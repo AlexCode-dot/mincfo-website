@@ -5,12 +5,12 @@ import { useEffect, useRef } from "react";
 import styles from "./BeamBackground.module.scss";
 
 // Tweak knobs: dotSpacing, waveAmplitude, waveSpeed, gradientHeight, dotAlpha, startYRatio, particleCount.
-const DOT_SPACING = 8;
-const WAVE_AMPLITUDE = 28;
-const WAVE_SPEED = 0.45;
-const GRADIENT_HEIGHT = 0.78;
-const DOT_ALPHA = 0.75;
-const START_Y_RATIO = 0.22;
+const DOT_SPACING = 7;
+const WAVE_AMPLITUDE = 38;
+const WAVE_SPEED = 0.62;
+const GRADIENT_HEIGHT = 0.9;
+const DOT_ALPHA = 0.8;
+const START_Y_RATIO = 0.06;
 const PARTICLE_COUNT = 220;
 
 type Dot = {
@@ -82,8 +82,8 @@ export default function BeamBackground({
         x: Math.random() * width,
         y: height * (0.55 + Math.random() * 0.4),
         vy: 0.08 + Math.random() * 0.22,
-        alpha: 0.12 + Math.random() * 0.18,
-        size: 0.8 + Math.random() * 1.6,
+        alpha: 0.08 + Math.random() * 0.1,
+        size: 0.5 + Math.random() * 0.9,
         drift: (Math.random() - 0.5) * 0.16,
       }));
     };
@@ -119,8 +119,8 @@ export default function BeamBackground({
         height
       );
       gradient.addColorStop(0, "rgba(20, 24, 32, 0)");
-      gradient.addColorStop(0.62, "rgba(83, 90, 255, 0.58)");
-      gradient.addColorStop(0.86, "rgba(83, 90, 255, 0.18)");
+      gradient.addColorStop(0.56, "rgba(83, 90, 255, 0.44)");
+      gradient.addColorStop(0.82, "rgba(83, 90, 255, 0.12)");
       gradient.addColorStop(1, "rgba(83, 90, 255, 0)");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, height * (1 - GRADIENT_HEIGHT), width, height * GRADIENT_HEIGHT);
@@ -135,23 +135,28 @@ export default function BeamBackground({
           Math.sin(dot.x * 0.006 - t * WAVE_SPEED * 0.6 + dot.phase * 0.6) *
           (WAVE_AMPLITUDE * 0.25);
         const yPos = dot.y + wave + wave2;
-        if (yPos < activeHeight * 0.22) continue;
+        if (yPos < activeHeight * 0.08) continue;
 
-        const fade = clamp((yPos - activeHeight * 0.2) / (activeHeight * 0.8), 0, 1);
+        const fade = clamp((yPos - activeHeight * 0.06) / (activeHeight * 0.94), 0, 1);
         const edgeFalloff = clamp((height - yPos) / tailZone, 0, 1);
         if (edgeFalloff < 0.05) continue;
         const tailProgress = clamp((yPos - tailStart) / (height - tailStart), 0, 1);
         const tailAtten = 1 - tailProgress;
-        const density = clamp(tailAtten ** 1.6, 0.04, 1);
+        const lowerProgress = clamp((yPos - height * 0.62) / (height * 0.38), 0, 1);
+        const lowerAtten = 1 - lowerProgress;
+        const density = clamp((tailAtten ** 1.12) * (lowerAtten ** 0.78), 0.32, 1);
         const noise = fract(Math.sin(dot.x * 12.9898 + dot.y * 78.233) * 43758.5453);
         if (noise > density) continue;
         const radius = clamp(
-          (1 + fade * 1.4) * (0.48 + edgeFalloff * 0.34) * (0.52 + tailAtten * 0.48),
-          0.58,
+          (1 + fade * 1.4) *
+          (0.42 + edgeFalloff * 0.28) *
+          (0.5 + tailAtten * 0.5) *
+          (0.58 + lowerAtten * 0.34),
+          0.44,
           2.2,
         );
 
-        ctx.globalAlpha = DOT_ALPHA * fade * edgeFalloff * tailAtten;
+        ctx.globalAlpha = DOT_ALPHA * fade * edgeFalloff * tailAtten * (0.62 + lowerAtten * 0.38);
         ctx.beginPath();
         ctx.arc(dot.x, yPos, radius, 0, Math.PI * 2);
         ctx.fill();
@@ -176,13 +181,24 @@ export default function BeamBackground({
           1,
         );
         const tailAtten = 1 - tailProgress;
-        const density = clamp(tailAtten ** 1.5, 0.06, 1);
+        const lowerProgress = clamp(
+          (particle.y - height * 0.62) / (height * 0.38),
+          0,
+          1,
+        );
+        const lowerAtten = 1 - lowerProgress;
+        const density = clamp((tailAtten ** 1.06) * (lowerAtten ** 0.72), 0.34, 1);
         const noise = fract(
           Math.sin(particle.x * 12.9898 + particle.y * 78.233) * 43758.5453,
         );
         if (noise > density) continue;
-        const renderedSize = particle.size * (0.46 + edgeFalloff * 0.34) * (0.58 + tailAtten * 0.42);
-        ctx.globalAlpha = particle.alpha * visibility * edgeFalloff * tailAtten;
+        const renderedSize =
+          particle.size *
+          (0.42 + edgeFalloff * 0.28) *
+          (0.52 + tailAtten * 0.4) *
+          (0.64 + lowerAtten * 0.3);
+        ctx.globalAlpha =
+          particle.alpha * visibility * edgeFalloff * tailAtten * (0.62 + lowerAtten * 0.38);
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, renderedSize, 0, Math.PI * 2);
         ctx.fill();
@@ -191,8 +207,8 @@ export default function BeamBackground({
         if (particle.y < activeHeight * 0.12) {
           particle.y = activeHeight * (0.5 + Math.random() * 0.22);
           particle.x = Math.random() * width;
-          particle.alpha = 0.12 + Math.random() * 0.18;
-          particle.size = 0.8 + Math.random() * 1.6;
+          particle.alpha = 0.08 + Math.random() * 0.1;
+          particle.size = 0.5 + Math.random() * 0.9;
           particle.drift = (Math.random() - 0.5) * 0.16;
         }
       }
