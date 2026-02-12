@@ -1,0 +1,41 @@
+.logo {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.logo:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
+  box-shadow: var(--shadow-glow);
+}
+
+.wordmark {
+  font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
+  .logo {
+    top: 18px;
+    left: 18px;
+  }
+
+  .wordmark {
+    font-size: 0.85rem;
+  }
+}
