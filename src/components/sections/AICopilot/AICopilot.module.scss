@@ -47,46 +47,97 @@
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--container-pad);
+  padding-top: clamp(36px, 4.6vh, 64px);
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  gap: clamp(32px, 5vw, 74px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(34px, 5.2vw, 76px);
   align-items: center;
 }
 
-.left,
-.right {
+.aiLeft,
+.aiRight,
+.dashboardLeft,
+.dashboardRight,
+.planLeft,
+.planRight {
   opacity: 0;
   transform: translateY(18px);
   transition: opacity 560ms ease, transform 560ms ease;
 }
 
-.visible .left,
-.visible .right {
+.visible .aiLeft,
+.visible .aiRight {
   opacity: 1;
   transform: translateY(0);
 }
 
-.visible .right {
+.visible .aiRight {
   transition-delay: 100ms;
+}
+
+.dashboardVisible .dashboardLeft,
+.dashboardVisible .dashboardRight {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dashboardVisible .dashboardRight {
+  transition-delay: 80ms;
+}
+
+.planVisible .planLeft,
+.planVisible .planRight {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.planVisible .planRight {
+  transition-delay: 90ms;
 }
 
 .pill {
   display: inline-flex;
   align-items: center;
-  padding: 7px 14px;
+  gap: 8px;
+  padding: 8px 16px;
   border-radius: var(--radius-pill);
   background: rgba(15, 24, 40, 0.74);
   color: rgba(206, 222, 249, 0.9);
-  font-size: 0.76rem;
+  font-size: 0.82rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   box-shadow: inset 0 0 0 1px rgba(162, 198, 255, 0.16);
 }
 
+.pill::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #7fd7ff;
+  box-shadow: 0 0 0 0 rgba(127, 215, 255, 0.52);
+  animation: pillPulse 2.1s ease-out infinite;
+}
+
+@keyframes pillPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(127, 215, 255, 0.48);
+    transform: scale(0.96);
+  }
+  65% {
+    box-shadow: 0 0 0 8px rgba(127, 215, 255, 0);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(127, 215, 255, 0);
+    transform: scale(0.96);
+  }
+}
+
 .title {
   margin-top: 20px;
-  max-width: 550px;
-  font-size: clamp(2.3rem, 4vw, 4.2rem);
+  max-width: 700px;
+  font-size: clamp(2.35rem, 4.1vw, 4.3rem);
   line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--color-text);
@@ -94,13 +145,14 @@
 
 .text {
   margin-top: 18px;
-  max-width: 560px;
-  color: rgba(194, 208, 231, 0.94);
+  max-width: 610px;
+  color: rgba(160, 173, 198, 0.94);
   font-size: 1.03rem;
+  line-height: 1.5;
 }
 
 .list {
-  margin-top: 30px;
+  margin-top: 34px;
   list-style: none;
   display: grid;
   gap: 14px;
@@ -109,15 +161,20 @@
 .list li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: rgba(218, 229, 248, 0.92);
-  font-size: 0.99rem;
+  gap: 12px;
+  color: rgba(187, 199, 220, 0.94);
+  font-size: 1rem;
+  line-height: 1.4;
 }
 
 .list svg {
   flex-shrink: 0;
-  color: rgba(133, 213, 255, 0.96);
-  filter: drop-shadow(0 0 8px rgba(108, 195, 255, 0.5));
+  width: 18px;
+  height: 18px;
+  padding: 3px;
+  border-radius: 999px;
+  color: rgba(99, 137, 250, 0.98);
+  box-shadow: inset 0 0 0 1px rgba(87, 128, 240, 0.58);
 }
 
 .right {
@@ -138,8 +195,9 @@
 }
 
 .panel {
-  width: min(560px, 100%);
-  padding: 22px 22px 18px;
+  width: min(610px, 100%);
+  min-height: clamp(450px, 56vh, 580px);
+  padding: 26px 24px 20px;
   border-radius: 26px;
   background: linear-gradient(165deg, rgba(16, 28, 49, 0.8) 0%, rgba(11, 20, 37, 0.8) 100%);
   box-shadow:
@@ -147,6 +205,8 @@
     inset 0 0 0 1px rgba(158, 190, 246, 0.16);
   backdrop-filter: blur(10px);
   transition: transform 420ms ease, box-shadow 420ms ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .section:hover .panel {
@@ -159,87 +219,761 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: rgba(226, 235, 250, 0.92);
-  font-size: 0.86rem;
+  font-size: 0.96rem;
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: #86dcff;
   box-shadow: 0 0 10px rgba(96, 207, 255, 0.65);
 }
 
 .body {
-  margin-top: 20px;
+  margin-top: 18px;
   display: grid;
-  gap: 14px;
+  gap: 16px;
+  flex: 1;
 }
 
 .question {
-  max-width: 88%;
-  padding: 12px 14px;
+  max-width: 90%;
+  min-height: 52px;
+  padding: 13px 15px;
   border-radius: 14px;
   background: rgba(7, 14, 27, 0.82);
   color: rgba(223, 232, 247, 0.95);
-  font-size: 0.92rem;
+  font-size: 0.98rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: transform 360ms ease, opacity 360ms ease, box-shadow 360ms ease;
+}
+
+.questionHidden {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.questionVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.questionSent {
+  transform: translateX(10px);
+  opacity: 0.72;
+  box-shadow: inset 0 0 0 1px rgba(116, 171, 255, 0.24);
+}
+
+.ghostText {
+  width: 2px;
+  opacity: 0;
+}
+
+.caret {
+  width: 2px;
+  height: 1em;
+  border-radius: 2px;
+  background: rgba(168, 218, 255, 0.9);
+  animation: blink 0.8s steps(1) infinite;
 }
 
 .answer {
-  max-width: 96%;
-  padding: 14px;
+  max-width: 100%;
+  min-height: 248px;
+  padding: 15px;
   border-radius: 16px;
   background: rgba(37, 58, 93, 0.3);
   box-shadow: inset 0 0 0 1px rgba(145, 192, 255, 0.16);
   color: rgba(208, 222, 246, 0.96);
-  font-size: 0.9rem;
+  font-size: 0.94rem;
+  display: grid;
+  align-content: start;
+}
+
+.answer p {
+  margin: 0;
+}
+
+.loadingAnswer {
+  display: grid;
+  gap: 10px;
+}
+
+.loadingAnswer span {
+  height: 9px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(117, 168, 255, 0.08), rgba(174, 219, 255, 0.5), rgba(117, 168, 255, 0.08));
+  background-size: 180% 100%;
+  animation: shimmer 1s linear infinite;
+}
+
+.loadingAnswer span:nth-child(1) {
+  width: 94%;
+}
+
+.loadingAnswer span:nth-child(2) {
+  width: 88%;
+}
+
+.loadingAnswer span:nth-child(3) {
+  width: 72%;
 }
 
 .chart {
-  margin-top: 14px;
-  height: 86px;
-  border-radius: 12px;
-  padding: 12px;
-  background:
-    linear-gradient(180deg, rgba(124, 173, 255, 0.16) 0%, rgba(124, 173, 255, 0.03) 100%),
-    rgba(11, 18, 32, 0.66);
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
+  margin-top: 0;
+  max-height: 0;
+  padding: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 460ms ease, transform 460ms ease, max-height 460ms ease, margin-top 460ms ease, padding 460ms ease;
 }
 
-.chart span {
-  flex: 1;
+.chartVisible {
+  margin-top: 14px;
+  max-height: 320px;
+  padding: 12px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chartHead {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(189, 212, 248, 0.84);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+}
+
+.chartPlot {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 10px;
+}
+
+.chartYAxis {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  align-items: end;
+  color: rgba(154, 177, 214, 0.74);
+  font-size: 0.75rem;
+  padding-bottom: 18px;
+}
+
+.chartBars {
+  height: 148px;
+  border-radius: 12px;
+  padding: 8px 10px 10px;
+  background:
+    linear-gradient(180deg, rgba(124, 173, 255, 0.14) 0%, rgba(124, 173, 255, 0.03) 100%),
+    repeating-linear-gradient(
+      to top,
+      rgba(117, 163, 240, 0.16) 0,
+      rgba(117, 163, 240, 0.16) 1px,
+      transparent 1px,
+      transparent 26%
+    ),
+    rgba(11, 18, 32, 0.66);
+  display: grid;
+  grid-template-columns: repeat(var(--bar-count, 5), minmax(0, 1fr));
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.chartBar {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: end;
+  gap: 6px;
+}
+
+.barValue {
+  text-align: center;
+  color: rgba(193, 218, 255, 0.92);
+  font-size: 0.75rem;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 320ms ease var(--bar-delay), transform 320ms ease var(--bar-delay);
+}
+
+.barFill {
+  display: block;
+  width: 100%;
   height: var(--bar-height);
-  border-radius: 999px;
+  border-radius: 12px 12px 10px 10px;
   background: linear-gradient(180deg, rgba(145, 222, 255, 0.86) 0%, rgba(95, 158, 255, 0.66) 100%);
   box-shadow: 0 0 14px rgba(122, 187, 255, 0.3);
+  transform-origin: bottom;
+  transform: scaleY(0.05);
+  transition: transform 540ms cubic-bezier(0.24, 0.8, 0.26, 1) var(--bar-delay);
+}
+
+.barLabel {
+  text-align: center;
+  color: rgba(172, 191, 223, 0.85);
+  font-size: 0.68rem;
+}
+
+.chartVisible .barFill {
+  transform: scaleY(1);
+}
+
+.chartVisible .barValue {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .inputRow {
-  margin-top: 16px;
+  margin-top: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 12px 12px 12px 16px;
+  padding: 14px 14px 14px 18px;
   border-radius: 13px;
   background: rgba(6, 12, 22, 0.72);
   color: rgba(168, 184, 209, 0.94);
-  font-size: 0.83rem;
+  font-size: 0.92rem;
+}
+
+.inputText {
+  min-height: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: rgba(188, 204, 229, 0.94);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .inputRow button {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   border-radius: 999px;
   border: none;
   background: rgba(86, 158, 255, 0.28);
   color: #d8ebff;
   display: grid;
   place-items: center;
+  transition: transform 240ms ease, background 240ms ease;
+}
+
+.dashboardContainer {
+  margin-top: 0;
+  align-items: start;
+  padding-top: clamp(62px, 7vh, 98px);
+}
+
+.dashboardLeft {
+  padding-top: 10px;
+}
+
+.dashboardRight {
+  justify-content: flex-start;
+}
+
+.dashboardSection {
+  position: relative;
+  margin-top: clamp(64px, 9vh, 120px);
+  padding: clamp(104px, 14vh, 158px) 0 clamp(84px, 10vh, 118px);
+}
+
+.dashboardCut {
+  position: absolute;
+  inset: 0 0 auto;
+  width: 100%;
+  height: 190px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.dashboardCut path {
+  fill: transparent;
+  stroke: rgba(88, 132, 209, 0.5);
+  stroke-width: 1.5;
+}
+
+.dashboardBackground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(76% 62% at 78% 36%, rgba(42, 84, 160, 0.25), transparent 74%),
+    radial-gradient(64% 54% at 22% 72%, rgba(28, 60, 121, 0.24), transparent 76%),
+    linear-gradient(180deg, rgba(10, 17, 31, 0.78) 0%, rgba(8, 14, 26, 0.86) 42%, rgba(8, 14, 24, 0.92) 100%);
+}
+
+.dashboardBackground::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(136, 170, 240, 0.22) 1px, transparent 1px);
+  background-size: 8px 8px;
+  opacity: 0.16;
+}
+
+.dashboardPanel {
+  width: min(680px, 100%);
+  padding: 14px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(13, 22, 39, 0.92) 0%, rgba(8, 14, 27, 0.94) 100%);
+  box-shadow:
+    0 28px 60px rgba(4, 9, 18, 0.5),
+    inset 0 0 0 1px rgba(128, 164, 222, 0.14);
+}
+
+.planSection {
+  position: relative;
+  margin-top: clamp(68px, 9vh, 120px);
+  padding: clamp(98px, 13vh, 148px) 0 clamp(84px, 11vh, 126px);
+}
+
+.planCut {
+  position: absolute;
+  inset: 0 0 auto;
+  width: 100%;
+  height: 190px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.planCut path {
+  fill: transparent;
+  stroke: rgba(95, 140, 214, 0.52);
+  stroke-width: 1.5;
+}
+
+.planBackground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(74% 60% at 20% 38%, rgba(36, 70, 136, 0.26), transparent 74%),
+    radial-gradient(62% 46% at 78% 74%, rgba(28, 59, 122, 0.24), transparent 78%),
+    linear-gradient(180deg, rgba(9, 16, 28, 0.84) 0%, rgba(7, 13, 24, 0.9) 100%);
+}
+
+.planBackground::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(130, 162, 231, 0.2) 1px, transparent 1px);
+  background-size: 8px 8px;
+  opacity: 0.14;
+}
+
+.planContainer {
+  align-items: start;
+  gap: clamp(34px, 4.6vw, 64px);
+}
+
+.planLeft .text {
+  max-width: 620px;
+}
+
+.planRight {
+  justify-content: flex-start;
+}
+
+.planPanel {
+  width: min(600px, 100%);
+  padding: 16px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(13, 23, 41, 0.9), rgba(9, 16, 30, 0.9));
+  box-shadow:
+    0 22px 46px rgba(4, 8, 16, 0.38),
+    inset 0 0 0 1px rgba(123, 160, 225, 0.16);
+}
+
+.planPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.planPanelHeader p {
+  margin: 0;
+  color: rgba(225, 234, 248, 0.93);
+  font-size: 0.88rem;
+}
+
+.planPanelHeader span {
+  color: rgba(153, 171, 199, 0.86);
+  font-size: 0.72rem;
+}
+
+.planPanelBody {
+  margin-top: 12px;
+  display: grid;
+  gap: 12px;
+}
+
+.planForecast,
+.planBenchmark {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(10, 18, 33, 0.84);
+  box-shadow: inset 0 0 0 1px rgba(112, 147, 201, 0.18);
+}
+
+.planLabel {
+  display: grid;
+  color: rgba(178, 195, 221, 0.86);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+}
+
+.planBars {
+  margin-top: 10px;
+  height: 124px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  gap: 12px;
+}
+
+.planBarGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 4px;
+}
+
+.planBar,
+.planBarForecast {
+  display: block;
+  height: var(--h);
+  border-radius: 8px 8px 6px 6px;
+}
+
+.planBar {
+  background: linear-gradient(180deg, rgba(152, 193, 255, 0.78), rgba(89, 124, 222, 0.66));
+}
+
+.planBarForecast {
+  background: linear-gradient(180deg, rgba(123, 223, 255, 0.9), rgba(78, 161, 255, 0.72));
+}
+
+.planBarGroup label {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  color: rgba(148, 166, 194, 0.88);
+  font-size: 0.66rem;
+  text-align: center;
+}
+
+.benchmarkRows {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.benchmarkRow {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.benchmarkRow p {
+  margin: 0;
+  color: rgba(176, 193, 220, 0.9);
+  font-size: 0.76rem;
+}
+
+.benchmarkRow div {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(27, 42, 69, 0.84);
+  overflow: hidden;
+}
+
+.benchmarkRow div span {
+  display: block;
+  width: var(--w);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(95, 135, 255, 0.9), rgba(98, 213, 255, 0.86));
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.statCard {
+  padding: 14px 14px 12px;
+  border-radius: 12px;
+  background: linear-gradient(155deg, rgba(12, 21, 38, 0.96), rgba(8, 14, 27, 0.92));
+  box-shadow: inset 0 0 0 1px rgba(112, 145, 197, 0.22);
+}
+
+.statLabelRow {
+  display: flex;
+  align-items: center;
+  color: rgba(188, 201, 223, 0.9);
+  font-size: 0.82rem;
+}
+
+.statAmount {
+  margin-top: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.statAmount strong {
+  color: rgba(237, 244, 255, 0.96);
+  font-size: clamp(1.15rem, 1.7vw, 2.1rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.statAmount span {
+  color: rgba(149, 167, 194, 0.88);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+}
+
+.statDelta {
+  margin-top: 10px;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 7px;
+  color: rgba(108, 231, 190, 0.94);
+  background: rgba(22, 73, 63, 0.36);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.statDelta.down {
+  color: rgba(112, 218, 184, 0.94);
+  background: rgba(24, 79, 66, 0.28);
+}
+
+.statMeta {
+  margin: 8px 0 0;
+  color: rgba(128, 146, 173, 0.86);
+  font-size: 0.7rem;
+}
+
+.trendPanel {
+  margin-top: 14px;
+  border-radius: 14px;
+  background: rgba(9, 16, 30, 0.88);
+  box-shadow: inset 0 0 0 1px rgba(112, 145, 197, 0.18);
+  overflow: hidden;
+}
+
+.trendHeader {
+  height: 52px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(93, 123, 171, 0.24);
+}
+
+.trendHeader p {
+  margin: 0;
+  color: rgba(229, 236, 247, 0.92);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.trendLegend {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(159, 176, 201, 0.86);
+  font-size: 0.76rem;
+}
+
+.trendDot {
+  width: 13px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(102, 128, 255, 0.95);
+  box-shadow: 0 0 10px rgba(102, 128, 255, 0.56);
+}
+
+.trendChartWrap {
+  min-height: 250px;
+  padding: 14px 12px 10px;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 8px;
+}
+
+.trendAxisY {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  color: rgba(128, 146, 172, 0.8);
+  font-size: 0.68rem;
+  align-items: center;
+}
+
+.trendSvgWrap {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 8px;
+  border-radius: 10px;
+  padding: 4px 6px 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(92, 123, 173, 0.2) 0,
+      rgba(92, 123, 173, 0.2) 1px,
+      transparent 1px,
+      transparent 56px
+    );
+}
+
+.trendSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.trendLine,
+.trendArea,
+.trendPoints circle {
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.trendLine {
+  fill: none;
+  stroke: rgba(96, 116, 255, 0.95);
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  transition: stroke-dashoffset 2.6s cubic-bezier(0.28, 0.11, 0.22, 1);
+}
+
+.trendArea {
+  fill: rgba(80, 102, 244, 0.12);
+  opacity: 0;
+  transition: opacity 900ms ease 480ms;
+}
+
+.trendPoints circle {
+  fill: rgba(96, 116, 255, 0.95);
+  stroke: rgba(136, 156, 255, 0.92);
+  stroke-width: 1.4;
+  opacity: 0;
+  transform: scale(0.8);
+  transform-origin: center;
+  transition:
+    opacity 520ms ease var(--point-delay),
+    transform 520ms cubic-bezier(0.24, 0.78, 0.22, 1) var(--point-delay);
+}
+
+.trendVisible .trendLine {
+  stroke-dashoffset: 0;
+}
+
+.trendVisible .trendArea {
+  opacity: 1;
+}
+
+.trendVisible .trendPoints circle {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.trendReset .trendLine,
+.trendReset .trendArea,
+.trendReset .trendPoints circle {
+  transition: none;
+}
+
+.trendReset .trendLine {
+  stroke-dashoffset: 1200;
+}
+
+.trendReset .trendArea {
+  opacity: 0;
+}
+
+.trendReset .trendPoints circle {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.trendMonths {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  color: rgba(132, 149, 174, 0.86);
+  font-size: 0.67rem;
+  text-align: center;
+}
+
+.sending {
+  background: rgba(104, 177, 255, 0.5) !important;
+  transform: translateX(2px);
+}
+
+.sending svg {
+  animation: sendPulse 0.55s ease infinite alternate;
+}
+
+.loading {
+  background: rgba(104, 177, 255, 0.38) !important;
+}
+
+.loading svg {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  46%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 180% 0;
+  }
+  100% {
+    background-position: -20% 0;
+  }
+}
+
+@keyframes sendPulse {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(2px) translateY(-1px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 980px) {
@@ -251,6 +985,7 @@
 
   .container {
     grid-template-columns: 1fr;
+    padding-top: 0;
     gap: 34px;
   }
 
@@ -265,11 +1000,44 @@
 
   .panel {
     width: 100%;
+    min-height: auto;
   }
 
   .glow {
     width: 100%;
     transform: translate(0, -6%);
+  }
+
+  .dashboardContainer {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .dashboardRight {
+    justify-content: stretch;
+    order: 2;
+  }
+
+  .dashboardLeft {
+    order: 1;
+  }
+
+  .dashboardSection {
+    margin-top: 52px;
+    padding: 102px 0 80px;
+  }
+
+  .planSection {
+    margin-top: 54px;
+    padding: 98px 0 70px;
+  }
+
+  .planRight {
+    justify-content: stretch;
+  }
+
+  .planPanel {
+    width: 100%;
   }
 }
 
@@ -300,6 +1068,65 @@
     border-radius: 18px;
   }
 
+  .chartBars {
+    height: 122px;
+    gap: 8px;
+  }
+
+  .dashboardPanel {
+    padding: 16px;
+  }
+
+  .statGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .trendChartWrap {
+    min-height: 220px;
+    grid-template-columns: 34px 1fr;
+    gap: 6px;
+  }
+
+  .trendAxisY {
+    font-size: 0.62rem;
+  }
+
+  .trendMonths {
+    font-size: 0.62rem;
+  }
+
+  .dashboardSection {
+    margin-top: 42px;
+    padding: 84px 0 62px;
+  }
+
+  .dashboardCut {
+    height: 150px;
+  }
+
+  .planSection {
+    margin-top: 42px;
+    padding: 84px 0 56px;
+  }
+
+  .planCut {
+    height: 150px;
+  }
+
+  .planPanel {
+    padding: 14px;
+  }
+
+  .planBars {
+    height: 106px;
+    gap: 10px;
+  }
+
+  .benchmarkRow {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
   .inputRow {
     font-size: 0.76rem;
   }
@@ -308,7 +1135,30 @@
 @media (prefers-reduced-motion: reduce) {
   .left,
   .right,
-  .panel {
+  .panel,
+  .chart,
+  .barFill,
+  .barValue,
+  .pill::before,
+  .caret,
+  .loadingAnswer span,
+  .sending svg,
+  .loading svg,
+  .trendLine,
+  .trendArea,
+  .trendPoints circle {
     transition: none;
+    animation: none;
+  }
+
+  .trendLine {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+
+  .trendArea,
+  .trendPoints circle {
+    opacity: 1;
+    transform: none;
   }
 }
