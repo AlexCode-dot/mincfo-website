@@ -101,7 +101,7 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} id="hero" className={styles.hero}>
-      <BeamBackground />
+      <BeamBackground extendBottom={260} />
 
       <div className={styles.container}>
         <div className={styles.tag}>

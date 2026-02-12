@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useEffect, useRef } from "react";
 import styles from "./BeamBackground.module.scss";
 
@@ -27,10 +28,19 @@ type Particle = {
   drift: number;
 };
 
+type BeamBackgroundProps = {
+  className?: string;
+  extendBottom?: number;
+};
+
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
+const fract = (value: number) => value - Math.floor(value);
 
-export default function BeamBackground() {
+export default function BeamBackground({
+  className,
+  extendBottom = 0,
+}: BeamBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const dotsRef = useRef<Dot[]>([]);
@@ -96,20 +106,22 @@ export default function BeamBackground() {
     const drawDots = (t: number) => {
       const { width, height, dpr } = sizeRef.current;
       const spacing = clamp(DOT_SPACING * dpr, 6, 12);
-      const waveAmplitude = WAVE_AMPLITUDE;
-      const waveSpeed = WAVE_SPEED;
+      const activeHeight = Math.max(height - extendBottom, height * 0.62);
+      const tailZone = Math.max(extendBottom + 40, height * 0.14);
+      const tailStart = activeHeight - Math.max(28, extendBottom * 0.12);
 
       ctx.clearRect(0, 0, width, height);
 
       const gradient = ctx.createLinearGradient(
         0,
-        height * (1 - GRADIENT_HEIGHT),
+        activeHeight * (1 - GRADIENT_HEIGHT),
         0,
         height
       );
       gradient.addColorStop(0, "rgba(20, 24, 32, 0)");
-      gradient.addColorStop(0.65, "rgba(83, 90, 255, 0.65)");
-      gradient.addColorStop(1, "rgba(83, 90, 255, 0.95)");
+      gradient.addColorStop(0.62, "rgba(83, 90, 255, 0.58)");
+      gradient.addColorStop(0.86, "rgba(83, 90, 255, 0.18)");
+      gradient.addColorStop(1, "rgba(83, 90, 255, 0)");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, height * (1 - GRADIENT_HEIGHT), width, height * GRADIENT_HEIGHT);
 
@@ -117,20 +129,29 @@ export default function BeamBackground() {
 
       for (const dot of dotsRef.current) {
         const wave =
-          Math.sin(dot.x * 0.018 + t * waveSpeed + dot.phase) *
-          (waveAmplitude * 0.35);
+          Math.sin(dot.x * 0.018 + t * WAVE_SPEED + dot.phase) *
+          (WAVE_AMPLITUDE * 0.35);
         const wave2 =
-          Math.sin(dot.x * 0.006 - t * waveSpeed * 0.6 + dot.phase * 0.6) *
-          (waveAmplitude * 0.25);
-        const offsetY = wave + wave2;
+          Math.sin(dot.x * 0.006 - t * WAVE_SPEED * 0.6 + dot.phase * 0.6) *
+          (WAVE_AMPLITUDE * 0.25);
+        const yPos = dot.y + wave + wave2;
+        if (yPos < activeHeight * 0.22) continue;
 
-        const yPos = dot.y + offsetY;
-        if (yPos < height * 0.22) continue;
+        const fade = clamp((yPos - activeHeight * 0.2) / (activeHeight * 0.8), 0, 1);
+        const edgeFalloff = clamp((height - yPos) / tailZone, 0, 1);
+        if (edgeFalloff < 0.05) continue;
+        const tailProgress = clamp((yPos - tailStart) / (height - tailStart), 0, 1);
+        const tailAtten = 1 - tailProgress;
+        const density = clamp(tailAtten ** 1.6, 0.04, 1);
+        const noise = fract(Math.sin(dot.x * 12.9898 + dot.y * 78.233) * 43758.5453);
+        if (noise > density) continue;
+        const radius = clamp(
+          (1 + fade * 1.4) * (0.48 + edgeFalloff * 0.34) * (0.52 + tailAtten * 0.48),
+          0.58,
+          2.2,
+        );
 
-        const fade = clamp((yPos - height * 0.2) / (height * 0.8), 0, 1);
-        const radius = clamp(1 + fade * 1.4, 1, 2.2);
-
-        ctx.globalAlpha = DOT_ALPHA * fade;
+        ctx.globalAlpha = DOT_ALPHA * fade * edgeFalloff * tailAtten;
         ctx.beginPath();
         ctx.arc(dot.x, yPos, radius, 0, Math.PI * 2);
         ctx.fill();
@@ -138,20 +159,37 @@ export default function BeamBackground() {
 
       ctx.globalAlpha = 1;
 
-      // floating particles drifting upward from the blended field
       ctx.save();
       ctx.globalCompositeOperation = "lighter";
       ctx.fillStyle = "rgba(170, 195, 255, 0.55)";
       for (const particle of particlesRef.current) {
-        const visibility = clamp((particle.y - height * 0.45) / (height * 0.28), 0, 1);
-        ctx.globalAlpha = particle.alpha * visibility;
+        const visibility = clamp(
+          (particle.y - activeHeight * 0.45) / (activeHeight * 0.28),
+          0,
+          1,
+        );
+        const edgeFalloff = clamp((height - particle.y) / tailZone, 0, 1);
+        if (edgeFalloff < 0.06) continue;
+        const tailProgress = clamp(
+          (particle.y - tailStart) / (height - tailStart),
+          0,
+          1,
+        );
+        const tailAtten = 1 - tailProgress;
+        const density = clamp(tailAtten ** 1.5, 0.06, 1);
+        const noise = fract(
+          Math.sin(particle.x * 12.9898 + particle.y * 78.233) * 43758.5453,
+        );
+        if (noise > density) continue;
+        const renderedSize = particle.size * (0.46 + edgeFalloff * 0.34) * (0.58 + tailAtten * 0.42);
+        ctx.globalAlpha = particle.alpha * visibility * edgeFalloff * tailAtten;
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.arc(particle.x, particle.y, renderedSize, 0, Math.PI * 2);
         ctx.fill();
         particle.y -= particle.vy;
         particle.x += particle.drift;
-        if (particle.y < height * 0.12) {
-          particle.y = height * (0.5 + Math.random() * 0.22);
+        if (particle.y < activeHeight * 0.12) {
+          particle.y = activeHeight * (0.5 + Math.random() * 0.22);
           particle.x = Math.random() * width;
           particle.alpha = 0.12 + Math.random() * 0.18;
           particle.size = 0.8 + Math.random() * 1.6;
@@ -161,14 +199,7 @@ export default function BeamBackground() {
       ctx.restore();
       ctx.globalAlpha = 1;
 
-      // faint shimmer noise pass
-      ctx.save();
-      ctx.globalCompositeOperation = "screen";
-      ctx.fillStyle = "rgba(160, 170, 255, 0.02)";
-      for (let i = 0; i < width; i += spacing * 2) {
-        ctx.fillRect(i, height * 0.52, spacing * 0.5, height * 0.48);
-      }
-      ctx.restore();
+      // Keep the transition clean: no extra post-process blur/mask band.
     };
 
     const render = () => {
@@ -214,8 +245,15 @@ export default function BeamBackground() {
     };
   }, []);
 
+  const wrapperStyle: CSSProperties =
+    extendBottom > 0 ? { bottom: `-${extendBottom}px` } : {};
+
   return (
-    <div className={styles.wrapper} aria-hidden="true">
+    <div
+      className={[styles.wrapper, className].filter(Boolean).join(" ")}
+      style={wrapperStyle}
+      aria-hidden="true"
+    >
       <canvas ref={canvasRef} className={styles.canvas} />
       <div className={styles.vignette} />
     </div>
