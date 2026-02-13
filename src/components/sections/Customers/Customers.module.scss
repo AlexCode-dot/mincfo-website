@@ -51,6 +51,7 @@
   max-width: 1320px;
   margin: 0 auto;
   padding: 0 var(--container-pad);
+  padding-top: clamp(74px, 9.4vh, 138px);
 }
 
 .header {
@@ -361,6 +362,10 @@
 }
 
 @media (max-width: 760px) {
+  .container {
+    padding-top: 72px;
+  }
+
   .section {
     padding: 98px 0 82px;
   }

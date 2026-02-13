@@ -137,7 +137,7 @@ export default function FloatingNav() {
         Hur det funkar
       </a>
       <a href="#hero" className={styles.cta}>
-        Boka demo
+        Kontakta oss
       </a>
     </nav>
   );

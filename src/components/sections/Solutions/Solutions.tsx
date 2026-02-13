@@ -1,26 +1,32 @@
 "use client";
 
-import { ArrowRight, Briefcase, Building2, Rocket } from "lucide-react";
+import { Briefcase, Building2, ChevronDown, Rocket } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "./Solutions.module.scss";
 
 const SOLUTIONS = [
   {
     href: "/losningar/ceo-founders",
-    title: "Founders & CEO",
+    title: "Om ni är VC-backade eller kapitalresande",
     text: "Få tydlig kontroll på runway, burn-rate och tillväxtdrivare utan att bygga ett stort finance-team internt.",
+    detail:
+      "Placeholder: veckovis cash-rapportering, investor-ready material och scenarioplanering inför nästa runda.",
     icon: Rocket,
   },
   {
     href: "/losningar/cfo-finance",
-    title: "CFO & Finance Team",
+    title: "Om ni har flera bolag eller marknader",
     text: "Automatisera uppföljning och rapportering för snabbare beslut, färre manuella moment och bättre precision.",
+    detail:
+      "Placeholder: samlad koncernvy, harmoniserad rapportstruktur och tydliga ansvarsflöden mellan team.",
     icon: Briefcase,
   },
   {
     href: "/losningar/saas-tech",
-    title: "SaaS / Tech",
+    title: "Om ni vill skala utan att tappa kontroll",
     text: "Koppla ihop planering, KPI:er och scenarioanalys så att teamet kan agera proaktivt istället för reaktivt.",
+    detail:
+      "Placeholder: månatliga beslutsunderlag, KPI-uppföljning och operativ rådgivning nära ledningsgruppen.",
     icon: Building2,
   },
 ];
@@ -113,29 +119,41 @@ export default function Solutions() {
       />
 
       <div className={styles.container}>
-        <header className={styles.header}>
-          <span className={styles.pill}>Lösningar</span>
-          <h2>Lösningar för olika bolagssituationer</h2>
-          <p>Kompakt översikt. Välj den inriktning som matchar ert läge och läs mer.</p>
-        </header>
+        <div className={styles.layout}>
+          <header className={styles.header}>
+            <span className={styles.pill}>Lösningar</span>
+            <h2>Hitta rätt ekonomiupplägg för ert bolag</h2>
+            <p>
+              Olika bolag har olika behov. Välj den inriktning som passar er
+              situation och läs hur vi kan stötta.
+            </p>
+          </header>
 
-        <div className={styles.grid}>
-          {SOLUTIONS.map((item) => {
-            const Icon = item.icon;
-            return (
-              <article key={item.href} className={styles.card}>
-                <div className={styles.iconWrap}>
-                  <Icon size={17} aria-hidden="true" />
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <a href={item.href} className={styles.cta}>
-                  Läs mer
-                  <ArrowRight size={14} aria-hidden="true" />
-                </a>
-              </article>
-            );
-          })}
+          <div className={styles.cardsColumn}>
+            <div className={styles.grid}>
+              {SOLUTIONS.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <article key={item.href} className={styles.card}>
+                    <div className={styles.iconWrap}>
+                      <Icon size={20} aria-hidden="true" />
+                    </div>
+
+                    <div className={styles.cardBody}>
+                      <h3>{item.title}</h3>
+                      <p>{item.text}</p>
+                      <p className={styles.placeholder}>{item.detail}</p>
+                    </div>
+
+                    <a href={item.href} className={styles.cta} aria-label={`Läs mer om ${item.title}`}>
+                      <span>Läs mer</span>
+                      <ChevronDown size={18} aria-hidden="true" />
+                    </a>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </section>

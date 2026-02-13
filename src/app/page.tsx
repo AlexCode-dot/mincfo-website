@@ -1,7 +1,9 @@
 import FloatingNav from "@/components/layout/FloatingNav/FloatingNav";
 import Logo from "@/components/layout/Logo/Logo";
+import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
 import AICopilot from "@/components/sections/AICopilot/AICopilot";
 import Customers from "@/components/sections/Customers/Customers";
+import Ending from "@/components/sections/Ending/Ending";
 import Hero from "@/components/sections/Hero/Hero";
 import HowItWorks from "@/components/sections/HowItWorks/HowItWorks";
 import Security from "@/components/sections/Security/Security";
@@ -18,6 +20,8 @@ export default function Home() {
       <Customers />
       <Security />
       <HowItWorks />
+      <Ending />
+      <SiteFooter />
     </>
   );
 }

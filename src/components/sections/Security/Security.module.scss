@@ -1,7 +1,7 @@
 .section {
   position: relative;
   margin-top: -2px;
-  padding: clamp(172px, 19vh, 242px) 0 clamp(118px, 12vh, 164px);
+  padding: clamp(146px, 16.5vh, 212px) 0 clamp(274px, 24vh, 370px);
   overflow: hidden;
 }
 
@@ -47,7 +47,7 @@
   margin: 0 auto;
   padding: 0 var(--container-pad);
   text-align: center;
-  padding-top: clamp(38px, 4.2vh, 56px);
+  padding-top: clamp(18px, 2.4vh, 30px);
 }
 
 .header {
@@ -601,7 +601,7 @@
 
 @media (max-width: 760px) {
   .section {
-    padding: 84px 0 80px;
+    padding: 84px 0 170px;
   }
 
   .curveCut {

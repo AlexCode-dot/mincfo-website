@@ -5,8 +5,8 @@ import { Database, Loader2, Lock } from "lucide-react";
 import styles from "./Security.module.scss";
 
 const CUT_HEIGHT = 170;
-const CUT_SIDE_Y = 14;
-const CUT_CENTER_Y = 78;
+const CUT_SIDE_Y = 78;
+const CUT_CENTER_Y = 14;
 const CUT_PATH = `M0 ${CUT_SIDE_Y} C280 ${CUT_SIDE_Y} 480 ${CUT_CENTER_Y} 720 ${CUT_CENTER_Y} C960 ${CUT_CENTER_Y} 1160 ${CUT_SIDE_Y} 1440 ${CUT_SIDE_Y}`;
 const cubic = (
   p0: number,

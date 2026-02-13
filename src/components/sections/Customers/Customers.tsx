@@ -99,9 +99,9 @@ export default function Customers() {
       const section = sectionRef.current;
       if (!section) return;
       const rect = section.getBoundingClientRect();
-      // Start animation later so users actually see the curve form.
-      const start = window.innerHeight * 1.08;
-      const end = window.innerHeight * 0.56;
+      // Start animation earlier so the transition begins before the section fully enters.
+      const start = window.innerHeight * 1.35;
+      const end = window.innerHeight * 0.74;
       const progress = clamp((start - rect.top) / (start - end), 0, 1);
       setCurveProgress(progress);
     };
@@ -133,8 +133,8 @@ export default function Customers() {
 
   const prevIndex = (activeIndex - 1 + TESTIMONIALS.length) % TESTIMONIALS.length;
   const nextIndex = (activeIndex + 1) % TESTIMONIALS.length;
-  const sideY = lerp(6, 86, curveProgress);
-  const centerY = 6;
+  const sideY = 6;
+  const centerY = lerp(6, 86, curveProgress);
   const cutPath = `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`;
   const curvePoints: string[] = [];
   for (let i = 0; i <= 18; i += 1) {
@@ -180,10 +180,10 @@ export default function Customers() {
 
       <div className={styles.container}>
         <header className={styles.header}>
-          <span className={styles.pill}>Customers</span>
+          <span className={styles.pill}>Kunder</span>
           <h2>Kundresultat från team som växer med MinCFO</h2>
           <p>
-            Case studies, testimonials och logos visar vad vi faktiskt levererar
+            Kundcase, omdömen och logotyper visar vad vi faktiskt levererar
             i praktiken. Här är ett urval kundröster.
           </p>
         </header>
@@ -223,8 +223,8 @@ export default function Customers() {
           </button>
         </div>
 
-        <div className={styles.trustedTicker} aria-label="Trusted customers">
-          <p className={styles.trustedLabel}>Trusted by teams using MinCFO every month</p>
+        <div className={styles.trustedTicker} aria-label="Kunder som litar på oss">
+          <p className={styles.trustedLabel}>Betrodd av team som använder MinCFO varje månad</p>
           <div className={styles.tickerViewport}>
             <div className={styles.tickerTrack}>
               {TRUSTED_LOGOS.map((name, index) => (

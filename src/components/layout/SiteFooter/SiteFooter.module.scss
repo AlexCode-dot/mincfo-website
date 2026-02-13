@@ -1,0 +1,137 @@
+.footer {
+  position: relative;
+  padding: clamp(54px, 7.2vh, 82px) 0 34px;
+  background:
+    radial-gradient(52% 46% at 12% 0%, rgba(50, 112, 196, 0.2), transparent 72%),
+    radial-gradient(46% 42% at 88% 0%, rgba(24, 68, 129, 0.2), transparent 74%),
+    linear-gradient(180deg, rgba(5, 10, 20, 0.99) 0%, rgba(4, 9, 18, 1) 100%);
+  border-top: 1px solid rgba(114, 151, 212, 0.24);
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(143, 181, 240, 0.07), transparent 36%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(117, 154, 219, 0.07) 0 1px,
+      transparent 1px 28px
+    );
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 var(--container-pad);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 44px);
+}
+
+.brandCol p {
+  margin: 14px 0 0;
+  max-width: 34ch;
+  color: rgba(160, 182, 216, 0.9);
+  font-size: 0.96rem;
+  line-height: 1.65;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(236, 244, 255, 0.95);
+}
+
+.mark {
+  width: 28px;
+  height: 28px;
+  color: rgba(124, 164, 236, 0.96);
+}
+
+.brand span {
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+}
+
+.linkCol h3 {
+  margin: 0;
+  color: rgba(228, 238, 254, 0.96);
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.linkCol a,
+.linkCol p {
+  display: block;
+  margin-top: 10px;
+  color: rgba(171, 191, 222, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.62;
+}
+
+.linkCol a {
+  transition: color 180ms ease;
+}
+
+.linkCol a:hover {
+  color: rgba(230, 240, 255, 0.96);
+}
+
+.bottom {
+  margin-top: clamp(34px, 5vh, 52px);
+  padding-top: 18px;
+  border-top: 1px solid rgba(112, 152, 214, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bottom span,
+.bottom a {
+  color: rgba(147, 169, 205, 0.86);
+  font-size: 0.88rem;
+}
+
+.bottom a {
+  transition: color 180ms ease;
+}
+
+.bottom a:hover {
+  color: rgba(216, 232, 255, 0.96);
+}
+
+@media (max-width: 1020px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 30px;
+  }
+}
+
+@media (max-width: 700px) {
+  .footer {
+    padding-top: 46px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
