@@ -164,17 +164,25 @@ export default function AICopilot() {
       const dashboardSection = dashboardSectionRef.current;
       if (dashboardSection) {
         const rect = dashboardSection.getBoundingClientRect();
-        const start = window.innerHeight * 1.34;
-        const end = window.innerHeight * 0.74;
-        const progress = clamp((start - rect.top) / (start - end), 0, 1);
-        setDashboardCurveProgress(progress);
+        const viewport = window.innerHeight;
+        // Keep the divider fully straight until the dashboard section actually
+        // approaches the viewport. This prevents the "always bent" feel when
+        // scrolling back up.
+        if (rect.top >= viewport) {
+          setDashboardCurveProgress(0);
+        } else {
+          const start = viewport * 0.96;
+          const end = viewport * 0.46;
+          const progress = clamp((start - rect.top) / (start - end), 0, 1);
+          setDashboardCurveProgress(progress);
+        }
       }
 
       const planSection = planSectionRef.current;
       if (planSection) {
         const rect = planSection.getBoundingClientRect();
-        const start = window.innerHeight * 1.18;
-        const end = window.innerHeight * 0.58;
+        const start = window.innerHeight * 1.3;
+        const end = window.innerHeight * 0.7;
         const progress = clamp((start - rect.top) / (start - end), 0, 1);
         setPlanCurveProgress(progress);
       }
@@ -310,6 +318,24 @@ export default function AICopilot() {
     planCurvePoints.push(`${(x / 1440) * 100}% ${y}px`);
   }
   const planCurveClip = `polygon(${planCurvePoints.join(", ")}, 100% 100%, 0% 100%)`;
+  const planForecastSeries: Array<[number, number]> = [
+    [0, 138],
+    [62, 130],
+    [124, 134],
+    [186, 118],
+    [248, 124],
+    [310, 110],
+    [372, 114],
+    [434, 106],
+    [496, 120],
+    [558, 102],
+    [620, 104],
+    [682, 96],
+  ];
+  const planForecastLinePath = planForecastSeries
+    .map(([x, y], index) => `${index === 0 ? "M" : "L"}${x} ${y}`)
+    .join(" ");
+  const planForecastAreaPath = `${planForecastLinePath} L682 190 L0 190 Z`;
   const trendSeries: Array<[number, number]> = [
     [0, 230],
     [68, 152],
@@ -658,8 +684,8 @@ export default function AICopilot() {
             <span className={styles.pill}>Planering &amp; Jämförelse</span>
             <h2 className={styles.title}>Budgetering, prognoser och benchmarking</h2>
             <p className={styles.text}>
-              Datadrivna prognoser och smart benchmarking hjälper dig att fatta
-              bättre beslut, minska ekonomiska risker och prioritera rätt
+              Datadrivna prognoser och strukturerade dimensioner hjälper dig
+              att planera framåt, minska ekonomiska risker och prioritera rätt
               initiativ både på kort och lång sikt.
             </p>
 
@@ -667,6 +693,10 @@ export default function AICopilot() {
               <li>
                 <Check aria-hidden="true" size={14} />
                 Automatiserade budgetprocesser
+              </li>
+              <li>
+                <Check aria-hidden="true" size={14} />
+                Strukturera intäkter och kostnader med egna dimensioner
               </li>
               <li>
                 <Check aria-hidden="true" size={14} />
@@ -678,63 +708,93 @@ export default function AICopilot() {
               </li>
               <li>
                 <Check aria-hidden="true" size={14} />
-                Jämför mot branschstandard
+                Jämför mellan dimensioner och perioder
               </li>
               <li>
                 <Check aria-hidden="true" size={14} />
-                Identifiera tillväxtpotential
+                Identifiera avvikelser mellan segment
               </li>
             </ul>
           </div>
 
           <div className={`${styles.right} ${styles.planRight}`}>
             <article className={styles.planPanel} aria-label="Planering och benchmarking">
-              <header className={styles.planPanelHeader}>
-                <p>Forecast &amp; Benchmark</p>
-                <span>Live scenario</span>
-              </header>
-
               <div className={styles.planPanelBody}>
-                <div className={styles.planForecast}>
-                  <span className={styles.planLabel}>Budget vs Prognos</span>
-                  <div className={styles.planBars}>
-                    <div className={styles.planBarGroup}>
-                      <span className={styles.planBar} style={{ "--h": "62%" } as CSSProperties} />
-                      <span className={styles.planBarForecast} style={{ "--h": "56%" } as CSSProperties} />
-                      <label>Q1</label>
-                    </div>
-                    <div className={styles.planBarGroup}>
-                      <span className={styles.planBar} style={{ "--h": "72%" } as CSSProperties} />
-                      <span className={styles.planBarForecast} style={{ "--h": "76%" } as CSSProperties} />
-                      <label>Q2</label>
-                    </div>
-                    <div className={styles.planBarGroup}>
-                      <span className={styles.planBar} style={{ "--h": "66%" } as CSSProperties} />
-                      <span className={styles.planBarForecast} style={{ "--h": "70%" } as CSSProperties} />
-                      <label>Q3</label>
-                    </div>
-                    <div className={styles.planBarGroup}>
-                      <span className={styles.planBar} style={{ "--h": "78%" } as CSSProperties} />
-                      <span className={styles.planBarForecast} style={{ "--h": "84%" } as CSSProperties} />
-                      <label>Q4</label>
+                <div className={styles.planVisualStack}>
+                  <div className={styles.planForecastShell}>
+                    <header className={styles.planPanelHeader}>
+                      <p>Forecast</p>
+                      <span>Live scenario</span>
+                    </header>
+                    <div className={styles.planRecon}>
+                      <div className={styles.planReconHead}>
+                        <p>Reconciliation</p>
+                        <span>2025</span>
+                      </div>
+                      <div className={styles.planMonthGrid}>
+                        <button type="button" className={`${styles.planMonth} ${styles.planMonthSelected}`}>Jan</button>
+                        <button type="button" className={styles.planMonth}>Feb</button>
+                        <button type="button" className={styles.planMonth}>Mar</button>
+                        <button type="button" className={styles.planMonth}>Apr</button>
+                        <button type="button" className={styles.planMonth}>May</button>
+                        <button type="button" className={styles.planMonth}>Jun</button>
+                        <button type="button" className={styles.planMonth}>Jul</button>
+                        <button type="button" className={styles.planMonth}>Aug</button>
+                        <button type="button" className={styles.planMonth}>Sep</button>
+                        <button type="button" className={styles.planMonth}>Oct</button>
+                        <button type="button" className={styles.planMonth}>Nov</button>
+                        <button type="button" className={`${styles.planMonth} ${styles.planMonthCurrent}`}>Dec</button>
+                      </div>
+                      <div className={styles.planForecastChart}>
+                        <svg viewBox="0 0 682 190" preserveAspectRatio="none" aria-hidden="true">
+                          <path className={styles.planForecastArea} d={planForecastAreaPath} />
+                          <path className={styles.planForecastLine} d={planForecastLinePath} />
+                          <line className={styles.planForecastBreak} x1="682" y1="18" x2="682" y2="184" />
+                        </svg>
+                        <div className={styles.planMonthAxis} aria-hidden="true">
+                          <span>Jan</span>
+                          <span>Feb</span>
+                          <span>Mar</span>
+                          <span>Apr</span>
+                          <span>May</span>
+                          <span>Jun</span>
+                          <span>Jul</span>
+                          <span>Aug</span>
+                          <span>Sep</span>
+                          <span>Oct</span>
+                          <span>Nov</span>
+                          <span>Dec</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className={styles.planBenchmark}>
-                  <span className={styles.planLabel}>Benchmarking</span>
-                  <div className={styles.benchmarkRows}>
-                    <div className={styles.benchmarkRow}>
-                      <p>Bruttomarginal</p>
-                      <div><span style={{ "--w": "78%" } as CSSProperties} /></div>
+                  <div className={styles.planDimensions}>
+                    <div className={styles.planDimensionsHead}>
+                      <p>Dimensions</p>
+                      <button type="button">+ New Dimension</button>
                     </div>
-                    <div className={styles.benchmarkRow}>
-                      <p>Opex / Omsättning</p>
-                      <div><span style={{ "--w": "62%" } as CSSProperties} /></div>
-                    </div>
-                    <div className={styles.benchmarkRow}>
-                      <p>Cash Conversion</p>
-                      <div><span style={{ "--w": "84%" } as CSSProperties} /></div>
+                    <div className={styles.planDimensionRows}>
+                      <div className={styles.planDimensionRow}>
+                        <p>Recurring - Revenue</p>
+                        <span>200 000 kr</span>
+                      </div>
+                      <div className={styles.planDimensionRow}>
+                        <p>Partner Sales</p>
+                        <span>144 000 kr</span>
+                      </div>
+                      <div className={styles.planDimensionRow}>
+                        <p>Consulting - Strategic</p>
+                        <span>150 000 kr</span>
+                      </div>
+                      <div className={styles.planDimensionRow}>
+                        <p>Project Delivery</p>
+                        <span>160 000 kr</span>
+                      </div>
+                      <div className={styles.planDimensionRow}>
+                        <p>Benchmark target</p>
+                        <span className={styles.planDimensionPositive}>+12.4%</span>
+                      </div>
                     </div>
                   </div>
                 </div>
