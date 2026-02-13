@@ -87,7 +87,7 @@ export default function Customers() {
       ([entry]) => {
         setVisible((prev) => prev || entry.isIntersecting);
       },
-      { threshold: 0.2, rootMargin: "0px 0px -18% 0px" },
+      { threshold: 0.3, rootMargin: "0px 0px -24% 0px" },
     );
 
     observer.observe(section);

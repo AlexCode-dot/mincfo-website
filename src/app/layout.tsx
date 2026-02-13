@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "MinCFO",
-  description: "Design-first finance operations for modern teams.",
+  description:
+    "MinCFO kombinerar automation, dashboards i realtid och en AI-copilot för moderna team.",
 };
 
 export default function RootLayout({

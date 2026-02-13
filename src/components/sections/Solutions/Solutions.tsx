@@ -51,6 +51,22 @@ const cubic = (
 export default function Solutions() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [curveProgress, setCurveProgress] = useState(0);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setVisible((prev) => prev || entry.isIntersecting);
+      },
+      { threshold: 0.3, rootMargin: "0px 0px -24% 0px" },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const updateCurve = () => {
@@ -97,7 +113,11 @@ export default function Solutions() {
   const curveClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
 
   return (
-    <section ref={sectionRef} id="losningar" className={styles.section}>
+    <section
+      ref={sectionRef}
+      id="losningar"
+      className={`${styles.section} ${visible ? styles.visible : ""}`}
+    >
       <svg
         className={styles.curveCut}
         viewBox="0 0 1440 190"

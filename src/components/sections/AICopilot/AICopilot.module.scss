@@ -4,6 +4,7 @@
   margin-top: 0;
   padding: clamp(138px, 17vh, 200px) 0 clamp(90px, 12vh, 140px);
   overflow: hidden;
+  overflow-anchor: none;
 }
 
 .curveCut {
@@ -285,7 +286,8 @@
 
 .answer {
   max-width: 100%;
-  min-height: 248px;
+  min-height: clamp(270px, 34vh, 318px);
+  height: clamp(270px, 34vh, 318px);
   padding: 15px;
   border-radius: 16px;
   background: rgba(37, 58, 93, 0.3);
@@ -294,6 +296,7 @@
   font-size: 0.94rem;
   display: grid;
   align-content: start;
+  overflow: hidden;
 }
 
 .answer p {
