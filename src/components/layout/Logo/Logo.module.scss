@@ -5,10 +5,8 @@
   z-index: 50;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   color: var(--color-text);
-  font-weight: 600;
-  letter-spacing: 0.02em;
   transition: opacity 200ms ease, transform 200ms ease;
 }
 
@@ -17,25 +15,34 @@
   transform: translateY(-1px);
 }
 
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
-  box-shadow: var(--shadow-glow);
+.mark {
+  width: 26px;
+  height: 26px;
+  display: block;
+  flex: 0 0 auto;
 }
 
 .wordmark {
-  font-size: 0.95rem;
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  font-family: var(--font-geist-sans), "Geist", "Segoe UI", sans-serif;
 }
 
 @media (max-width: 600px) {
   .logo {
     top: 18px;
     left: 18px;
+    gap: 7px;
+  }
+
+  .mark {
+    width: 22px;
+    height: 22px;
   }
 
   .wordmark {
-    font-size: 0.85rem;
+    font-size: 1.3rem;
   }
 }

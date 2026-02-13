@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Lock, Play } from "lucide-react";
+import { Lock, Play } from "lucide-react";
 import { useLayoutEffect, useRef } from "react";
 import BeamBackground from "@/components/visual/BeamBackground/BeamBackground";
 import styles from "./Hero.module.scss";
@@ -110,30 +110,19 @@ export default function Hero() {
         </div>
 
         <h1 className={styles.title}>
-          Den moderna
-          <br />
-          ekonomitjänsten för
-          <br />
-          ditt företag
+          Den moderna ekonomitjänsten <br />– med AI som analyserar, förutser
+          och agerar
         </h1>
 
         <p className={styles.subtitle}>
-          Optimera er ekonomistyrning med MinCFO. En kostnadseffektiv och
-          automatiserad lösning som frigör tid och möjliggör datadrivna beslut
-          för tillväxt.
+          MinCFO kombinerar automation, dashboards i realtid och en AI-copilot
+          som låter dig chatta med din data. Få insikter, prognoser och
+          proaktiva rekommendationer — utan att lägga tid på manuellt arbete.
         </p>
 
         <div className={styles.ctaRow}>
-          <a className={styles.primaryCta} href="#">
-            Get Started
-            <ArrowRight aria-hidden="true" size={18} />
-          </a>
-          <a className={styles.secondaryCta} href="#">
-            <span className={styles.playRing}>
-              <Play aria-hidden="true" size={14} />
-            </span>
-            How it works
-          </a>
+          <a className={styles.primaryCta} href="#">Boka ett möte</a>
+          <a className={styles.secondaryCta} href="#">Vad vi erbjuder</a>
         </div>
 
         <div className={styles.cardWrap}>

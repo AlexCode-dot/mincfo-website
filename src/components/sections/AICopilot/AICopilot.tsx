@@ -61,6 +61,22 @@ const EXAMPLES: CopilotExample[] = [
   },
 ];
 
+function MiniMincfoBrand() {
+  return (
+    <span className={styles.visualBrand} aria-hidden="true">
+      <svg className={styles.visualMark} viewBox="0 0 50 50" role="img">
+        <g fill="currentColor">
+          <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
+          <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
+          <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
+          <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
+        </g>
+      </svg>
+      <span className={styles.visualWordmark}>MinCFO</span>
+    </span>
+  );
+}
+
 export default function AICopilot() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const dashboardSectionRef = useRef<HTMLDivElement | null>(null);
@@ -171,8 +187,8 @@ export default function AICopilot() {
         if (rect.top >= viewport) {
           setDashboardCurveProgress(0);
         } else {
-          const start = viewport * 0.96;
-          const end = viewport * 0.46;
+          const start = viewport * 0.9;
+          const end = viewport * 0.42;
           const progress = clamp((start - rect.top) / (start - end), 0, 1);
           setDashboardCurveProgress(progress);
         }
@@ -181,8 +197,8 @@ export default function AICopilot() {
       const planSection = planSectionRef.current;
       if (planSection) {
         const rect = planSection.getBoundingClientRect();
-        const start = window.innerHeight * 1.3;
-        const end = window.innerHeight * 0.7;
+        const start = window.innerHeight * 1.12;
+        const end = window.innerHeight * 0.58;
         const progress = clamp((start - rect.top) / (start - end), 0, 1);
         setPlanCurveProgress(progress);
       }
@@ -366,7 +382,7 @@ export default function AICopilot() {
   return (
     <section
       ref={sectionRef}
-      id="solution"
+      id="produkt"
       className={`${styles.section} ${visible ? styles.visible : ""}`}
     >
       <svg
@@ -391,7 +407,7 @@ export default function AICopilot() {
 
       <div className={styles.container}>
         <div className={`${styles.left} ${styles.aiLeft}`}>
-          <span className={styles.pill}>AI &amp; Automation</span>
+          <span className={styles.pill}>Vad plattformen gör</span>
           <h2 className={styles.title}>AI-copilot som analyserar och agerar</h2>
           <p className={styles.text}>
             Ställ frågor om resultat, kostnader och runway. Få svar, grafer och
@@ -419,6 +435,8 @@ export default function AICopilot() {
           <div className={styles.glow} />
 
           <article className={styles.panel} aria-label="AI Copilot">
+            <MiniMincfoBrand />
+
             <header className={styles.header}>
               <span className={styles.dot} />
               <p>AI Copilot</p>
@@ -537,6 +555,8 @@ export default function AICopilot() {
         >
           <div className={`${styles.right} ${styles.dashboardRight}`}>
             <article className={styles.dashboardPanel} aria-label="Dashboard Preview">
+              <MiniMincfoBrand />
+
               <div className={styles.statGrid}>
                 <div className={styles.statCard}>
                   <div className={styles.statLabelRow}>
@@ -720,12 +740,17 @@ export default function AICopilot() {
           <div className={`${styles.right} ${styles.planRight}`}>
             <article className={styles.planPanel} aria-label="Planering och benchmarking">
               <div className={styles.planPanelBody}>
-                <div className={styles.planVisualStack}>
-                  <div className={styles.planForecastShell}>
-                    <header className={styles.planPanelHeader}>
-                      <p>Forecast</p>
-                      <span>Live scenario</span>
-                    </header>
+              <div className={styles.planVisualStack}>
+                <div className={styles.planForecastShell}>
+                  <MiniMincfoBrand />
+
+                  <header className={styles.planPanelHeader}>
+                    <p>Forecast</p>
+                    <span className={styles.liveScenario}>
+                      <span className={styles.liveDot} aria-hidden="true" />
+                      Live scenario
+                    </span>
+                  </header>
                     <div className={styles.planRecon}>
                       <div className={styles.planReconHead}>
                         <p>Reconciliation</p>

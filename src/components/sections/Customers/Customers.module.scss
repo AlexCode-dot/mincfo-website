@@ -1,0 +1,446 @@
+.section {
+  position: relative;
+  margin-top: -96px;
+  padding: clamp(124px, 14.8vh, 184px) 0 clamp(102px, 11.8vh, 148px);
+  overflow: hidden;
+}
+
+.curveCut {
+  position: absolute;
+  inset: -2px 0 auto;
+  width: 100%;
+  height: 190px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.curveCut path {
+  fill: transparent;
+  stroke: rgba(104, 150, 227, 0.68);
+  stroke-width: 1.7;
+}
+
+.background {
+  position: absolute;
+  inset: -2px 0 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(66% 54% at 22% 22%, rgba(46, 74, 128, 0.18), transparent 74%),
+    radial-gradient(72% 58% at 78% 78%, rgba(19, 36, 68, 0.3), transparent 76%),
+    linear-gradient(180deg, rgba(10, 16, 30, 0.98) 0%, rgba(8, 14, 26, 0.97) 44%, rgba(9, 15, 29, 0.99) 100%);
+}
+
+.background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(149, 181, 238, 0.06), transparent 36%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(117, 154, 219, 0.08) 0 1px,
+      transparent 1px 28px
+    );
+  opacity: 0.22;
+}
+
+.container {
+  position: relative;
+  z-index: 3;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 var(--container-pad);
+}
+
+.header {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(128, 167, 230, 0.3);
+  background: rgba(14, 24, 42, 0.62);
+  color: rgba(202, 219, 245, 0.9);
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.header h2 {
+  margin: 16px 0 0;
+  color: rgba(236, 244, 255, 0.96);
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.header p {
+  margin: 16px 0 0;
+  color: rgba(162, 180, 210, 0.9);
+  font-size: 1.02rem;
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cardsShell {
+  margin-top: 40px;
+  position: relative;
+  min-height: 456px;
+  display: grid;
+  place-items: center;
+  perspective: 1600px;
+}
+
+.controls {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.trustedTicker {
+  margin-top: 92px;
+  padding: 0;
+}
+
+.trustedLabel {
+  margin: 0 0 14px;
+  text-align: center;
+  color: rgba(153, 174, 206, 0.76);
+  font-size: 0.84rem;
+  letter-spacing: 0.04em;
+}
+
+.tickerViewport {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+  background: transparent;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+}
+
+.tickerViewport::before,
+.tickerViewport::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.tickerViewport::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(9, 15, 29, 0.98), rgba(9, 15, 29, 0));
+  filter: blur(1px);
+}
+
+.tickerViewport::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(9, 15, 29, 0.98), rgba(9, 15, 29, 0));
+  filter: blur(1px);
+}
+
+.tickerTrack {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  width: max-content;
+  padding: 6px 0;
+  animation: trustedTickerMove 34s linear infinite;
+}
+
+.tickerItem {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  white-space: nowrap;
+  padding: 0 8px;
+  color: rgba(198, 214, 240, 0.64);
+  font-size: clamp(1.15rem, 2vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.88;
+}
+
+.tickerItem:not(:last-child)::after {
+  content: "•";
+  margin-left: 18px;
+  color: rgba(136, 161, 203, 0.4);
+  font-size: 0.92rem;
+}
+
+.controlBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(112, 149, 210, 0.32);
+  background: linear-gradient(180deg, rgba(16, 27, 45, 0.84), rgba(10, 18, 34, 0.9));
+  color: rgba(204, 223, 252, 0.9);
+  display: grid;
+  place-items: center;
+  box-shadow:
+    inset 0 1px 0 rgba(164, 197, 244, 0.14),
+    0 8px 18px rgba(4, 10, 22, 0.34);
+  transition: transform 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.controlBtn span {
+  font-size: 1.55rem;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.controlBtn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(141, 187, 251, 0.48);
+  color: #edf6ff;
+  box-shadow:
+    inset 0 1px 0 rgba(190, 220, 255, 0.18),
+    0 10px 20px rgba(8, 20, 40, 0.42);
+}
+
+@keyframes trustedTickerMove {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.card {
+  position: absolute;
+  width: min(620px, 92vw);
+  min-height: 360px;
+  padding: 28px;
+  border-radius: 24px;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(64, 102, 172, 0.16), transparent 62%),
+    linear-gradient(168deg, rgba(16, 27, 45, 0.88), rgba(11, 19, 34, 0.92));
+  color: rgba(219, 231, 251, 0.94);
+  box-shadow:
+    0 22px 34px rgba(3, 8, 16, 0.34),
+    inset 0 0 0 1px rgba(126, 158, 207, 0.24);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 24px, 0) scale(0.96);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  transition:
+    transform 700ms cubic-bezier(0.22, 0.82, 0.2, 1),
+    opacity 700ms ease,
+    box-shadow 700ms ease;
+}
+
+.cardAccent {
+  background:
+    radial-gradient(120% 90% at 18% 0%, rgba(90, 125, 220, 0.24), transparent 60%),
+    linear-gradient(165deg, rgba(24, 41, 78, 0.9), rgba(16, 31, 60, 0.94));
+  color: rgba(234, 243, 255, 0.96);
+  box-shadow:
+    0 24px 40px rgba(10, 20, 49, 0.46),
+    inset 0 0 0 1px rgba(146, 175, 233, 0.32);
+}
+
+.visible .centerCard {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 5;
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+}
+
+.visible .leftCard {
+  opacity: 0.58;
+  z-index: 3;
+  transform: translate3d(-42%, 16px, -80px) rotate(-5deg) scale(0.92);
+}
+
+.visible .rightCard {
+  opacity: 0.58;
+  z-index: 3;
+  transform: translate3d(42%, 16px, -80px) rotate(5deg) scale(0.92);
+}
+
+.visible .hiddenCard {
+  opacity: 0;
+  z-index: 1;
+  transform: translate3d(0, 30px, -140px) scale(0.9);
+}
+
+.company {
+  margin: 0;
+  font-size: clamp(1.06rem, 1.2vw, 1.34rem);
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  opacity: 0.94;
+}
+
+.quote {
+  margin: 18px 0 0;
+  font-size: 1.22rem;
+  line-height: 1.5;
+  color: rgba(191, 208, 236, 0.94);
+}
+
+.cardAccent .quote {
+  color: rgba(211, 224, 247, 0.96);
+}
+
+.person {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: rgba(225, 236, 255, 0.95);
+  background: linear-gradient(160deg, rgba(54, 88, 145, 0.94), rgba(35, 61, 104, 0.92));
+}
+
+.cardAccent .avatar {
+  color: rgba(213, 230, 255, 0.96);
+  background: linear-gradient(160deg, rgba(63, 100, 170, 0.95), rgba(40, 70, 126, 0.93));
+}
+
+.person strong {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: rgba(229, 239, 255, 0.96);
+}
+
+.person small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: rgba(158, 176, 206, 0.92);
+}
+
+@media (max-width: 1180px) {
+  .cardsShell {
+    min-height: 400px;
+  }
+
+  .card {
+    width: min(560px, 94vw);
+    min-height: 330px;
+    padding: 24px;
+  }
+
+  .quote {
+    font-size: 1.08rem;
+  }
+
+  .visible .leftCard {
+    transform: translate3d(-36%, 14px, -70px) rotate(-4deg) scale(0.92);
+  }
+
+  .visible .rightCard {
+    transform: translate3d(36%, 14px, -70px) rotate(4deg) scale(0.92);
+  }
+}
+
+@media (max-width: 760px) {
+  .section {
+    padding: 98px 0 82px;
+  }
+
+  .curveCut {
+    height: 150px;
+  }
+
+  .cardsShell {
+    min-height: 0;
+    display: grid;
+    gap: 12px;
+    perspective: none;
+  }
+
+  .controls {
+    margin-top: 14px;
+  }
+
+  .trustedTicker {
+    margin-top: 52px;
+    padding: 0;
+  }
+
+  .trustedLabel {
+    margin-bottom: 8px;
+    font-size: 0.74rem;
+  }
+
+  .tickerTrack {
+    padding: 10px 0;
+    animation-duration: 28s;
+  }
+
+  .tickerItem {
+    font-size: 1rem;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    min-height: 0;
+    padding: 20px;
+    border-radius: 18px;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .visible .leftCard,
+  .visible .rightCard,
+  .visible .hiddenCard,
+  .visible .centerCard {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .controlBtn {
+    transition: none;
+  }
+
+  .tickerTrack {
+    animation: none;
+    transform: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .tickerViewport::before,
+  .tickerViewport::after {
+    display: none;
+  }
+}

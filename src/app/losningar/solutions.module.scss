@@ -1,0 +1,60 @@
+.page {
+  min-height: 100vh;
+  padding: 96px 24px 48px;
+  background:
+    radial-gradient(70% 50% at 12% 10%, rgba(42, 84, 160, 0.2), transparent 72%),
+    linear-gradient(180deg, rgba(6, 11, 20, 0.98), rgba(6, 11, 20, 1));
+  color: var(--color-text);
+}
+
+.shell {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 28px;
+  border-radius: 18px;
+  background: rgba(9, 16, 30, 0.86);
+  box-shadow:
+    0 24px 48px rgba(2, 7, 15, 0.5),
+    inset 0 0 0 1px rgba(121, 158, 224, 0.2);
+}
+
+.back {
+  color: rgba(170, 193, 231, 0.86);
+  font-size: 0.9rem;
+}
+
+.title {
+  margin-top: 14px;
+  font-size: clamp(2rem, 4.8vw, 3.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.description {
+  margin-top: 14px;
+  max-width: 62ch;
+  color: rgba(185, 201, 229, 0.86);
+  font-size: 1rem;
+}
+
+.placeholder {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(18, 31, 53, 0.52);
+  box-shadow: inset 0 0 0 1px rgba(122, 159, 225, 0.22);
+  color: rgba(205, 221, 245, 0.88);
+  font-size: 0.95rem;
+}
+
+.list {
+  margin-top: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.list a {
+  color: rgba(206, 224, 250, 0.92);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
