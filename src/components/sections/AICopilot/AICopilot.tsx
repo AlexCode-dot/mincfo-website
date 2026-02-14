@@ -81,6 +81,7 @@ export default function AICopilot() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const dashboardSectionRef = useRef<HTMLDivElement | null>(null);
   const planSectionRef = useRef<HTMLDivElement | null>(null);
+  const [curveScale, setCurveScale] = useState(1);
   const [visible, setVisible] = useState(false);
   const [dashboardVisible, setDashboardVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
@@ -168,6 +169,12 @@ export default function AICopilot() {
 
   useEffect(() => {
     const updateCurve = () => {
+      const width = window.innerWidth;
+      const nextCurveScale = width <= 600 ? 0.46 : width <= 980 ? 0.62 : 1;
+      setCurveScale((previous) =>
+        Math.abs(previous - nextCurveScale) < 0.01 ? previous : nextCurveScale,
+      );
+
       const section = sectionRef.current;
       if (section) {
         const rect = section.getBoundingClientRect();
@@ -269,9 +276,11 @@ export default function AICopilot() {
     };
   }, [visible]);
 
-  const waveHeight = 190;
-  const sideY = lerp(1, 16, curveProgress);
-  const centerY = lerp(1, 128, curveProgress);
+  const waveHeight = curveScale < 0.7 ? 160 : 190;
+  const curveValue = (start: number, end: number, progress: number) =>
+    lerp(start, start + (end - start) * curveScale, progress);
+  const sideY = curveValue(1, 16, curveProgress);
+  const centerY = curveValue(1, 128, curveProgress);
   const curvePath = `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`;
 
   const curvePoints: string[] = [];
@@ -288,8 +297,8 @@ export default function AICopilot() {
     curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
   }
   const curveClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
-  const dashboardSideY = lerp(1, 128, dashboardCurveProgress);
-  const dashboardCenterY = lerp(1, 16, dashboardCurveProgress);
+  const dashboardSideY = curveValue(1, 128, dashboardCurveProgress);
+  const dashboardCenterY = curveValue(1, 16, dashboardCurveProgress);
   const dashboardCurvePath = `M0 ${dashboardSideY} C280 ${dashboardSideY} 480 ${dashboardCenterY} 720 ${dashboardCenterY} C960 ${dashboardCenterY} 1160 ${dashboardSideY} 1440 ${dashboardSideY}`;
   const dashboardCurvePoints: string[] = [];
   for (let i = 0; i <= 18; i += 1) {
@@ -317,8 +326,8 @@ export default function AICopilot() {
     dashboardCurvePoints.push(`${(x / 1440) * 100}% ${y}px`);
   }
   const dashboardCurveClip = `polygon(${dashboardCurvePoints.join(", ")}, 100% 100%, 0% 100%)`;
-  const planSideY = lerp(1, 16, planCurveProgress);
-  const planCenterY = lerp(1, 128, planCurveProgress);
+  const planSideY = curveValue(1, 16, planCurveProgress);
+  const planCenterY = curveValue(1, 128, planCurveProgress);
   const planCurvePath = `M0 ${planSideY} C280 ${planSideY} 480 ${planCenterY} 720 ${planCenterY} C960 ${planCenterY} 1160 ${planSideY} 1440 ${planSideY}`;
   const planCurvePoints: string[] = [];
   for (let i = 0; i <= 18; i += 1) {

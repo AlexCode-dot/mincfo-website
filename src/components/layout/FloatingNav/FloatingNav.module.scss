@@ -21,6 +21,12 @@
   border-color: rgba(255, 255, 255, 0.08);
 }
 
+.desktopNav {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+}
+
 .link {
   font-size: 0.85rem;
   color: rgba(210, 220, 240, 0.62);
@@ -158,38 +164,194 @@
   filter: saturate(0.96);
 }
 
-@media (max-width: 720px) {
-  .nav {
-    top: 16px;
-    right: 16px;
-    padding: 5px 12px;
-    gap: 14px;
-  }
+.mobileToggle {
+  display: none;
+}
 
-  .link {
-    font-size: 0.8rem;
-  }
-
-  .mega {
-    width: min(90vw, 520px);
-    grid-template-columns: 1fr;
-    gap: 14px;
-    left: auto;
-    right: -48px;
-    transform: translateY(6px);
-  }
-
-  .megaOpen {
-    transform: translateY(0);
-  }
-
-  .cta {
-    padding: 5px 10px;
-  }
+.mobilePanel {
+  display: none;
 }
 
 @media (max-width: 980px) {
-  .desktopOnly {
-    display: none;
+  .nav {
+    top: 14px;
+    right: 14px;
+    padding: 0;
+    gap: 0;
+    border-radius: 14px;
+    min-width: 56px;
+    min-height: 56px;
+    justify-content: center;
+    background: rgba(8, 13, 23, 0.86);
+    overflow: visible;
+  }
+
+  .desktopNav {
+    display: none !important;
+  }
+
+  .link,
+  .menuWrap,
+  .desktopOnly,
+  .cta,
+  .mega {
+    display: none !important;
+  }
+
+  .mobileToggle {
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    background: transparent;
+    color: rgba(230, 239, 255, 0.96);
+    cursor: pointer;
+  }
+
+  .mobileToggle span {
+    width: 20px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transition: transform 200ms ease, opacity 200ms ease;
+  }
+
+  .mobileToggleOpen span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .mobileToggleOpen span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobileToggleOpen span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .mobilePanel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: min(92vw, 380px);
+    max-height: 75vh;
+    overflow: auto;
+    display: grid;
+    gap: 8px;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(7, 12, 22, 0.96);
+    border: 1px solid rgba(149, 182, 241, 0.2);
+    box-shadow:
+      0 24px 44px rgba(3, 8, 15, 0.66),
+      inset 0 1px 0 rgba(196, 220, 255, 0.1);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .mobilePanelOpen {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .mobileLink {
+    padding: 11px 12px;
+    border-radius: 10px;
+    color: rgba(221, 233, 250, 0.9);
+    font-size: 0.94rem;
+    font-weight: 520;
+    transition: background 160ms ease, color 160ms ease;
+  }
+
+  .mobileLink:hover,
+  .mobileLinkActive {
+    background: rgba(32, 51, 83, 0.52);
+    color: #f4f8ff;
+  }
+
+  .mobileSolutionsToggle {
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 11px 12px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(24, 38, 62, 0.62);
+    color: rgba(223, 234, 251, 0.94);
+    font-size: 0.94rem;
+    font-weight: 550;
+    cursor: pointer;
+  }
+
+  .mobileSolutionsToggleOpen {
+    background: rgba(32, 51, 83, 0.7);
+  }
+
+  .mobileSolutions {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 220ms ease, opacity 220ms ease;
+  }
+
+  .mobileSolutionsOpen {
+    max-height: 680px;
+    opacity: 1;
+  }
+
+  .mobileGroup {
+    margin-top: 8px;
+  }
+
+  .mobileGroup p {
+    padding: 0 2px;
+    color: rgba(162, 180, 210, 0.86);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .mobileItems {
+    margin-top: 8px;
+    display: grid;
+    gap: 6px;
+  }
+
+  .mobileItem {
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: rgba(223, 234, 250, 0.9);
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: rgba(17, 28, 46, 0.56);
+    transition: background 160ms ease, color 160ms ease;
+  }
+
+  .mobileItem:hover {
+    background: rgba(37, 58, 92, 0.58);
+    color: #f4f8ff;
+  }
+
+  .mobileCta {
+    margin-top: 10px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 11px 14px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #6d78e6 0%, #4d58ba 100%);
+    color: #f4f6ff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba(136, 148, 255, 0.32);
   }
 }

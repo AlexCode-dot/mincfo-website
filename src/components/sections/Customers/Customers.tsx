@@ -198,6 +198,7 @@ export default function Customers() {
             return (
               <article
                 key={`${item.company}-${item.person}`}
+                data-card-index={index}
                 className={`${styles.card} ${item.accent ? styles.cardAccent : ""} ${positionClass}`}
               >
                 <p className={styles.company}>{item.company}</p>

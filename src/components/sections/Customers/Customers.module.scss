@@ -375,14 +375,18 @@
   }
 
   .cardsShell {
-    min-height: 0;
+    margin-top: 34px;
+    width: calc(100% + var(--container-pad) * 2);
+    margin-left: calc(var(--container-pad) * -1);
+    min-height: 332px;
     display: grid;
-    gap: 12px;
-    perspective: none;
+    place-items: center;
+    overflow: hidden;
+    perspective: 1400px;
   }
 
   .controls {
-    margin-top: 14px;
+    margin-top: 10px;
   }
 
   .trustedTicker {
@@ -405,22 +409,42 @@
   }
 
   .card {
-    position: relative;
-    width: 100%;
+    position: absolute;
+    width: min(84vw, 350px);
     min-height: 0;
     padding: 20px;
     border-radius: 18px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .visible .centerCard {
     opacity: 1;
-    transform: none;
-    transition: none;
+    pointer-events: auto;
+    z-index: 5;
+    transform: translate3d(0, 0, 0) scale(1);
+    box-shadow:
+      0 26px 42px rgba(3, 8, 16, 0.5),
+      inset 0 0 0 1px rgba(148, 182, 235, 0.32);
   }
 
   .visible .leftCard,
-  .visible .rightCard,
-  .visible .hiddenCard,
-  .visible .centerCard {
-    opacity: 1;
-    transform: none;
+  .visible .rightCard {
+    opacity: 0.62;
+    z-index: 3;
+  }
+
+  .visible .leftCard {
+    transform: translate3d(-52%, 12px, -64px) rotate(-4deg) scale(0.9);
+  }
+
+  .visible .rightCard {
+    transform: translate3d(52%, 12px, -64px) rotate(4deg) scale(0.9);
+  }
+
+  .visible .hiddenCard {
+    opacity: 0;
+    transform: translate3d(0, 30px, -120px) scale(0.86);
   }
 }
 

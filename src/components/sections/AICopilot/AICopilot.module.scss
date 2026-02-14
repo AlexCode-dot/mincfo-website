@@ -2,7 +2,7 @@
   position: relative;
   min-height: 100vh;
   margin-top: 0;
-  padding: clamp(138px, 17vh, 200px) 0 clamp(90px, 12vh, 140px);
+  padding: clamp(156px, 18vh, 226px) 0 clamp(112px, 14vh, 172px);
   overflow: hidden;
   overflow-anchor: none;
 }
@@ -45,14 +45,18 @@
 .container {
   position: relative;
   z-index: 3;
-  max-width: var(--container-max);
+  max-width: 1360px;
   margin: 0 auto;
   padding: 0 var(--container-pad);
-  padding-top: clamp(36px, 4.6vh, 64px);
+  padding-top: clamp(48px, 5.6vh, 82px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(34px, 5.2vw, 76px);
+  gap: clamp(48px, 5.8vw, 96px);
   align-items: center;
+}
+
+.container > * {
+  min-width: 0;
 }
 
 .aiLeft,
@@ -137,8 +141,8 @@
 
 .title {
   margin-top: 20px;
-  max-width: 700px;
-  font-size: clamp(2.35rem, 4.1vw, 4.3rem);
+  max-width: 760px;
+  font-size: clamp(2.6rem, 4.3vw, 4.7rem);
   line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--color-text);
@@ -146,17 +150,17 @@
 
 .text {
   margin-top: 18px;
-  max-width: 610px;
+  max-width: 680px;
   color: rgba(160, 173, 198, 0.94);
-  font-size: 1.03rem;
-  line-height: 1.5;
+  font-size: 1.12rem;
+  line-height: 1.56;
 }
 
 .list {
-  margin-top: 34px;
+  margin-top: 38px;
   list-style: none;
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
 
 .list li {
@@ -164,7 +168,7 @@
   align-items: center;
   gap: 12px;
   color: rgba(187, 199, 220, 0.94);
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1.4;
 }
 
@@ -182,12 +186,13 @@
   position: relative;
   display: flex;
   justify-content: center;
+  min-width: 0;
 }
 
 .glow {
   position: absolute;
-  width: clamp(320px, 44vw, 520px);
-  height: clamp(290px, 38vw, 430px);
+  width: clamp(380px, 46vw, 620px);
+  height: clamp(340px, 42vw, 510px);
   border-radius: 50%;
   background: radial-gradient(circle, rgba(95, 162, 255, 0.26) 0%, rgba(95, 162, 255, 0.06) 46%, transparent 72%);
   transform: translate(18%, -10%);
@@ -197,9 +202,10 @@
 
 .panel {
   position: relative;
-  width: min(610px, 100%);
-  min-height: clamp(450px, 56vh, 580px);
-  padding: 46px 24px 20px;
+  width: min(740px, 100%);
+  max-width: 100%;
+  min-height: clamp(520px, 62vh, 680px);
+  padding: 52px 30px 24px;
   border-radius: 26px;
   background: linear-gradient(165deg, rgba(16, 28, 49, 0.8) 0%, rgba(11, 20, 37, 0.8) 100%);
   box-shadow:
@@ -209,6 +215,7 @@
   transition: transform 420ms ease, box-shadow 420ms ease;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .section:hover .panel {
@@ -223,7 +230,7 @@
   align-items: center;
   gap: 12px;
   color: rgba(226, 235, 250, 0.92);
-  font-size: 0.96rem;
+  font-size: 1.04rem;
 }
 
 .dot {
@@ -235,20 +242,20 @@
 }
 
 .body {
-  margin-top: 18px;
+  margin-top: 22px;
   display: grid;
-  gap: 16px;
+  gap: 18px;
   flex: 1;
 }
 
 .question {
   max-width: 90%;
-  min-height: 52px;
-  padding: 13px 15px;
+  min-height: 58px;
+  padding: 15px 18px;
   border-radius: 14px;
   background: rgba(7, 14, 27, 0.82);
   color: rgba(223, 232, 247, 0.95);
-  font-size: 0.98rem;
+  font-size: 1.05rem;
   display: inline-flex;
   align-items: center;
   gap: 3px;
@@ -286,14 +293,14 @@
 
 .answer {
   max-width: 100%;
-  min-height: clamp(270px, 34vh, 318px);
-  height: clamp(270px, 34vh, 318px);
-  padding: 15px;
+  min-height: clamp(324px, 37vh, 400px);
+  height: clamp(324px, 37vh, 400px);
+  padding: 18px;
   border-radius: 16px;
   background: rgba(37, 58, 93, 0.3);
   box-shadow: inset 0 0 0 1px rgba(145, 192, 255, 0.16);
   color: rgba(208, 222, 246, 0.96);
-  font-size: 0.94rem;
+  font-size: 1rem;
   display: grid;
   align-content: start;
   overflow: hidden;
@@ -340,7 +347,7 @@
 
 .chartVisible {
   margin-top: 14px;
-  max-height: 320px;
+  max-height: 380px;
   padding: 12px;
   opacity: 1;
   transform: translateY(0);
@@ -371,7 +378,7 @@
 }
 
 .chartBars {
-  height: 148px;
+  height: 176px;
   border-radius: 12px;
   padding: 8px 10px 10px;
   background:
@@ -435,19 +442,21 @@
 }
 
 .inputRow {
-  margin-top: 18px;
+  margin-top: 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 14px 14px 14px 18px;
+  padding: 16px 16px 16px 20px;
   border-radius: 13px;
   background: rgba(6, 12, 22, 0.72);
   color: rgba(168, 184, 209, 0.94);
-  font-size: 0.92rem;
+  font-size: 0.98rem;
+  overflow: hidden;
 }
 
 .inputText {
+  min-width: 0;
   min-height: 1.1rem;
   display: inline-flex;
   align-items: center;
@@ -456,11 +465,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 .inputRow button {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 999px;
   border: none;
   background: rgba(86, 158, 255, 0.28);
@@ -473,7 +483,7 @@
 .dashboardContainer {
   margin-top: 0;
   align-items: center;
-  padding-top: clamp(78px, 8.8vh, 124px);
+  padding-top: clamp(92px, 10.4vh, 152px);
 }
 
 .dashboardLeft {
@@ -486,8 +496,8 @@
 
 .dashboardSection {
   position: relative;
-  margin-top: clamp(64px, 9vh, 120px);
-  padding: clamp(92px, 12vh, 144px) 0 clamp(104px, 13.5vh, 164px);
+  margin-top: clamp(82px, 10.2vh, 138px);
+  padding: clamp(118px, 14vh, 188px) 0 clamp(126px, 15.4vh, 210px);
   overflow: visible;
 }
 
@@ -528,9 +538,9 @@
 
 .dashboardPanel {
   position: relative;
-  width: min(680px, 100%);
-  padding: 36px 14px 14px;
-  border-radius: 20px;
+  width: min(820px, 100%);
+  padding: 44px 22px 20px;
+  border-radius: 24px;
   background: linear-gradient(160deg, rgba(13, 22, 39, 0.92) 0%, rgba(8, 14, 27, 0.94) 100%);
   box-shadow:
     0 28px 60px rgba(4, 9, 18, 0.5),
@@ -540,7 +550,7 @@
 .planSection {
   position: relative;
   margin-top: -1px;
-  padding: clamp(98px, 13vh, 148px) 0 clamp(84px, 11vh, 126px);
+  padding: clamp(120px, 14.4vh, 196px) 0 clamp(104px, 12.6vh, 166px);
 }
 
 .planCut {
@@ -580,8 +590,8 @@
 
 .planContainer {
   align-items: start;
-  gap: clamp(34px, 4.6vw, 64px);
-  padding-top: clamp(72px, 8.4vh, 114px);
+  gap: clamp(48px, 5.4vw, 86px);
+  padding-top: clamp(88px, 10vh, 142px);
 }
 
 .planLeft .text {
@@ -593,7 +603,7 @@
 }
 
 .planPanel {
-  width: min(660px, 100%);
+  width: min(760px, 100%);
   padding: 0;
   border-radius: 0;
   background: transparent;
@@ -641,15 +651,15 @@
 
 .planVisualStack {
   position: relative;
-  min-height: 468px;
+  min-height: 560px;
   padding-bottom: 10px;
 }
 
 .planForecastShell {
   position: relative;
   z-index: 2;
-  padding: 34px 12px 12px;
-  border-radius: 13px;
+  padding: 38px 16px 16px;
+  border-radius: 16px;
   background: linear-gradient(160deg, rgba(13, 23, 41, 0.95), rgba(9, 16, 30, 0.96));
   box-shadow:
     0 18px 34px rgba(4, 8, 16, 0.34),
@@ -702,9 +712,9 @@
 .planDimensions {
   position: absolute;
   z-index: 3;
-  width: min(418px, calc(100% - 12px));
-  right: -24px;
-  top: 296px;
+  width: min(472px, calc(100% - 8px));
+  right: -28px;
+  top: 344px;
   background: linear-gradient(165deg, rgba(20, 32, 52, 0.94), rgba(10, 18, 33, 0.95));
   box-shadow:
     0 18px 38px rgba(2, 7, 15, 0.54),
@@ -747,9 +757,9 @@
   position: absolute;
   z-index: 2;
   right: -8px;
-  top: 334px;
-  width: min(368px, calc(100% - 42px));
-  height: 146px;
+  top: 390px;
+  width: min(418px, calc(100% - 38px));
+  height: 166px;
   border-radius: 14px;
   background: radial-gradient(80% 72% at 50% 40%, rgba(8, 15, 28, 0.55), rgba(3, 8, 16, 0.08));
   filter: blur(8px);
@@ -813,7 +823,7 @@
 
 .planForecastChart svg {
   width: 100%;
-  height: 178px;
+  height: 210px;
 }
 
 .planForecastLine {
@@ -899,12 +909,12 @@
 .statGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 14px;
 }
 
 .statCard {
-  padding: 14px 14px 12px;
-  border-radius: 12px;
+  padding: 18px 18px 16px;
+  border-radius: 14px;
   background: linear-gradient(155deg, rgba(12, 21, 38, 0.96), rgba(8, 14, 27, 0.92));
   box-shadow: inset 0 0 0 1px rgba(112, 145, 197, 0.22);
 }
@@ -913,11 +923,11 @@
   display: flex;
   align-items: center;
   color: rgba(188, 201, 223, 0.9);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
 }
 
 .statAmount {
-  margin-top: 8px;
+  margin-top: 10px;
   display: flex;
   align-items: baseline;
   gap: 8px;
@@ -937,13 +947,13 @@
 }
 
 .statDelta {
-  margin-top: 10px;
+  margin-top: 12px;
   width: fit-content;
   padding: 4px 8px;
   border-radius: 7px;
   color: rgba(108, 231, 190, 0.94);
   background: rgba(22, 73, 63, 0.36);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 600;
 }
 
@@ -953,13 +963,13 @@
 }
 
 .statMeta {
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   color: rgba(128, 146, 173, 0.86);
-  font-size: 0.7rem;
+  font-size: 0.76rem;
 }
 
 .trendPanel {
-  margin-top: 14px;
+  margin-top: 18px;
   border-radius: 14px;
   background: rgba(9, 16, 30, 0.88);
   box-shadow: inset 0 0 0 1px rgba(112, 145, 197, 0.18);
@@ -967,8 +977,8 @@
 }
 
 .trendHeader {
-  height: 52px;
-  padding: 0 14px;
+  height: 58px;
+  padding: 0 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -978,7 +988,7 @@
 .trendHeader p {
   margin: 0;
   color: rgba(229, 236, 247, 0.92);
-  font-size: 0.86rem;
+  font-size: 0.94rem;
   font-weight: 600;
 }
 
@@ -987,7 +997,7 @@
   align-items: center;
   gap: 8px;
   color: rgba(159, 176, 201, 0.86);
-  font-size: 0.76rem;
+  font-size: 0.82rem;
 }
 
 .trendDot {
@@ -999,18 +1009,18 @@
 }
 
 .trendChartWrap {
-  min-height: 250px;
-  padding: 14px 12px 10px;
+  min-height: 292px;
+  padding: 18px 16px 14px;
   display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 8px;
+  grid-template-columns: 46px 1fr;
+  gap: 10px;
 }
 
 .trendAxisY {
   display: grid;
   grid-template-rows: repeat(5, 1fr);
   color: rgba(128, 146, 172, 0.8);
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   align-items: center;
 }
 
@@ -1106,7 +1116,7 @@
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   color: rgba(132, 149, 174, 0.86);
-  font-size: 0.67rem;
+  font-size: 0.72rem;
   text-align: center;
 }
 
@@ -1263,13 +1273,13 @@
   .section {
     min-height: auto;
     margin-top: 0;
-    padding: clamp(104px, 12vh, 150px) 0 90px;
+    padding: clamp(118px, 13.6vh, 170px) 0 102px;
   }
 
   .container {
     grid-template-columns: 1fr;
     padding-top: 0;
-    gap: 34px;
+    gap: 44px;
   }
 
   .title,
@@ -1308,12 +1318,12 @@
 
   .dashboardSection {
     margin-top: 52px;
-    padding: 84px 0 96px;
+    padding: 98px 0 116px;
   }
 
   .planSection {
     margin-top: 0;
-    padding: 98px 0 70px;
+    padding: 112px 0 86px;
   }
 
   .planRight {
@@ -1330,6 +1340,7 @@
 
   .planVisualStack {
     min-height: 0;
+    padding-bottom: 34px;
   }
 
   .planVisualStack::before {
@@ -1338,10 +1349,17 @@
 
   .planDimensions {
     position: relative;
-    width: 100%;
+    width: calc(100% - 46px);
     right: auto;
     top: auto;
-    margin-top: 12px;
+    margin-top: -74px;
+    margin-left: auto;
+    margin-right: 6px;
+    border-radius: 14px;
+    box-shadow:
+      0 20px 42px rgba(2, 7, 15, 0.62),
+      0 10px 20px rgba(7, 18, 35, 0.5),
+      inset 0 0 0 1px rgba(149, 182, 240, 0.28);
   }
 
   .planForecastShell:hover {
@@ -1357,11 +1375,16 @@
 @media (max-width: 600px) {
   .section {
     margin-top: 0;
-    padding: 90px 0 72px;
+    padding: 96px 0 80px;
   }
 
   .curveCut {
     height: 150px;
+  }
+
+  .curveCut path {
+    stroke: rgba(74, 116, 186, 0.36);
+    stroke-width: 1.05;
   }
 
   .title {
@@ -1369,11 +1392,11 @@
   }
 
   .text {
-    font-size: 0.96rem;
+    font-size: 1rem;
   }
 
   .list li {
-    font-size: 0.94rem;
+    font-size: 0.98rem;
   }
 
   .panel {
@@ -1388,8 +1411,8 @@
   }
 
   .dashboardPanel {
-    padding: 16px;
-    padding-top: 36px;
+    padding: 20px;
+    padding-top: 38px;
   }
 
   .statGrid {
@@ -1397,7 +1420,7 @@
   }
 
   .trendChartWrap {
-    min-height: 220px;
+    min-height: 232px;
     grid-template-columns: 34px 1fr;
     gap: 6px;
   }
@@ -1412,24 +1435,44 @@
 
   .dashboardSection {
     margin-top: 42px;
-    padding: 72px 0 80px;
+    padding: 84px 0 92px;
   }
 
   .dashboardCut {
     height: 150px;
   }
 
+  .dashboardCut path {
+    stroke: rgba(88, 132, 209, 0.06);
+    stroke-width: 1.1;
+  }
+
   .planSection {
     margin-top: 0;
-    padding: 84px 0 56px;
+    padding: 96px 0 64px;
   }
 
   .planCut {
     height: 150px;
   }
 
+  .planCut path {
+    stroke: rgba(88, 132, 209, 0.08);
+    stroke-width: 1.15;
+  }
+
   .planPanel {
     padding: 14px;
+  }
+
+  .planVisualStack {
+    padding-bottom: 24px;
+  }
+
+  .planDimensions {
+    width: calc(100% - 26px);
+    margin-top: -58px;
+    margin-right: 2px;
   }
 
   .visualBrand {
@@ -1461,6 +1504,12 @@
 
   .inputRow {
     font-size: 0.76rem;
+  }
+
+  .inputText {
+    white-space: normal;
+    text-overflow: clip;
+    line-height: 1.35;
   }
 }
 
