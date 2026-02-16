@@ -89,7 +89,7 @@
   border: 1px solid rgba(149, 182, 241, 0.17);
   box-shadow:
     0 22px 38px rgba(3, 8, 15, 0.66),
-    inset 0 1px 0 rgba(196, 220, 255, 0.1);
+    inset 0 1px 0 rgba(189, 206, 255, 0.12);
   backdrop-filter: blur(12px);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -144,24 +144,24 @@
   gap: 8px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #6d78e6 0%, #4d58ba 100%);
+  background: #3f47e8;
   color: #f4f6ff;
   font-size: 0.85rem;
   font-weight: 600;
-  border: 1px solid rgba(136, 148, 255, 0.32);
+  border: 1px solid rgba(109, 121, 255, 0.46);
   box-shadow:
-    inset 0 1px 0 rgba(233, 238, 255, 0.16),
-    0 8px 16px rgba(23, 28, 68, 0.48);
+    inset 0 1px 0 rgba(226, 233, 255, 0.2),
+    0 8px 16px rgba(20, 31, 86, 0.52);
   transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
 }
 
 .cta:hover {
   transform: translateY(-1px);
   box-shadow:
-    inset 0 1px 0 rgba(238, 243, 255, 0.2),
-    0 10px 20px rgba(28, 35, 82, 0.54),
-    0 0 14px rgba(83, 90, 255, 0.18);
-  filter: saturate(0.96);
+    inset 0 1px 0 rgba(236, 242, 255, 0.24),
+    0 10px 20px rgba(24, 38, 96, 0.58),
+    0 0 10px rgba(80, 96, 239, 0.14);
+  filter: saturate(1.08) brightness(1.03);
 }
 
 .mobileToggle {
@@ -247,7 +247,7 @@
     border: 1px solid rgba(149, 182, 241, 0.2);
     box-shadow:
       0 24px 44px rgba(3, 8, 15, 0.66),
-      inset 0 1px 0 rgba(196, 220, 255, 0.1);
+      inset 0 1px 0 rgba(189, 206, 255, 0.12);
     opacity: 0;
     pointer-events: none;
     transform: translateY(-6px);

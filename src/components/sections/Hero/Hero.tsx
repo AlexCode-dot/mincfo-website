@@ -1,7 +1,7 @@
 "use client";
 
-import { Lock, Play } from "lucide-react";
-import { useLayoutEffect, useRef } from "react";
+import { ChevronRight, Lock, Play } from "lucide-react";
+import { useLayoutEffect, useRef, useState } from "react";
 import BeamBackground from "@/components/visual/BeamBackground/BeamBackground";
 import styles from "./Hero.module.scss";
 
@@ -11,7 +11,11 @@ const clamp = (value: number, min: number, max: number) =>
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const playRequestedRef = useRef(false);
   const rafRef = useRef<number | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [useFullVideo, setUseFullVideo] = useState(false);
   const stateRef = useRef({
     progress: 0,
     mouseX: 0,
@@ -99,6 +103,42 @@ export default function Hero() {
     };
   }, []);
 
+  const handlePlayDemo = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    playRequestedRef.current = true;
+
+    if (!useFullVideo) {
+      setUseFullVideo(true);
+      return;
+    }
+
+    try {
+      // Always start actual playback from the beginning.
+      video.currentTime = 0;
+      await video.play();
+      setIsPlaying(true);
+      playRequestedRef.current = false;
+    } catch {
+      setIsPlaying(false);
+    }
+  };
+
+  const handleVideoCanPlay = async () => {
+    const video = videoRef.current;
+    if (!video || !useFullVideo || !playRequestedRef.current || isPlaying) return;
+
+    try {
+      video.currentTime = 0;
+      await video.play();
+      setIsPlaying(true);
+      playRequestedRef.current = false;
+    } catch {
+      setIsPlaying(false);
+    }
+  };
+
   return (
     <section ref={sectionRef} id="hero" className={styles.hero}>
       <BeamBackground extendBottom={260} />
@@ -121,7 +161,9 @@ export default function Hero() {
         </p>
 
         <div className={styles.ctaRow}>
-          <a className={styles.primaryCta} href="#">Boka en demo</a>
+          <a className={styles.primaryCta} href="#">
+            Boka en demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+          </a>
         </div>
 
         <div className={styles.cardWrap}>
@@ -138,10 +180,39 @@ export default function Hero() {
 
             <div className={`${styles.cardBody} ${styles.gridBg}`}>
               <div className={styles.centerGlow} />
-              <button className={styles.playButton} type="button">
-                <span className={styles.playPulse} />
-                <Play aria-hidden="true" size={22} />
-              </button>
+              {!isPlaying && <div className={styles.previewTopMask} aria-hidden="true" />}
+              {!isPlaying && (
+                <button
+                  className={styles.playButton}
+                  type="button"
+                  onClick={handlePlayDemo}
+                  aria-label="Play demo video"
+                >
+                  <span className={styles.playPulse} />
+                  <Play aria-hidden="true" size={30} />
+                </button>
+              )}
+              <video
+                key={useFullVideo ? "full-video" : "preview-video"}
+                ref={videoRef}
+                className={`${styles.demoVideo} ${!isPlaying ? styles.previewVideo : ""}`}
+                loop={useFullVideo}
+                controls={isPlaying}
+                playsInline
+                preload={useFullVideo ? "metadata" : "auto"}
+                aria-label="Demo video of MinCFO dashboard"
+                onCanPlay={handleVideoCanPlay}
+              >
+                {useFullVideo ? (
+                  <>
+                    <source src="/videos/mincfo-demo-video-full.mp4" type="video/mp4" />
+                    <source src="/videos/mincfo-demo-video.mov" type="video/quicktime" />
+                  </>
+                ) : (
+                  <source src="/videos/mincfo-demo-video-preview.m4v" type="video/mp4" />
+                )}
+                Din webbläsare kan inte spela upp videon.
+              </video>
             </div>
           </div>
         </div>

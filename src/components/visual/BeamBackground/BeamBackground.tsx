@@ -166,7 +166,7 @@ export default function BeamBackground({
 
       ctx.save();
       ctx.globalCompositeOperation = "lighter";
-      ctx.fillStyle = "rgba(170, 195, 255, 0.55)";
+      ctx.fillStyle = "rgba(162, 181, 255, 0.58)";
       for (const particle of particlesRef.current) {
         const visibility = clamp(
           (particle.y - activeHeight * 0.45) / (activeHeight * 0.28),

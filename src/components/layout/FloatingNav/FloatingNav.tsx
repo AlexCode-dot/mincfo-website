@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styles from "./FloatingNav.module.scss";
 
@@ -32,6 +33,7 @@ const SOLUTION_GROUPS = [
 ];
 
 export default function FloatingNav() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<(typeof HOMEPAGE_SECTIONS)[number]>("hero");
   const [solutionsOpen, setSolutionsOpen] = useState(false);
@@ -104,14 +106,19 @@ export default function FloatingNav() {
     setMobileSolutionsOpen(false);
   };
 
+  const sectionHref = (id: (typeof HOMEPAGE_SECTIONS)[number]) =>
+    pathname === "/" ? `#${id}` : `/#${id}`;
+
+  const heroHref = pathname === "/" ? "#hero" : "/#hero";
+
   return (
     <nav ref={navRef} className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.desktopNav}>
-        <a href="#produkt" className={`${styles.link} ${isActive("produkt") ? styles.linkActive : ""}`}>
+        <a href={sectionHref("produkt")} className={`${styles.link} ${isActive("produkt") ? styles.linkActive : ""}`}>
           Produkt
         </a>
         <div className={styles.menuWrap}>
-          <a href="#losningar" className={`${styles.link} ${isActive("losningar") ? styles.linkActive : ""}`}>
+          <a href={sectionHref("losningar")} className={`${styles.link} ${isActive("losningar") ? styles.linkActive : ""}`}>
             Lösningar
           </a>
           <button
@@ -142,24 +149,24 @@ export default function FloatingNav() {
           </div>
         </div>
         <a
-          href="#customers"
+          href={sectionHref("customers")}
           className={`${styles.link} ${styles.desktopOnly} ${isActive("customers") ? styles.linkActive : ""}`}
         >
           Kundcase
         </a>
         <a
-          href="#security"
+          href={sectionHref("security")}
           className={`${styles.link} ${styles.desktopOnly} ${isActive("security") ? styles.linkActive : ""}`}
         >
           Säkerhet
         </a>
         <a
-          href="#how-it-works"
+          href={sectionHref("how-it-works")}
           className={`${styles.link} ${styles.desktopOnly} ${isActive("how-it-works") ? styles.linkActive : ""}`}
         >
           Hur det funkar
         </a>
-        <a href="#hero" className={styles.cta}>
+        <a href={heroHref} className={styles.cta}>
           Kontakta oss
         </a>
       </div>
@@ -182,28 +189,28 @@ export default function FloatingNav() {
         className={`${styles.mobilePanel} ${mobileMenuOpen ? styles.mobilePanelOpen : ""}`}
       >
         <a
-          href="#produkt"
+          href={sectionHref("produkt")}
           onClick={closeMobileMenu}
           className={`${styles.mobileLink} ${isActive("produkt") ? styles.mobileLinkActive : ""}`}
         >
           Produkt
         </a>
         <a
-          href="#customers"
+          href={sectionHref("customers")}
           onClick={closeMobileMenu}
           className={`${styles.mobileLink} ${isActive("customers") ? styles.mobileLinkActive : ""}`}
         >
           Kundcase
         </a>
         <a
-          href="#security"
+          href={sectionHref("security")}
           onClick={closeMobileMenu}
           className={`${styles.mobileLink} ${isActive("security") ? styles.mobileLinkActive : ""}`}
         >
           Säkerhet
         </a>
         <a
-          href="#how-it-works"
+          href={sectionHref("how-it-works")}
           onClick={closeMobileMenu}
           className={`${styles.mobileLink} ${isActive("how-it-works") ? styles.mobileLinkActive : ""}`}
         >
@@ -241,7 +248,7 @@ export default function FloatingNav() {
           ))}
         </div>
 
-        <a href="#hero" className={styles.mobileCta} onClick={closeMobileMenu}>
+        <a href={heroHref} className={styles.mobileCta} onClick={closeMobileMenu}>
           Kontakta oss
         </a>
       </div>

@@ -63,7 +63,7 @@
   align-items: center;
   padding: 8px 16px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(128, 170, 228, 0.3);
+  border: 1px solid rgba(118, 152, 238, 0.34);
   background: rgba(12, 24, 40, 0.62);
   color: rgba(203, 223, 250, 0.9);
   font-size: 0.82rem;
@@ -108,7 +108,7 @@
   position: absolute;
   inset: -40px 0 auto;
   height: 180px;
-  background: radial-gradient(50% 100% at 50% 50%, rgba(74, 130, 210, 0.08), transparent 72%);
+  background: radial-gradient(50% 100% at 50% 50%, rgba(82, 112, 238, 0.14), transparent 72%);
   filter: blur(18px);
   pointer-events: none;
 }
@@ -119,11 +119,11 @@
   padding: 30px 24px 26px;
   border-radius: 14px;
   background:
-    radial-gradient(120% 92% at 50% -8%, rgba(38, 93, 166, 0.14), transparent 58%),
+    radial-gradient(120% 92% at 50% -8%, rgba(62, 102, 220, 0.18), transparent 58%),
     linear-gradient(165deg, rgba(8, 16, 28, 0.96), rgba(6, 12, 22, 0.98));
   box-shadow:
     0 16px 30px rgba(3, 8, 16, 0.36),
-    inset 0 0 0 1px rgba(103, 148, 206, 0.16);
+    inset 0 0 0 1px rgba(115, 149, 231, 0.24);
   opacity: 0;
   transform: translateY(18px) scale(0.98);
   transition: opacity 560ms ease, transform 560ms cubic-bezier(0.22, 0.82, 0.2, 1), box-shadow 560ms ease;
@@ -136,8 +136,8 @@
   inset: 0;
   border-radius: inherit;
   background:
-    radial-gradient(80% 56% at 50% 6%, rgba(72, 128, 204, 0.08), transparent 62%),
-    radial-gradient(60% 48% at 50% 28%, rgba(52, 102, 170, 0.05), transparent 72%);
+    radial-gradient(80% 56% at 50% 6%, rgba(91, 128, 233, 0.12), transparent 62%),
+    radial-gradient(60% 48% at 50% 28%, rgba(74, 115, 212, 0.08), transparent 72%);
   pointer-events: none;
 }
 
@@ -163,7 +163,7 @@
   position: absolute;
   inset: 4px;
   border-radius: inherit;
-  background-image: radial-gradient(rgba(96, 184, 255, 0.2) 0.8px, transparent 0.8px);
+  background-image: radial-gradient(rgba(102, 132, 255, 0.2) 0.8px, transparent 0.8px);
   background-size: 10px 10px;
   opacity: 0.06;
 }
@@ -171,8 +171,8 @@
 .visualIcon {
   position: relative;
   z-index: 3;
-  color: rgba(188, 225, 255, 0.92);
-  filter: drop-shadow(0 0 8px rgba(80, 163, 237, 0.26));
+  color: rgba(188, 205, 255, 0.92);
+  filter: drop-shadow(0 0 8px rgba(86, 118, 236, 0.26));
 }
 
 .visualHalo {
@@ -180,7 +180,7 @@
   z-index: 1;
   inset: 14px 16px;
   border-radius: 999px;
-  background: radial-gradient(circle, rgba(74, 171, 255, 0.18), rgba(36, 83, 138, 0.05) 58%, transparent 78%);
+  background: radial-gradient(circle, rgba(89, 114, 255, 0.26), rgba(52, 86, 176, 0.08) 58%, transparent 78%);
   filter: blur(10px);
 }
 
@@ -223,7 +223,7 @@
   position: absolute;
   inset: 26px 30px;
   border-radius: 999px;
-  border: 1px solid rgba(126, 197, 255, 0.2);
+  border: 1px solid rgba(124, 160, 255, 0.24);
   opacity: 0.4;
   animation: securityPulse 7s ease-in-out infinite;
 }
@@ -244,13 +244,13 @@
 
 .card:nth-child(1) .visualShield {
   background:
-    radial-gradient(54% 44% at 50% 46%, rgba(86, 184, 255, 0.09), transparent 70%),
+    radial-gradient(54% 44% at 50% 46%, rgba(92, 126, 255, 0.12), transparent 70%),
     radial-gradient(90% 60% at 50% 72%, rgba(52, 119, 192, 0.1), transparent 78%);
 }
 
 .card:nth-child(1) .visualHalo {
   inset: 26px 32px;
-  background: radial-gradient(circle, rgba(92, 196, 255, 0.14), rgba(50, 115, 190, 0.03) 62%, transparent 80%);
+  background: radial-gradient(circle, rgba(94, 130, 255, 0.16), rgba(50, 115, 190, 0.03) 62%, transparent 80%);
 }
 
 .card:nth-child(1) .visualShield::after {
@@ -266,8 +266,8 @@
 }
 
 .card:nth-child(1) .visualIcon {
-  color: rgba(211, 236, 255, 0.96);
-  filter: drop-shadow(0 0 6px rgba(92, 184, 255, 0.22));
+  color: rgba(212, 221, 255, 0.96);
+  filter: drop-shadow(0 0 6px rgba(94, 128, 255, 0.24));
 }
 
 .shieldStack {
@@ -287,14 +287,14 @@
 }
 
 .shieldOuter {
-  stroke: rgba(120, 196, 255, 0.14);
+  stroke: rgba(114, 146, 255, 0.18);
   stroke-width: 0.8;
   transform-origin: 50% 50%;
   animation: shieldLineBreath 6.2s ease-in-out infinite;
 }
 
 .shieldMid {
-  stroke: rgba(126, 205, 255, 0.24);
+  stroke: rgba(121, 153, 255, 0.28);
   stroke-width: 1;
   transform: scale(0.86);
   transform-origin: 50% 50%;
@@ -302,11 +302,11 @@
 }
 
 .shieldMain {
-  stroke: rgba(146, 220, 255, 0.72);
+  stroke: rgba(145, 173, 255, 0.76);
   stroke-width: 1.35;
   transform: scale(0.72);
   transform-origin: 50% 50%;
-  filter: drop-shadow(0 0 8px rgba(92, 184, 255, 0.24));
+  filter: drop-shadow(0 0 8px rgba(94, 128, 255, 0.26));
   animation: shieldLineGlow 5.4s ease-in-out infinite;
 }
 
@@ -329,7 +329,7 @@
   top: 50%;
   transform: translateY(-50%);
   height: 1px;
-  background: linear-gradient(90deg, rgba(93, 152, 237, 0), rgba(119, 214, 255, 0.34), rgba(93, 152, 237, 0));
+  background: linear-gradient(90deg, rgba(93, 152, 237, 0), rgba(121, 156, 255, 0.34), rgba(93, 152, 237, 0));
   filter: blur(0.4px);
 }
 
@@ -342,7 +342,7 @@
   top: 50%;
   transform: translateY(-50%);
   height: 10px;
-  background: linear-gradient(90deg, transparent 0%, rgba(128, 220, 255, 0.32) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(130, 165, 255, 0.32) 50%, transparent 100%);
   opacity: 0.22;
   filter: blur(5px);
   animation: flowTravel 6.4s ease-in-out infinite;
@@ -359,8 +359,8 @@
   border-radius: 11px;
   background: rgba(8, 21, 34, 0.9);
   box-shadow:
-    inset 0 0 0 1px rgba(130, 203, 255, 0.28),
-    0 0 10px rgba(88, 175, 245, 0.18);
+    inset 0 0 0 1px rgba(115, 146, 250, 0.38),
+    0 0 10px rgba(89, 116, 235, 0.22);
   display: grid;
   place-items: center;
 }
@@ -374,8 +374,8 @@
 }
 
 .flowNodeIcon {
-  color: rgba(176, 219, 255, 0.8);
-  filter: drop-shadow(0 0 4px rgba(110, 188, 255, 0.22));
+  color: rgba(184, 205, 255, 0.86);
+  filter: drop-shadow(0 0 4px rgba(100, 128, 255, 0.3));
   stroke-width: 1.7;
 }
 
@@ -391,13 +391,13 @@
 .flowLinkLeft {
   left: 28px;
   width: 44px;
-  background: linear-gradient(90deg, rgba(132, 213, 255, 0.46), rgba(132, 213, 255, 0.08));
+  background: linear-gradient(90deg, rgba(132, 165, 255, 0.46), rgba(132, 165, 255, 0.1));
 }
 
 .flowLinkRight {
   right: 28px;
   width: 44px;
-  background: linear-gradient(90deg, rgba(132, 213, 255, 0.08), rgba(132, 213, 255, 0.46));
+  background: linear-gradient(90deg, rgba(132, 165, 255, 0.1), rgba(132, 165, 255, 0.46));
 }
 
 .flowLinkLeft::after,
@@ -408,7 +408,7 @@
   width: 14px;
   height: 1px;
   transform: translateY(-50%);
-  background: linear-gradient(90deg, rgba(166, 227, 255, 0), rgba(166, 227, 255, 0.95), rgba(166, 227, 255, 0));
+  background: linear-gradient(90deg, rgba(166, 190, 255, 0), rgba(166, 190, 255, 0.95), rgba(166, 190, 255, 0));
   filter: blur(0.4px);
 }
 
@@ -430,13 +430,13 @@
   width: 214px;
   overflow: visible;
   background:
-    radial-gradient(46% 42% at 50% 50%, rgba(104, 198, 255, 0.12), transparent 68%),
+    radial-gradient(46% 42% at 50% 50%, rgba(106, 138, 255, 0.14), transparent 68%),
     radial-gradient(65% 54% at 50% 50%, rgba(84, 168, 236, 0.07), transparent 78%);
 }
 
 .card:nth-child(2) .visualFlow .visualHalo {
   inset: 20px 30px;
-  background: radial-gradient(circle, rgba(102, 191, 255, 0.2), rgba(58, 125, 190, 0.05) 58%, transparent 78%);
+  background: radial-gradient(circle, rgba(102, 134, 255, 0.22), rgba(58, 125, 190, 0.05) 58%, transparent 78%);
 }
 
 .card:nth-child(2) .visualFlow .visualIcon {
@@ -446,10 +446,10 @@
   border-radius: 16px;
   background: rgba(8, 20, 32, 0.92);
   box-shadow:
-    inset 0 0 0 1px rgba(128, 208, 255, 0.44),
+    inset 0 0 0 1px rgba(124, 159, 255, 0.46),
     0 0 20px rgba(94, 178, 251, 0.24);
-  color: rgba(208, 236, 255, 0.96);
-  filter: drop-shadow(0 0 8px rgba(108, 188, 255, 0.24));
+  color: rgba(208, 220, 255, 0.96);
+  filter: drop-shadow(0 0 8px rgba(106, 140, 255, 0.26));
 }
 
 .card:nth-child(2) .visualFlow::before {
@@ -463,7 +463,7 @@
 .card:nth-child(2) .visual::before {
   inset: 8px;
   border-radius: 18px;
-  background-image: radial-gradient(rgba(113, 204, 255, 0.22) 0.8px, transparent 0.8px);
+  background-image: radial-gradient(rgba(116, 152, 255, 0.22) 0.8px, transparent 0.8px);
   background-size: 8px 8px;
   opacity: 0.15;
 }
@@ -490,8 +490,8 @@
   inset: 6px;
   border-radius: 18px;
   background-image:
-    linear-gradient(rgba(112, 192, 255, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(112, 192, 255, 0.2) 1px, transparent 1px);
+    linear-gradient(rgba(114, 148, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(114, 148, 255, 0.2) 1px, transparent 1px);
   background-size: 14px 14px;
   opacity: 0.2;
   mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.96) 28%, rgba(0, 0, 0, 0.72) 58%, transparent 84%);
@@ -505,11 +505,11 @@
   width: 82px;
   height: 82px;
   border-radius: 999px;
-  border: 1px solid rgba(125, 206, 255, 0.24);
+  border: 1px solid rgba(123, 157, 255, 0.26);
   background: radial-gradient(circle at 50% 42%, rgba(8, 20, 38, 0.94), rgba(4, 11, 24, 0.98));
   box-shadow:
-    0 0 16px rgba(91, 178, 255, 0.16),
-    inset 0 0 0 1px rgba(122, 199, 255, 0.08);
+    0 0 16px rgba(94, 128, 255, 0.18),
+    inset 0 0 0 1px rgba(123, 156, 255, 0.1);
   animation: coreRingPulse 5.6s ease-in-out infinite;
 }
 
@@ -523,8 +523,8 @@
 }
 
 .card:nth-child(3) .visualCore .visualIcon {
-  color: rgba(205, 233, 255, 0.95);
-  filter: drop-shadow(0 0 7px rgba(109, 189, 255, 0.2));
+  color: rgba(206, 219, 255, 0.95);
+  filter: drop-shadow(0 0 7px rgba(106, 140, 255, 0.22));
 }
 
 .card h3 {
@@ -726,13 +726,13 @@
   0%,
   100% {
     box-shadow:
-      0 0 16px rgba(91, 178, 255, 0.16),
-      inset 0 0 0 1px rgba(122, 199, 255, 0.1);
+      0 0 16px rgba(94, 128, 255, 0.18),
+      inset 0 0 0 1px rgba(123, 156, 255, 0.12);
   }
   50% {
     box-shadow:
-      0 0 24px rgba(91, 178, 255, 0.24),
-      inset 0 0 0 1px rgba(122, 199, 255, 0.16);
+      0 0 24px rgba(94, 128, 255, 0.26),
+      inset 0 0 0 1px rgba(123, 156, 255, 0.18);
   }
 }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "./HowItWorks.module.scss";
 
@@ -231,7 +232,8 @@ export default function HowItWorks() {
         </div>
 
         <a href="#hero" className={styles.cta}>
-          Kontakta oss för en offert <span aria-hidden="true">→</span>
+          Kontakta oss för en offert
+          <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
         </a>
       </div>
     </section>

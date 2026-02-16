@@ -83,14 +83,14 @@ export default function CanvasBeam() {
       const haloWidth = beamRadius * 1.4;
 
       const coreGradient = ctx.createLinearGradient(0, 0, 0, height);
-      coreGradient.addColorStop(0, `rgba(110, 200, 255, ${0.08 * glowStrength})`);
-      coreGradient.addColorStop(0.5, `rgba(110, 200, 255, ${0.2 * glowStrength})`);
-      coreGradient.addColorStop(1, `rgba(110, 200, 255, ${0.06 * glowStrength})`);
+      coreGradient.addColorStop(0, `rgba(96, 116, 255, ${0.1 * glowStrength})`);
+      coreGradient.addColorStop(0.5, `rgba(96, 116, 255, ${0.24 * glowStrength})`);
+      coreGradient.addColorStop(1, `rgba(96, 116, 255, ${0.08 * glowStrength})`);
 
       const haloGradient = ctx.createLinearGradient(0, 0, 0, height);
-      haloGradient.addColorStop(0, `rgba(60, 140, 255, ${0.04 * glowStrength})`);
-      haloGradient.addColorStop(0.5, `rgba(60, 140, 255, ${0.12 * glowStrength})`);
-      haloGradient.addColorStop(1, `rgba(60, 140, 255, ${0.03 * glowStrength})`);
+      haloGradient.addColorStop(0, `rgba(72, 92, 255, ${0.06 * glowStrength})`);
+      haloGradient.addColorStop(0.5, `rgba(72, 92, 255, ${0.16 * glowStrength})`);
+      haloGradient.addColorStop(1, `rgba(72, 92, 255, ${0.05 * glowStrength})`);
 
       ctx.fillStyle = haloGradient;
       ctx.fillRect(center - haloWidth / 2, 0, haloWidth, height);
@@ -138,7 +138,7 @@ export default function CanvasBeam() {
           if (intensity < intensityThreshold) continue;
 
           const radius = clamp(1 + intensity * 1.4, 1, 2.6);
-          ctx.fillStyle = `rgba(150, 220, 255, ${intensity * 0.65})`;
+          ctx.fillStyle = `rgba(149, 168, 255, ${intensity * 0.65})`;
           ctx.beginPath();
           ctx.arc(x, y, radius, 0, Math.PI * 2);
           ctx.fill();
@@ -151,7 +151,7 @@ export default function CanvasBeam() {
     const drawRain = () => {
       const { width, height } = sizeRef.current;
       ctx.save();
-      ctx.strokeStyle = "rgba(120, 170, 255, 0.08)";
+      ctx.strokeStyle = "rgba(110, 136, 245, 0.1)";
       ctx.lineWidth = 1;
       for (const streak of rainRef.current) {
         const distanceFromCenter = Math.abs(streak.x - width / 2);
