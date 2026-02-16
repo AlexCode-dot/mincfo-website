@@ -1,33 +1,45 @@
 "use client";
 
-import { Briefcase, Building2, ChevronDown, Rocket } from "lucide-react";
+import { Briefcase, Building2, ChevronRight, Cpu, Handshake, Rocket, ShoppingCart } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "./Solutions.module.scss";
 
 const SOLUTIONS = [
   {
     href: "/losningar/ceo-founders",
-    title: "Om ni är VC-backade eller kapitalresande",
-    text: "Få tydlig kontroll på runway, burn-rate och tillväxtdrivare utan att bygga ett stort finance-team internt.",
-    detail:
-      "Placeholder: veckovis cash-rapportering, investor-ready material och scenarioplanering inför nästa runda.",
+    title: "CEO & Founders",
+    text: "Finansiell klarhet för snabbare vägval med AI Copilot, realtidsdata och scenarioplanering.",
     icon: Rocket,
   },
   {
     href: "/losningar/cfo-finance",
-    title: "Om ni har flera bolag eller marknader",
-    text: "Automatisera uppföljning och rapportering för snabbare beslut, färre manuella moment och bättre precision.",
-    detail:
-      "Placeholder: samlad koncernvy, harmoniserad rapportstruktur och tydliga ansvarsflöden mellan team.",
+    title: "CFO & Finance Team",
+    text: "Mindre manuella loopar och bättre forecast med dashboards, automation och spårbar analys.",
     icon: Briefcase,
   },
   {
+    href: "/losningar/fractional-cfo",
+    title: "Fractional CFO",
+    text: "Leverera board-ready underlag snabbare med ett skalbart arbetssätt och hög leveransprecision.",
+    icon: Handshake,
+  },
+  {
     href: "/losningar/saas-tech",
-    title: "Om ni vill skala utan att tappa kontroll",
-    text: "Koppla ihop planering, KPI:er och scenarioanalys så att teamet kan agera proaktivt istället för reaktivt.",
-    detail:
-      "Placeholder: månatliga beslutsunderlag, KPI-uppföljning och operativ rådgivning nära ledningsgruppen.",
+    title: "SaaS / Tech",
+    text: "Koppla produkt, GTM och ekonomi i samma beslutsyta för hållbar tillväxt med kontroll.",
+    icon: Cpu,
+  },
+  {
+    href: "/losningar/konsult-tjanster",
+    title: "Konsult & Tjänster",
+    text: "Styr beläggning, projektmarginal och cash i realtid med tydliga signaler per kund och uppdrag.",
     icon: Building2,
+  },
+  {
+    href: "/losningar/ehandel",
+    title: "E-handel",
+    text: "Få kontroll på marginal, lager och likviditet när kampanjer och inköp påverkar utfallet dag för dag.",
+    icon: ShoppingCart,
   },
 ];
 
@@ -162,12 +174,11 @@ export default function Solutions() {
                     <div className={styles.cardBody}>
                       <h3>{item.title}</h3>
                       <p>{item.text}</p>
-                      <p className={styles.placeholder}>{item.detail}</p>
                     </div>
 
                     <a href={item.href} className={styles.cta} aria-label={`Läs mer om ${item.title}`}>
-                      <span>Läs mer</span>
-                      <ChevronDown size={18} aria-hidden="true" />
+                      <span>Se lösning</span>
+                      <ChevronRight size={18} aria-hidden="true" />
                     </a>
                   </article>
                 );
