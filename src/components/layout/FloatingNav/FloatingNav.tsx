@@ -100,6 +100,11 @@ export default function FloatingNav() {
 
   const isActive = (id: (typeof HOMEPAGE_SECTIONS)[number]) =>
     activeSection === id;
+  const normalizedPathname = pathname.startsWith("/solutions/")
+    ? pathname.replace("/solutions/", "/losningar/")
+    : pathname;
+  const isSolutionsPage = pathname.startsWith("/losningar") || pathname.startsWith("/solutions");
+  const isSolutionItemActive = (href: string) => normalizedPathname === href;
 
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
@@ -118,7 +123,11 @@ export default function FloatingNav() {
           Produkt
         </a>
         <div className={styles.menuWrap}>
-          <a href={sectionHref("losningar")} className={`${styles.link} ${isActive("losningar") ? styles.linkActive : ""}`}>
+          <a
+            href={sectionHref("losningar")}
+            className={`${styles.link} ${isActive("losningar") || isSolutionsPage ? styles.linkActive : ""}`}
+            aria-current={isSolutionsPage ? "page" : undefined}
+          >
             Lösningar
           </a>
           <button
@@ -139,7 +148,12 @@ export default function FloatingNav() {
                 <p>{group.title}</p>
                 <div className={styles.menuItems}>
                   {group.items.map((item) => (
-                    <a key={item.href} href={item.href} className={styles.menuItem}>
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      className={`${styles.menuItem} ${isSolutionItemActive(item.href) ? styles.menuItemActive : ""}`}
+                      aria-current={isSolutionItemActive(item.href) ? "page" : undefined}
+                    >
                       {item.label}
                     </a>
                   ))}
@@ -219,7 +233,9 @@ export default function FloatingNav() {
 
         <button
           type="button"
-          className={`${styles.mobileSolutionsToggle} ${mobileSolutionsOpen ? styles.mobileSolutionsToggleOpen : ""}`}
+          className={`${styles.mobileSolutionsToggle} ${mobileSolutionsOpen ? styles.mobileSolutionsToggleOpen : ""} ${
+            isSolutionsPage ? styles.mobileSolutionsToggleActive : ""
+          }`}
           onClick={() => setMobileSolutionsOpen((previous) => !previous)}
           aria-expanded={mobileSolutionsOpen}
           aria-controls="mobile-solutions-list"
@@ -239,7 +255,13 @@ export default function FloatingNav() {
               <p>{group.title}</p>
               <div className={styles.mobileItems}>
                 {group.items.map((item) => (
-                  <a key={item.href} href={item.href} className={styles.mobileItem} onClick={closeMobileMenu}>
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className={`${styles.mobileItem} ${isSolutionItemActive(item.href) ? styles.mobileItemActive : ""}`}
+                    onClick={closeMobileMenu}
+                    aria-current={isSolutionItemActive(item.href) ? "page" : undefined}
+                  >
                     {item.label}
                   </a>
                 ))}
