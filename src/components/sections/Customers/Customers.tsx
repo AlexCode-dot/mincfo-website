@@ -5,6 +5,7 @@ import styles from "./Customers.module.scss";
 
 type Testimonial = {
   accent?: boolean;
+  avatarFile: string;
   company: string;
   quote: string;
   role: string;
@@ -30,6 +31,7 @@ const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 
 const TESTIMONIALS: Testimonial[] = [
   {
+    avatarFile: "logo-rikard.avif",
     company: "Qsid",
     quote:
       "MinCFO har gett oss en ny nivå av ekonomisk insikt. Med automatiserad bokföring och realtidsdata kan vi nu fatta snabbare beslut och lägga mer tid på att utveckla vår verksamhet.",
@@ -38,6 +40,7 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     accent: true,
+    avatarFile: "logo-aviv.avif",
     company: "Showcase",
     quote:
       "Att anlita MinCFO är ett av våra bästa beslut. Vi har fått proaktiv rådgivning som gjort att vi kunnat minska kostnader och frigöra kapital. En komplett lösning för vår ekonomi.",
@@ -45,6 +48,7 @@ const TESTIMONIALS: Testimonial[] = [
     role: "VD, Showcase",
   },
   {
+    avatarFile: "logo-joakim.avif",
     company: "SweBal",
     quote:
       "Med MinCFO slipper vi lägga värdefull tid på rapportering, finansiella analyser och administration. Istället kan vi fokusera fullt ut på vår kärnverksamhet och projekteringen av ny fabrik.",
@@ -53,6 +57,7 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     accent: true,
+    avatarFile: "logo-oskar.avif",
     company: "Hälsa Hemma",
     quote:
       "MinCFO är ett viktigt stöd i vår tillväxt. De avlastar det administrativa och levererar snabba, korrekta svar, så att vi kan fokusera på verksamheten.",
@@ -62,14 +67,16 @@ const TESTIMONIALS: Testimonial[] = [
 ];
 
 const TRUSTED_LOGOS = [
-  "Realforce",
-  "BAM",
-  "SWEBAL",
-  "Runway",
-  "Lawster",
-  "Swedish Algae Factory",
-  "Hälsa Hemma",
-  "Rossoneri",
+  { name: "Swedish Algae Factory", file: "logo-algae.avif" },
+  { name: "BAM", file: "logo-bam.avif" },
+  { name: "Eloize", file: "logo-eloize.avif" },
+  { name: "Fler", file: "logo-fler.avif" },
+  { name: "Hälsa Hemma", file: "logo-hälsa.avif" },
+  { name: "Lawster", file: "logo-lawster.avif" },
+  { name: "Realforce", file: "logo-realforce.avif" },
+  { name: "Rossoneri", file: "logo-rossoneri.avif" },
+  { name: "Runway", file: "logo-runway.webp" },
+  { name: "SweBal", file: "logo-swebal.avif" },
 ];
 
 export default function Customers() {
@@ -204,7 +211,14 @@ export default function Customers() {
                 <p className={styles.company}>{item.company}</p>
                 <p className={styles.quote}>"{item.quote}"</p>
                 <footer className={styles.person}>
-                  <span className={styles.avatar}>{item.person.slice(0, 1)}</span>
+                  <span className={styles.avatar}>
+                    <img
+                      src={`/customers/testimonials/${item.avatarFile}`}
+                      alt={`${item.person} portratt`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
                   <span>
                     <strong>{item.person}</strong>
                     <small>{item.role}</small>
@@ -228,14 +242,26 @@ export default function Customers() {
           <p className={styles.trustedLabel}>Betrodd av team som använder MinCFO varje månad</p>
           <div className={styles.tickerViewport}>
             <div className={styles.tickerTrack}>
-              {TRUSTED_LOGOS.map((name, index) => (
-                <span key={`a-${name}-${index}`} className={styles.tickerItem}>
-                  {name}
+              {TRUSTED_LOGOS.map((logo, index) => (
+                <span key={`a-${logo.file}-${index}`} className={styles.tickerItem}>
+                  <img
+                    className={styles.tickerLogo}
+                    src={`/customers/logos/${logo.file}`}
+                    alt={`${logo.name} logo`}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </span>
               ))}
-              {TRUSTED_LOGOS.map((name, index) => (
-                <span key={`b-${name}-${index}`} className={styles.tickerItem}>
-                  {name}
+              {TRUSTED_LOGOS.map((logo, index) => (
+                <span key={`b-${logo.file}-${index}`} className={styles.tickerItem}>
+                  <img
+                    className={styles.tickerLogo}
+                    src={`/customers/logos/${logo.file}`}
+                    alt={`${logo.name} logo`}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </span>
               ))}
             </div>

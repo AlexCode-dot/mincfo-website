@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Lock, Play } from "lucide-react";
+import { Lock, Play } from "lucide-react";
 import { useLayoutEffect, useRef } from "react";
 import BeamBackground from "@/components/visual/BeamBackground/BeamBackground";
 import styles from "./Hero.module.scss";
@@ -121,11 +121,7 @@ export default function Hero() {
         </p>
 
         <div className={styles.ctaRow}>
-          <a className={styles.primaryCta} href="#">Boka ett möte</a>
-          <a className={styles.secondaryCta} href="#produkt">
-            Vad vi erbjuder
-            <ChevronDown className={styles.secondaryCtaIcon} aria-hidden="true" size={15} />
-          </a>
+          <a className={styles.primaryCta} href="#">Boka en demo</a>
         </div>
 
         <div className={styles.cardWrap}>

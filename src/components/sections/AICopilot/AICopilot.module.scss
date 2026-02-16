@@ -615,6 +615,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  padding-inline: 8px;
 }
 
 .planPanelHeader p {
@@ -626,6 +627,13 @@
 .planPanelHeader span {
   color: rgba(153, 171, 199, 0.86);
   font-size: 0.72rem;
+}
+
+.panelUpdating {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 0 1px rgba(136, 171, 231, 0.28),
+    0 10px 24px rgba(4, 10, 22, 0.32);
 }
 
 .liveScenario {
@@ -647,6 +655,46 @@
   margin-top: 0;
   display: grid;
   gap: 14px;
+}
+
+.planScenarioTabs {
+  margin-top: 12px;
+  display: inline-flex;
+  gap: 8px;
+  border-radius: 10px;
+  padding: 4px;
+  background: rgba(13, 23, 40, 0.86);
+  box-shadow: inset 0 0 0 1px rgba(110, 142, 195, 0.22);
+}
+
+.planScenarioTab {
+  height: 30px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(164, 183, 211, 0.9);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 220ms ease, color 220ms ease, transform 220ms ease;
+}
+
+.planScenarioTab:hover {
+  color: rgba(220, 233, 254, 0.96);
+  background: rgba(37, 54, 83, 0.58);
+}
+
+.planScenarioTab:focus-visible {
+  outline: 2px solid rgba(139, 172, 226, 0.8);
+  outline-offset: 1px;
+}
+
+.planScenarioTabActive {
+  color: rgba(233, 242, 255, 0.98);
+  background: rgba(82, 103, 230, 0.92);
+  box-shadow: 0 4px 10px rgba(28, 43, 106, 0.34);
 }
 
 .planVisualStack {
@@ -703,6 +751,7 @@
 }
 
 .planRecon {
+  margin-top: 12px;
   position: relative;
   z-index: 0;
   padding-bottom: 18px;
@@ -714,7 +763,7 @@
   z-index: 3;
   width: min(472px, calc(100% - 8px));
   right: -28px;
-  top: 344px;
+  top: 426px;
   background: linear-gradient(165deg, rgba(20, 32, 52, 0.94), rgba(10, 18, 33, 0.95));
   box-shadow:
     0 18px 38px rgba(2, 7, 15, 0.54),
@@ -793,6 +842,44 @@
   gap: 9px;
 }
 
+.planForecastStats {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.planForecastStat {
+  min-height: 56px;
+  border-radius: 9px;
+  background: rgba(16, 28, 46, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(104, 136, 188, 0.15);
+  padding: 8px 10px;
+}
+
+.planForecastStat p {
+  margin: 0;
+  color: rgba(145, 166, 196, 0.9);
+  font-size: 0.64rem;
+  letter-spacing: 0.02em;
+}
+
+.planForecastStat strong {
+  display: block;
+  margin-top: 5px;
+  color: rgba(234, 243, 255, 0.96);
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.planStatUp {
+  color: rgba(114, 224, 189, 0.96) !important;
+}
+
+.planStatDown {
+  color: rgba(253, 144, 144, 0.94) !important;
+}
+
 .planMonth {
   height: 37px;
   border: none;
@@ -800,17 +887,25 @@
   background: rgba(27, 38, 58, 0.78);
   color: rgba(206, 217, 234, 0.92);
   font-size: 0.72rem;
+  cursor: pointer;
+  transition: transform 220ms ease, background 220ms ease, color 220ms ease, box-shadow 220ms ease;
+}
+
+.planMonth:hover {
+  transform: translateY(-1px);
+  background: rgba(38, 52, 78, 0.9);
+}
+
+.planMonth:focus-visible {
+  outline: 2px solid rgba(137, 170, 223, 0.84);
+  outline-offset: 1px;
 }
 
 .planMonthSelected {
   box-shadow:
-    inset 0 0 0 2px rgba(240, 247, 255, 0.88),
-    0 0 0 1px rgba(114, 147, 205, 0.3);
-}
-
-.planMonthCurrent {
-  color: rgba(121, 139, 255, 0.96);
-  box-shadow: inset 0 0 0 2px rgba(99, 124, 255, 0.88);
+    inset 0 0 0 2px rgba(126, 154, 234, 0.9),
+    0 0 0 1px rgba(97, 128, 214, 0.36),
+    0 0 12px rgba(82, 112, 205, 0.24);
 }
 
 .planForecastChart {
@@ -819,6 +914,7 @@
   padding: 9px 11px 11px;
   background: rgba(7, 13, 24, 0.82);
   box-shadow: inset 0 0 0 1px rgba(94, 124, 179, 0.18);
+  transition: transform 260ms ease, box-shadow 260ms ease, background 260ms ease;
 }
 
 .planForecastChart svg {
@@ -832,30 +928,37 @@
   stroke-width: 2.6;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 900;
-  stroke-dashoffset: 900;
-  animation: planForecastDraw 13s cubic-bezier(0.35, 0.08, 0.18, 1) infinite;
+  transition: stroke 260ms ease;
 }
 
 .planForecastArea {
-  fill: rgba(91, 116, 255, 0.16);
-  opacity: 0;
-  animation: planForecastAreaReveal 13s ease-in-out infinite;
+  fill: rgba(91, 116, 255, 0.2);
+  opacity: 1;
+  transition: fill 260ms ease, opacity 260ms ease;
 }
 
-.planForecastBreak {
-  stroke: rgba(118, 136, 250, 0.8);
-  stroke-width: 2;
-  stroke-dasharray: 7 7;
+.planActualSplit {
+  stroke: rgba(148, 171, 215, 0.34);
+  stroke-width: 1.4;
+  stroke-dasharray: 3 8;
 }
 
 .planMonthAxis {
   margin-top: 2px;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  color: rgba(130, 148, 177, 0.82);
+  color: rgba(108, 126, 156, 0.62);
   font-size: 0.62rem;
   text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.planForecastLegend {
+  margin: 6px 0 2px;
+  color: rgba(128, 147, 177, 0.7);
+  font-size: 0.62rem;
+  letter-spacing: 0.03em;
+  text-align: right;
 }
 
 .planDimensionsHead button {
@@ -974,6 +1077,7 @@
   background: rgba(9, 16, 30, 0.88);
   box-shadow: inset 0 0 0 1px rgba(112, 145, 197, 0.18);
   overflow: hidden;
+  transition: transform 260ms ease, box-shadow 260ms ease;
 }
 
 .trendHeader {
@@ -998,6 +1102,87 @@
   gap: 8px;
   color: rgba(159, 176, 201, 0.86);
   font-size: 0.82rem;
+}
+
+.trendHeaderRight {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.metricTrigger {
+  height: 30px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(20, 32, 52, 0.86);
+  box-shadow: inset 0 0 0 1px rgba(112, 144, 196, 0.26);
+  color: rgba(221, 233, 252, 0.95);
+  font-size: 0.84rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 220ms ease, box-shadow 220ms ease;
+}
+
+.metricTrigger:hover {
+  background: rgba(28, 43, 68, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(129, 163, 220, 0.32);
+}
+
+.metricTrigger:focus-visible {
+  outline: 2px solid rgba(134, 167, 220, 0.84);
+  outline-offset: 1px;
+}
+
+.metricTriggerIcon {
+  transition: transform 200ms ease;
+}
+
+.metricTriggerIconOpen {
+  transform: rotate(180deg);
+}
+
+.metricMenu {
+  position: absolute;
+  top: 38px;
+  left: 0;
+  width: 180px;
+  display: grid;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 10px;
+  background: rgba(6, 12, 24, 0.98);
+  box-shadow:
+    0 16px 30px rgba(2, 7, 16, 0.56),
+    inset 0 0 0 1px rgba(111, 146, 205, 0.26);
+  z-index: 10;
+}
+
+.metricOption {
+  min-height: 32px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: rgba(185, 202, 227, 0.94);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: left;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.metricOption:hover {
+  background: rgba(40, 57, 87, 0.56);
+  color: rgba(230, 238, 252, 0.98);
+}
+
+.metricOptionActive {
+  background: rgba(72, 95, 229, 0.34);
+  color: rgba(238, 245, 255, 0.98);
 }
 
 .trendDot {
@@ -1366,6 +1551,10 @@
     transform: none;
   }
 
+  .planForecastStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .planForecastShell,
   .planDimensions {
     animation: none;
@@ -1425,12 +1614,48 @@
     gap: 6px;
   }
 
+  .trendHeader {
+    height: auto;
+    min-height: 58px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    align-items: flex-start;
+    gap: 8px;
+    flex-direction: column;
+  }
+
+  .trendHeaderRight {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .trendLegend {
+    font-size: 0.74rem;
+  }
+
+  .metricTrigger {
+    height: 28px;
+    font-size: 0.78rem;
+  }
+
+  .metricMenu {
+    top: 34px;
+    width: 160px;
+  }
+
   .trendAxisY {
     font-size: 0.62rem;
   }
 
   .trendMonths {
     font-size: 0.62rem;
+  }
+
+  .planForecastLegend {
+    font-size: 0.58rem;
+    margin-top: 5px;
   }
 
   .dashboardSection {
@@ -1463,6 +1688,19 @@
 
   .planPanel {
     padding: 14px;
+  }
+
+  .planScenarioTabs {
+    flex-wrap: wrap;
+  }
+
+  .planForecastStats {
+    grid-template-columns: 1fr;
+  }
+
+  .planForecastStat {
+    min-height: 50px;
+    padding: 8px 9px;
   }
 
   .planVisualStack {
