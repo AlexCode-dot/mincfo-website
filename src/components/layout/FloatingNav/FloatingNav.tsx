@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import styles from "./FloatingNav.module.scss";
 
 const HOMEPAGE_SECTIONS = [
@@ -9,8 +9,8 @@ const HOMEPAGE_SECTIONS = [
   "produkt",
   "losningar",
   "customers",
-  "security",
   "how-it-works",
+  "security",
 ] as const;
 
 const SOLUTION_GROUPS = [
@@ -32,6 +32,10 @@ const SOLUTION_GROUPS = [
   },
 ];
 
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
+
 export default function FloatingNav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -40,6 +44,7 @@ export default function FloatingNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
   const navRef = useRef<HTMLElement | null>(null);
+  const scrollRafRef = useRef<number | null>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -60,6 +65,15 @@ export default function FloatingNav() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (scrollRafRef.current) {
+        window.cancelAnimationFrame(scrollRafRef.current);
+        scrollRafRef.current = null;
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -116,10 +130,105 @@ export default function FloatingNav() {
 
   const heroHref = pathname === "/" ? "#hero" : "/#hero";
 
+  const animateScrollTo = (targetY: number) => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) {
+      window.scrollTo(0, targetY);
+      return;
+    }
+
+    if (scrollRafRef.current) {
+      window.cancelAnimationFrame(scrollRafRef.current);
+      scrollRafRef.current = null;
+    }
+
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    if (Math.abs(distance) < 2) {
+      window.scrollTo(0, targetY);
+      return;
+    }
+
+    const duration = Math.abs(distance) < 96
+      ? 520
+      : clamp(Math.abs(distance) * 1.12, 900, 1600);
+    const startTime = performance.now();
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = clamp(elapsed / duration, 0, 1);
+      const eased = easeOutCubic(progress);
+      window.scrollTo(0, startY + distance * eased);
+
+      if (progress < 1) {
+        scrollRafRef.current = window.requestAnimationFrame(tick);
+      } else {
+        scrollRafRef.current = null;
+      }
+    };
+
+    scrollRafRef.current = window.requestAnimationFrame(tick);
+  };
+
+  const handleSectionAnchorClick = (
+    event: MouseEvent<HTMLAnchorElement>,
+    href: string,
+    onDone?: () => void,
+  ) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    const hashIndex = href.indexOf("#");
+    if (hashIndex === -1) {
+      onDone?.();
+      return;
+    }
+
+    const hash = href.slice(hashIndex + 1);
+    if (!hash) {
+      onDone?.();
+      return;
+    }
+
+    const path = href.slice(0, hashIndex);
+    const targetPath = path === "" ? "/" : path;
+    if (pathname !== targetPath) {
+      onDone?.();
+      return;
+    }
+
+    const target = document.getElementById(hash);
+    if (!target) {
+      onDone?.();
+      return;
+    }
+
+    event.preventDefault();
+    const scrollPaddingTop = Number.parseFloat(
+      window.getComputedStyle(document.documentElement).scrollPaddingTop,
+    ) || 0;
+    const targetY = target.getBoundingClientRect().top + window.scrollY - scrollPaddingTop;
+    animateScrollTo(Math.max(0, targetY));
+    setSolutionsOpen(false);
+    onDone?.();
+  };
+
   return (
     <nav ref={navRef} className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.desktopNav}>
-        <a href={sectionHref("produkt")} className={`${styles.link} ${isActive("produkt") ? styles.linkActive : ""}`}>
+        <a
+          href={sectionHref("produkt")}
+          className={`${styles.link} ${isActive("produkt") ? styles.linkActive : ""}`}
+          onClick={(event) => handleSectionAnchorClick(event, sectionHref("produkt"))}
+        >
           Produkt
         </a>
         <div className={styles.menuWrap}>
@@ -127,6 +236,7 @@ export default function FloatingNav() {
             href={sectionHref("losningar")}
             className={`${styles.link} ${isActive("losningar") || isSolutionsPage ? styles.linkActive : ""}`}
             aria-current={isSolutionsPage ? "page" : undefined}
+            onClick={(event) => handleSectionAnchorClick(event, sectionHref("losningar"))}
           >
             Lösningar
           </a>
@@ -165,22 +275,29 @@ export default function FloatingNav() {
         <a
           href={sectionHref("customers")}
           className={`${styles.link} ${styles.desktopOnly} ${isActive("customers") ? styles.linkActive : ""}`}
+          onClick={(event) => handleSectionAnchorClick(event, sectionHref("customers"))}
         >
           Kundcase
         </a>
         <a
+          href={sectionHref("how-it-works")}
+          className={`${styles.link} ${styles.desktopOnly} ${isActive("how-it-works") ? styles.linkActive : ""}`}
+          onClick={(event) => handleSectionAnchorClick(event, sectionHref("how-it-works"))}
+        >
+          Hur det funkar
+        </a>
+        <a
           href={sectionHref("security")}
           className={`${styles.link} ${styles.desktopOnly} ${isActive("security") ? styles.linkActive : ""}`}
+          onClick={(event) => handleSectionAnchorClick(event, sectionHref("security"))}
         >
           Säkerhet
         </a>
         <a
-          href={sectionHref("how-it-works")}
-          className={`${styles.link} ${styles.desktopOnly} ${isActive("how-it-works") ? styles.linkActive : ""}`}
+          href={heroHref}
+          className={styles.cta}
+          onClick={(event) => handleSectionAnchorClick(event, heroHref)}
         >
-          Hur det funkar
-        </a>
-        <a href={heroHref} className={styles.cta}>
           Kontakta oss
         </a>
       </div>
@@ -204,31 +321,38 @@ export default function FloatingNav() {
       >
         <a
           href={sectionHref("produkt")}
-          onClick={closeMobileMenu}
+          onClick={(event) => handleSectionAnchorClick(event, sectionHref("produkt"), closeMobileMenu)}
           className={`${styles.mobileLink} ${isActive("produkt") ? styles.mobileLinkActive : ""}`}
         >
           Produkt
         </a>
         <a
+          href={sectionHref("losningar")}
+          onClick={(event) => handleSectionAnchorClick(event, sectionHref("losningar"), closeMobileMenu)}
+          className={`${styles.mobileLink} ${isActive("losningar") ? styles.mobileLinkActive : ""}`}
+        >
+          Lösningar
+        </a>
+        <a
           href={sectionHref("customers")}
-          onClick={closeMobileMenu}
+          onClick={(event) => handleSectionAnchorClick(event, sectionHref("customers"), closeMobileMenu)}
           className={`${styles.mobileLink} ${isActive("customers") ? styles.mobileLinkActive : ""}`}
         >
           Kundcase
         </a>
         <a
-          href={sectionHref("security")}
-          onClick={closeMobileMenu}
-          className={`${styles.mobileLink} ${isActive("security") ? styles.mobileLinkActive : ""}`}
-        >
-          Säkerhet
-        </a>
-        <a
           href={sectionHref("how-it-works")}
-          onClick={closeMobileMenu}
+          onClick={(event) => handleSectionAnchorClick(event, sectionHref("how-it-works"), closeMobileMenu)}
           className={`${styles.mobileLink} ${isActive("how-it-works") ? styles.mobileLinkActive : ""}`}
         >
           Hur det funkar
+        </a>
+        <a
+          href={sectionHref("security")}
+          onClick={(event) => handleSectionAnchorClick(event, sectionHref("security"), closeMobileMenu)}
+          className={`${styles.mobileLink} ${isActive("security") ? styles.mobileLinkActive : ""}`}
+        >
+          Säkerhet
         </a>
 
         <button
@@ -270,7 +394,11 @@ export default function FloatingNav() {
           ))}
         </div>
 
-        <a href={heroHref} className={styles.mobileCta} onClick={closeMobileMenu}>
+        <a
+          href={heroHref}
+          className={styles.mobileCta}
+          onClick={(event) => handleSectionAnchorClick(event, heroHref, closeMobileMenu)}
+        >
           Kontakta oss
         </a>
       </div>

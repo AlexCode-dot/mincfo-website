@@ -1,12 +1,84 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import styles from "./Ending.module.scss";
 
+const cubic = (
+  p0: number,
+  p1: number,
+  p2: number,
+  p3: number,
+  t: number,
+) =>
+  (1 - t) ** 3 * p0 +
+  3 * (1 - t) ** 2 * t * p1 +
+  3 * (1 - t) * t ** 2 * p2 +
+  t ** 3 * p3;
+
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+
+const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
+
 export default function Ending() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [curveProgress, setCurveProgress] = useState(0);
+
+  useEffect(() => {
+    const updateCurve = () => {
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const start = window.innerHeight * 1.1;
+      const end = window.innerHeight * 0.46;
+      const progress = clamp((start - rect.top) / (start - end), 0, 1);
+      setCurveProgress(progress);
+    };
+
+    updateCurve();
+    window.addEventListener("scroll", updateCurve, { passive: true });
+    window.addEventListener("resize", updateCurve);
+    return () => {
+      window.removeEventListener("scroll", updateCurve);
+      window.removeEventListener("resize", updateCurve);
+    };
+  }, []);
+
+  const sideY = lerp(1, 13, curveProgress);
+  const centerY = lerp(1, 104, curveProgress);
+  const curvePath = `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`;
+  const curvePoints: string[] = [];
+  for (let i = 0; i <= 18; i += 1) {
+    const t = i / 18;
+    const x = cubic(0, 280, 480, 720, t);
+    const y = cubic(sideY, sideY, centerY, centerY, t);
+    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
+  }
+  for (let i = 1; i <= 18; i += 1) {
+    const t = i / 18;
+    const x = cubic(720, 960, 1160, 1440, t);
+    const y = cubic(centerY, centerY, sideY, sideY, t);
+    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
+  }
+  const curveClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
+
   return (
-    <section className={styles.section} id="kontakt">
+    <section ref={sectionRef} className={styles.section} id="kontakt">
+      <svg
+        className={styles.curveCut}
+        viewBox="0 0 1440 190"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path d={curvePath} />
+      </svg>
+      <div
+        className={styles.background}
+        aria-hidden="true"
+        style={{ clipPath: curveClip, WebkitClipPath: curveClip } as CSSProperties}
+      />
+
       <div className={styles.container}>
         <div className={styles.ctaPanel}>
           <h2>Ta nästa steg mot en smartare ekonomifunktion</h2>
@@ -19,10 +91,6 @@ export default function Ending() {
             Boka ett kostnadsfritt möte <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
           </a>
         </div>
-
-        <Link href="/karriar" className={styles.secondaryCta}>
-          Se våra lediga tjänster <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
-        </Link>
       </div>
     </section>
   );

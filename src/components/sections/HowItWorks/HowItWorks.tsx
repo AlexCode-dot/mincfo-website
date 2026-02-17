@@ -58,7 +58,7 @@ export default function HowItWorks() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setVisible((prev) => prev || entry.isIntersecting);
+        setVisible(entry.isIntersecting);
         setInView(entry.isIntersecting);
       },
       { threshold: 0.24, rootMargin: "0px 0px -8% 0px" },
@@ -72,13 +72,18 @@ export default function HowItWorks() {
     const updateCurve = () => {
       const section = sectionRef.current;
       if (!section) return;
-      const sectionTop = section.offsetTop;
-      const viewportBottom = window.scrollY + window.innerHeight;
-      const earlyOffset = window.innerHeight * 0.95;
-      const triggerStart = sectionTop - earlyOffset;
-      const triggerRange = window.innerHeight * 0.72;
-      const progress = clamp((viewportBottom - triggerStart) / triggerRange, 0, 1);
-      setCurveProgress(progress);
+      const rect = section.getBoundingClientRect();
+      const viewport = window.innerHeight;
+      // Keep divider straight until section approaches viewport,
+      // then animate curvature progressively.
+      if (rect.top >= viewport) {
+        setCurveProgress(0);
+      } else {
+        const start = viewport * 0.9;
+        const end = viewport * 0.42;
+        const progress = clamp((start - rect.top) / (start - end), 0, 1);
+        setCurveProgress(progress);
+      }
     };
 
     updateCurve();
@@ -156,8 +161,8 @@ export default function HowItWorks() {
     };
   }, [inView]);
 
-  const sideY = 6;
-  const centerY = lerp(6, 86, curveProgress);
+  const sideY = lerp(6, 86, curveProgress);
+  const centerY = lerp(6, 2, curveProgress);
   const cutPath = `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`;
   const curvePoints: string[] = [];
   for (let i = 0; i <= 18; i += 1) {

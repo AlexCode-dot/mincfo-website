@@ -18,9 +18,9 @@ export default function Home() {
       <AICopilot />
       <Solutions />
       <Customers />
-      <Security />
       <HowItWorks />
       <Ending />
+      <Security />
       <SiteFooter />
     </>
   );

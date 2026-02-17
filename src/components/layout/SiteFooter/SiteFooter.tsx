@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import styles from "./SiteFooter.module.scss";
 
@@ -22,6 +23,9 @@ export default function SiteFooter() {
               Din moderna ekonomifunktion för tillväxtbolag som vill arbeta mer
               datadrivet med ekonomi, rapportering och beslut.
             </p>
+            <Link href="/karriar" className={styles.careersCta}>
+              Se våra lediga tjänster <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+            </Link>
           </div>
 
           <div className={styles.linkCol}>

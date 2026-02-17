@@ -156,7 +156,7 @@ export default function AICopilot() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setVisible((previous) => previous || entry.isIntersecting);
+        setVisible(entry.isIntersecting);
       },
       { threshold: 0.12, rootMargin: "0px 0px -28% 0px" },
     );
@@ -171,7 +171,7 @@ export default function AICopilot() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setDashboardVisible((previous) => previous || entry.isIntersecting);
+        setDashboardVisible(entry.isIntersecting);
       },
       { threshold: 0.28, rootMargin: "0px 0px -24% 0px" },
     );
@@ -186,7 +186,7 @@ export default function AICopilot() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setPlanVisible((previous) => previous || entry.isIntersecting);
+        setPlanVisible(entry.isIntersecting);
       },
       { threshold: 0.22, rootMargin: "0px 0px -18% 0px" },
     );

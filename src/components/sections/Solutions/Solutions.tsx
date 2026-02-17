@@ -74,7 +74,7 @@ export default function Solutions() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setVisible((prev) => prev || entry.isIntersecting);
+        setVisible(entry.isIntersecting);
       },
       { threshold: 0.3, rootMargin: "0px 0px -24% 0px" },
     );

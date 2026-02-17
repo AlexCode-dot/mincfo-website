@@ -92,7 +92,7 @@ export default function Customers() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setVisible((prev) => prev || entry.isIntersecting);
+        setVisible(entry.isIntersecting);
       },
       { threshold: 0.3, rootMargin: "0px 0px -24% 0px" },
     );
@@ -106,11 +106,15 @@ export default function Customers() {
       const section = sectionRef.current;
       if (!section) return;
       const rect = section.getBoundingClientRect();
-      // Start animation earlier so the transition begins before the section fully enters.
-      const start = window.innerHeight * 1.35;
-      const end = window.innerHeight * 0.74;
-      const progress = clamp((start - rect.top) / (start - end), 0, 1);
-      setCurveProgress(progress);
+      const viewport = window.innerHeight;
+      if (rect.top >= viewport) {
+        setCurveProgress(0);
+      } else {
+        const start = viewport * 0.92;
+        const end = viewport * 0.46;
+        const progress = clamp((start - rect.top) / (start - end), 0, 1);
+        setCurveProgress(progress);
+      }
     };
 
     updateCurve();

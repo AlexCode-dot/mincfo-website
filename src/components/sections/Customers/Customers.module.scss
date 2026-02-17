@@ -1,7 +1,7 @@
 .section {
   position: relative;
   margin-top: -96px;
-  padding: clamp(124px, 14.8vh, 184px) 0 clamp(102px, 11.8vh, 148px);
+  padding: clamp(124px, 14.8vh, 184px) 0 clamp(156px, 17vh, 214px);
   overflow: hidden;
 }
 
@@ -109,6 +109,7 @@
 .trustedTicker {
   margin-top: 92px;
   padding: 0;
+  margin-bottom: clamp(24px, 4vh, 44px);
 }
 
 .trustedLabel {

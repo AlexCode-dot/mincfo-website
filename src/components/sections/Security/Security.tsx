@@ -1,39 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Database, Loader2, Lock } from "lucide-react";
 import styles from "./Security.module.scss";
-
-const CUT_HEIGHT = 170;
-const CUT_SIDE_Y = 78;
-const CUT_CENTER_Y = 14;
-const CUT_PATH = `M0 ${CUT_SIDE_Y} C280 ${CUT_SIDE_Y} 480 ${CUT_CENTER_Y} 720 ${CUT_CENTER_Y} C960 ${CUT_CENTER_Y} 1160 ${CUT_SIDE_Y} 1440 ${CUT_SIDE_Y}`;
-const cubic = (
-  p0: number,
-  p1: number,
-  p2: number,
-  p3: number,
-  t: number,
-) =>
-  (1 - t) ** 3 * p0 +
-  3 * (1 - t) ** 2 * t * p1 +
-  3 * (1 - t) * t ** 2 * p2 +
-  t ** 3 * p3;
-
-const curvePoints: string[] = [];
-for (let i = 0; i <= 18; i += 1) {
-  const t = i / 18;
-  const x = cubic(0, 280, 480, 720, t);
-  const y = cubic(CUT_SIDE_Y, CUT_SIDE_Y, CUT_CENTER_Y, CUT_CENTER_Y, t);
-  curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
-}
-for (let i = 1; i <= 18; i += 1) {
-  const t = i / 18;
-  const x = cubic(720, 960, 1160, 1440, t);
-  const y = cubic(CUT_CENTER_Y, CUT_CENTER_Y, CUT_SIDE_Y, CUT_SIDE_Y, t);
-  curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
-}
-const CUT_CLIP = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
 
 export default function Security() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -45,7 +14,7 @@ export default function Security() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setVisible((prev) => prev || entry.isIntersecting);
+        setVisible(entry.isIntersecting);
       },
       { threshold: 0.34, rootMargin: "0px 0px -8% 0px" },
     );
@@ -60,20 +29,7 @@ export default function Security() {
       id="security"
       className={`${styles.section} ${visible ? styles.visible : ""}`}
     >
-      <svg
-        className={styles.curveCut}
-        viewBox={`0 0 1440 ${CUT_HEIGHT}`}
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path d={CUT_PATH} />
-      </svg>
-
-      <div
-        className={styles.background}
-        aria-hidden="true"
-        style={{ clipPath: CUT_CLIP, WebkitClipPath: CUT_CLIP } as CSSProperties}
-      />
+      <div className={styles.background} aria-hidden="true" />
 
       <div className={styles.container}>
         <header className={styles.header}>

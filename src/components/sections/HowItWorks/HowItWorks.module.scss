@@ -1,6 +1,6 @@
 .section {
   position: relative;
-  margin-top: -96px;
+  margin-top: -78px;
   padding: clamp(124px, 14.8vh, 184px) 0 clamp(108px, 13vh, 156px);
   overflow: hidden;
 }
@@ -274,7 +274,7 @@
 
 @media (max-width: 840px) {
   .section {
-    margin-top: -68px;
+    margin-top: -52px;
     padding-top: 120px;
   }
 
