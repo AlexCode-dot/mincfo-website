@@ -43,6 +43,9 @@ const SOLUTIONS = [
   },
 ];
 
+const CARD_TRACER_PATH =
+  "M 0.8 7.2 A 6.4 6.4 0 0 1 7.2 0.8 H 92.8 A 6.4 6.4 0 0 1 99.2 7.2 V 92.8 A 6.4 6.4 0 0 1 92.8 99.2 H 7.2 A 6.4 6.4 0 0 1 0.8 92.8 Z";
+
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
@@ -167,6 +170,67 @@ export default function Solutions() {
                 const Icon = item.icon;
                 return (
                   <article key={item.href} className={styles.card}>
+                    <div className={styles.cardTracer} aria-hidden="true">
+                      <svg
+                        className={styles.cardTracerSvg}
+                        viewBox="0 0 100 100"
+                        preserveAspectRatio="none"
+                      >
+                        <path
+                          className={`${styles.stroke} ${styles.strokeAGlow}`}
+                          d={CARD_TRACER_PATH}
+                          pathLength={1}
+                        >
+                          <animate
+                            attributeName="stroke-dashoffset"
+                            from="0"
+                            to="-1"
+                            dur="8s"
+                            repeatCount="indefinite"
+                          />
+                        </path>
+                        <path
+                          className={`${styles.stroke} ${styles.strokeA}`}
+                          d={CARD_TRACER_PATH}
+                          pathLength={1}
+                        >
+                          <animate
+                            attributeName="stroke-dashoffset"
+                            from="0"
+                            to="-1"
+                            dur="8s"
+                            repeatCount="indefinite"
+                          />
+                        </path>
+                        <path
+                          className={`${styles.stroke} ${styles.strokeBGlow}`}
+                          d={CARD_TRACER_PATH}
+                          pathLength={1}
+                        >
+                          <animate
+                            attributeName="stroke-dashoffset"
+                            from="-0.5"
+                            to="-1.5"
+                            dur="8s"
+                            repeatCount="indefinite"
+                          />
+                        </path>
+                        <path
+                          className={`${styles.stroke} ${styles.strokeB}`}
+                          d={CARD_TRACER_PATH}
+                          pathLength={1}
+                        >
+                          <animate
+                            attributeName="stroke-dashoffset"
+                            from="-0.5"
+                            to="-1.5"
+                            dur="8s"
+                            repeatCount="indefinite"
+                          />
+                        </path>
+                      </svg>
+                    </div>
+
                     <div className={styles.iconWrap}>
                       <Icon size={20} aria-hidden="true" />
                     </div>
