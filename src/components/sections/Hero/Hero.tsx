@@ -3,12 +3,14 @@
 import { ChevronRight, Lock, Play } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import BeamBackground from "@/components/visual/BeamBackground/BeamBackground";
+import { homeContent } from "@/content/homeContent";
 import styles from "./Hero.module.scss";
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
 export default function Hero() {
+  const content = homeContent.hero;
   const sectionRef = useRef<HTMLElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -146,23 +148,18 @@ export default function Hero() {
       <div className={styles.container}>
         <div className={styles.tag}>
           <span className={styles.ping} />
-          Financial Intelligence
+          {content.tag}
         </div>
 
         <h1 className={styles.title}>
-          Den moderna ekonomitjänsten <br />– med AI som analyserar, förutser
-          och agerar
+          {content.titleTop} <br />– {content.titleBottom}
         </h1>
 
-        <p className={styles.subtitle}>
-          MinCFO kombinerar automation, dashboards i realtid och en AI-copilot
-          som låter dig chatta med din data. Få insikter, prognoser och
-          proaktiva rekommendationer — utan att lägga tid på manuellt arbete.
-        </p>
+        <p className={styles.subtitle}>{content.subtitle}</p>
 
         <div className={styles.ctaRow}>
           <a className={styles.primaryCta} href="#">
-            Boka en demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+            {content.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
           </a>
         </div>
 
@@ -174,7 +171,7 @@ export default function Hero() {
               <span className={styles.dot} />
               <div className={styles.address}>
                 <Lock aria-hidden="true" size={12} />
-                app.mincfo.com/dashboard
+                {content.appAddress}
               </div>
             </div>
 
@@ -186,7 +183,7 @@ export default function Hero() {
                   className={styles.playButton}
                   type="button"
                   onClick={handlePlayDemo}
-                  aria-label="Play demo video"
+                  aria-label={content.playDemoAriaLabel}
                 >
                   <span className={styles.playPulse} />
                   <Play aria-hidden="true" size={30} />
@@ -200,7 +197,7 @@ export default function Hero() {
                 controls={isPlaying}
                 playsInline
                 preload={useFullVideo ? "metadata" : "auto"}
-                aria-label="Demo video of MinCFO dashboard"
+                aria-label={content.videoAriaLabel}
                 onCanPlay={handleVideoCanPlay}
               >
                 {useFullVideo ? (
@@ -211,7 +208,7 @@ export default function Hero() {
                 ) : (
                   <source src="/videos/mincfo-demo-video-preview.m4v" type="video/mp4" />
                 )}
-                Din webbläsare kan inte spela upp videon.
+                {content.videoFallback}
               </video>
             </div>
           </div>

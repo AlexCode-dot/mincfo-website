@@ -2,46 +2,17 @@
 
 import { Briefcase, Building2, ChevronRight, Cpu, Handshake, Rocket, ShoppingCart } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { homeContent } from "@/content/homeContent";
 import styles from "./Solutions.module.scss";
 
-const SOLUTIONS = [
-  {
-    href: "/losningar/ceo-founders",
-    title: "CEO & Founders",
-    text: "Finansiell klarhet för snabbare vägval med AI Copilot, realtidsdata och scenarioplanering.",
-    icon: Rocket,
-  },
-  {
-    href: "/losningar/cfo-finance",
-    title: "CFO & Finance Team",
-    text: "Mindre manuella loopar och bättre forecast med dashboards, automation och spårbar analys.",
-    icon: Briefcase,
-  },
-  {
-    href: "/losningar/fractional-cfo",
-    title: "Fractional CFO",
-    text: "Leverera board-ready underlag snabbare med ett skalbart arbetssätt och hög leveransprecision.",
-    icon: Handshake,
-  },
-  {
-    href: "/losningar/saas-tech",
-    title: "SaaS / Tech",
-    text: "Koppla produkt, GTM och ekonomi i samma beslutsyta för hållbar tillväxt med kontroll.",
-    icon: Cpu,
-  },
-  {
-    href: "/losningar/konsult-tjanster",
-    title: "Konsult & Tjänster",
-    text: "Styr beläggning, projektmarginal och cash i realtid med tydliga signaler per kund och uppdrag.",
-    icon: Building2,
-  },
-  {
-    href: "/losningar/ehandel",
-    title: "E-handel",
-    text: "Få kontroll på marginal, lager och likviditet när kampanjer och inköp påverkar utfallet dag för dag.",
-    icon: ShoppingCart,
-  },
-];
+const ICON_MAP = {
+  rocket: Rocket,
+  briefcase: Briefcase,
+  handshake: Handshake,
+  cpu: Cpu,
+  building2: Building2,
+  shoppingCart: ShoppingCart,
+} as const;
 
 const CARD_TRACER_PATH =
   "M 0.8 7.2 A 6.4 6.4 0 0 1 7.2 0.8 H 92.8 A 6.4 6.4 0 0 1 99.2 7.2 V 92.8 A 6.4 6.4 0 0 1 92.8 99.2 H 7.2 A 6.4 6.4 0 0 1 0.8 92.8 Z";
@@ -64,6 +35,11 @@ const cubic = (
   t ** 3 * p3;
 
 export default function Solutions() {
+  const content = homeContent.solutions;
+  const solutions = content.cards.map((card) => ({
+    ...card,
+    icon: ICON_MAP[card.icon as keyof typeof ICON_MAP],
+  }));
   const sectionRef = useRef<HTMLElement | null>(null);
   const [curveProgress, setCurveProgress] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -156,17 +132,14 @@ export default function Solutions() {
       <div className={styles.container}>
         <div className={styles.layout}>
           <header className={styles.header}>
-            <span className={styles.pill}>Lösningar</span>
-            <h2>Hitta rätt ekonomiupplägg för ert bolag</h2>
-            <p>
-              Olika bolag har olika behov. Välj den inriktning som passar er
-              situation och läs hur vi kan stötta.
-            </p>
+            <span className={styles.pill}>{content.pill}</span>
+            <h2>{content.title}</h2>
+            <p>{content.description}</p>
           </header>
 
           <div className={styles.cardsColumn}>
             <div className={styles.grid}>
-              {SOLUTIONS.map((item) => {
+              {solutions.map((item) => {
                 const Icon = item.icon;
                 return (
                   <article key={item.href} className={styles.card}>
@@ -240,8 +213,8 @@ export default function Solutions() {
                       <p>{item.text}</p>
                     </div>
 
-                    <a href={item.href} className={styles.cta} aria-label={`Läs mer om ${item.title}`}>
-                      <span>Se lösning</span>
+                    <a href={item.href} className={styles.cta} aria-label={`${content.ctaAriaPrefix} ${item.title}`}>
+                      <span>{content.cta}</span>
                       <ChevronRight size={18} aria-hidden="true" />
                     </a>
                   </article>

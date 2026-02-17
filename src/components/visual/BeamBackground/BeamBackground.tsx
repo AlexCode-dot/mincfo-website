@@ -104,8 +104,7 @@ export default function BeamBackground({
     };
 
     const drawDots = (t: number) => {
-      const { width, height, dpr } = sizeRef.current;
-      const spacing = clamp(DOT_SPACING * dpr, 6, 12);
+      const { width, height } = sizeRef.current;
       const activeHeight = Math.max(height - extendBottom, height * 0.62);
       const tailZone = Math.max(extendBottom + 40, height * 0.14);
       const tailStart = activeHeight - Math.max(28, extendBottom * 0.12);
@@ -259,7 +258,7 @@ export default function BeamBackground({
         window.cancelAnimationFrame(rafRef.current);
       }
     };
-  }, []);
+  }, [extendBottom]);
 
   const wrapperStyle: CSSProperties =
     extendBottom > 0 ? { bottom: `-${extendBottom}px` } : {};

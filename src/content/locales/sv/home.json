@@ -1,0 +1,333 @@
+{
+  "floatingNav": {
+    "desktop": {
+      "product": "Produkt",
+      "solutions": "Lösningar",
+      "customers": "Kundcase",
+      "security": "Säkerhet",
+      "howItWorks": "Hur det funkar",
+      "contact": "Kontakta oss",
+      "openSolutionsMenuAriaLabel": "Öppna lösningsmeny",
+      "openMenuAriaLabel": "Öppna meny"
+    },
+    "solutionGroups": [
+      {
+        "title": "Efter roll",
+        "items": [
+          { "href": "/losningar/ceo-founders", "label": "Founders & CEO" },
+          { "href": "/losningar/cfo-finance", "label": "CFO & Finance Team" },
+          { "href": "/losningar/fractional-cfo", "label": "Fractional CFO" }
+        ]
+      },
+      {
+        "title": "Efter bransch",
+        "items": [
+          { "href": "/losningar/saas-tech", "label": "SaaS / Tech" },
+          { "href": "/losningar/konsult-tjanster", "label": "Konsult & Tjänster" },
+          { "href": "/losningar/ehandel", "label": "E-handel" }
+        ]
+      }
+    ]
+  },
+  "hero": {
+    "tag": "Financial Intelligence",
+    "titleTop": "Den moderna ekonomitjänsten",
+    "titleBottom": "med AI som analyserar, förutser och agerar",
+    "subtitle": "MinCFO kombinerar automation, dashboards i realtid och en AI-copilot som låter dig chatta med din data. Få insikter, prognoser och proaktiva rekommendationer \u2014 utan att lägga tid på manuellt arbete.",
+    "primaryCta": "Boka en demo",
+    "appAddress": "app.mincfo.com/dashboard",
+    "playDemoAriaLabel": "Play demo video",
+    "videoAriaLabel": "Demo video of MinCFO dashboard",
+    "videoFallback": "Din webbläsare kan inte spela upp videon."
+  },
+  "aiCopilot": {
+    "examples": [
+      {
+        "question": "Hur ser vår runway ut baserat på Q3?",
+        "answer": "Med nuvarande burn-rate har ni cirka 11.4 månader runway. Största påverkan är SaaS-kostnader och rekrytering i november.",
+        "chartTitle": "Runway forecast",
+        "chartUnit": "Månader",
+        "yTicks": ["12", "10", "8", "6"],
+        "bars": [
+          { "label": "Nu", "value": "11.4", "height": "92%" },
+          { "label": "Okt", "value": "10.2", "height": "82%" },
+          { "label": "Nov", "value": "8.9", "height": "71%" },
+          { "label": "Dec", "value": "7.4", "height": "59%" },
+          { "label": "Jan", "value": "6.0", "height": "48%" }
+        ]
+      },
+      {
+        "question": "Hur stor del av kostnaderna är fasta vs rörliga?",
+        "answer": "Kostnadsbasen är ungefär 62% fasta kostnader och 38% rörliga. De rörliga kostnaderna drivs främst av marknadsföring och transaktionsavgifter.",
+        "chartTitle": "Kostnadsfördelning",
+        "chartUnit": "Andel %",
+        "yTicks": ["80", "60", "40", "20"],
+        "bars": [
+          { "label": "Fasta", "value": "62%", "height": "78%" },
+          { "label": "Rörliga", "value": "38%", "height": "48%" }
+        ]
+      }
+    ],
+    "monthLabelsSv": ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
+    "monthLabelsEn": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "trendAxisTicks": ["500K", "375K", "250K", "125K", "0"],
+    "analysisMetrics": {
+      "netIncome": "Net Income",
+      "ebit": "EBIT",
+      "ebitda": "EBITDA",
+      "grossProfit": "Gross Profit"
+    },
+    "analysisCompareLabel": "Compared to previous period",
+    "left": {
+      "pill": "Vad plattformen gör",
+      "title": "AI-copilot som analyserar och agerar",
+      "text": "Ställ frågor om resultat, kostnader och runway. Få svar, grafer och rapporter direkt. AI kan även förbereda åtgärder i era ekonomiflöden med full spårbarhet.",
+      "list": [
+        "Chatta med din data - direkta svar",
+        "Proaktiva insights och avvikelser",
+        "AI-stödda åtgärder med audit log"
+      ]
+    },
+    "chatPanel": {
+      "title": "AI Copilot",
+      "loadingAriaLabel": "AI analyserar data",
+      "sendingQuestion": "Skickar fråga...",
+      "loadingText": "AI analyserar data...",
+      "inputPlaceholder": "Fråga AI om ekonomi, forecast eller nästa åtgärd",
+      "sendQuestionAriaLabel": "Skicka fråga"
+    },
+    "dashboard": {
+      "pill": "Dashboard",
+      "title": "Analys & översikt",
+      "text": "Tillgång till dashboard med de senaste finansiella nyckeltalen för att ta informerade beslut. Få tydliga insikter för att identifiera flaskhalsar och säkerställa bättre likviditet.",
+      "list": [
+        "Realtidsrapportering av nyckeltal",
+        "Kassaflödesoptimering i realtid",
+        "Identifiera lönsamma segment"
+      ],
+      "incomeStatementLabel": "Income Statement · 2025",
+      "metricMenuAriaLabel": "Välj metrisk",
+      "currentLabelSuffix": "Current",
+      "previousLabelSuffix": "Previous",
+      "panelAriaLabel": "Dashboard Preview",
+      "currencyLabel": "SEK"
+    },
+    "plan": {
+      "pill": "Planering & Jämförelse",
+      "title": "Budgetering, prognoser och benchmarking",
+      "text": "Datadrivna prognoser och strukturerade dimensioner hjälper dig att planera framåt, minska ekonomiska risker och prioritera rätt initiativ både på kort och lång sikt.",
+      "list": [
+        "Automatiserade budgetprocesser",
+        "Strukturera intäkter och kostnader med egna dimensioner",
+        "Scenariohantering för framtiden",
+        "Datadriven riskminimering",
+        "Jämför mellan dimensioner och perioder",
+        "Identifiera avvikelser mellan segment"
+      ],
+      "forecastTitle": "Forecast",
+      "liveForecast": "Live forecast",
+      "reconciliationTitle": "Reconciliation",
+      "actualsThroughJun": "2025 · Actuals through Jun",
+      "actualMonthPrefix": "Actual month",
+      "forecastMonthPrefix": "Forecast month",
+      "vsPreviousMonth": "Vs previous month",
+      "annualVarianceVsBaseline": "Annual variance vs baseline",
+      "showBudgetForPrefix": "Visa budget för",
+      "actualForecastLegend": "Actuals: Jan-Jun · Forecast: Jul-Dec",
+      "dimensionsTitle": "Dimensions",
+      "newDimensionButton": "+ New Dimension",
+      "benchmarkTargetLabel": "Benchmark target",
+      "panelAriaLabel": "Planering och benchmarking",
+      "currencySuffix": "kr",
+      "dimensionRows": [
+        "Recurring - Revenue",
+        "Partner Sales",
+        "Consulting - Strategic",
+        "Project Delivery"
+      ]
+    }
+  },
+  "solutions": {
+    "pill": "Lösningar",
+    "title": "Hitta rätt ekonomiupplägg för ert bolag",
+    "description": "Olika bolag har olika behov. Välj den inriktning som passar er situation och läs hur vi kan stötta.",
+    "cta": "Se lösning",
+    "ctaAriaPrefix": "Läs mer om",
+    "cards": [
+      {
+        "href": "/losningar/ceo-founders",
+        "title": "CEO & Founders",
+        "text": "Finansiell klarhet för snabbare vägval med AI Copilot, realtidsdata och scenarioplanering.",
+        "icon": "rocket"
+      },
+      {
+        "href": "/losningar/cfo-finance",
+        "title": "CFO & Finance Team",
+        "text": "Mindre manuella loopar och bättre forecast med dashboards, automation och spårbar analys.",
+        "icon": "briefcase"
+      },
+      {
+        "href": "/losningar/fractional-cfo",
+        "title": "Fractional CFO",
+        "text": "Leverera board-ready underlag snabbare med ett skalbart arbetssätt och hög leveransprecision.",
+        "icon": "handshake"
+      },
+      {
+        "href": "/losningar/saas-tech",
+        "title": "SaaS / Tech",
+        "text": "Koppla produkt, GTM och ekonomi i samma beslutsyta för hållbar tillväxt med kontroll.",
+        "icon": "cpu"
+      },
+      {
+        "href": "/losningar/konsult-tjanster",
+        "title": "Konsult & Tjänster",
+        "text": "Styr beläggning, projektmarginal och cash i realtid med tydliga signaler per kund och uppdrag.",
+        "icon": "building2"
+      },
+      {
+        "href": "/losningar/ehandel",
+        "title": "E-handel",
+        "text": "Få kontroll på marginal, lager och likviditet när kampanjer och inköp påverkar utfallet dag för dag.",
+        "icon": "shoppingCart"
+      }
+    ]
+  },
+  "customers": {
+    "pill": "Kunder",
+    "title": "Kundresultat från team som växer med MinCFO",
+    "description": "Kundcase, omdömen och logotyper visar vad vi faktiskt levererar i praktiken. Här är ett urval kundröster.",
+    "carouselAriaLabel": "Bläddra kundomdömen",
+    "previousAriaLabel": "Föregående omdöme",
+    "nextAriaLabel": "Nästa omdöme",
+    "trustedAriaLabel": "Kunder som litar på oss",
+    "trustedLabel": "Betrodd av team som använder MinCFO varje månad",
+    "avatarAltSuffix": "portratt",
+    "logoAltSuffix": "logo",
+    "testimonials": [
+      {
+        "avatarFile": "logo-rikard.avif",
+        "company": "Qsid",
+        "quote": "MinCFO har gett oss en ny nivå av ekonomisk insikt. Med automatiserad bokföring och realtidsdata kan vi nu fatta snabbare beslut och lägga mer tid på att utveckla vår verksamhet.",
+        "person": "Rikard Jonsson",
+        "role": "VD, Sid Marketing"
+      },
+      {
+        "accent": true,
+        "avatarFile": "logo-aviv.avif",
+        "company": "Showcase",
+        "quote": "Att anlita MinCFO är ett av våra bästa beslut. Vi har fått proaktiv rådgivning som gjort att vi kunnat minska kostnader och frigöra kapital. En komplett lösning för vår ekonomi.",
+        "person": "Aviv Fahri",
+        "role": "VD, Showcase"
+      },
+      {
+        "avatarFile": "logo-joakim.avif",
+        "company": "SweBal",
+        "quote": "Med MinCFO slipper vi lägga värdefull tid på rapportering, finansiella analyser och administration. Istället kan vi fokusera fullt ut på vår kärnverksamhet och projekteringen av ny fabrik.",
+        "person": "Joakim Sjöholm",
+        "role": "VD, Swebal AB"
+      },
+      {
+        "accent": true,
+        "avatarFile": "logo-oskar.avif",
+        "company": "Hälsa Hemma",
+        "quote": "MinCFO är ett viktigt stöd i vår tillväxt. De avlastar det administrativa och levererar snabba, korrekta svar, så att vi kan fokusera på verksamheten.",
+        "person": "Oskar Nordmark",
+        "role": "Financial Controller, Hälsa Hemma"
+      }
+    ],
+    "trustedLogos": [
+      { "name": "Swedish Algae Factory", "file": "logo-algae.avif" },
+      { "name": "BAM", "file": "logo-bam.avif" },
+      { "name": "Eloize", "file": "logo-eloize.avif" },
+      { "name": "Fler", "file": "logo-fler.avif" },
+      { "name": "Hälsa Hemma", "file": "logo-hälsa.avif" },
+      { "name": "Lawster", "file": "logo-lawster.avif" },
+      { "name": "Realforce", "file": "logo-realforce.avif" },
+      { "name": "Rossoneri", "file": "logo-rossoneri.avif" },
+      { "name": "Runway", "file": "logo-runway.webp" },
+      { "name": "SweBal", "file": "logo-swebal.avif" }
+    ]
+  },
+  "security": {
+    "pill": "Säkerhet & Compliance",
+    "title": "Enterprise-grade säkerhet",
+    "description": "Vi hanterar känslig finansiell data med högsta krav på säkerhet, integritet och efterlevnad.",
+    "cards": [
+      {
+        "title": "Dataskydd & integritet",
+        "text": "MinCFO hanterar all kunddata konfidentiellt och i enlighet med gällande dataskyddslagstiftning. Åtkomst är strikt begränsad och loggas kontinuerligt."
+      },
+      {
+        "title": "Säker infrastruktur",
+        "text": "Systemen är byggda med moderna säkerhetsprinciper och skyddas genom kryptering, övervakning och regelbundna säkerhetskontroller."
+      },
+      {
+        "title": "EU & GDPR-efterlevnad",
+        "text": "All behandling av person- och företagsdata sker i enlighet med GDPR. Data hanteras inom EU och enligt tydliga personuppgiftsbiträdesavtal."
+      }
+    ]
+  },
+  "howItWorks": {
+    "title": "Så här fungerar det",
+    "steps": [
+      {
+        "id": "01",
+        "title": "Kostnadsfri konsultation",
+        "body": "Kontakta oss för ett inledande samtal där vi går igenom ditt företags behov och mål. Under konsultationen visar vi hur vår lösning kan stötta din verksamhet och ger en offert baserad på dina specifika krav."
+      },
+      {
+        "id": "02",
+        "title": "Integrering och förberedelser",
+        "body": "Vi hjälper dig att ge oss åtkomst till ditt ekonomisystem, bankkonton och historiska data. Vi ser också till att alla lagstadgade krav uppfylls."
+      },
+      {
+        "id": "03",
+        "title": "Implementering och onboarding",
+        "body": "När integrationen är klar påbörjar vi arbetet med att automatisera och effektivisera dina ekonomiprocesser. Du får en dedikerad kontaktperson och utbildning i våra dashboards."
+      }
+    ],
+    "cta": "Kontakta oss för en offert"
+  },
+  "ending": {
+    "title": "Ta nästa steg mot en smartare ekonomifunktion",
+    "description": "Ta kontroll över ditt bolags ekonomiska framtid med MinCFO. Boka demo och se hur vårt team kan skapa mer fart, struktur och trygghet i er tillväxt.",
+    "primaryCta": "Boka demo",
+    "secondaryCta": "Se våra lediga tjänster"
+  },
+  "footer": {
+    "brandAriaLabel": "MinCFO",
+    "description": "Din moderna ekonomifunktion för tillväxtbolag som vill arbeta mer datadrivet med ekonomi, rapportering och beslut.",
+    "columns": {
+      "solutions": {
+        "title": "Lösningar",
+        "links": [
+          { "href": "/losningar/ceo-founders", "label": "CEO & Founders" },
+          { "href": "/losningar/cfo-finance", "label": "CFO & Finance" },
+          { "href": "/losningar/saas-tech", "label": "SaaS / Tech" },
+          { "href": "#how-it-works", "label": "Hur det fungerar" }
+        ]
+      },
+      "company": {
+        "title": "Bolag",
+        "links": [
+          { "href": "#customers", "label": "Kundcase" },
+          { "href": "#security", "label": "Säkerhet" },
+          { "href": "/karriar", "label": "Karriär" }
+        ],
+        "email": "kontakt@example.com"
+      },
+      "offices": {
+        "title": "Kontor",
+        "locations": [
+          "Västra Hamngatan 11\n411 17 Gothenburg Sweden",
+          "Stora Nygatan 33\n111 27 Stockholm Sweden"
+        ]
+      }
+    },
+    "bottom": {
+      "copyright": "Copyright 2026. All rights reserved by MinCFO Sverige AB.",
+      "linkedInAriaLabel": "MinCFO på LinkedIn",
+      "linkedInLabel": "LinkedIn"
+    }
+  }
+}

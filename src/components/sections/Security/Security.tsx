@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Database, Loader2, Lock } from "lucide-react";
+import { homeContent } from "@/content/homeContent";
 import styles from "./Security.module.scss";
 
 const CUT_HEIGHT = 170;
@@ -36,6 +37,7 @@ for (let i = 1; i <= 18; i += 1) {
 const CUT_CLIP = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
 
 export default function Security() {
+  const content = homeContent.security;
   const sectionRef = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -77,12 +79,9 @@ export default function Security() {
 
       <div className={styles.container}>
         <header className={styles.header}>
-          <span className={styles.pill}>Säkerhet &amp; Compliance</span>
-          <h2>Enterprise-grade säkerhet</h2>
-          <p>
-            Vi hanterar känslig finansiell data med högsta krav på säkerhet,
-            integritet och efterlevnad.
-          </p>
+          <span className={styles.pill}>{content.pill}</span>
+          <h2>{content.title}</h2>
+          <p>{content.description}</p>
         </header>
 
         <div className={styles.grid}>
@@ -110,12 +109,8 @@ export default function Security() {
               </svg>
               <Lock className={styles.visualIcon} size={24} aria-hidden="true" />
             </div>
-            <h3>Dataskydd &amp; integritet</h3>
-            <p>
-              MinCFO hanterar all kunddata konfidentiellt och i enlighet med
-              gällande dataskyddslagstiftning. Åtkomst är strikt begränsad och
-              loggas kontinuerligt.
-            </p>
+            <h3>{content.cards[0].title}</h3>
+            <p>{content.cards[0].text}</p>
           </article>
 
           <article className={styles.card}>
@@ -135,11 +130,8 @@ export default function Security() {
                 aria-hidden="true"
               />
             </div>
-            <h3>Säker infrastruktur</h3>
-            <p>
-              Systemen är byggda med moderna säkerhetsprinciper och skyddas
-              genom kryptering, övervakning och regelbundna säkerhetskontroller.
-            </p>
+            <h3>{content.cards[1].title}</h3>
+            <p>{content.cards[1].text}</p>
           </article>
 
           <article className={styles.card}>
@@ -148,12 +140,8 @@ export default function Security() {
               <span className={styles.coreRing} aria-hidden="true" />
               <Database className={styles.visualIcon} size={24} aria-hidden="true" />
             </div>
-            <h3>EU &amp; GDPR-efterlevnad</h3>
-            <p>
-              All behandling av person- och företagsdata sker i enlighet med
-              GDPR. Data hanteras inom EU och enligt tydliga
-              personuppgiftsbiträdesavtal.
-            </p>
+            <h3>{content.cards[2].title}</h3>
+            <p>{content.cards[2].text}</p>
           </article>
         </div>
       </div>

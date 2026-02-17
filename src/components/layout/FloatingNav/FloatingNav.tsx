@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { homeContent } from "@/content/homeContent";
 import styles from "./FloatingNav.module.scss";
 
 const HOMEPAGE_SECTIONS = [
@@ -13,26 +14,9 @@ const HOMEPAGE_SECTIONS = [
   "how-it-works",
 ] as const;
 
-const SOLUTION_GROUPS = [
-  {
-    title: "Efter roll",
-    items: [
-      { href: "/losningar/ceo-founders", label: "Founders & CEO" },
-      { href: "/losningar/cfo-finance", label: "CFO & Finance Team" },
-      { href: "/losningar/fractional-cfo", label: "Fractional CFO" },
-    ],
-  },
-  {
-    title: "Efter bransch",
-    items: [
-      { href: "/losningar/saas-tech", label: "SaaS / Tech" },
-      { href: "/losningar/konsult-tjanster", label: "Konsult & Tjänster" },
-      { href: "/losningar/ehandel", label: "E-handel" },
-    ],
-  },
-];
-
 export default function FloatingNav() {
+  const content = homeContent.floatingNav;
+  const solutionGroups = content.solutionGroups;
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<(typeof HOMEPAGE_SECTIONS)[number]>("hero");
@@ -120,7 +104,7 @@ export default function FloatingNav() {
     <nav ref={navRef} className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.desktopNav}>
         <a href={sectionHref("produkt")} className={`${styles.link} ${isActive("produkt") ? styles.linkActive : ""}`}>
-          Produkt
+          {content.desktop.product}
         </a>
         <div className={styles.menuWrap}>
           <a
@@ -128,14 +112,14 @@ export default function FloatingNav() {
             className={`${styles.link} ${isActive("losningar") || isSolutionsPage ? styles.linkActive : ""}`}
             aria-current={isSolutionsPage ? "page" : undefined}
           >
-            Lösningar
+            {content.desktop.solutions}
           </a>
           <button
             type="button"
             className={`${styles.menuToggle} ${solutionsOpen ? styles.menuToggleOpen : ""}`}
             aria-expanded={solutionsOpen}
             aria-haspopup="true"
-            aria-label="Öppna lösningsmeny"
+            aria-label={content.desktop.openSolutionsMenuAriaLabel}
             onClick={() => setSolutionsOpen((previous) => !previous)}
           >
             <span className={`${styles.chevron} ${solutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
@@ -143,7 +127,7 @@ export default function FloatingNav() {
             </span>
           </button>
           <div className={`${styles.mega} ${solutionsOpen ? styles.megaOpen : ""}`} role="menu">
-            {SOLUTION_GROUPS.map((group) => (
+            {solutionGroups.map((group) => (
               <div key={group.title} className={styles.menuGroup}>
                 <p>{group.title}</p>
                 <div className={styles.menuItems}>
@@ -166,22 +150,22 @@ export default function FloatingNav() {
           href={sectionHref("customers")}
           className={`${styles.link} ${styles.desktopOnly} ${isActive("customers") ? styles.linkActive : ""}`}
         >
-          Kundcase
+          {content.desktop.customers}
         </a>
         <a
           href={sectionHref("security")}
           className={`${styles.link} ${styles.desktopOnly} ${isActive("security") ? styles.linkActive : ""}`}
         >
-          Säkerhet
+          {content.desktop.security}
         </a>
         <a
           href={sectionHref("how-it-works")}
           className={`${styles.link} ${styles.desktopOnly} ${isActive("how-it-works") ? styles.linkActive : ""}`}
         >
-          Hur det funkar
+          {content.desktop.howItWorks}
         </a>
         <a href={heroHref} className={styles.cta}>
-          Kontakta oss
+          {content.desktop.contact}
         </a>
       </div>
 
@@ -190,7 +174,7 @@ export default function FloatingNav() {
         className={`${styles.mobileToggle} ${mobileMenuOpen ? styles.mobileToggleOpen : ""}`}
         aria-expanded={mobileMenuOpen}
         aria-controls="mobile-nav-panel"
-        aria-label="Öppna meny"
+        aria-label={content.desktop.openMenuAriaLabel}
         onClick={() => setMobileMenuOpen((previous) => !previous)}
       >
         <span />
@@ -207,28 +191,28 @@ export default function FloatingNav() {
           onClick={closeMobileMenu}
           className={`${styles.mobileLink} ${isActive("produkt") ? styles.mobileLinkActive : ""}`}
         >
-          Produkt
+          {content.desktop.product}
         </a>
         <a
           href={sectionHref("customers")}
           onClick={closeMobileMenu}
           className={`${styles.mobileLink} ${isActive("customers") ? styles.mobileLinkActive : ""}`}
         >
-          Kundcase
+          {content.desktop.customers}
         </a>
         <a
           href={sectionHref("security")}
           onClick={closeMobileMenu}
           className={`${styles.mobileLink} ${isActive("security") ? styles.mobileLinkActive : ""}`}
         >
-          Säkerhet
+          {content.desktop.security}
         </a>
         <a
           href={sectionHref("how-it-works")}
           onClick={closeMobileMenu}
           className={`${styles.mobileLink} ${isActive("how-it-works") ? styles.mobileLinkActive : ""}`}
         >
-          Hur det funkar
+          {content.desktop.howItWorks}
         </a>
 
         <button
@@ -240,7 +224,7 @@ export default function FloatingNav() {
           aria-expanded={mobileSolutionsOpen}
           aria-controls="mobile-solutions-list"
         >
-          Lösningar
+          {content.desktop.solutions}
           <span className={`${styles.chevron} ${mobileSolutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
             ▾
           </span>
@@ -250,7 +234,7 @@ export default function FloatingNav() {
           id="mobile-solutions-list"
           className={`${styles.mobileSolutions} ${mobileSolutionsOpen ? styles.mobileSolutionsOpen : ""}`}
         >
-          {SOLUTION_GROUPS.map((group) => (
+          {solutionGroups.map((group) => (
             <div key={group.title} className={styles.mobileGroup}>
               <p>{group.title}</p>
               <div className={styles.mobileItems}>
@@ -271,7 +255,7 @@ export default function FloatingNav() {
         </div>
 
         <a href={heroHref} className={styles.mobileCta} onClick={closeMobileMenu}>
-          Kontakta oss
+          {content.desktop.contact}
         </a>
       </div>
     </nav>

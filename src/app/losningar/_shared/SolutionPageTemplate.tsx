@@ -25,21 +25,21 @@ import RevealSection from "../ceo-founders/RevealSection";
 import ScenarioVisualization from "../ceo-founders/ScenarioVisualization";
 import TestimonialSpotlight from "../ceo-founders/TestimonialSpotlight";
 import styles from "../ceo-founders/page.module.scss";
-import type { SolutionPageContent } from "./solutionPageContent";
+import { solutionsTemplateContent, type SolutionPageContent } from "./solutionPageContent";
 
-const HERO_TICKER_LOGOS = [
-  { src: "/customers/logos/logo-algae.avif", alt: "Swedish Algae Factory" },
-  { src: "/customers/logos/logo-bam.avif", alt: "BAM" },
-  { src: "/customers/logos/logo-eloize.avif", alt: "Eloize" },
-  { src: "/customers/logos/logo-fler.avif", alt: "Fler" },
-  { src: "/customers/logos/logo-lawster.avif", alt: "Lawster" },
-  { src: "/customers/logos/logo-realforce.avif", alt: "Realforce" },
-  { src: "/customers/logos/logo-rossoneri.avif", alt: "Rossoneri" },
-  { src: "/customers/logos/logo-runway.webp", alt: "Runway" },
-  { src: "/customers/logos/logo-swebal.avif", alt: "Swebal" },
-] as const;
+const renderMultiline = (value: string) => {
+  const lines = value.split("\n");
+  return lines.map((line, index) => (
+    <span key={`${line}-${index}`}>
+      {line}
+      {index < lines.length - 1 ? <br /> : null}
+    </span>
+  ));
+};
 
 export default function SolutionPageTemplate({ content }: { content: SolutionPageContent }) {
+  const templateContent = solutionsTemplateContent;
+  const heroTickerLogos = templateContent.heroTickerLogos;
   const impactVisuals = content.impactVisuals ?? ["realtime", "flow", "accuracy", "analysis"];
   const scenarioDescription = content.scenario.description ?? `Fråga: ${content.scenario.question}`;
   const testimonialItems = content.testimonials ?? (content.testimonial ? [content.testimonial] : undefined);
@@ -56,24 +56,24 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
 
             <span className={styles.eyebrow}>{content.eyebrow}</span>
             <h1 className={`${styles.title}${content.heroTitleWide === false ? "" : ` ${styles.titleWide}`}`}>
-              {content.heroHeadline}
+              {renderMultiline(content.heroHeadline)}
             </h1>
             <p className={styles.subtitle}>{content.heroSubheadline}</p>
 
             <div className={styles.heroActions}>
               <a href="#kontakt" className={styles.primaryCta}>
-                Boka en demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+                {templateContent.heroPrimaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
               </a>
               <a href="#utmaning" className={styles.secondaryCta}>
-                Se hur MinCFO löser det
+                {templateContent.heroSecondaryCta}
               </a>
             </div>
 
             <div className={styles.heroTrust}>
               <p className={styles.heroTrustLabel}>{content.logoStripMicrocopy}</p>
-              <div className={styles.heroTickerViewport} aria-label="Betrodda kundlogotyper">
+              <div className={styles.heroTickerViewport} aria-label={templateContent.heroTickerAriaLabel}>
                 <div className={styles.heroTickerTrack}>
-                  {HERO_TICKER_LOGOS.map((logo, index) => (
+                  {heroTickerLogos.map((logo, index) => (
                     <span key={`a-${logo.src}-${index}`} className={styles.heroTickerItem}>
                       <Image
                         src={logo.src}
@@ -84,7 +84,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
                       />
                     </span>
                   ))}
-                  {HERO_TICKER_LOGOS.map((logo, index) => (
+                  {heroTickerLogos.map((logo, index) => (
                     <span key={`b-${logo.src}-${index}`} className={styles.heroTickerItem}>
                       <Image
                         src={logo.src}
@@ -100,8 +100,8 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             </div>
           </div>
           <div className={styles.heroScrollCueWrap}>
-            <span className={styles.heroScrollCueLabel}>Läs mer</span>
-            <a href="#utmaning" className={styles.heroScrollCue} aria-label="Scrolla till nästa sektion">
+            <span className={styles.heroScrollCueLabel}>{templateContent.heroScrollLabel}</span>
+            <a href="#utmaning" className={styles.heroScrollCue} aria-label={templateContent.heroScrollAriaLabel}>
               <span className={styles.heroScrollCueInner}>
                 <ChevronDown size={18} />
               </span>
@@ -132,7 +132,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             <header className={styles.sectionHead}>
               <p className={styles.overline}>
                 <Sparkles size={14} />
-                Hur MinCFO löser det
+                {templateContent.helpsOverline}
               </p>
               <h2>{content.helpsTitle}</h2>
               <p>{content.helpsSubtitle}</p>
@@ -157,7 +157,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           heading={content.scenario.heading}
           description={scenarioDescription}
           prompt={content.scenario.question}
-          summary={content.scenario.answer}
+          summary={[content.scenario.answer[0] ?? "", content.scenario.answer[1] ?? ""]}
           primaryMetricLabel={content.scenario.metrics[0]}
           primaryMetricValue={content.scenario.metricValues[0]}
           primaryMetricHint={content.scenario.metricHints[0]}
@@ -172,8 +172,8 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
         <RevealSection className={`${styles.section} ${styles.impactSection}`}>
           <div className={styles.impactIntro}>
             <div>
-              <p className={styles.impactTag}>Affärsvärde</p>
-              <h2 className={styles.impactHeadline}>{content.impactTitle}</h2>
+              <p className={styles.impactTag}>{templateContent.impactTag}</p>
+              <h2 className={styles.impactHeadline}>{renderMultiline(content.impactTitle)}</h2>
             </div>
             <p className={styles.impactLead}>{content.impactSubtitle}</p>
           </div>
@@ -344,15 +344,15 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           <div className={styles.closingCard}>
             <p className={styles.overline}>
               <Sparkles size={14} />
-              Trust & CTA
+              {templateContent.closingOverline}
             </p>
             <h2>
               <span className={styles.closingTitleMain}>{content.trustHeadline}</span>
-              <span className={styles.closingTitleAccent}>Bygg med MinCFO.</span>
+              <span className={styles.closingTitleAccent}>{templateContent.closingAccent}</span>
             </h2>
             <p>{content.trustSub}</p>
             <Link href="/#hero" className={styles.primaryCta}>
-              Boka demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+              {templateContent.closingPrimaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
             </Link>
           </div>
         </RevealSection>

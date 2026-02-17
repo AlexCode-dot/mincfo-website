@@ -2,6 +2,7 @@
 
 import { Check, ChevronDown, SendHorizontal } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { homeContent } from "@/content/homeContent";
 import styles from "./AICopilot.module.scss";
 
 type CopilotStage = "idle" | "typing" | "sending" | "loading" | "answer" | "chart";
@@ -32,38 +33,6 @@ const cubic = (
   3 * (1 - t) * t ** 2 * p2 +
   t ** 3 * p3;
 
-const EXAMPLES: CopilotExample[] = [
-  {
-    question: "Hur ser vår runway ut baserat på Q3?",
-    answer:
-      "Med nuvarande burn-rate har ni cirka 11.4 månader runway. Största påverkan är SaaS-kostnader och rekrytering i november.",
-    chartTitle: "Runway forecast",
-    chartUnit: "Månader",
-    yTicks: ["12", "10", "8", "6"],
-    bars: [
-      { label: "Nu", value: "11.4", height: "92%" },
-      { label: "Okt", value: "10.2", height: "82%" },
-      { label: "Nov", value: "8.9", height: "71%" },
-      { label: "Dec", value: "7.4", height: "59%" },
-      { label: "Jan", value: "6.0", height: "48%" },
-    ],
-  },
-  {
-    question: "Hur stor del av kostnaderna är fasta vs rörliga?",
-    answer:
-      "Kostnadsbasen är ungefär 62% fasta kostnader och 38% rörliga. De rörliga kostnaderna drivs främst av marknadsföring och transaktionsavgifter.",
-    chartTitle: "Kostnadsfördelning",
-    chartUnit: "Andel %",
-    yTicks: ["80", "60", "40", "20"],
-    bars: [
-      { label: "Fasta", value: "62%", height: "78%" },
-      { label: "Rörliga", value: "38%", height: "48%" },
-    ],
-  },
-];
-
-const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"] as const;
-const MONTH_LABELS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const;
 const TREND_X_STEP = 760 / 11;
 const PLAN_X_STEP = 682 / 11;
 const ANALYSIS_NET_K = [14, 162, 101, 131, 176, 197, 204, 283, 207, 38, 307, 352];
@@ -72,24 +41,16 @@ const ANALYSIS_EBITDA_K = [168, 194, 183, 207, 229, 246, 259, 281, 268, 224, 301
 const ANALYSIS_GROSS_PROFIT_K = [258, 279, 271, 292, 307, 322, 337, 356, 344, 301, 372, 394];
 const TREND_AXIS_MIN_K = 0;
 const TREND_AXIS_MAX_K = 500;
-const TREND_AXIS_TICKS = ["500K", "375K", "250K", "125K", "0"];
 const PLAN_FORECAST_BASE_K = [280, 298, 312, 326, 340, 352, 364, 379, 394, 409, 425, 442];
 const PLAN_ACTUAL_VARIANCE = [0.052, 0.034, -0.012, -0.026, 0.018, 0.029] as const;
 const PLAN_ACTUAL_CUTOFF_INDEX = 5; // Jun
 
 const PLAN_DIMENSION_BASE = [
-  { name: "Recurring - Revenue", amount: 200000 },
-  { name: "Partner Sales", amount: 144000 },
-  { name: "Consulting - Strategic", amount: 150000 },
-  { name: "Project Delivery", amount: 160000 },
+  { amount: 200000 },
+  { amount: 144000 },
+  { amount: 150000 },
+  { amount: 160000 },
 ] as const;
-
-const ANALYSIS_METRICS: Array<{ id: AnalysisMetric; label: string; seriesK: number[] }> = [
-  { id: "netIncome", label: "Net Income", seriesK: ANALYSIS_NET_K },
-  { id: "ebit", label: "EBIT", seriesK: ANALYSIS_EBIT_K },
-  { id: "ebitda", label: "EBITDA", seriesK: ANALYSIS_EBITDA_K },
-  { id: "grossProfit", label: "Gross Profit", seriesK: ANALYSIS_GROSS_PROFIT_K },
-];
 
 const buildSmoothPath = (points: Array<[number, number]>) => {
   if (points.length < 2) return "";
@@ -128,6 +89,17 @@ function MiniMincfoBrand() {
 }
 
 export default function AICopilot() {
+  const content = homeContent.aiCopilot;
+  const examples = content.examples as CopilotExample[];
+  const monthLabels = content.monthLabelsSv;
+  const monthLabelsEn = content.monthLabelsEn;
+  const trendAxisTicks = content.trendAxisTicks;
+  const analysisMetrics: Array<{ id: AnalysisMetric; label: string; seriesK: number[] }> = [
+    { id: "netIncome", label: content.analysisMetrics.netIncome, seriesK: ANALYSIS_NET_K },
+    { id: "ebit", label: content.analysisMetrics.ebit, seriesK: ANALYSIS_EBIT_K },
+    { id: "ebitda", label: content.analysisMetrics.ebitda, seriesK: ANALYSIS_EBITDA_K },
+    { id: "grossProfit", label: content.analysisMetrics.grossProfit, seriesK: ANALYSIS_GROSS_PROFIT_K },
+  ];
   const sectionRef = useRef<HTMLElement | null>(null);
   const dashboardSectionRef = useRef<HTMLDivElement | null>(null);
   const planSectionRef = useRef<HTMLDivElement | null>(null);
@@ -298,9 +270,11 @@ export default function AICopilot() {
 
   useEffect(() => {
     if (!visible) {
-      setStage("idle");
-      setTypedLength(0);
-      return;
+      const resetTimer = setTimeout(() => {
+        setStage("idle");
+        setTypedLength(0);
+      }, 0);
+      return () => clearTimeout(resetTimer);
     }
 
     let cancelled = false;
@@ -315,7 +289,7 @@ export default function AICopilot() {
 
     const runCycle = (index: number) => {
       if (cancelled) return;
-      const example = EXAMPLES[index];
+      const example = examples[index];
       const typingTick = 34;
       const typingDuration = example.question.length * typingTick;
       setExampleIndex(index);
@@ -341,7 +315,7 @@ export default function AICopilot() {
       queueTimeout(() => setStage("loading"), typingDuration + 900);
       queueTimeout(() => setStage("answer"), typingDuration + 2050);
       queueTimeout(() => setStage("chart"), typingDuration + 2850);
-      queueTimeout(() => runCycle((index + 1) % EXAMPLES.length), typingDuration + 6900);
+      queueTimeout(() => runCycle((index + 1) % examples.length), typingDuration + 6900);
     };
 
     runCycle(0);
@@ -350,7 +324,7 @@ export default function AICopilot() {
       timers.forEach((timer) => clearTimeout(timer));
       intervals.forEach((interval) => clearInterval(interval));
     };
-  }, [visible]);
+  }, [examples, visible]);
 
   const waveHeight = curveScale < 0.7 ? 160 : 190;
   const curveValue = (start: number, end: number, progress: number) =>
@@ -420,8 +394,8 @@ export default function AICopilot() {
   }
   const planCurveClip = `polygon(${planCurvePoints.join(", ")}, 100% 100%, 0% 100%)`;
   const activeMetric =
-    ANALYSIS_METRICS.find((metric) => metric.id === analysisMetric) ??
-    ANALYSIS_METRICS[0];
+    analysisMetrics.find((metric) => metric.id === analysisMetric) ??
+    analysisMetrics[0];
   const analysisSeries = activeMetric.seriesK;
   const mapTrendY = (valueK: number) => {
     const top = 32;
@@ -490,7 +464,10 @@ export default function AICopilot() {
   const planBaseTotalValue = planForecastBaseValues.reduce((sum, value) => sum + value, 0);
   const planTotalDelta = ((planTotalValue - planBaseTotalValue) / Math.max(planBaseTotalValue, 1)) * 100;
   const planActualCutoffX = PLAN_ACTUAL_CUTOFF_INDEX * PLAN_X_STEP;
-  const selectedPlanMode = planMonthIndex <= PLAN_ACTUAL_CUTOFF_INDEX ? "Actual" : "Forecast";
+  const selectedPlanMode =
+    planMonthIndex <= PLAN_ACTUAL_CUTOFF_INDEX
+      ? content.plan.actualMonthPrefix
+      : content.plan.forecastMonthPrefix;
   const trendLinePath = buildSmoothPath(trendSeries);
   const trendAreaPath = `${trendLinePath} L760 290 L0 290 Z`;
   const latestMonthIndex = 11;
@@ -506,7 +483,7 @@ export default function AICopilot() {
     ((analysisSeries[previousMonthIndex] - analysisSeries[priorMonthIndex]) /
       Math.max(Math.abs(analysisSeries[priorMonthIndex]), 1)) *
     100;
-  const analysisCompareLabel = "Compared to previous period";
+  const analysisCompareLabel = content.analysisCompareLabel;
   const formatSek = (value: number) => new Intl.NumberFormat("sv-SE").format(Math.round(value));
   const formatPercent = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
   const benchmarkTarget = 12.4 + planTotalDelta * 0.52;
@@ -515,9 +492,9 @@ export default function AICopilot() {
   const planDimensionRows = PLAN_DIMENSION_BASE.map((row, index) => {
     const rowBias = 1 + (index - 1.5) * 0.02;
     const amount = row.amount * (1 + selectedMonthPlanGap * 0.9) * dimensionMonthModifier * rowBias;
-    return { name: row.name, amount };
+    return { name: content.plan.dimensionRows[index] ?? "", amount };
   });
-  const currentExample = EXAMPLES[exampleIndex];
+  const currentExample = examples[exampleIndex];
   const typedQuestion = currentExample.question.slice(0, typedLength);
   const isTyping = stage === "typing";
   const isSending = stage === "sending";
@@ -554,39 +531,29 @@ export default function AICopilot() {
 
       <div className={styles.container}>
         <div className={`${styles.left} ${styles.aiLeft}`}>
-          <span className={styles.pill}>Vad plattformen gör</span>
-          <h2 className={styles.title}>AI-copilot som analyserar och agerar</h2>
-          <p className={styles.text}>
-            Ställ frågor om resultat, kostnader och runway. Få svar, grafer och
-            rapporter direkt. AI kan även förbereda åtgärder i era
-            ekonomiflöden med full spårbarhet.
-          </p>
+          <span className={styles.pill}>{content.left.pill}</span>
+          <h2 className={styles.title}>{content.left.title}</h2>
+          <p className={styles.text}>{content.left.text}</p>
 
           <ul className={styles.list}>
-            <li>
-              <Check aria-hidden="true" size={14} />
-              Chatta med din data - direkta svar
-            </li>
-            <li>
-              <Check aria-hidden="true" size={14} />
-              Proaktiva insights och avvikelser
-            </li>
-            <li>
-              <Check aria-hidden="true" size={14} />
-              AI-stödda åtgärder med audit log
-            </li>
+            {content.left.list.map((item) => (
+              <li key={item}>
+                <Check aria-hidden="true" size={14} />
+                {item}
+              </li>
+            ))}
           </ul>
         </div>
 
         <div className={`${styles.right} ${styles.aiRight}`}>
           <div className={styles.glow} />
 
-          <article className={styles.panel} aria-label="AI Copilot">
+          <article className={styles.panel} aria-label={content.chatPanel.title}>
             <MiniMincfoBrand />
 
             <header className={styles.header}>
               <span className={styles.dot} />
-              <p>AI Copilot</p>
+              <p>{content.chatPanel.title}</p>
             </header>
 
             <div className={styles.body}>
@@ -601,7 +568,7 @@ export default function AICopilot() {
                   <div
                     className={styles.loadingAnswer}
                     role="status"
-                    aria-label="AI analyserar data"
+                    aria-label={content.chatPanel.loadingAriaLabel}
                   >
                     <span />
                     <span />
@@ -659,14 +626,14 @@ export default function AICopilot() {
                     <span className={styles.caret} aria-hidden="true" />
                   </>
                 )}
-                {isSending && "Skickar fråga..."}
-                {isLoading && "AI analyserar data..."}
+                {isSending && content.chatPanel.sendingQuestion}
+                {isLoading && content.chatPanel.loadingText}
                 {(stage === "idle" || stage === "answer" || stage === "chart") &&
-                  "Fråga AI om ekonomi, forecast eller nästa åtgärd"}
+                  content.chatPanel.inputPlaceholder}
               </span>
               <button
                 type="button"
-                aria-label="Skicka fråga"
+                aria-label={content.chatPanel.sendQuestionAriaLabel}
                 className={`${isSending ? styles.sending : ""} ${isLoading ? styles.loading : ""}`}
               >
                 <SendHorizontal aria-hidden="true" size={14} />
@@ -701,17 +668,17 @@ export default function AICopilot() {
           className={`${styles.container} ${styles.dashboardContainer} ${dashboardVisible ? styles.dashboardVisible : ""}`}
         >
           <div className={`${styles.right} ${styles.dashboardRight}`}>
-            <article className={styles.dashboardPanel} aria-label="Dashboard Preview">
+            <article className={styles.dashboardPanel} aria-label={content.dashboard.panelAriaLabel}>
               <MiniMincfoBrand />
 
               <div className={styles.statGrid}>
                 <div className={styles.statCard}>
                   <div className={styles.statLabelRow}>
-                    <span>{activeMetric.label} (Current)</span>
+                    <span>{activeMetric.label} ({content.dashboard.currentLabelSuffix})</span>
                   </div>
                   <div className={styles.statAmount}>
                     <strong>{formatSek(selectedMetricAmount)}</strong>
-                    <span>SEK</span>
+                    <span>{content.dashboard.currencyLabel}</span>
                   </div>
                   <div className={`${styles.statDelta} ${selectedMetricDelta < 0 ? styles.down : ""}`}>
                     {formatPercent(selectedMetricDelta)}
@@ -721,11 +688,11 @@ export default function AICopilot() {
 
                 <div className={styles.statCard}>
                   <div className={styles.statLabelRow}>
-                    <span>{activeMetric.label} (Previous)</span>
+                    <span>{activeMetric.label} ({content.dashboard.previousLabelSuffix})</span>
                   </div>
                   <div className={styles.statAmount}>
                     <strong>{formatSek(selectedMetricPreviousAmount)}</strong>
-                    <span>SEK</span>
+                    <span>{content.dashboard.currencyLabel}</span>
                   </div>
                   <div className={`${styles.statDelta} ${selectedMetricPreviousDelta < 0 ? styles.down : ""}`}>
                     {formatPercent(selectedMetricPreviousDelta)}
@@ -736,7 +703,7 @@ export default function AICopilot() {
 
               <div className={`${styles.trendPanel} ${analysisUpdating ? styles.panelUpdating : ""}`}>
                 <header className={styles.trendHeader}>
-                  <p>Income Statement · 2025</p>
+                  <p>{content.dashboard.incomeStatementLabel}</p>
                   <div className={styles.trendHeaderRight} ref={trendMetricMenuRef}>
                     <button
                       type="button"
@@ -753,8 +720,8 @@ export default function AICopilot() {
                       />
                     </button>
                     {analysisMetricOpen && (
-                      <div className={styles.metricMenu} role="menu" aria-label="Välj metrisk">
-                        {ANALYSIS_METRICS.map((metric) => (
+                      <div className={styles.metricMenu} role="menu" aria-label={content.dashboard.metricMenuAriaLabel}>
+                        {analysisMetrics.map((metric) => (
                           <button
                             key={metric.id}
                             type="button"
@@ -780,7 +747,7 @@ export default function AICopilot() {
 
                 <div className={styles.trendChartWrap}>
                   <div className={styles.trendAxisY} aria-hidden="true">
-                    {TREND_AXIS_TICKS.map((tick) => (
+                    {trendAxisTicks.map((tick) => (
                       <span key={tick}>{tick}</span>
                     ))}
                   </div>
@@ -814,7 +781,7 @@ export default function AICopilot() {
                     </svg>
 
                     <div className={styles.trendMonths} aria-hidden="true">
-                      {MONTH_LABELS.map((month) => (
+                      {monthLabels.map((month) => (
                         <span key={month}>{month}</span>
                       ))}
                     </div>
@@ -825,27 +792,17 @@ export default function AICopilot() {
           </div>
 
           <div className={`${styles.left} ${styles.dashboardLeft}`}>
-            <span className={styles.pill}>Dashboard</span>
-            <h2 className={styles.title}>Analys &amp; översikt</h2>
-            <p className={styles.text}>
-              Tillgång till dashboard med de senaste finansiella nyckeltalen för
-              att ta informerade beslut. Få tydliga insikter för att identifiera
-              flaskhalsar och säkerställa bättre likviditet.
-            </p>
+            <span className={styles.pill}>{content.dashboard.pill}</span>
+            <h2 className={styles.title}>{content.dashboard.title}</h2>
+            <p className={styles.text}>{content.dashboard.text}</p>
 
             <ul className={styles.list}>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Realtidsrapportering av nyckeltal
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Kassaflödesoptimering i realtid
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Identifiera lönsamma segment
-              </li>
+              {content.dashboard.list.map((item) => (
+                <li key={item}>
+                  <Check aria-hidden="true" size={14} />
+                  {item}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -876,88 +833,66 @@ export default function AICopilot() {
           className={`${styles.container} ${styles.planContainer} ${planVisible ? styles.planVisible : ""}`}
         >
           <div className={`${styles.left} ${styles.planLeft}`}>
-            <span className={styles.pill}>Planering &amp; Jämförelse</span>
-            <h2 className={styles.title}>Budgetering, prognoser och benchmarking</h2>
-            <p className={styles.text}>
-              Datadrivna prognoser och strukturerade dimensioner hjälper dig
-              att planera framåt, minska ekonomiska risker och prioritera rätt
-              initiativ både på kort och lång sikt.
-            </p>
+            <span className={styles.pill}>{content.plan.pill}</span>
+            <h2 className={styles.title}>{content.plan.title}</h2>
+            <p className={styles.text}>{content.plan.text}</p>
 
             <ul className={styles.list}>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Automatiserade budgetprocesser
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Strukturera intäkter och kostnader med egna dimensioner
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Scenariohantering för framtiden
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Datadriven riskminimering
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Jämför mellan dimensioner och perioder
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Identifiera avvikelser mellan segment
-              </li>
+              {content.plan.list.map((item) => (
+                <li key={item}>
+                  <Check aria-hidden="true" size={14} />
+                  {item}
+                </li>
+              ))}
             </ul>
           </div>
 
           <div className={`${styles.right} ${styles.planRight}`}>
-            <article className={styles.planPanel} aria-label="Planering och benchmarking">
+            <article className={styles.planPanel} aria-label={content.plan.panelAriaLabel}>
               <div className={styles.planPanelBody}>
               <div className={styles.planVisualStack}>
                 <div className={styles.planForecastShell}>
                   <MiniMincfoBrand />
 
                   <header className={styles.planPanelHeader}>
-                    <p>Forecast</p>
+                    <p>{content.plan.forecastTitle}</p>
                     <span className={styles.liveScenario}>
                       <span className={styles.liveDot} aria-hidden="true" />
-                      Live forecast
+                      {content.plan.liveForecast}
                     </span>
                   </header>
                     <div className={styles.planRecon}>
                       <div className={styles.planReconHead}>
-                        <p>Reconciliation</p>
-                        <span>2025 · Actuals through Jun</span>
+                        <p>{content.plan.reconciliationTitle}</p>
+                        <span>{content.plan.actualsThroughJun}</span>
                       </div>
                       <div className={styles.planForecastStats}>
                         <div className={styles.planForecastStat}>
-                          <p>{selectedPlanMode} month ({MONTH_LABELS_EN[planMonthIndex]})</p>
-                          <strong>{formatSek(selectedPlanValue * 1000)} kr</strong>
+                          <p>{selectedPlanMode} ({monthLabelsEn[planMonthIndex]})</p>
+                          <strong>{formatSek(selectedPlanValue * 1000)} {content.plan.currencySuffix}</strong>
                         </div>
                         <div className={styles.planForecastStat}>
-                          <p>Vs previous month</p>
+                          <p>{content.plan.vsPreviousMonth}</p>
                           <strong className={selectedPlanDelta < 0 ? styles.planStatDown : styles.planStatUp}>
                             {formatPercent(selectedPlanDelta)}
                           </strong>
                         </div>
                         <div className={styles.planForecastStat}>
-                          <p>Annual variance vs baseline</p>
+                          <p>{content.plan.annualVarianceVsBaseline}</p>
                           <strong className={planTotalDelta < 0 ? styles.planStatDown : styles.planStatUp}>
                             {formatPercent(planTotalDelta)}
                           </strong>
                         </div>
                       </div>
                       <div className={styles.planMonthGrid}>
-                        {MONTH_LABELS_EN.map((month, index) => (
+                        {monthLabelsEn.map((month, index) => (
                           <button
                             key={month}
                             type="button"
                             className={`${styles.planMonth} ${planMonthIndex === index ? styles.planMonthSelected : ""}`}
                             onClick={() => setPlanMonthIndex(index)}
                             aria-pressed={planMonthIndex === index}
-                            aria-label={`Visa budget för ${month}`}
+                            aria-label={`${content.plan.showBudgetForPrefix} ${month}`}
                           >
                             {month}
                           </button>
@@ -970,10 +905,10 @@ export default function AICopilot() {
                           <line className={styles.planActualSplit} x1={planActualCutoffX} y1="16" x2={planActualCutoffX} y2="184" />
                         </svg>
                         <p className={styles.planForecastLegend} aria-hidden="true">
-                          Actuals: Jan-Jun · Forecast: Jul-Dec
+                          {content.plan.actualForecastLegend}
                         </p>
                         <div className={styles.planMonthAxis} aria-hidden="true">
-                          {MONTH_LABELS_EN.map((month) => (
+                          {monthLabelsEn.map((month) => (
                             <span key={month}>{month}</span>
                           ))}
                         </div>
@@ -983,18 +918,18 @@ export default function AICopilot() {
 
                   <div className={styles.planDimensions}>
                     <div className={styles.planDimensionsHead}>
-                      <p>Dimensions</p>
-                      <button type="button">+ New Dimension</button>
+                      <p>{content.plan.dimensionsTitle}</p>
+                      <button type="button">{content.plan.newDimensionButton}</button>
                     </div>
                     <div className={styles.planDimensionRows}>
                       {planDimensionRows.map((row) => (
                         <div key={row.name} className={styles.planDimensionRow}>
                           <p>{row.name}</p>
-                          <span>{formatSek(row.amount)} kr</span>
+                          <span>{formatSek(row.amount)} {content.plan.currencySuffix}</span>
                         </div>
                       ))}
                       <div className={styles.planDimensionRow}>
-                        <p>Benchmark target</p>
+                        <p>{content.plan.benchmarkTargetLabel}</p>
                         <span className={styles.planDimensionPositive}>{formatPercent(benchmarkTarget)}</span>
                       </div>
                     </div>

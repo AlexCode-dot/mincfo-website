@@ -2,6 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { homeContent } from "@/content/homeContent";
 import styles from "./HowItWorks.module.scss";
 
 const cubic = (
@@ -21,28 +22,9 @@ const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 
-const STEPS = [
-  {
-    id: "01",
-    title: "Kostnadsfri konsultation",
-    body:
-      "Kontakta oss för ett inledande samtal där vi går igenom ditt företags behov och mål. Under konsultationen visar vi hur vår lösning kan stötta din verksamhet och ger en offert baserad på dina specifika krav.",
-  },
-  {
-    id: "02",
-    title: "Integrering och förberedelser",
-    body:
-      "Vi hjälper dig att ge oss åtkomst till ditt ekonomisystem, bankkonton och historiska data. Vi ser också till att alla lagstadgade krav uppfylls.",
-  },
-  {
-    id: "03",
-    title: "Implementering och onboarding",
-    body:
-      "När integrationen är klar påbörjar vi arbetet med att automatisera och effektivisera dina ekonomiprocesser. Du får en dedikerad kontaktperson och utbildning i våra dashboards.",
-  },
-] as const;
-
 export default function HowItWorks() {
+  const content = homeContent.howItWorks;
+  const steps = content.steps;
   const sectionRef = useRef<HTMLElement | null>(null);
   const stepsGridRef = useRef<HTMLDivElement | null>(null);
   const stepCircleRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -202,7 +184,7 @@ export default function HowItWorks() {
       />
 
       <div className={styles.container}>
-        <h2>Så här fungerar det</h2>
+        <h2>{content.title}</h2>
 
         <div
           ref={stepsGridRef}
@@ -212,7 +194,7 @@ export default function HowItWorks() {
           <div className={styles.line} aria-hidden="true" />
           <span className={styles.particle} aria-hidden="true" />
 
-          {STEPS.map((step, index) => (
+          {steps.map((step, index) => (
             <article
               key={step.id}
               className={`${styles.step} ${renderedActiveStep === index ? styles.stepActive : ""}`}
@@ -232,7 +214,7 @@ export default function HowItWorks() {
         </div>
 
         <a href="#hero" className={styles.cta}>
-          Kontakta oss för en offert
+          {content.cta}
           <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
         </a>
       </div>
