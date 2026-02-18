@@ -16,7 +16,7 @@
 
 .curveCut path {
   fill: transparent;
-  stroke: rgba(104, 150, 227, 0.68);
+  stroke: oklch(0.62 0.035 264 / 0.38);
   stroke-width: 1.7;
 }
 
@@ -26,9 +26,9 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(66% 54% at 22% 22%, rgba(46, 74, 128, 0.18), transparent 74%),
-    radial-gradient(72% 58% at 78% 78%, rgba(19, 36, 68, 0.3), transparent 76%),
-    linear-gradient(180deg, rgba(10, 16, 30, 0.98) 0%, rgba(8, 14, 26, 0.97) 44%, rgba(9, 15, 29, 0.99) 100%);
+    radial-gradient(66% 54% at 22% 22%, oklch(0.44 0.05 264 / 0.16), transparent 74%),
+    radial-gradient(72% 58% at 78% 78%, oklch(0.34 0.03 262 / 0.24), transparent 76%),
+    linear-gradient(180deg, oklch(0.16 0.018 262 / 0.98) 0%, oklch(0.14 0.016 262 / 0.97) 44%, oklch(0.15 0.017 262 / 0.99) 100%);
 }
 
 .background::after {
@@ -36,10 +36,10 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(149, 181, 238, 0.06), transparent 36%),
+    linear-gradient(180deg, oklch(0.74 0.03 260 / 0.06), transparent 36%),
     repeating-linear-gradient(
       90deg,
-      rgba(117, 154, 219, 0.08) 0 1px,
+      var(--chart-grid) 0 1px,
       transparent 1px 28px
     );
   opacity: 0.22;
@@ -65,9 +65,9 @@
   align-items: center;
   padding: 8px 16px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(128, 167, 230, 0.3);
-  background: rgba(14, 24, 42, 0.62);
-  color: rgba(202, 219, 245, 0.9);
+  border: 1px solid var(--border-subtle);
+  background: oklch(0.24 0.024 262 / 0.7);
+  color: oklch(0.9 0.012 258 / 0.92);
   font-size: 0.82rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -75,7 +75,7 @@
 
 .header h2 {
   margin: 16px 0 0;
-  color: rgba(236, 244, 255, 0.96);
+  color: var(--text-primary);
   font-size: clamp(2rem, 3.2vw, 3rem);
   line-height: 1.08;
   letter-spacing: -0.02em;
@@ -83,7 +83,7 @@
 
 .header p {
   margin: 16px 0 0;
-  color: rgba(162, 180, 210, 0.9);
+  color: var(--text-secondary);
   font-size: 1.02rem;
   max-width: 760px;
   margin-left: auto;
@@ -115,7 +115,7 @@
 .trustedLabel {
   margin: 0 0 14px;
   text-align: center;
-  color: rgba(153, 174, 206, 0.76);
+  color: var(--text-secondary);
   font-size: 0.84rem;
   letter-spacing: 0.04em;
 }
@@ -142,13 +142,13 @@
 
 .tickerViewport::before {
   left: 0;
-  background: linear-gradient(90deg, rgba(9, 15, 29, 0.98), rgba(9, 15, 29, 0));
+  background: linear-gradient(90deg, oklch(0.15 0.017 262 / 0.98), oklch(0.15 0.017 262 / 0));
   filter: blur(1px);
 }
 
 .tickerViewport::after {
   right: 0;
-  background: linear-gradient(270deg, rgba(9, 15, 29, 0.98), rgba(9, 15, 29, 0));
+  background: linear-gradient(270deg, oklch(0.15 0.017 262 / 0.98), oklch(0.15 0.017 262 / 0));
   filter: blur(1px);
 }
 
@@ -184,14 +184,14 @@
   width: 42px;
   height: 42px;
   border-radius: 999px;
-  border: 1px solid rgba(112, 149, 210, 0.32);
-  background: linear-gradient(180deg, rgba(16, 27, 45, 0.84), rgba(10, 18, 34, 0.9));
-  color: rgba(204, 223, 252, 0.9);
+  border: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, oklch(0.24 0.024 262 / 0.84), oklch(0.2 0.02 262 / 0.9));
+  color: var(--text-primary);
   display: grid;
   place-items: center;
   box-shadow:
-    inset 0 1px 0 rgba(164, 197, 244, 0.14),
-    0 8px 18px rgba(4, 10, 22, 0.34);
+    var(--shadow-inner-subtle),
+    0 8px 18px oklch(0.08 0.012 262 / 0.34);
   transition: transform 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 
@@ -203,11 +203,11 @@
 
 .controlBtn:hover {
   transform: translateY(-1px);
-  border-color: rgba(141, 187, 251, 0.48);
-  color: #edf6ff;
+  border-color: oklch(0.72 0.03 262 / 0.36);
+  color: var(--text-primary);
   box-shadow:
-    inset 0 1px 0 rgba(187, 207, 255, 0.18),
-    0 10px 20px rgba(8, 20, 40, 0.42);
+    var(--shadow-inner-subtle),
+    0 10px 20px oklch(0.08 0.012 262 / 0.42);
 }
 
 @keyframes trustedTickerMove {
@@ -228,12 +228,12 @@
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(120% 90% at 20% 0%, rgba(64, 102, 172, 0.13), transparent 62%),
-    linear-gradient(168deg, rgba(12, 22, 40, 0.97), rgba(9, 17, 32, 0.985));
-  color: rgba(219, 231, 251, 0.94);
+    radial-gradient(120% 90% at 20% 0%, oklch(0.5 0.05 266 / 0.1), transparent 62%),
+    linear-gradient(168deg, oklch(0.21 0.02 262 / 0.97), oklch(0.18 0.018 262 / 0.985));
+  color: oklch(0.9 0.012 258 / 0.94);
   box-shadow:
-    0 22px 34px rgba(3, 8, 16, 0.34),
-    inset 0 0 0 1px rgba(126, 158, 207, 0.24);
+    0 22px 34px oklch(0.08 0.012 262 / 0.34),
+    inset 0 0 0 1px var(--border-subtle);
   opacity: 0;
   pointer-events: none;
   transform: translate3d(0, 24px, 0) scale(0.96);
@@ -251,8 +251,8 @@
   inset: 0;
   z-index: 0;
   background:
-    linear-gradient(180deg, rgba(20, 42, 84, 0.22), rgba(10, 22, 43, 0.08) 36%, rgba(9, 18, 35, 0.02) 100%),
-    linear-gradient(168deg, rgba(12, 22, 40, 0.94), rgba(9, 17, 32, 0.96));
+    linear-gradient(180deg, oklch(0.45 0.05 266 / 0.14), oklch(0.23 0.022 262 / 0.06) 36%, oklch(0.21 0.02 262 / 0.02) 100%),
+    linear-gradient(168deg, oklch(0.21 0.02 262 / 0.94), oklch(0.18 0.018 262 / 0.96));
 }
 
 .card > * {
@@ -262,12 +262,12 @@
 
 .cardAccent {
   background:
-    radial-gradient(120% 90% at 18% 0%, rgba(90, 125, 220, 0.18), transparent 60%),
-    linear-gradient(165deg, rgba(21, 38, 74, 0.97), rgba(14, 29, 56, 0.985));
-  color: rgba(234, 243, 255, 0.96);
+    radial-gradient(120% 90% at 18% 0%, oklch(0.56 0.06 270 / 0.14), transparent 60%),
+    linear-gradient(165deg, oklch(0.25 0.03 265 / 0.97), oklch(0.22 0.024 263 / 0.985));
+  color: var(--text-primary);
   box-shadow:
-    0 24px 40px rgba(10, 20, 49, 0.46),
-    inset 0 0 0 1px rgba(146, 175, 233, 0.32);
+    0 24px 40px oklch(0.12 0.02 262 / 0.44),
+    inset 0 0 0 1px oklch(0.7 0.04 266 / 0.28);
 }
 
 .visible .centerCard {
@@ -308,11 +308,11 @@
   margin: 18px 0 0;
   font-size: 1.22rem;
   line-height: 1.5;
-  color: rgba(191, 208, 236, 0.94);
+  color: oklch(0.84 0.016 258 / 0.94);
 }
 
 .cardAccent .quote {
-  color: rgba(211, 224, 247, 0.96);
+  color: oklch(0.9 0.012 258 / 0.96);
 }
 
 .person {
@@ -327,8 +327,8 @@
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
-  border: 1px solid rgba(149, 178, 223, 0.32);
-  background: rgba(15, 24, 41, 0.9);
+  border: 1px solid var(--border-subtle);
+  background: oklch(0.23 0.023 262 / 0.9);
 }
 
 .avatar img {
@@ -339,21 +339,21 @@
 }
 
 .cardAccent .avatar {
-  border-color: rgba(165, 194, 237, 0.38);
+  border-color: oklch(0.72 0.03 264 / 0.28);
 }
 
 .person strong {
   display: block;
   font-size: 1rem;
   line-height: 1.2;
-  color: rgba(229, 239, 255, 0.96);
+  color: var(--text-primary);
 }
 
 .person small {
   display: block;
   margin-top: 4px;
   font-size: 0.9rem;
-  color: rgba(158, 176, 206, 0.92);
+  color: var(--text-secondary);
 }
 
 @media (max-width: 1180px) {

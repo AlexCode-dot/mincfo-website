@@ -24,6 +24,22 @@ const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 export default function Ending() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [curveProgress, setCurveProgress] = useState(0);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setVisible(entry.isIntersecting);
+      },
+      { threshold: 0.28, rootMargin: "0px 0px -16% 0px" },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const updateCurve = () => {
@@ -64,7 +80,11 @@ export default function Ending() {
   const curveClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
 
   return (
-    <section ref={sectionRef} className={styles.section} id="kontakt">
+    <section
+      ref={sectionRef}
+      className={`${styles.section} ${visible ? styles.visible : ""}`}
+      id="kontakt"
+    >
       <svg
         className={styles.curveCut}
         viewBox="0 0 1440 190"

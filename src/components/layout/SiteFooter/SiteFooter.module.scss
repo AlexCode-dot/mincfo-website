@@ -2,10 +2,10 @@
   position: relative;
   padding: clamp(54px, 7.2vh, 82px) 0 34px;
   background:
-    radial-gradient(52% 46% at 12% 0%, rgba(60, 96, 214, 0.22), transparent 72%),
-    radial-gradient(46% 42% at 88% 0%, rgba(30, 58, 156, 0.22), transparent 74%),
-    linear-gradient(180deg, rgba(5, 10, 20, 0.99) 0%, rgba(4, 9, 18, 1) 100%);
-  border-top: 1px solid rgba(108, 136, 220, 0.28);
+    radial-gradient(52% 46% at 12% 0%, oklch(0.5 0.06 268 / 0.16), transparent 72%),
+    radial-gradient(46% 42% at 88% 0%, oklch(0.42 0.04 264 / 0.16), transparent 74%),
+    linear-gradient(180deg, oklch(0.15 0.016 262 / 0.99) 0%, oklch(0.13 0.015 262) 100%);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .footer::before {
@@ -13,10 +13,10 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(133, 163, 240, 0.09), transparent 36%),
+    linear-gradient(180deg, oklch(0.74 0.03 260 / 0.06), transparent 36%),
     repeating-linear-gradient(
       90deg,
-      rgba(108, 139, 220, 0.08) 0 1px,
+      var(--chart-grid) 0 1px,
       transparent 1px 28px
     );
   opacity: 0.2;
@@ -40,7 +40,7 @@
 .brandCol p {
   margin: 14px 0 0;
   max-width: 34ch;
-  color: rgba(160, 182, 216, 0.9);
+  color: var(--text-secondary);
   font-size: 0.96rem;
   line-height: 1.65;
 }
@@ -49,13 +49,13 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: rgba(236, 244, 255, 0.95);
+  color: var(--text-primary);
 }
 
 .mark {
   width: 28px;
   height: 28px;
-  color: #3f47e8;
+  color: var(--accent-primary);
 }
 
 .brand span {
@@ -67,7 +67,7 @@
 
 .linkCol h3 {
   margin: 0;
-  color: rgba(228, 238, 254, 0.96);
+  color: var(--text-primary);
   font-size: 1.05rem;
   letter-spacing: -0.01em;
 }
@@ -76,7 +76,7 @@
 .linkCol p {
   display: block;
   margin-top: 10px;
-  color: rgba(171, 191, 222, 0.9);
+  color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.62;
 }
@@ -86,13 +86,13 @@
 }
 
 .linkCol a:hover {
-  color: rgba(230, 240, 255, 0.96);
+  color: var(--text-primary);
 }
 
 .bottom {
   margin-top: clamp(34px, 5vh, 52px);
   padding-top: 18px;
-  border-top: 1px solid rgba(106, 136, 220, 0.24);
+  border-top: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -101,7 +101,7 @@
 
 .bottom span,
 .bottom a {
-  color: rgba(147, 169, 205, 0.86);
+  color: oklch(0.74 0.016 258 / 0.86);
   font-size: 0.88rem;
 }
 
@@ -110,7 +110,7 @@
 }
 
 .bottom a:hover {
-  color: rgba(216, 232, 255, 0.96);
+  color: var(--text-primary);
 }
 
 .careersCta {
@@ -122,22 +122,23 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: rgba(211, 228, 252, 0.94);
+  color: var(--btn-secondary-text);
   font-size: 0.95rem;
   font-weight: 600;
-  background: rgba(14, 28, 51, 0.72);
-  border: 1px solid rgba(118, 145, 242, 0.3);
+  background: var(--btn-secondary-bg);
+  border: 1px solid var(--border-subtle);
   box-shadow:
-    inset 0 1px 0 rgba(164, 186, 255, 0.1),
-    0 10px 22px rgba(6, 14, 31, 0.28);
+    var(--shadow-inner-subtle),
+    0 10px 22px oklch(0.08 0.012 262 / 0.28);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
 .careersCta:hover {
   transform: translateY(-1px);
+  background: var(--btn-secondary-bg-hover);
   box-shadow:
-    inset 0 1px 0 rgba(173, 198, 255, 0.16),
-    0 12px 24px rgba(7, 17, 36, 0.36);
+    var(--shadow-inner-subtle),
+    0 12px 24px oklch(0.08 0.012 262 / 0.36);
 }
 
 .ctaIcon {

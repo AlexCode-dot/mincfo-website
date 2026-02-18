@@ -1,17 +1,58 @@
 :root {
-  /* Color system */
-  --color-bg: #0a1020;
-  --color-surface: #111a2e;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-text: #e6edf7;
-  --color-muted: #9aa6c1;
-  --color-accent: #6673ff;
-  --color-accent-strong: #4a57ff;
-  --color-glass: rgba(17, 26, 46, 0.55);
-  --color-glass-strong: rgba(17, 26, 46, 0.75);
-  --color-beam-core: #9ba8ff;
-  --color-beam-glow: rgba(92, 110, 255, 0.66);
-  --color-beam-fade: rgba(74, 90, 255, 0.24);
+  /* Platform-aligned dark foundation (OKLCH for stable ramps) */
+  --bg-0: oklch(0.145 0.012 262);
+  --bg-1: oklch(0.18 0.014 262);
+  --surface-0: oklch(0.225 0.016 262);
+  --surface-1: oklch(0.26 0.018 262);
+  --surface-blue-0: oklch(0.2 0.028 258 / 0.92);
+  --surface-blue-1: oklch(0.17 0.024 258 / 0.95);
+  --surface-blue-2: oklch(0.145 0.02 258 / 0.96);
+  --border-subtle: oklch(0.7 0.016 262 / 0.17);
+  --border-blue-subtle: oklch(0.68 0.03 258 / 0.22);
+  --text-primary: oklch(0.95 0.008 258);
+  --text-secondary: oklch(0.74 0.014 258);
+
+  --accent-primary: #3836cf;
+  --accent-hover: #3230b4;
+  --accent-soft: oklch(0.51 0.09 271 / 0.2);
+
+  --success: oklch(0.77 0.12 157);
+  --success-soft: oklch(0.29 0.045 165 / 0.58);
+  --success-border: oklch(0.72 0.06 162 / 0.22);
+  --warning: oklch(0.84 0.13 84);
+  --danger: oklch(0.7 0.17 27);
+
+  /* Compatibility aliases for existing styles */
+  --color-bg: var(--bg-0);
+  --color-surface: var(--surface-0);
+  --color-border: var(--border-subtle);
+  --color-text: var(--text-primary);
+  --color-muted: var(--text-secondary);
+  --color-accent: var(--accent-primary);
+  --color-accent-strong: var(--accent-hover);
+  --color-glass: oklch(0.24 0.022 262 / 0.58);
+  --color-glass-strong: oklch(0.22 0.02 262 / 0.78);
+  --color-beam-core: oklch(0.81 0.09 277);
+  --color-beam-glow: oklch(0.65 0.12 279 / 0.44);
+  --color-beam-fade: oklch(0.59 0.09 279 / 0.2);
+
+  /* CTA + chart helpers */
+  --btn-primary-bg: #3836cf;
+  --btn-primary-bg-hover: #3230b4;
+  --btn-primary-text: oklch(0.96 0.01 260);
+  --btn-secondary-bg: oklch(0.26 0.03 262 / 0.75);
+  --btn-secondary-bg-hover: oklch(0.3 0.03 262 / 0.82);
+  --btn-secondary-text: var(--text-primary);
+  --chart-line: var(--btn-primary-bg);
+  --chart-fill: color-mix(in oklab, var(--btn-primary-bg) 12%, transparent);
+  --chart-fill-strong: color-mix(in oklab, var(--btn-primary-bg) 18%, transparent);
+  --chart-bar-top: color-mix(in oklab, var(--btn-primary-bg) 88%, white);
+  --chart-bar-bottom: color-mix(in oklab, var(--btn-primary-bg) 88%, black);
+  --chart-grid: oklch(0.64 0.015 260 / 0.11);
+  --chart-label: oklch(0.72 0.012 258 / 0.78);
+  --ambient-spot-1: oklch(0.35 0.03 266 / 0.12);
+  --ambient-spot-2: oklch(0.31 0.025 263 / 0.1);
+  --ambient-dot: oklch(0.74 0.015 260 / 0.12);
 
   /* Radius */
   --radius-sm: 8px;
@@ -21,10 +62,12 @@
   --radius-pill: 999px;
 
   /* Shadow & glow */
-  --shadow-soft: 0 12px 40px rgba(5, 10, 22, 0.45);
-  --shadow-glow: 0 0 44px rgba(92, 110, 255, 0.32);
-  --shadow-elevated: 0 24px 70px rgba(6, 12, 24, 0.55);
-  --shadow-beam: 0 0 124px rgba(92, 110, 255, 0.52);
+  --shadow-soft: 0 12px 32px oklch(0.07 0.008 260 / 0.46);
+  --shadow-glow: 0 0 16px oklch(0.58 0.07 272 / 0.12);
+  --shadow-elevated: 0 20px 50px oklch(0.07 0.008 260 / 0.54);
+  --shadow-beam: 0 0 82px oklch(0.63 0.11 279 / 0.28);
+  --shadow-inner-subtle: inset 0 1px 0 oklch(0.95 0.02 260 / 0.12);
+  --ring-accent-subtle: inset 0 0 0 1px oklch(0.7 0.07 278 / 0.24);
 
   /* Layout */
   --container-max: 1200px;

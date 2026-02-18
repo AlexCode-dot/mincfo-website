@@ -18,7 +18,7 @@
 
 .curveCut path {
   fill: transparent;
-  stroke: rgba(42, 74, 126, 0.64);
+  stroke: oklch(0.55 0.035 262 / 0.36);
   stroke-width: 1.6;
 }
 
@@ -28,18 +28,18 @@
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(80% 62% at 18% 42%, rgba(11, 20, 39, 0.52), transparent 72%),
-    radial-gradient(62% 44% at 72% 12%, rgba(84, 138, 220, 0.13), transparent 72%),
-    linear-gradient(180deg, rgba(6, 11, 20, 0.95) 0%, rgba(7, 11, 19, 0.94) 50%, rgba(5, 9, 16, 0.97) 100%);
+    radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
+    radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
+    linear-gradient(180deg, oklch(0.145 0.012 262 / 0.96) 0%, oklch(0.14 0.011 262 / 0.95) 50%, oklch(0.135 0.01 262 / 0.98) 100%);
 }
 
 .background::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(137, 166, 232, 0.28) 1px, transparent 1px);
+  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
   background-size: 8px 8px;
-  opacity: 0.24;
+  opacity: 0.16;
 }
 
 .container {
@@ -106,12 +106,12 @@
   gap: 8px;
   padding: 8px 16px;
   border-radius: var(--radius-pill);
-  background: rgba(15, 24, 40, 0.74);
-  color: rgba(206, 222, 249, 0.9);
+  background: oklch(0.24 0.024 262 / 0.74);
+  color: oklch(0.9 0.012 258 / 0.92);
   font-size: 0.82rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  box-shadow: inset 0 0 0 1px rgba(162, 198, 255, 0.16);
+  box-shadow: inset 0 0 0 1px oklch(0.71 0.04 262 / 0.18);
 }
 
 .pill::before {
@@ -119,22 +119,22 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #6673ff;
-  box-shadow: 0 0 0 0 rgba(102, 115, 255, 0.6);
+  background: var(--accent-primary);
+  box-shadow: 0 0 0 0 oklch(0.62 0.08 272 / 0.24);
   animation: pillPulse 2.1s ease-out infinite;
 }
 
 @keyframes pillPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(111, 129, 255, 0.48);
+    box-shadow: 0 0 0 0 oklch(0.62 0.08 272 / 0.2);
     transform: scale(0.96);
   }
   65% {
-    box-shadow: 0 0 0 8px rgba(111, 129, 255, 0);
+    box-shadow: 0 0 0 6px oklch(0.62 0.08 272 / 0);
     transform: scale(1);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(111, 129, 255, 0);
+    box-shadow: 0 0 0 0 oklch(0.62 0.08 272 / 0);
     transform: scale(0.96);
   }
 }
@@ -151,7 +151,7 @@
 .text {
   margin-top: 18px;
   max-width: 680px;
-  color: rgba(160, 173, 198, 0.94);
+  color: var(--text-secondary);
   font-size: 1.12rem;
   line-height: 1.56;
 }
@@ -167,7 +167,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: rgba(187, 199, 220, 0.94);
+  color: oklch(0.84 0.016 258 / 0.94);
   font-size: 1.05rem;
   line-height: 1.4;
 }
@@ -178,8 +178,9 @@
   height: 18px;
   padding: 3px;
   border-radius: 999px;
-  color: rgba(99, 137, 250, 0.98);
-  box-shadow: inset 0 0 0 1px rgba(87, 128, 240, 0.58);
+  color: var(--accent-hover);
+  border: 1px solid currentColor;
+  box-shadow: 0 0 8px color-mix(in oklab, currentColor 20%, transparent);
 }
 
 .right {
@@ -194,9 +195,9 @@
   width: clamp(380px, 46vw, 620px);
   height: clamp(340px, 42vw, 510px);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(86, 108, 255, 0.34) 0%, rgba(86, 108, 255, 0.12) 46%, transparent 72%);
+  background: radial-gradient(circle, oklch(0.58 0.07 272 / 0.12) 0%, oklch(0.58 0.05 272 / 0.04) 50%, transparent 74%);
   transform: translate(18%, -10%);
-  filter: blur(5px);
+  filter: blur(7px);
   pointer-events: none;
 }
 
@@ -207,10 +208,10 @@
   min-height: clamp(520px, 62vh, 680px);
   padding: 52px 30px 24px;
   border-radius: 26px;
-  background: linear-gradient(165deg, rgba(16, 28, 49, 0.8) 0%, rgba(11, 20, 37, 0.8) 100%);
+  background: linear-gradient(165deg, var(--surface-blue-0) 0%, var(--surface-blue-1) 100%);
   box-shadow:
-    0 32px 78px rgba(4, 9, 18, 0.56),
-    inset 0 0 0 1px rgba(158, 190, 246, 0.16);
+    0 30px 72px oklch(0.08 0.012 262 / 0.56),
+    inset 0 0 0 1px var(--border-subtle);
   backdrop-filter: blur(10px);
   transition: transform 420ms ease, box-shadow 420ms ease;
   display: flex;
@@ -221,8 +222,8 @@
 .section:hover .panel {
   transform: translateY(-4px);
   box-shadow:
-    0 40px 90px rgba(4, 9, 18, 0.6),
-    inset 0 0 0 1px rgba(176, 211, 255, 0.18);
+    0 36px 82px oklch(0.08 0.012 262 / 0.58),
+    inset 0 0 0 1px oklch(0.74 0.04 262 / 0.2);
 }
 
 .header {
@@ -237,8 +238,8 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #6673ff;
-  box-shadow: 0 0 16px rgba(92, 112, 255, 0.8);
+  background: var(--accent-primary);
+  box-shadow: 0 0 6px oklch(0.62 0.08 272 / 0.18);
 }
 
 .body {
@@ -253,8 +254,8 @@
   min-height: 58px;
   padding: 15px 18px;
   border-radius: 14px;
-  background: rgba(7, 14, 27, 0.82);
-  color: rgba(223, 232, 247, 0.95);
+  background: oklch(0.19 0.018 262 / 0.84);
+  color: var(--text-primary);
   font-size: 1.05rem;
   display: inline-flex;
   align-items: center;
@@ -275,7 +276,7 @@
 .questionSent {
   transform: translateX(10px);
   opacity: 0.72;
-  box-shadow: inset 0 0 0 1px rgba(108, 133, 236, 0.3);
+  box-shadow: inset 0 0 0 1px oklch(0.66 0.08 279 / 0.26);
 }
 
 .ghostText {
@@ -287,7 +288,7 @@
   width: 2px;
   height: 1em;
   border-radius: 2px;
-  background: rgba(149, 168, 255, 0.92);
+  background: var(--accent-hover);
   animation: blink 0.8s steps(1) infinite;
 }
 
@@ -297,9 +298,9 @@
   height: clamp(324px, 37vh, 400px);
   padding: 18px;
   border-radius: 16px;
-  background: rgba(37, 58, 93, 0.3);
-  box-shadow: inset 0 0 0 1px rgba(127, 154, 241, 0.22);
-  color: rgba(208, 222, 246, 0.96);
+  background: linear-gradient(165deg, oklch(0.22 0.024 258 / 0.6), oklch(0.19 0.02 258 / 0.66));
+  box-shadow: inset 0 0 0 1px var(--border-blue-subtle);
+  color: oklch(0.9 0.012 258 / 0.96);
   font-size: 1rem;
   display: grid;
   align-content: start;
@@ -318,7 +319,7 @@
 .loadingAnswer span {
   height: 9px;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(95, 125, 245, 0.1), rgba(155, 176, 255, 0.5), rgba(95, 125, 245, 0.1));
+  background: linear-gradient(90deg, oklch(0.64 0.08 279 / 0.08), oklch(0.72 0.06 278 / 0.34), oklch(0.64 0.08 279 / 0.08));
   background-size: 180% 100%;
   animation: shimmer 1s linear infinite;
 }
@@ -356,7 +357,7 @@
 .chartHead {
   display: flex;
   justify-content: space-between;
-  color: rgba(189, 212, 248, 0.84);
+  color: var(--chart-label);
   font-size: 0.78rem;
   letter-spacing: 0.03em;
 }
@@ -372,7 +373,7 @@
   display: grid;
   grid-template-rows: repeat(4, 1fr);
   align-items: end;
-  color: rgba(154, 177, 214, 0.74);
+  color: var(--chart-label);
   font-size: 0.75rem;
   padding-bottom: 18px;
 }
@@ -382,15 +383,19 @@
   border-radius: 12px;
   padding: 8px 10px 10px;
   background:
-    linear-gradient(180deg, rgba(88, 115, 255, 0.22) 0%, rgba(88, 115, 255, 0.06) 100%),
+    linear-gradient(180deg, oklch(0.22 0.022 258 / 0.22) 0%, oklch(0.16 0.016 258 / 0.04) 100%),
     repeating-linear-gradient(
       to top,
-      rgba(84, 111, 238, 0.26) 0,
-      rgba(84, 111, 238, 0.26) 1px,
+      var(--chart-grid) 0,
+      var(--chart-grid) 1px,
       transparent 1px,
       transparent 26%
     ),
-    rgba(11, 18, 32, 0.66);
+    linear-gradient(180deg, oklch(0.155 0.014 258 / 0.94), oklch(0.13 0.012 258 / 0.98));
+  border: 1px solid oklch(0.62 0.04 262 / 0.2);
+  box-shadow:
+    inset 0 1px 0 oklch(0.84 0.015 258 / 0.06),
+    0 10px 20px oklch(0.08 0.012 262 / 0.28);
   display: grid;
   grid-template-columns: repeat(var(--bar-count, 5), minmax(0, 1fr));
   align-items: flex-end;
@@ -407,7 +412,7 @@
 
 .barValue {
   text-align: center;
-  color: rgba(193, 218, 255, 0.92);
+  color: oklch(0.87 0.016 258 / 0.92);
   font-size: 0.75rem;
   opacity: 0;
   transform: translateY(6px);
@@ -419,8 +424,15 @@
   width: 100%;
   height: var(--bar-height);
   border-radius: 12px 12px 10px 10px;
-  background: linear-gradient(180deg, rgba(144, 168, 255, 0.94) 0%, rgba(68, 96, 255, 0.82) 100%);
-  box-shadow: 0 0 12px rgba(76, 106, 255, 0.32);
+  background: linear-gradient(
+    180deg,
+    var(--chart-bar-top) 0%,
+    var(--chart-bar-top) 22%,
+    var(--chart-bar-bottom) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 oklch(0.9 0.012 260 / 0.05),
+    0 4px 8px oklch(0.09 0.008 262 / 0.24);
   transform-origin: bottom;
   transform: scaleY(0.05);
   transition: transform 540ms cubic-bezier(0.24, 0.8, 0.26, 1) var(--bar-delay);
@@ -428,7 +440,7 @@
 
 .barLabel {
   text-align: center;
-  color: rgba(172, 191, 223, 0.85);
+  color: var(--chart-label);
   font-size: 0.68rem;
 }
 
@@ -449,8 +461,8 @@
   gap: 14px;
   padding: 16px 16px 16px 20px;
   border-radius: 13px;
-  background: rgba(6, 12, 22, 0.72);
-  color: rgba(168, 184, 209, 0.94);
+  background: linear-gradient(180deg, oklch(0.17 0.02 258 / 0.86), oklch(0.15 0.018 258 / 0.88));
+  color: var(--text-secondary);
   font-size: 0.98rem;
   overflow: hidden;
 }
@@ -461,7 +473,7 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  color: rgba(188, 204, 229, 0.94);
+  color: oklch(0.84 0.016 258 / 0.92);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -473,8 +485,8 @@
   height: 38px;
   border-radius: 999px;
   border: none;
-  background: rgba(90, 113, 255, 0.3);
-  color: #d8ebff;
+  background: var(--accent-soft);
+  color: var(--text-primary);
   display: grid;
   place-items: center;
   transition: transform 240ms ease, background 240ms ease;
@@ -512,7 +524,7 @@
 
 .dashboardCut path {
   fill: transparent;
-  stroke: rgba(88, 132, 209, 0.08);
+  stroke: oklch(0.62 0.03 262 / 0.09);
   stroke-width: 1.5;
 }
 
@@ -522,18 +534,18 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(76% 62% at 78% 36%, rgba(42, 84, 160, 0.25), transparent 74%),
-    radial-gradient(64% 54% at 22% 72%, rgba(28, 60, 121, 0.24), transparent 76%),
-    linear-gradient(180deg, rgba(10, 17, 31, 0.78) 0%, rgba(8, 14, 26, 0.86) 42%, rgba(8, 14, 24, 0.92) 100%);
+    radial-gradient(76% 62% at 78% 36%, var(--ambient-spot-1), transparent 74%),
+    radial-gradient(64% 54% at 22% 72%, var(--ambient-spot-2), transparent 76%),
+    linear-gradient(180deg, oklch(0.16 0.012 262 / 0.84) 0%, oklch(0.15 0.011 262 / 0.9) 42%, oklch(0.14 0.01 262 / 0.95) 100%);
 }
 
 .dashboardBackground::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(136, 170, 240, 0.22) 1px, transparent 1px);
+  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
   background-size: 8px 8px;
-  opacity: 0.16;
+  opacity: 0.12;
 }
 
 .dashboardPanel {
@@ -541,10 +553,10 @@
   width: min(820px, 100%);
   padding: 44px 22px 20px;
   border-radius: 24px;
-  background: linear-gradient(160deg, rgba(13, 22, 39, 0.92) 0%, rgba(8, 14, 27, 0.94) 100%);
+  background: linear-gradient(160deg, var(--surface-blue-0) 0%, var(--surface-blue-1) 100%);
   box-shadow:
-    0 28px 60px rgba(4, 9, 18, 0.5),
-    inset 0 0 0 1px rgba(128, 164, 222, 0.14);
+    0 24px 52px oklch(0.08 0.012 262 / 0.48),
+    inset 0 0 0 1px var(--border-subtle);
 }
 
 .planSection {
@@ -564,7 +576,7 @@
 
 .planCut path {
   fill: transparent;
-  stroke: rgba(42, 74, 126, 0.1);
+  stroke: oklch(0.58 0.03 262 / 0.12);
   stroke-width: 1.6;
 }
 
@@ -574,18 +586,18 @@
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(80% 62% at 18% 42%, rgba(11, 20, 39, 0.52), transparent 72%),
-    radial-gradient(62% 44% at 72% 12%, rgba(84, 138, 220, 0.13), transparent 72%),
-    linear-gradient(180deg, rgba(6, 11, 20, 0.95) 0%, rgba(7, 11, 19, 0.94) 50%, rgba(5, 9, 16, 0.97) 100%);
+    radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
+    radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
+    linear-gradient(180deg, oklch(0.145 0.012 262 / 0.96) 0%, oklch(0.14 0.011 262 / 0.95) 50%, oklch(0.135 0.01 262 / 0.98) 100%);
 }
 
 .planBackground::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(137, 166, 232, 0.28) 1px, transparent 1px);
+  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
   background-size: 8px 8px;
-  opacity: 0.24;
+  opacity: 0.16;
 }
 
 .planContainer {
@@ -646,8 +658,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #62df9f;
-  box-shadow: 0 0 0 0 rgba(98, 223, 159, 0.56);
+  background: var(--success);
+  box-shadow: 0 0 0 0 oklch(0.77 0.12 157 / 0.24);
   animation: livePulse 2s ease-out infinite;
 }
 
@@ -663,8 +675,8 @@
   gap: 8px;
   border-radius: 10px;
   padding: 4px;
-  background: rgba(13, 23, 40, 0.86);
-  box-shadow: inset 0 0 0 1px rgba(110, 142, 195, 0.22);
+  background: oklch(0.23 0.023 262 / 0.86);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
 }
 
 .planScenarioTab {
@@ -673,7 +685,7 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: rgba(164, 183, 211, 0.9);
+  color: var(--text-secondary);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -682,8 +694,8 @@
 }
 
 .planScenarioTab:hover {
-  color: rgba(220, 233, 254, 0.96);
-  background: rgba(37, 54, 83, 0.58);
+  color: var(--text-primary);
+  background: oklch(0.3 0.03 262 / 0.62);
 }
 
 .planScenarioTab:focus-visible {
@@ -692,9 +704,9 @@
 }
 
 .planScenarioTabActive {
-  color: rgba(233, 242, 255, 0.98);
-  background: rgba(82, 103, 230, 0.92);
-  box-shadow: 0 4px 10px rgba(28, 43, 106, 0.34);
+  color: var(--text-primary);
+  background: oklch(0.6 0.1 278 / 0.78);
+  box-shadow: 0 4px 10px oklch(0.16 0.03 262 / 0.34);
 }
 
 .planVisualStack {
@@ -708,7 +720,7 @@
   z-index: 2;
   padding: 38px 16px 16px;
   border-radius: 16px;
-  background: linear-gradient(160deg, rgba(13, 23, 41, 0.95), rgba(9, 16, 30, 0.96));
+  background: linear-gradient(160deg, oklch(0.2 0.03 258 / 0.95), oklch(0.16 0.024 258 / 0.96));
   box-shadow:
     0 18px 34px rgba(4, 8, 16, 0.34),
     inset 0 0 0 1px rgba(123, 160, 225, 0.2);
@@ -746,8 +758,8 @@
 .planDimensions {
   padding: 14px;
   border-radius: 12px;
-  background: rgba(10, 18, 33, 0.84);
-  box-shadow: inset 0 0 0 1px rgba(112, 147, 201, 0.18);
+  background: oklch(0.17 0.022 258 / 0.9);
+  box-shadow: inset 0 0 0 1px var(--border-blue-subtle);
 }
 
 .planRecon {
@@ -764,7 +776,7 @@
   width: min(472px, calc(100% - 8px));
   right: -28px;
   top: 426px;
-  background: linear-gradient(165deg, rgba(20, 32, 52, 0.94), rgba(10, 18, 33, 0.95));
+  background: linear-gradient(165deg, oklch(0.22 0.03 258 / 0.94), oklch(0.17 0.024 258 / 0.95));
   box-shadow:
     0 18px 38px rgba(2, 7, 15, 0.54),
     0 8px 18px rgba(7, 18, 35, 0.45),
@@ -912,8 +924,8 @@
   margin-top: 14px;
   border-radius: 10px;
   padding: 9px 11px 11px;
-  background: rgba(7, 13, 24, 0.82);
-  box-shadow: inset 0 0 0 1px rgba(94, 124, 179, 0.18);
+  background: oklch(0.19 0.018 262 / 0.84);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
   transition: transform 260ms ease, box-shadow 260ms ease, background 260ms ease;
 }
 
@@ -924,7 +936,7 @@
 
 .planForecastLine {
   fill: none;
-  stroke: rgba(90, 110, 255, 0.99);
+  stroke: var(--chart-line);
   stroke-width: 2.6;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -932,13 +944,13 @@
 }
 
 .planForecastArea {
-  fill: rgba(78, 102, 255, 0.34);
+  fill: var(--chart-fill);
   opacity: 1;
   transition: fill 260ms ease, opacity 260ms ease;
 }
 
 .planActualSplit {
-  stroke: rgba(110, 137, 235, 0.52);
+  stroke: oklch(0.68 0.05 264 / 0.44);
   stroke-width: 1.4;
   stroke-dasharray: 3 8;
 }
@@ -947,7 +959,7 @@
   margin-top: 2px;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  color: rgba(108, 126, 156, 0.62);
+  color: var(--chart-label);
   font-size: 0.62rem;
   text-align: center;
   letter-spacing: 0.02em;
@@ -955,7 +967,7 @@
 
 .planForecastLegend {
   margin: 6px 0 2px;
-  color: rgba(128, 147, 177, 0.7);
+  color: var(--chart-label);
   font-size: 0.62rem;
   letter-spacing: 0.03em;
   text-align: right;
@@ -966,8 +978,8 @@
   padding: 0 10px;
   border: none;
   border-radius: 8px;
-  background: rgba(75, 102, 255, 0.94);
-  color: rgba(233, 241, 255, 0.96);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
   font-size: 0.66rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1189,8 +1201,8 @@
   width: 13px;
   height: 3px;
   border-radius: 999px;
-  background: rgba(90, 111, 255, 0.99);
-  box-shadow: 0 0 16px rgba(90, 111, 255, 0.74);
+  background: var(--chart-line);
+  box-shadow: 0 0 6px oklch(0.6 0.07 272 / 0.16);
 }
 
 .trendChartWrap {
@@ -1204,7 +1216,7 @@
 .trendAxisY {
   display: grid;
   grid-template-rows: repeat(5, 1fr);
-  color: rgba(128, 146, 172, 0.8);
+  color: var(--chart-label);
   font-size: 0.74rem;
   align-items: center;
 }
@@ -1218,8 +1230,8 @@
   background:
     repeating-linear-gradient(
       to bottom,
-      rgba(92, 123, 173, 0.2) 0,
-      rgba(92, 123, 173, 0.2) 1px,
+      var(--chart-grid) 0,
+      var(--chart-grid) 1px,
       transparent 1px,
       transparent 56px
     );
@@ -1238,7 +1250,7 @@
 
 .trendLine {
   fill: none;
-  stroke: rgba(90, 111, 255, 0.99);
+  stroke: var(--chart-line);
   stroke-width: 2.1;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -1248,14 +1260,14 @@
 }
 
 .trendArea {
-  fill: rgba(78, 102, 255, 0.28);
+  fill: var(--chart-fill);
   opacity: 0;
   transition: opacity 900ms ease 480ms;
 }
 
 .trendPoints circle {
-  fill: rgba(90, 111, 255, 0.99);
-  stroke: rgba(157, 176, 255, 0.96);
+  fill: var(--chart-line);
+  stroke: color-mix(in oklab, var(--chart-line) 42%, white);
   stroke-width: 1.4;
   opacity: 0;
   transform: scale(0.8);
@@ -1306,7 +1318,7 @@
 }
 
 .sending {
-  background: rgba(95, 124, 255, 0.5) !important;
+  background: oklch(0.66 0.1 279 / 0.34) !important;
   transform: translateX(2px);
 }
 
@@ -1315,7 +1327,7 @@
 }
 
 .loading {
-  background: rgba(95, 124, 255, 0.38) !important;
+  background: oklch(0.66 0.1 279 / 0.24) !important;
 }
 
 .loading svg {
@@ -1441,15 +1453,15 @@
 
 @keyframes livePulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(98, 223, 159, 0.5);
+    box-shadow: 0 0 0 0 oklch(0.77 0.12 157 / 0.22);
     transform: scale(0.92);
   }
   65% {
-    box-shadow: 0 0 0 8px rgba(98, 223, 159, 0);
+    box-shadow: 0 0 0 6px oklch(0.77 0.12 157 / 0);
     transform: scale(1);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(98, 223, 159, 0);
+    box-shadow: 0 0 0 0 oklch(0.77 0.12 157 / 0);
     transform: scale(0.92);
   }
 }

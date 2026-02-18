@@ -560,7 +560,7 @@ export default function HowItWorks() {
                             <span className={styles.accountMetaText}>Jag godkänner villkoren</span>
                           </div>
 
-                          <span className={styles.accountButton} />
+                          <span className={styles.accountButton}>Skapa konto</span>
 
                           <div className={styles.accountFooter}>
                             <span className={styles.accountFooterText}>Redan konto?</span>
@@ -806,12 +806,6 @@ export default function HowItWorks() {
                               <path d="M310 258 L310 308" />
                             </g>
 
-                            <circle cx="270" cy="170" r="7.5" />
-                            <circle cx="310" cy="170" r="7.5" />
-                            <circle cx="350" cy="170" r="7.5" />
-                            <circle cx="252" cy="214" r="7.5" />
-                            <circle cx="368" cy="214" r="7.5" />
-                            <circle cx="310" cy="258" r="7.5" />
                           </svg>
 
                           <div className={styles.faasSystemsHub}>
