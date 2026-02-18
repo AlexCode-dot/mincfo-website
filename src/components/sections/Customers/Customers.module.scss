@@ -225,9 +225,11 @@
   min-height: 360px;
   padding: 28px;
   border-radius: 24px;
+  overflow: hidden;
+  isolation: isolate;
   background:
-    radial-gradient(120% 90% at 20% 0%, rgba(64, 102, 172, 0.16), transparent 62%),
-    linear-gradient(168deg, rgba(16, 27, 45, 0.88), rgba(11, 19, 34, 0.92));
+    radial-gradient(120% 90% at 20% 0%, rgba(64, 102, 172, 0.13), transparent 62%),
+    linear-gradient(168deg, rgba(12, 22, 40, 0.97), rgba(9, 17, 32, 0.985));
   color: rgba(219, 231, 251, 0.94);
   box-shadow:
     0 22px 34px rgba(3, 8, 16, 0.34),
@@ -243,10 +245,25 @@
     box-shadow 700ms ease;
 }
 
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(180deg, rgba(20, 42, 84, 0.22), rgba(10, 22, 43, 0.08) 36%, rgba(9, 18, 35, 0.02) 100%),
+    linear-gradient(168deg, rgba(12, 22, 40, 0.94), rgba(9, 17, 32, 0.96));
+}
+
+.card > * {
+  position: relative;
+  z-index: 1;
+}
+
 .cardAccent {
   background:
-    radial-gradient(120% 90% at 18% 0%, rgba(90, 125, 220, 0.24), transparent 60%),
-    linear-gradient(165deg, rgba(24, 41, 78, 0.9), rgba(16, 31, 60, 0.94));
+    radial-gradient(120% 90% at 18% 0%, rgba(90, 125, 220, 0.18), transparent 60%),
+    linear-gradient(165deg, rgba(21, 38, 74, 0.97), rgba(14, 29, 56, 0.985));
   color: rgba(234, 243, 255, 0.96);
   box-shadow:
     0 24px 40px rgba(10, 20, 49, 0.46),
@@ -261,13 +278,13 @@
 }
 
 .visible .leftCard {
-  opacity: 0.58;
+  opacity: 0.42;
   z-index: 3;
   transform: translate3d(-42%, 16px, -80px) rotate(-5deg) scale(0.92);
 }
 
 .visible .rightCard {
-  opacity: 0.58;
+  opacity: 0.42;
   z-index: 3;
   transform: translate3d(42%, 16px, -80px) rotate(5deg) scale(0.92);
 }
@@ -437,7 +454,7 @@
 
   .visible .leftCard,
   .visible .rightCard {
-    opacity: 0.62;
+    opacity: 0.46;
     z-index: 3;
   }
 

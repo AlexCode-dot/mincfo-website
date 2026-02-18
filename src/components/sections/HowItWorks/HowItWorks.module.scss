@@ -1,7 +1,7 @@
 .section {
   position: relative;
-  margin-top: -78px;
-  padding: clamp(124px, 14.8vh, 184px) 0 clamp(108px, 13vh, 156px);
+  margin-top: -72px;
+  padding: clamp(118px, 14vh, 176px) 0 clamp(108px, 12vh, 146px);
   overflow: hidden;
 }
 
@@ -14,230 +14,2080 @@
   pointer-events: none;
 }
 
-.curveLine {
+.curveCut path {
   fill: transparent;
-  stroke: rgba(104, 150, 227, 0.5);
-  stroke-width: 1.5;
+  stroke: rgba(42, 74, 126, 0.1);
+  stroke-width: 1.6;
+}
+
+.background,
+.backgroundGrid,
+.backgroundGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
 .background {
-  position: absolute;
-  inset: -2px 0 0;
   z-index: 0;
-  pointer-events: none;
   background:
-    radial-gradient(66% 54% at 22% 22%, rgba(36, 66, 120, 0.2), transparent 74%),
-    radial-gradient(72% 58% at 78% 78%, rgba(19, 36, 68, 0.32), transparent 76%),
-    linear-gradient(180deg, rgba(6, 12, 24, 0.98) 0%, rgba(5, 10, 20, 0.98) 46%, rgba(6, 11, 22, 1) 100%);
+    radial-gradient(82% 66% at 50% -8%, rgba(39, 78, 154, 0.2), transparent 72%),
+    linear-gradient(180deg, rgba(2, 7, 16, 0.98) 0%, rgba(2, 8, 18, 0.99) 100%);
 }
 
-.background::after {
-  content: "";
-  position: absolute;
-  inset: 0;
+.backgroundGrid {
+  z-index: 1;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(to right, rgba(132, 166, 230, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(132, 166, 230, 0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at 50% 24%, rgba(0, 0, 0, 0.92) 28%, transparent 100%);
+}
+
+.backgroundGlow {
+  z-index: 2;
   background:
-    linear-gradient(180deg, rgba(149, 181, 238, 0.06), transparent 36%),
-    repeating-linear-gradient(
-      90deg,
-      rgba(117, 154, 219, 0.08) 0 1px,
-      transparent 1px 28px
-    );
-  opacity: 0.2;
+    radial-gradient(34% 28% at 20% 34%, rgba(64, 120, 228, 0.18), transparent 100%),
+    radial-gradient(34% 28% at 80% 74%, rgba(34, 82, 188, 0.2), transparent 100%);
 }
 
 .container {
   position: relative;
   z-index: 3;
-  max-width: 1280px;
+  max-width: 1460px;
   margin: 0 auto;
   padding: 0 var(--container-pad);
-  padding-top: clamp(74px, 9.4vh, 138px);
 }
 
-.container h2 {
-  margin: 0;
+.header {
+  max-width: 900px;
+  margin: 0 auto;
   text-align: center;
-  color: rgba(243, 248, 255, 0.96);
-  font-size: clamp(2.2rem, 4vw, 4.1rem);
-  line-height: 1.06;
-  font-weight: 600;
-  letter-spacing: -0.02em;
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 500ms ease, transform 500ms ease;
+  transition: opacity 420ms ease, transform 420ms ease;
 }
 
-.stepsGrid {
-  position: relative;
-  margin-top: clamp(72px, 9vh, 104px);
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(34px, 4vw, 56px);
-  --particle-left: 1.8;
-  --particle-right: 98.2;
-  --particle-progress: 0;
+.header h2 {
+  margin: 0;
+  color: rgba(246, 251, 255, 0.99);
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 620;
 }
 
-.line {
-  position: absolute;
-  top: 48px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: rgba(186, 208, 244, 0.14);
-  z-index: 0;
+.header p {
+  margin: 18px auto 0;
+  max-width: 720px;
+  color: rgba(165, 188, 225, 0.92);
+  font-size: clamp(1rem, 1.35vw, 1.22rem);
+  line-height: 1.56;
 }
 
-.particle {
-  position: absolute;
-  top: 48px;
-  width: 9px;
-  height: 9px;
-  border-radius: 999px;
-  left: calc((var(--particle-left) * 1%) + ((var(--particle-right) - var(--particle-left)) * 1% * var(--particle-progress)));
-  transform: translate(-50%, -50%) translate3d(0, 0, 0);
-  background: radial-gradient(circle, rgba(214, 225, 255, 0.98) 0%, rgba(162, 182, 255, 0.88) 42%, rgba(112, 141, 255, 0.24) 80%, transparent 100%);
-  box-shadow:
-    0 0 10px rgba(141, 170, 255, 0.7),
-    0 0 22px rgba(101, 132, 255, 0.36);
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 180ms ease;
-  will-change: transform;
-}
-
-.particle::after {
-  content: "";
-  position: absolute;
-  right: 56%;
-  top: 50%;
-  width: 18px;
-  height: 1px;
-  transform: translateY(-50%);
-  background: linear-gradient(90deg, rgba(137, 164, 255, 0), rgba(137, 164, 255, 0.64));
-}
-
-.timelineRun .particle {
-  opacity: 1;
-}
-
-.step {
-  position: relative;
-  z-index: 3;
+.tabList {
+  margin: clamp(30px, 4.6vh, 52px) auto 0;
+  width: fit-content;
+  max-width: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(9, 18, 36, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 0 0 1px rgba(123, 158, 226, 0.3),
+    0 14px 28px rgba(2, 8, 18, 0.42);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 380ms ease 70ms, transform 380ms ease 70ms;
+}
+
+.tab {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(166, 191, 232, 0.9);
+  font-size: 0.93rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.tab:hover {
+  color: rgba(231, 241, 255, 0.96);
+  background: rgba(35, 64, 116, 0.52);
+}
+
+.tabActive {
+  color: rgba(246, 251, 255, 0.98);
+  background: rgba(74, 118, 206, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(205, 224, 255, 0.28),
+    0 10px 20px rgba(10, 27, 63, 0.52);
+}
+
+.tab:focus-visible {
+  outline: 2px solid rgba(148, 185, 247, 0.95);
+  outline-offset: 2px;
+}
+
+.panel {
+  margin-top: clamp(46px, 5.8vh, 72px);
+  border-radius: 0;
+  padding: 0;
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.panelPrimary {
+  background: transparent;
+  border: 0;
+}
+
+.panelSecondary {
+  background: transparent;
+  border: 0;
+}
+
+.panelSwitching {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.stepsFlow {
+  position: relative;
+  margin-top: clamp(18px, 2.8vh, 30px);
+  display: grid;
+  gap: clamp(76px, 8vh, 104px);
+}
+
+.stepRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(14px, 2vw, 24px);
+  align-items: stretch;
   opacity: 0;
   transform: translateY(12px);
-  transition: opacity 520ms ease, transform 520ms ease;
+  transition: opacity 320ms ease, transform 320ms ease;
 }
 
-.circle {
-  width: 106px;
-  height: 106px;
+.stepRow:nth-child(2) {
+  margin-bottom: clamp(18px, 2.6vh, 28px);
+}
+
+.stepRowReverse .stepText {
+  order: 2;
+}
+
+.stepRowReverse .stepVisual {
+  order: 1;
+}
+
+.stepRowVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stepRowCreate .stepVisual {
+  min-height: clamp(340px, 46vh, 460px);
+}
+
+.stepRowInsights .stepVisual {
+  min-height: clamp(440px, 56vh, 620px);
+}
+
+.stepRowOnboarding .stepVisual {
+  min-height: clamp(330px, 44vh, 430px);
+}
+
+.stepRowFaasSystems .stepVisual {
+  min-height: clamp(330px, 44vh, 430px);
+}
+
+.stepRowFaasRealtime .stepVisual {
+  min-height: clamp(360px, 48vh, 500px);
+}
+
+.stepSpineMarker {
+  display: none;
+}
+
+.stepText,
+.stepVisual {
+  min-height: 240px;
+}
+
+.stepText {
+  padding: clamp(14px, 1.6vw, 22px) clamp(2px, 0.2vw, 4px);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  display: grid;
+  align-content: center;
+}
+
+.stepMain {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.stepMainCentered {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.stepCopy {
+  display: grid;
+  align-content: start;
+}
+
+.stepCopyCreate {
+  justify-items: center;
+  text-align: center;
+}
+
+.stepCopyCentered {
+  justify-items: center;
+  text-align: center;
+}
+
+.stepCreateLead {
+  margin-bottom: 10px;
+}
+
+.stepTitleRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stepOrb {
+  width: 94px;
+  height: 94px;
+  position: relative;
+  isolation: isolate;
   border-radius: 999px;
   display: grid;
   place-items: center;
-  margin-bottom: 34px;
-  position: relative;
-  z-index: 2;
-  background: #05060d;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  transition: border-color 420ms ease, box-shadow 460ms ease;
+  color: rgba(222, 236, 255, 0.98);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(38, 66, 122, 0.5) 0%, rgba(12, 21, 43, 0.92) 64%),
+    linear-gradient(180deg, rgba(16, 31, 62, 0.9), rgba(8, 16, 33, 0.95));
+  border: 1px solid rgba(122, 164, 243, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(178, 206, 255, 0.18),
+    0 0 0 1px rgba(121, 159, 236, 0.26),
+    0 0 26px rgba(87, 141, 255, 0.36),
+    0 12px 26px rgba(3, 10, 20, 0.38);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
 }
 
-.circle::after {
+.stepOrb::after {
   content: "";
   position: absolute;
-  inset: -1px;
+  inset: -2px;
   border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(150, 189, 255, 0) 0deg,
+    rgba(150, 189, 255, 0) 268deg,
+    rgba(208, 230, 255, 1) 322deg,
+    rgba(150, 189, 255, 0) 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
   opacity: 0;
-  background: radial-gradient(circle, rgba(136, 165, 255, 0.2) 0%, rgba(114, 148, 255, 0.14) 38%, transparent 72%);
-  filter: blur(10px);
-  transition: opacity 420ms ease;
   pointer-events: none;
+  transform: rotate(0deg);
 }
 
-.circle span {
-  font-size: 1.56rem;
-  line-height: 1;
-  font-weight: 500;
-  color: rgba(144, 152, 171, 0.42);
-  letter-spacing: 0.02em;
-  transition: color 420ms ease, opacity 420ms ease;
+.stepRowVisible .stepOrb::after {
+  opacity: 0.88;
+  animation: stepOrbBorderSweep 4.2s linear infinite;
 }
 
-.stepActive .circle {
-  border-color: rgba(132, 165, 255, 0.92);
+.stepsFlow .stepRow:nth-child(1) .stepOrb::after {
+  animation-delay: 0ms;
+}
+
+.stepsFlow .stepRow:nth-child(2) .stepOrb::after {
+  animation-delay: 420ms;
+}
+
+.stepsFlow .stepRow:nth-child(3) .stepOrb::after {
+  animation-delay: 840ms;
+}
+
+.stepsFlow .stepRow:nth-child(4) .stepOrb::after {
+  animation-delay: 1260ms;
+}
+
+@media (min-width: 901px) {
+  .stepsFlow::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      180deg,
+      rgba(59, 130, 246, 0),
+      rgba(59, 130, 246, 0.72) 18%,
+      rgba(59, 130, 246, 0.72) 82%,
+      rgba(59, 130, 246, 0)
+    );
+    opacity: 0.86;
+    filter: blur(0.8px);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.16);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .stepRow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(150px, 15vw, 250px);
+    align-items: center;
+    z-index: 2;
+  }
+
+  .stepSpineMarker {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 66px;
+    height: 66px;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    color: rgba(235, 245, 255, 0.98);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    background:
+      radial-gradient(circle at 50% 52%, rgb(26, 54, 114) 0%, rgb(12, 24, 50) 62%, rgb(8, 16, 34) 100%);
+    border: 0.85px solid rgba(121, 170, 255, 0.82);
+    box-shadow:
+      inset 0 1px 0 rgba(196, 220, 255, 0.18),
+      0 0 0 1px rgba(103, 154, 246, 0.14),
+      0 0 16px rgba(59, 130, 246, 0.32),
+      0 0 30px rgba(59, 130, 246, 0.2);
+    z-index: 4;
+    opacity: 0;
+    transition: opacity 260ms ease, transform 260ms ease;
+  }
+
+  .stepSpineMarker::after {
+    content: "";
+    position: absolute;
+    inset: -0.75px;
+    border-radius: inherit;
+    padding: 0.85px;
+    background: conic-gradient(
+      from 0deg,
+      rgba(121, 170, 255, 0.05) 0deg,
+      rgba(182, 215, 255, 0.92) 84deg,
+      rgba(121, 170, 255, 0.1) 168deg,
+      rgba(182, 215, 255, 0.92) 252deg,
+      rgba(121, 170, 255, 0.05) 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.62;
+    pointer-events: none;
+    animation: stepSpineRingSpin 7.5s linear infinite;
+  }
+
+  .stepRowVisible .stepSpineMarker {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  .stepOrb {
+    display: none;
+  }
+
+  .stepMain {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .stepMainCentered {
+    justify-items: center;
+  }
+
+  .stepCreateLead {
+    display: none;
+  }
+
+  .stepText {
+    justify-items: center;
+    text-align: center;
+    padding-inline: clamp(22px, 2.8vw, 48px);
+  }
+
+  .stepCopy {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .stepCopyCreate,
+  .stepCopyCentered {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .stepTitleRow {
+    justify-content: center;
+  }
+
+  .stepText p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.stepMetaIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(188, 214, 255, 0.96);
+  background: rgba(16, 30, 56, 0.9);
+  border: 1px solid rgba(121, 154, 211, 0.3);
+  margin-top: 4px;
+}
+
+.stepRowVisible .stepOrb {
   box-shadow:
-    inset 0 1px 0 rgba(182, 207, 255, 0.16),
-    0 0 32px -12px rgba(88, 118, 245, 0.56);
+    inset 0 1px 0 rgba(188, 216, 255, 0.22),
+    0 0 0 1px rgba(143, 182, 255, 0.32),
+    0 0 34px rgba(105, 157, 255, 0.44),
+    0 14px 28px rgba(3, 10, 20, 0.42);
 }
 
-.stepActive .circle::after {
-  opacity: 1;
+.stepText h4 {
+  margin: 10px 0 0;
+  color: rgba(240, 248, 255, 0.98);
+  font-size: clamp(2rem, 3.9vw, 4rem);
+  line-height: 1.22;
+  letter-spacing: -0.024em;
+  max-width: 12ch;
 }
 
-.stepActive .circle span {
-  color: rgba(226, 243, 255, 0.96);
-}
-
-.step h3 {
+.stepTitleRow h4 {
   margin: 0;
-  color: rgba(232, 239, 250, 0.93);
-  font-size: clamp(1.18rem, 1.45vw, 1.58rem);
-  line-height: 1.24;
-  font-weight: 590;
-  letter-spacing: -0.01em;
-  transition: color 380ms ease, opacity 380ms ease;
 }
 
-.step p {
+.stepCopyCreate p {
+  max-width: 42ch;
+}
+
+.stepCopyCentered p {
+  max-width: 42ch;
+}
+
+.stepText p {
   margin: 16px 0 0;
-  max-width: 360px;
-  color: rgba(147, 162, 186, 0.8);
-  font-size: 0.97rem;
-  line-height: 1.7;
-  transition: color 380ms ease, opacity 380ms ease;
+  color: rgba(157, 180, 214, 0.94);
+  font-size: clamp(1rem, 1.32vw, 1.22rem);
+  line-height: 1.62;
+  max-width: 58ch;
 }
 
-.stepActive h3 {
-  color: rgba(242, 248, 255, 0.96);
+.stepHighlights {
+  margin: 20px auto 0;
+  padding: 0;
+  list-style: none;
+  width: fit-content;
+  display: grid;
+  gap: 10px;
+  text-align: left;
 }
 
-.stepActive p {
-  color: rgba(166, 184, 211, 0.9);
+.stepHighlightItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(193, 211, 242, 0.94);
+  font-size: clamp(1rem, 1.25vw, 1.14rem);
+  line-height: 1.35;
+}
+
+.stepHighlightCheck {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: rgba(150, 192, 255, 0.95);
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid rgba(111, 162, 248, 0.72);
+  background: rgba(12, 27, 58, 0.78);
+  box-shadow:
+    inset 0 1px 0 rgba(188, 219, 255, 0.14),
+    0 0 10px rgba(74, 136, 247, 0.2);
+}
+
+.stepVisual {
+  position: relative;
+  overflow: visible;
+  min-height: 300px;
+  display: grid;
+  place-items: center;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.stepVisualCreate {
+  align-items: center;
+}
+
+.stepVisualConnect {
+  align-items: center;
+}
+
+.stepVisualInsights {
+  align-items: center;
+}
+
+.stepVisualOnboarding {
+  align-items: center;
+}
+
+.stepVisualFaasSystems {
+  align-items: center;
+}
+
+.stepVisualFaasRealtime {
+  align-items: center;
+}
+
+.visualSurface {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 3.2vw, 36px);
+}
+
+.visualCore {
+  width: clamp(74px, 10vw, 116px);
+  aspect-ratio: 1;
+  border-radius: clamp(18px, 2.3vw, 26px);
+  display: grid;
+  place-items: center;
+  color: rgba(214, 231, 255, 0.98);
+  background: rgba(24, 54, 108, 0.6);
+  border: 1px solid rgba(150, 184, 246, 0.36);
+  z-index: 2;
+}
+
+.accountMock {
+  width: min(88%, 430px);
+  min-height: clamp(280px, 38vh, 360px);
+  border-radius: 18px;
+  padding: clamp(14px, 2.2vw, 20px);
+  display: grid;
+  align-content: start;
+  gap: clamp(10px, 1.25vw, 14px);
+  background: linear-gradient(180deg, rgba(7, 17, 39, 0.92), rgba(5, 12, 30, 0.95));
+  border: 1px solid rgba(108, 146, 221, 0.34);
+  box-shadow:
+    inset 0 1px 0 rgba(158, 190, 246, 0.14),
+    0 18px 30px rgba(2, 8, 18, 0.46);
+  z-index: 2;
+}
+
+.accountHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.accountBrand {
+  color: rgba(226, 239, 255, 0.98);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.accountSecure {
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  color: rgba(160, 194, 255, 0.95);
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: rgba(27, 53, 100, 0.4);
+  border: 1px solid rgba(110, 151, 230, 0.3);
+}
+
+.accountTabs {
+  margin-top: 2px;
+  width: fit-content;
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(12, 26, 54, 0.74);
+  border: 1px solid rgba(93, 132, 205, 0.26);
+}
+
+.accountTab {
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  color: rgba(148, 175, 224, 0.9);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.accountTabActive {
+  color: rgba(238, 247, 255, 0.98);
+  background: rgba(63, 102, 187, 0.82);
+}
+
+.accountInputGroup {
+  display: grid;
+  gap: 6px;
+}
+
+.accountInputLabel {
+  color: rgba(152, 177, 217, 0.9);
+  font-size: 0.76rem;
+  line-height: 1;
+}
+
+.accountField,
+.accountFieldShort,
+.accountButton {
+  border-radius: 10px;
+  background: rgba(16, 35, 69, 0.9);
+  border: 1px solid rgba(93, 129, 194, 0.35);
+}
+
+.accountField {
+  width: 100%;
+  height: 42px;
+}
+
+.accountFieldShort {
+  width: 100%;
+  height: 42px;
+}
+
+.accountMetaRow {
+  margin-top: -2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accountCheck {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(116, 151, 217, 0.5);
+  background: rgba(13, 28, 57, 0.82);
+}
+
+.accountMetaText {
+  color: rgba(143, 169, 209, 0.9);
+  font-size: 0.76rem;
+}
+
+.accountButton {
+  margin-top: 2px;
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(65, 102, 198, 0.96), rgba(47, 84, 178, 0.96));
+  border: 1px solid rgba(108, 146, 236, 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(176, 202, 255, 0.24),
+    0 8px 18px rgba(17, 36, 86, 0.44);
+}
+
+.accountFooter {
+  margin-top: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accountFooterText {
+  color: rgba(141, 168, 209, 0.88);
+  font-size: 0.76rem;
+}
+
+.accountFooterLink {
+  color: rgba(181, 208, 255, 0.97);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.stepRowVisible .accountMock {
+  border-color: rgba(132, 173, 248, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(178, 205, 252, 0.2),
+    0 0 24px rgba(77, 129, 237, 0.2),
+    0 18px 30px rgba(2, 8, 18, 0.46);
+}
+
+.connectMock {
+  --connector-offset: 144px;
+  --connector-gap: 28px;
+  position: relative;
+  width: min(100%, 680px);
+  min-height: 292px;
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) clamp(104px, 12vw, 148px) minmax(150px, 1fr);
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 2.4vw, 28px);
+}
+
+.connectMock::before {
+  content: "";
+  position: absolute;
+  inset: 14px 8px 52px;
+  border-radius: 999px;
+  background:
+    radial-gradient(36% 80% at 24% 50%, rgba(102, 138, 225, 0.2), transparent 74%),
+    radial-gradient(36% 80% at 76% 50%, rgba(88, 204, 186, 0.2), transparent 74%),
+    radial-gradient(26% 45% at 50% 50%, rgba(124, 173, 255, 0.1), transparent 82%);
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(8px);
+}
+
+.connectMock::after {
+  display: none;
+}
+
+.connectTopConnector {
+  position: absolute;
+  left: 50%;
+  top: calc(50% - var(--connector-offset));
+  transform: translate(-50%, -50%);
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(196, 214, 247, 0.96);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  background: rgba(10, 26, 55, 0.82);
+  border: 1px solid rgba(98, 134, 202, 0.46);
+  box-shadow:
+    inset 0 1px 0 rgba(162, 194, 248, 0.13),
+    0 8px 12px rgba(2, 8, 18, 0.3);
+  z-index: 3;
+}
+
+.connectTopIcon {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(179, 206, 252, 0.96);
+  background: rgba(17, 40, 82, 0.9);
+  border: 1px solid rgba(111, 147, 218, 0.34);
+}
+
+.connectTopStem {
+  position: absolute;
+  left: 50%;
+  top: calc(50% - var(--connector-offset) + var(--connector-gap));
+  width: 2px;
+  height: calc(var(--connector-offset) - var(--connector-gap));
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(126, 210, 196, 0.08) 0%,
+    rgba(126, 210, 196, 0.34) 60%,
+    rgba(128, 172, 255, 0.08) 100%
+  );
+  background-size: 100% 200%;
+  background-position: 0 -44px;
+  box-shadow: 0 0 10px rgba(111, 171, 255, 0.14);
+  z-index: 2;
+  animation: connectStemPulse 2.8s ease-in-out infinite;
+}
+
+.connectTopPulse {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 18px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(169, 196, 255, 0), rgba(169, 196, 255, 0.95), rgba(169, 196, 255, 0));
+  filter: blur(0.2px);
+  animation: connectTopPulseTravel 2.8s ease-in-out infinite;
+}
+
+.connectBottomStem {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: calc(var(--connector-offset) - var(--connector-gap));
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(128, 172, 255, 0.08) 0%,
+    rgba(126, 210, 196, 0.34) 40%,
+    rgba(126, 210, 196, 0.08) 100%
+  );
+  background-size: 100% 200%;
+  background-position: 0 -58px;
+  box-shadow: 0 0 10px rgba(111, 171, 255, 0.15);
+  z-index: 2;
+  animation: connectStemPulse 2.8s ease-in-out infinite;
+}
+
+.connectBottomPulse {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 18px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(169, 196, 255, 0), rgba(169, 196, 255, 0.95), rgba(169, 196, 255, 0));
+  filter: blur(0.2px);
+  animation: connectBottomPulseTravel 2.8s ease-in-out infinite;
+}
+
+.connectNode {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 210px;
+  height: clamp(74px, 8.4vw, 96px);
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: rgba(17, 36, 72, 0.88);
+  border: 1px solid rgba(118, 154, 220, 0.36);
+  box-shadow:
+    inset 0 1px 0 rgba(167, 196, 246, 0.12),
+    0 12px 18px rgba(2, 8, 18, 0.36);
+}
+
+.connectNodeFortnox {
+  background:
+    radial-gradient(80% 90% at 50% 50%, rgba(10, 46, 54, 0.84), rgba(5, 22, 28, 0.94));
+  border-color: rgba(72, 183, 169, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(128, 226, 209, 0.14),
+    0 12px 18px rgba(2, 8, 18, 0.36);
+}
+
+.connectBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(229, 240, 255, 0.98);
+}
+
+.connectBrandMark {
+  width: 18px;
+  height: 18px;
+}
+
+.connectBrandWord {
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.connectBridge {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.connectFlow {
+  position: absolute;
+  left: -14px;
+  right: -14px;
+  top: 50%;
+  height: 1.5px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(116, 152, 229, 0.16), rgba(118, 217, 197, 0.62), rgba(116, 152, 229, 0.16));
+  z-index: 1;
+}
+
+.connectPulseSource,
+.connectPulseRight {
+  position: absolute;
+  top: 50%;
+  width: 24px;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(169, 196, 255, 0), rgba(169, 196, 255, 0.95), rgba(169, 196, 255, 0));
+  filter: blur(0.2px);
+  z-index: 1;
+}
+
+.connectPulseSource {
+  left: 0;
+  animation: connectPulseSourceToCenter 2.8s ease-in-out infinite;
+}
+
+.connectPulseRight {
+  left: calc(50% - 9px);
+  animation: connectPulseCenterToRight 2.8s ease-in-out infinite;
+}
+
+.connectFortnoxLogo {
+  width: min(84px, 54%);
+  height: auto;
+  display: block;
+  filter: brightness(1.12) contrast(1.08) saturate(1.06);
+}
+
+.connectStatus {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--connector-offset));
+  transform: translate(-50%, -50%);
+  min-height: 30px;
+  padding: 0 14px 0 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(180, 233, 221, 0.97);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  background: linear-gradient(180deg, rgba(11, 52, 62, 0.66), rgba(7, 38, 45, 0.7));
+  border: 1px solid rgba(92, 201, 181, 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(147, 227, 211, 0.16),
+    0 8px 14px rgba(3, 14, 22, 0.3);
+  z-index: 2;
+}
+
+.connectStatus::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(111, 255, 200, 0.98);
+  box-shadow: 0 0 8px rgba(101, 245, 194, 0.66);
+  animation: connectStatusPulse 2.2s ease-in-out infinite;
+}
+
+.stepRowVisible .connectNode {
+  box-shadow:
+    inset 0 1px 0 rgba(170, 199, 250, 0.16),
+    0 0 16px rgba(90, 124, 220, 0.18),
+    0 12px 18px rgba(2, 8, 18, 0.36);
+}
+
+.stepRowVisible .connectNodeFortnox {
+  box-shadow:
+    inset 0 1px 0 rgba(143, 236, 221, 0.17),
+    0 0 18px rgba(69, 205, 185, 0.2),
+    0 12px 18px rgba(2, 8, 18, 0.36);
+}
+
+.stepRowVisible .connectTopConnector {
+  box-shadow:
+    inset 0 1px 0 rgba(170, 201, 252, 0.17),
+    0 0 12px rgba(86, 132, 242, 0.14),
+    0 8px 12px rgba(2, 8, 18, 0.3);
+}
+
+.insightsMock {
+  --insights-loop: 7.2s;
+  width: min(90%, 500px);
+  min-height: clamp(320px, 42vh, 420px);
+  border-radius: 16px;
+  padding: clamp(14px, 2.2vw, 20px);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  align-content: stretch;
+  gap: 12px;
+  background:
+    radial-gradient(120% 100% at 10% 0%, rgba(60, 106, 196, 0.2), transparent 56%),
+    linear-gradient(180deg, rgba(7, 17, 39, 0.94), rgba(5, 12, 30, 0.96));
+  border: 1px solid rgba(111, 151, 232, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(170, 198, 251, 0.14),
+    0 18px 30px rgba(2, 8, 18, 0.46);
+  z-index: 2;
+}
+
+.insightsHeader {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(220, 234, 255, 0.96);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.insightsDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(144, 171, 255, 0.94);
+  box-shadow: 0 0 10px rgba(115, 147, 255, 0.55);
+}
+
+.insightsTitle {
+  color: rgba(223, 236, 255, 0.97);
+}
+
+.insightsQuestion {
+  max-width: 92%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: rgba(219, 232, 251, 0.95);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  background: rgba(12, 25, 50, 0.88);
+  border: 1px solid rgba(92, 129, 194, 0.34);
+  opacity: 0;
+  transform: translateY(5px);
+  animation: insightsQuestionFlow var(--insights-loop) ease-in-out infinite;
+}
+
+.insightsAnswer {
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  background:
+    linear-gradient(180deg, rgba(22, 43, 82, 0.5), rgba(12, 27, 54, 0.72)),
+    rgba(10, 24, 49, 0.88);
+  border: 1px solid rgba(95, 131, 197, 0.3);
+}
+
+.insightsThinking {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(183, 208, 246, 0.92);
+  font-size: 0.69rem;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  animation: insightsThinkingFlow var(--insights-loop) ease-in-out infinite;
+}
+
+.insightsThinking span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(150, 176, 236, 0.92);
+  animation: insightsThinkingDots 0.9s ease-in-out infinite;
+}
+
+.insightsThinking span:nth-child(2) {
+  animation-delay: 120ms;
+}
+
+.insightsThinking span:nth-child(3) {
+  animation-delay: 240ms;
+}
+
+.insightsThinking em {
+  margin-left: 3px;
+  font-style: normal;
+}
+
+.insightsResult {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(5px);
+  animation: insightsResultFlow var(--insights-loop) ease-in-out infinite;
+}
+
+.insightsAnswerHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: rgba(177, 202, 240, 0.88);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+}
+
+.insightsBars {
+  height: 136px;
+  padding: 10px 10px 8px;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  align-items: end;
+  background:
+    linear-gradient(to top, rgba(101, 138, 211, 0.16) 1px, transparent 1px),
+    rgba(9, 21, 44, 0.84);
+  background-size: 100% 25%;
+  border: 1px solid rgba(92, 129, 194, 0.3);
+}
+
+.insightsBar {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 6px;
+  align-items: end;
+}
+
+.insightsBarFill {
+  display: block;
+  align-self: end;
+  width: 100%;
+  border-radius: 8px 8px 6px 6px;
+  background: linear-gradient(180deg, rgba(144, 170, 255, 0.92), rgba(77, 107, 214, 0.86));
+  box-shadow: 0 0 10px rgba(89, 123, 237, 0.3);
+  transform-origin: bottom;
+  transform: scaleY(0.05);
+}
+
+.insightsBarCurrent .insightsBarFill {
+  height: 78%;
+  animation: insightsBarGrow var(--insights-loop) cubic-bezier(0.24, 0.8, 0.26, 1) infinite;
+}
+
+.insightsBarPlan .insightsBarFill {
+  height: 64%;
+  animation: insightsBarGrow var(--insights-loop) cubic-bezier(0.24, 0.8, 0.26, 1) infinite 120ms;
+}
+
+.insightsBarScenario .insightsBarFill {
+  height: 56%;
+  animation: insightsBarGrow var(--insights-loop) cubic-bezier(0.24, 0.8, 0.26, 1) infinite 240ms;
+}
+
+.insightsBar em {
+  font-style: normal;
+  text-align: center;
+  color: rgba(170, 192, 227, 0.88);
+  font-size: 0.64rem;
+}
+
+.insightsSummary {
+  color: rgba(197, 218, 249, 0.94);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+.insightsInput {
+  margin-top: 0;
+  min-height: 42px;
+  border-radius: 11px;
+  padding: 8px 9px 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgba(8, 17, 34, 0.82);
+  border: 1px solid rgba(91, 124, 184, 0.34);
+  opacity: 1;
+  transform: none;
+}
+
+.insightsInputText {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  color: rgba(173, 196, 232, 0.93);
+  font-size: 0.69rem;
+  min-height: 1em;
+  overflow: hidden;
+  display: block;
+}
+
+.insightsInputHint,
+.insightsInputTyped {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+.insightsInputHint {
+  color: rgba(173, 196, 232, 0.93);
+  animation: insightsInputHintFlow var(--insights-loop) linear infinite;
+}
+
+.insightsInputTyped {
+  color: rgba(214, 230, 252, 0.96);
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  animation: insightsInputTypedFlow var(--insights-loop) steps(32, end) infinite;
+}
+
+.insightsInputCaret {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: min(95%, 42ch);
+  width: 2px;
+  height: 0.95em;
+  border-radius: 2px;
+  background: rgba(149, 168, 255, 0.92);
+  opacity: 0;
+  animation:
+    insightsCaretPhase var(--insights-loop) linear infinite,
+    insightsCaretBlink 0.9s steps(1) infinite;
+}
+
+.insightsInputSend {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: rgba(221, 235, 255, 0.98);
+  background: rgba(84, 112, 205, 0.54);
+  box-shadow: inset 0 1px 0 rgba(179, 201, 250, 0.2);
+  animation: insightsSendPulse var(--insights-loop) ease-in-out infinite;
+}
+
+.stepRowVisible .insightsMock {
+  border-color: rgba(132, 173, 248, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(178, 205, 252, 0.2),
+    0 0 24px rgba(77, 129, 237, 0.2),
+    0 18px 30px rgba(2, 8, 18, 0.46);
+}
+
+.faasRealtimeMock {
+  width: min(90%, 520px);
+  min-height: clamp(320px, 42vh, 430px);
+  border-radius: 16px;
+  padding: clamp(14px, 2.2vw, 20px);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 12px;
+  background:
+    radial-gradient(120% 100% at 6% 0%, rgba(67, 115, 212, 0.24), transparent 56%),
+    linear-gradient(180deg, rgba(7, 17, 39, 0.94), rgba(5, 12, 30, 0.96));
+  border: 1px solid rgba(111, 151, 232, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(170, 198, 251, 0.14),
+    0 18px 30px rgba(2, 8, 18, 0.46);
+  z-index: 2;
+}
+
+.faasRealtimeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.faasRealtimeBadge {
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(210, 228, 253, 0.97);
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(16, 34, 67, 0.86);
+  border: 1px solid rgba(103, 141, 209, 0.4);
+}
+
+.faasRealtimeStatus {
+  color: rgba(176, 225, 210, 0.96);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.faasRealtimeStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.faasRealtimeStat {
+  min-height: 58px;
+  padding: 9px 10px 10px;
+  border-radius: 11px;
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  background: rgba(12, 25, 50, 0.86);
+  border: 1px solid rgba(92, 129, 194, 0.34);
+}
+
+.faasRealtimeStatLabel {
+  color: rgba(168, 191, 226, 0.9);
+  font-size: 0.64rem;
+  letter-spacing: 0.01em;
+}
+
+.faasRealtimeStat strong {
+  color: rgba(227, 238, 255, 0.98);
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.faasRealtimeChart {
+  position: relative;
+  overflow: hidden;
+  height: 164px;
+  padding: 10px 10px 8px;
+  border-radius: 11px;
+  background: rgba(9, 21, 44, 0.84);
+  border: 1px solid rgba(92, 129, 194, 0.3);
+}
+
+.faasRealtimeGrid {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(101, 138, 211, 0.14) 1px, transparent 1px),
+    linear-gradient(to right, rgba(101, 138, 211, 0.08) 1px, transparent 1px);
+  background-size: 100% 25%, 20% 100%;
+}
+
+.faasRealtimeLine {
+  position: absolute;
+  inset: 14px 10px 72px;
+  z-index: 2;
+}
+
+.faasRealtimeLine polyline {
+  fill: none;
+  stroke: rgba(163, 192, 246, 0.72);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 7 8;
+  stroke-dashoffset: 0;
+  filter: drop-shadow(0 0 3px rgba(90, 131, 220, 0.16));
+  animation: faasRealtimeLineTrace 5.8s linear infinite;
+}
+
+.faasRealtimeBars {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 7px;
+  height: 66px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 7px;
+  align-items: end;
+  z-index: 2;
+}
+
+.faasRealtimeBarItem {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 4px;
+  align-items: end;
+}
+
+.faasRealtimeBar {
+  border-radius: 7px 7px 5px 5px;
+  background: linear-gradient(180deg, rgba(112, 158, 255, 0.92), rgba(69, 111, 221, 0.84));
+  box-shadow: 0 0 10px rgba(89, 123, 237, 0.28);
+  transform-origin: bottom;
+  transform: scaleY(0.08);
+  animation: faasRealtimeBarPulse 4.8s cubic-bezier(0.24, 0.8, 0.26, 1) infinite;
+}
+
+.faasRealtimeBarItem:nth-child(2) .faasRealtimeBar {
+  animation-delay: 90ms;
+}
+
+.faasRealtimeBarItem:nth-child(3) .faasRealtimeBar {
+  animation-delay: 160ms;
+}
+
+.faasRealtimeBarItem:nth-child(4) .faasRealtimeBar {
+  animation-delay: 230ms;
+}
+
+.faasRealtimeBarItem:nth-child(5) .faasRealtimeBar {
+  animation-delay: 300ms;
+}
+
+.faasRealtimeBarItem em {
+  font-style: normal;
+  text-align: center;
+  color: rgba(163, 186, 223, 0.88);
+  font-size: 0.56rem;
+  line-height: 1;
+}
+
+.faasRealtimeAlerts {
+  display: grid;
+  gap: 6px;
+}
+
+.faasRealtimeAlert {
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(192, 214, 247, 0.94);
+  font-size: 0.68rem;
+  line-height: 1.25;
+  background: rgba(11, 24, 48, 0.84);
+  border: 1px solid rgba(92, 129, 194, 0.3);
+}
+
+.faasRealtimeAlertDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  background: rgba(139, 179, 255, 0.96);
+  box-shadow: 0 0 10px rgba(95, 145, 248, 0.54);
+  animation: faasRealtimeDotPulse 1.9s ease-in-out infinite;
+}
+
+.stepRowVisible .faasRealtimeMock {
+  border-color: rgba(132, 173, 248, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(178, 205, 252, 0.2),
+    0 0 24px rgba(77, 129, 237, 0.2),
+    0 18px 30px rgba(2, 8, 18, 0.46);
+}
+
+.faasOnboardingConnect {
+  position: relative;
+  width: min(100%, 560px);
+  min-height: clamp(220px, 28vh, 272px);
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) auto minmax(110px, 1fr);
+  align-items: center;
+  gap: clamp(16px, 2.2vw, 26px);
+}
+
+.faasNodeClient,
+.faasNodeMincfo {
+  z-index: 2;
+  justify-self: center;
+  width: clamp(82px, 8.6vw, 98px);
+  height: clamp(82px, 8.6vw, 98px);
+  border-radius: 20px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(185, 212, 255, 0.98);
+  background: rgba(13, 31, 61, 0.95);
+  border: 1px solid rgba(111, 156, 241, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(177, 207, 252, 0.14),
+    0 0 20px rgba(84, 135, 236, 0.18),
+    0 8px 16px rgba(2, 8, 18, 0.34);
+}
+
+.faasNodeMincfo {
+  background: rgba(11, 27, 56, 0.9);
+}
+
+.faasNodeIcon,
+.faasHubIcon {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(195, 219, 255, 0.98);
+}
+
+.faasNodeMincfoIcon {
+  width: 24px;
+  height: 24px;
+  color: rgba(208, 227, 255, 0.98);
+  display: inline-flex;
+}
+
+.faasNodeMincfoIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.faasOnboardingHub {
+  position: relative;
+  z-index: 3;
+  justify-self: center;
+  width: clamp(112px, 11.2vw, 136px);
+  height: clamp(112px, 11.2vw, 136px);
+  border-radius: 30px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, rgba(14, 33, 66, 0.98), rgba(9, 23, 47, 1));
+  border: 1px solid rgba(125, 170, 249, 0.54);
+  box-shadow:
+    inset 0 1px 0 rgba(191, 216, 255, 0.16),
+    0 0 44px rgba(86, 142, 248, 0.4),
+    0 18px 28px rgba(2, 8, 18, 0.4);
+  isolation: isolate;
+  animation: faasHubSpin 12s linear infinite;
+}
+
+.faasHubSpinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: 5px solid rgba(181, 205, 247, 0.16);
+  border-top-color: rgba(189, 212, 255, 0.94);
+  border-right-color: rgba(189, 212, 255, 0.72);
+  border-bottom-color: rgba(181, 205, 247, 0.08);
+  animation: none;
+}
+
+.faasLinkLeft,
+.faasLinkRight {
+  position: absolute;
+  top: 50%;
+  width: clamp(44px, 6.2vw, 68px);
+  height: 1.5px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(116, 152, 229, 0.16), rgba(141, 184, 255, 0.82), rgba(116, 152, 229, 0.16));
+  z-index: 1;
+}
+
+.faasLinkLeft {
+  right: calc(50% + clamp(60px, 6.1vw, 72px));
+}
+
+.faasLinkRight {
+  left: calc(50% + clamp(60px, 6.1vw, 72px));
+}
+
+.faasPulseLeft,
+.faasPulseRight {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(169, 196, 255, 0), rgba(169, 196, 255, 0.95), rgba(169, 196, 255, 0));
+  filter: blur(0.2px);
+}
+
+.faasPulseLeft {
+  right: 0;
+  animation: faasPulseFromHubLeft 3.2s ease-in-out infinite;
+}
+
+.faasPulseRight {
+  left: 0;
+  animation: faasPulseFromHubRight 3.2s ease-in-out infinite 280ms;
+}
+
+.faasLinkBottom {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + clamp(50px, 5.2vw, 58px));
+  width: 1.5px;
+  height: clamp(30px, 4.6vw, 40px);
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(116, 152, 229, 0.18), rgba(141, 184, 255, 0.68), rgba(116, 152, 229, 0.18));
+  z-index: 1;
+}
+
+.faasPulseBottom {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 14px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(169, 196, 255, 0), rgba(169, 196, 255, 0.95), rgba(169, 196, 255, 0));
+  filter: blur(0.2px);
+  animation: connectTopPulseTravel 3.2s ease-in-out infinite 420ms;
+}
+
+.faasOnboardingBadge {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + clamp(98px, 9.6vw, 114px));
+  transform: translateX(-50%);
+  min-height: 30px;
+  padding: 0 14px 0 11px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(189, 210, 244, 0.96);
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: rgba(10, 26, 55, 0.82);
+  border: 1px solid rgba(99, 136, 205, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(168, 198, 247, 0.12),
+    0 8px 12px rgba(2, 8, 18, 0.3);
+  z-index: 2;
+}
+
+.faasBadgeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(142, 189, 255, 0.96);
+  box-shadow: 0 0 10px rgba(92, 157, 255, 0.5);
+}
+
+.stepRowVisible .faasNodeClient,
+.stepRowVisible .faasNodeMincfo {
+  border-color: rgba(132, 173, 248, 0.48);
+  box-shadow:
+    inset 0 1px 0 rgba(178, 205, 252, 0.2),
+    0 0 18px rgba(77, 129, 237, 0.16),
+    0 12px 20px rgba(2, 8, 18, 0.36);
+}
+
+.stepRowVisible .faasOnboardingBadge {
+  border-color: rgba(118, 161, 239, 0.54);
+  box-shadow:
+    inset 0 1px 0 rgba(182, 210, 253, 0.14),
+    0 0 14px rgba(86, 142, 248, 0.16),
+    0 8px 12px rgba(2, 8, 18, 0.3);
+}
+
+.faasSystemsConnect {
+  position: relative;
+  width: min(100%, 640px);
+  min-height: clamp(380px, 48vh, 470px);
+  display: grid;
+  place-items: center;
+}
+
+.faasSystemsMap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.faasSystemsMap path {
+  fill: none;
+  stroke: rgba(122, 168, 245, 0.62);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px rgba(86, 141, 246, 0.16));
+  stroke-dasharray: 1;
+  animation: faasSystemsLineGlow 4.6s ease-in-out infinite;
+}
+
+.faasSystemsMap circle {
+  fill: rgba(80, 137, 242, 0.95);
+  stroke: rgba(178, 213, 255, 0.72);
+  stroke-width: 1;
+  animation: faasSystemsDotGlow 4.6s ease-in-out infinite;
+}
+
+.faasSystemsBranch {
+  transform-box: fill-box;
+  transform-origin: var(--branch-origin-x) var(--branch-origin-y);
+}
+
+.faasSystemsBranchTopLeft {
+  --branch-origin-x: 270px;
+  --branch-origin-y: 170px;
+}
+
+.faasSystemsBranchTopCenter {
+  --branch-origin-x: 310px;
+  --branch-origin-y: 170px;
+}
+
+.faasSystemsBranchTopRight {
+  --branch-origin-x: 350px;
+  --branch-origin-y: 170px;
+}
+
+.faasSystemsBranchMidLeft {
+  --branch-origin-x: 252px;
+  --branch-origin-y: 214px;
+}
+
+.faasSystemsBranchMidRight {
+  --branch-origin-x: 368px;
+  --branch-origin-y: 214px;
+}
+
+.faasSystemsBranchBottomCenter {
+  --branch-origin-x: 310px;
+  --branch-origin-y: 258px;
+}
+
+.faasSystemsHub {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 130px;
+  height: 130px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  color: rgba(231, 242, 255, 0.98);
+  font-size: 0.94rem;
+  font-weight: 680;
+  background: linear-gradient(180deg, rgba(14, 32, 64, 0.98), rgba(9, 22, 45, 1));
+  border: 2px solid rgba(170, 197, 247, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(198, 221, 255, 0.16),
+    0 0 38px rgba(91, 145, 247, 0.34),
+    0 16px 30px rgba(2, 8, 18, 0.42);
+  z-index: 3;
+  transform-origin: 50% 50%;
+}
+
+.faasSystemsHubLogo {
+  width: 30px;
+  height: 30px;
+  color: rgba(208, 226, 255, 0.98);
+  display: inline-flex;
+}
+
+.faasSystemsHubLogo svg {
+  width: 100%;
+  height: 100%;
+}
+
+.faasSystemsNode {
+  position: absolute;
+  z-index: 2;
+  width: 102px;
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  color: rgba(194, 214, 246, 0.94);
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-align: center;
+  transform-origin: 50% 50%;
+}
+
+.faasSystemsNodeInner {
+  width: 86px;
+  height: 86px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(196, 221, 255, 0.98);
+  background: radial-gradient(circle at 48% 42%, rgba(28, 55, 104, 0.9), rgba(11, 25, 52, 0.985));
+  border: 2px solid rgba(121, 165, 241, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(188, 216, 255, 0.16),
+    0 0 20px rgba(86, 142, 248, 0.2),
+    0 10px 18px rgba(2, 8, 18, 0.3);
+}
+
+.faasSystemsNode em {
+  font-style: normal;
+  line-height: 1.15;
+  color: rgba(188, 210, 244, 0.94);
+}
+
+.faasSystemsNodeFortnox .faasSystemsNodeInner img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  filter: brightness(1.2) contrast(1.18) saturate(1.12) drop-shadow(0 0 3px rgba(125, 175, 255, 0.28));
+}
+
+.faasSystemsNodeTopCenter .faasSystemsNodeInner img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.faasSystemsNodeTopLeft {
+  --node-shift-x: -4px;
+  --node-shift-y: -3px;
+  left: 30.6%;
+  top: 20.5%;
+}
+
+.faasSystemsNodeTopCenter {
+  --node-shift-x: 0px;
+  --node-shift-y: -5px;
+  left: 50%;
+  top: 16.3%;
+}
+
+.faasSystemsNodeTopRight {
+  --node-shift-x: 4px;
+  --node-shift-y: -3px;
+  left: 69.4%;
+  top: 20.5%;
+}
+
+.faasSystemsNodeMidLeft {
+  --node-shift-x: -5px;
+  --node-shift-y: 0px;
+  left: 15.5%;
+  top: 44.2%;
+}
+
+.faasSystemsNodeMidRight {
+  --node-shift-x: 5px;
+  --node-shift-y: 0px;
+  left: 84.5%;
+  top: 44.2%;
+}
+
+.faasSystemsNodeBottomCenter {
+  --node-shift-x: 0px;
+  --node-shift-y: 5px;
+  left: 50%;
+  top: 81.9%;
+}
+
+.stepRowVisible .faasSystemsHub {
+  border-color: rgba(157, 194, 255, 0.64);
+  box-shadow:
+    inset 0 1px 0 rgba(222, 236, 255, 0.28),
+    0 0 62px rgba(112, 167, 255, 0.46),
+    0 16px 30px rgba(2, 8, 18, 0.42);
+  animation: faasSystemsHubBreathe 5.2s ease-in-out infinite;
+}
+
+.stepRowVisible .faasSystemsNode {
+  animation: faasSystemsNodeFloat 6.2s ease-in-out infinite;
+}
+
+.stepRowVisible .faasSystemsBranch {
+  animation: faasSystemsBranchFloat 6.2s ease-in-out infinite;
+}
+
+.stepRowVisible .faasSystemsMap path:nth-of-type(1),
+.stepRowVisible .faasSystemsMap circle:nth-of-type(1) {
+  animation-delay: 0ms;
+}
+
+.stepRowVisible .faasSystemsMap path:nth-of-type(2),
+.stepRowVisible .faasSystemsMap circle:nth-of-type(2) {
+  animation-delay: 420ms;
+}
+
+.stepRowVisible .faasSystemsMap path:nth-of-type(3),
+.stepRowVisible .faasSystemsMap circle:nth-of-type(3) {
+  animation-delay: 820ms;
+}
+
+.stepRowVisible .faasSystemsMap path:nth-of-type(4),
+.stepRowVisible .faasSystemsMap circle:nth-of-type(4) {
+  animation-delay: 1240ms;
+}
+
+.stepRowVisible .faasSystemsMap path:nth-of-type(5),
+.stepRowVisible .faasSystemsMap circle:nth-of-type(5) {
+  animation-delay: 1660ms;
+}
+
+.stepRowVisible .faasSystemsMap path:nth-of-type(6),
+.stepRowVisible .faasSystemsMap circle:nth-of-type(6) {
+  animation-delay: 2080ms;
+}
+
+.stepRowVisible .faasSystemsNodeTopLeft {
+  animation-delay: 0ms;
+}
+
+.stepRowVisible .faasSystemsBranchTopLeft {
+  animation-delay: 0ms;
+}
+
+.stepRowVisible .faasSystemsNodeTopCenter {
+  animation-delay: 680ms;
+}
+
+.stepRowVisible .faasSystemsBranchTopCenter {
+  animation-delay: 680ms;
+}
+
+.stepRowVisible .faasSystemsNodeTopRight {
+  animation-delay: 1320ms;
+}
+
+.stepRowVisible .faasSystemsBranchTopRight {
+  animation-delay: 1320ms;
+}
+
+.stepRowVisible .faasSystemsNodeMidLeft {
+  animation-delay: 1980ms;
+}
+
+.stepRowVisible .faasSystemsBranchMidLeft {
+  animation-delay: 1980ms;
+}
+
+.stepRowVisible .faasSystemsNodeMidRight {
+  animation-delay: 2580ms;
+}
+
+.stepRowVisible .faasSystemsBranchMidRight {
+  animation-delay: 2580ms;
+}
+
+.stepRowVisible .faasSystemsNodeBottomCenter {
+  animation-delay: 3220ms;
+}
+
+.stepRowVisible .faasSystemsBranchBottomCenter {
+  animation-delay: 3220ms;
+}
+
+.visualBeam {
+  display: none;
+}
+
+.visualVariant1 {
+  background: transparent;
+}
+
+.visualVariant1 .visualCore {
+  width: 152px;
+  height: 108px;
+  border-radius: 12px;
+}
+
+.visualVariant2 {
+  background: transparent;
+}
+
+.visualVariant3 {
+  background: transparent;
+}
+
+.ctaWrap {
+  margin-top: clamp(28px, 3.8vh, 40px);
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 380ms ease, transform 380ms ease;
+}
+
+.ctaWrapVisible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .cta {
-  margin: clamp(72px, 9vh, 108px) auto 0;
-  display: flex;
-  width: fit-content;
-  align-items: center;
-  gap: 8px;
-  min-height: 50px;
-  padding: 0 24px;
+  min-height: 54px;
+  padding: 0 30px;
   border-radius: var(--radius-pill);
-  background: rgba(14, 28, 51, 0.72);
-  border: 1px solid rgba(118, 145, 242, 0.3);
-  color: rgba(211, 228, 252, 0.94);
-  text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 600;
-  box-shadow:
-    inset 0 1px 0 rgba(164, 186, 255, 0.1),
-    0 10px 22px rgba(6, 14, 31, 0.28);
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.05rem;
+  font-weight: 620;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
 }
 
-.cta:hover {
+.ctaPrimary {
+  color: #f4f6ff;
+  background: #3f47e8;
+  border: 1px solid rgba(109, 121, 255, 0.46);
+  box-shadow:
+    inset 0 1px 0 rgba(226, 233, 255, 0.2),
+    0 10px 22px rgba(20, 31, 86, 0.52);
+}
+
+.ctaPrimary:hover {
   transform: translateY(-1px);
   box-shadow:
-    inset 0 1px 0 rgba(173, 198, 255, 0.16),
-    0 12px 24px rgba(7, 17, 36, 0.36);
+    inset 0 1px 0 rgba(236, 242, 255, 0.24),
+    0 12px 26px rgba(24, 38, 96, 0.58),
+    0 0 12px rgba(80, 96, 239, 0.14);
+  filter: saturate(1.08) brightness(1.03);
+}
+
+.ctaSecondary {
+  color: rgba(213, 228, 250, 0.95);
+  background: rgba(10, 21, 41, 0.56);
+  border: 1px solid rgba(120, 155, 224, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(175, 202, 255, 0.1),
+    0 10px 20px rgba(3, 9, 19, 0.3);
+}
+
+.ctaSecondary:hover {
+  transform: translateY(-1px);
+  background: rgba(15, 27, 50, 0.66);
 }
 
 .ctaIcon {
@@ -247,87 +2097,1104 @@
   transform: translateX(1px);
 }
 
-.visible .container h2,
-.visible .step {
+.secondaryLink {
+  color: rgba(167, 193, 238, 0.94);
+  font-size: 0.92rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(136, 169, 227, 0.48);
+  text-underline-offset: 3px;
+}
+
+.secondaryLink:hover {
+  color: rgba(205, 222, 250, 0.96);
+}
+
+.trustLine {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(132, 157, 195, 0.9);
+  font-size: 0.94rem;
+}
+
+.trustDot {
+  color: rgba(108, 136, 184, 0.8);
+}
+
+.visible .header {
   opacity: 1;
   transform: translateY(0);
 }
 
-.visible .step:nth-child(2) {
-  transition-delay: 40ms;
+.visible .tabList {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.visible .step:nth-child(3) {
-  transition-delay: 100ms;
-}
+@keyframes connectPulseSourceToCenter {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
 
-.visible .step:nth-child(4) {
-  transition-delay: 160ms;
-}
+  10% {
+    opacity: 1;
+  }
 
-@media (max-width: 1024px) {
-  .step p {
-    max-width: 320px;
-    font-size: 0.93rem;
+  34% {
+    left: calc(50% - 9px);
+    opacity: 1;
+  }
+
+  40%,
+  100% {
+    left: calc(50% - 9px);
+    opacity: 0;
   }
 }
 
-@media (max-width: 840px) {
-  .section {
-    margin-top: -52px;
-    padding-top: 120px;
+@keyframes connectPulseCenterToRight {
+  0%,
+  34% {
+    left: calc(50% - 9px);
+    opacity: 0;
   }
 
-  .container {
-    padding-top: 72px;
+  40% {
+    opacity: 1;
   }
 
-  .stepsGrid {
+  70% {
+    left: calc(100% - 18px);
+    opacity: 1;
+  }
+
+  100% {
+    left: calc(100% - 18px);
+    opacity: 0;
+  }
+}
+
+@keyframes connectStatusPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.78;
+  }
+
+  50% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+}
+
+@keyframes connectStemPulse {
+  0% {
+    background-position: 0 -58px;
+    opacity: 0.55;
+  }
+
+  35% {
+    opacity: 0.9;
+  }
+
+  100% {
+    background-position: 0 58px;
+    opacity: 0.55;
+  }
+}
+
+@keyframes connectTopPulseTravel {
+  0%,
+  34% {
+    top: calc(100% - 16px);
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  70% {
+    top: 0;
+    opacity: 1;
+  }
+
+  100% {
+    top: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes connectBottomPulseTravel {
+  0%,
+  34% {
+    top: 0;
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  70% {
+    top: calc(100% - 16px);
+    opacity: 1;
+  }
+
+  100% {
+    top: calc(100% - 16px);
+    opacity: 0;
+  }
+}
+
+@keyframes insightsQuestionFlow {
+  0%,
+  34% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  40%,
+  92% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+@keyframes insightsThinkingFlow {
+  0%,
+  48% {
+    opacity: 0;
+    max-height: 0;
+  }
+
+  52%,
+  60% {
+    opacity: 1;
+    max-height: 30px;
+  }
+
+  64%,
+  100% {
+    opacity: 0;
+    max-height: 0;
+  }
+}
+
+@keyframes insightsResultFlow {
+  0%,
+  60% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  66%,
+  92% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+@keyframes insightsBarGrow {
+  0%,
+  60% {
+    transform: scaleY(0.05);
+  }
+
+  69%,
+  92% {
+    transform: scaleY(1);
+  }
+
+  100% {
+    transform: scaleY(0.05);
+  }
+}
+
+@keyframes insightsInputHintFlow {
+  0%,
+  11% {
+    opacity: 1;
+  }
+
+  12%,
+  39% {
+    opacity: 0;
+  }
+
+  40%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes insightsInputTypedFlow {
+  0%,
+  11% {
+    opacity: 0;
+    width: 0;
+  }
+
+  12% {
+    opacity: 1;
+    width: 0;
+  }
+
+  30% {
+    opacity: 1;
+    width: 42ch;
+  }
+
+  36% {
+    opacity: 1;
+    width: 42ch;
+  }
+
+  40%,
+  100% {
+    opacity: 0;
+    width: 42ch;
+  }
+}
+
+@keyframes insightsCaretPhase {
+  0%,
+  10% {
+    opacity: 0;
+  }
+
+  12%,
+  35% {
+    opacity: 1;
+  }
+
+  38%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes insightsCaretBlink {
+  0%,
+  49% {
+    background: rgba(149, 168, 255, 0.92);
+  }
+
+  50%,
+  100% {
+    background: transparent;
+  }
+}
+
+@keyframes insightsSendPulse {
+  0%,
+  34%,
+  100% {
+    transform: scale(1);
+    background: rgba(84, 112, 205, 0.54);
+  }
+
+  36% {
+    transform: scale(1.05);
+    background: rgba(110, 143, 244, 0.72);
+  }
+
+  39% {
+    transform: scale(0.98);
+  }
+}
+
+@keyframes insightsThinkingDots {
+  0%,
+  80%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.9);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes faasRealtimeLineTrace {
+  0% {
+    stroke-dashoffset: 0;
+    opacity: 0.72;
+  }
+
+  50% {
+    opacity: 0.86;
+  }
+
+  100% {
+    stroke-dashoffset: -30;
+    opacity: 0.72;
+  }
+}
+
+@keyframes faasRealtimeBarPulse {
+  0%,
+  20% {
+    transform: scaleY(0.08);
+  }
+
+  36%,
+  78% {
+    transform: scaleY(1);
+  }
+
+  100% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes faasRealtimeDotPulse {
+  0%,
+  100% {
+    opacity: 0.52;
+    transform: scale(0.9);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes stepOrbBorderSweep {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.72;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.72;
+  }
+}
+
+@keyframes stepSpineRingSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes faasHubSpin {
+  0% {
+    transform: rotate(-18deg);
+  }
+
+  100% {
+    transform: rotate(342deg);
+  }
+}
+
+@keyframes faasSpinnerTurn {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes faasSystemsPulseOut {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  72% {
+    left: calc(100% - 18px);
+    opacity: 1;
+  }
+
+  100% {
+    left: calc(100% - 18px);
+    opacity: 0;
+  }
+}
+
+@keyframes faasSystemsHubSpin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes faasSystemsHubBreathe {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow:
+      inset 0 1px 0 rgba(222, 236, 255, 0.24),
+      0 0 58px rgba(112, 167, 255, 0.42),
+      0 16px 30px rgba(2, 8, 18, 0.42);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.03);
+    box-shadow:
+      inset 0 1px 0 rgba(236, 247, 255, 0.34),
+      0 0 76px rgba(124, 178, 255, 0.58),
+      0 18px 34px rgba(2, 8, 18, 0.46);
+  }
+}
+
+@keyframes faasSystemsNodeFloat {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-50%, -50%)
+      translate(var(--node-shift-x, 0px), var(--node-shift-y, 0px));
+  }
+}
+
+@keyframes faasSystemsBranchFloat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes faasSystemsLineGlow {
+  0%,
+  100% {
+    stroke: rgba(126, 171, 247, 0.66);
+    filter: drop-shadow(0 0 6px rgba(86, 141, 246, 0.2));
+  }
+
+  50% {
+    stroke: rgba(174, 207, 255, 0.94);
+    filter: drop-shadow(0 0 11px rgba(124, 178, 255, 0.36));
+  }
+}
+
+@keyframes faasSystemsDotGlow {
+  0%,
+  100% {
+    fill: rgba(94, 149, 248, 0.92);
+    stroke: rgba(188, 220, 255, 0.76);
+  }
+
+  50% {
+    fill: rgba(164, 203, 255, 1);
+    stroke: rgba(230, 244, 255, 0.98);
+  }
+}
+
+@keyframes faasPulseFromHubLeft {
+  0% {
+    right: 0;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  72% {
+    right: calc(100% - 18px);
+    opacity: 1;
+  }
+
+  100% {
+    right: calc(100% - 18px);
+    opacity: 0;
+  }
+}
+
+@keyframes faasPulseFromHubRight {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  72% {
+    left: calc(100% - 18px);
+    opacity: 1;
+  }
+
+  100% {
+    left: calc(100% - 18px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .stepRow {
     grid-template-columns: 1fr;
-    gap: 42px;
-    margin-top: 52px;
+    gap: 14px;
   }
 
-  .line {
-    display: none;
+  .stepsFlow {
+    gap: clamp(62px, 7.2vh, 82px);
   }
 
-  .particle {
-    display: none;
+  .stepRowReverse .stepText,
+  .stepRowReverse .stepVisual {
+    order: initial;
   }
 
-  .curveCut {
-    height: 150px;
+  .stepVisual {
+    min-height: 224px;
   }
 
-  .circle {
-    margin-bottom: 24px;
+  .stepRowCreate .stepVisual {
+    min-height: 300px;
   }
 
-  .step p {
-    max-width: 560px;
+  .stepRowOnboarding .stepVisual {
+    min-height: 280px;
+  }
+
+  .stepRowFaasRealtime .stepVisual {
+    min-height: 320px;
+  }
+
+  .stepRowFaasSystems .stepVisual {
+    min-height: 280px;
+  }
+
+  .stepRowInsights .stepVisual {
+    min-height: 420px;
+  }
+
+  .connectMock {
+    --connector-offset: 130px;
+    --connector-gap: 24px;
+    min-height: 244px;
+    width: min(100%, 560px);
+    grid-template-columns: minmax(140px, 1fr) 104px minmax(140px, 1fr);
+  }
+
+  .connectTopConnector {
+    min-height: 28px;
+    font-size: 0.7rem;
+  }
+
+  .connectNode {
+    max-width: 200px;
+    height: clamp(66px, 12vw, 88px);
+  }
+}
+
+@media (max-width: 760px) {
+  .section {
+    margin-top: -48px;
+    padding-top: 108px;
+  }
+
+  .tabList {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .tab {
+    flex: 1;
+    min-width: 0;
+    padding-inline: 10px;
+    font-size: 0.84rem;
+  }
+
+  .stepVisual {
+    min-height: 190px;
+  }
+
+  .stepRow:nth-child(2) {
+    margin-bottom: 16px;
+  }
+
+  .stepsFlow {
+    gap: 56px;
+  }
+
+  .stepRowInsights .stepVisual {
+    min-height: 348px;
+  }
+
+  .stepRowOnboarding .stepVisual {
+    min-height: 248px;
+  }
+
+  .stepRowFaasRealtime .stepVisual {
+    min-height: 280px;
+  }
+
+  .stepRowFaasSystems .stepVisual {
+    min-height: 248px;
+  }
+
+  .connectMock {
+    --connector-offset: 114px;
+    --connector-gap: 20px;
+    width: min(100%, 360px);
+    min-height: 218px;
+    grid-template-columns: minmax(116px, 1fr) 76px minmax(116px, 1fr);
+    gap: 8px;
+  }
+
+  .connectTopConnector {
+    min-height: 26px;
+    padding: 0 10px;
+    font-size: 0.64rem;
+    gap: 5px;
+  }
+
+  .connectTopIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .connectNode {
+    max-width: 160px;
+    height: clamp(58px, 16vw, 74px);
+    border-radius: 12px;
+  }
+
+  .connectBrandMark {
+    width: 15px;
+    height: 15px;
+  }
+
+  .connectBrandWord {
+    font-size: 0.84rem;
+  }
+
+  .connectFortnoxLogo {
+    width: min(70px, 56%);
+  }
+
+  .stepText {
+    padding: 4px 0;
+  }
+
+  .stepText h4 {
+    font-size: clamp(1.5rem, 8vw, 2.25rem);
+    max-width: 100%;
+  }
+
+  .stepText p {
+    font-size: 0.98rem;
+    max-width: 100%;
+  }
+
+  .stepOrb {
+    width: 74px;
+    height: 74px;
+    font-size: 1.5rem;
+  }
+
+  .accountMock {
+    width: min(86%, 240px);
+    min-height: 134px;
+    padding: 12px 12px 10px;
+  }
+
+  .stepMain {
+    gap: 12px;
+  }
+
+  .accountMock {
+    width: min(94%, 340px);
+    min-height: 250px;
+    padding: 12px;
+  }
+
+  .insightsMock {
+    width: min(94%, 360px);
+    min-height: 300px;
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .faasRealtimeMock {
+    width: min(94%, 360px);
+    min-height: 280px;
+    padding: 12px;
+    border-radius: 14px;
+    gap: 10px;
+  }
+
+  .faasRealtimeStats {
+    gap: 6px;
+  }
+
+  .faasRealtimeStat {
+    min-height: 50px;
+    padding: 7px 8px;
+  }
+
+  .faasRealtimeStatLabel {
+    font-size: 0.58rem;
+  }
+
+  .faasRealtimeStat strong {
+    font-size: 0.72rem;
+  }
+
+  .faasRealtimeChart {
+    height: 138px;
+    padding: 8px 8px 7px;
+  }
+
+  .faasRealtimeBars {
+    left: 9px;
+    right: 9px;
+    bottom: 7px;
+    height: 44px;
+    gap: 6px;
+  }
+
+  .faasRealtimeAlert {
+    min-height: 24px;
+    font-size: 0.6rem;
+    padding: 0 8px;
+    gap: 6px;
+  }
+
+  .faasRealtimeAlertDot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .faasOnboardingConnect {
+    width: min(100%, 332px);
+    min-height: 206px;
+    grid-template-columns: minmax(94px, 1fr) auto minmax(94px, 1fr);
+    gap: 10px;
+  }
+
+  .faasNodeClient,
+  .faasNodeMincfo {
+    width: 68px;
+    height: 68px;
+    border-radius: 12px;
+  }
+
+  .faasNodeIcon,
+  .faasHubIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .faasNodeMincfoIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .faasLinkLeft,
+  .faasLinkRight {
+    width: 30px;
+  }
+
+  .faasLinkLeft {
+    right: calc(50% + 41px);
+  }
+
+  .faasLinkRight {
+    left: calc(50% + 41px);
+  }
+
+  .faasOnboardingHub {
+    width: 86px;
+    height: 86px;
+    border-radius: 12px;
+  }
+
+  .faasHubSpinner {
+    width: 34px;
+    height: 34px;
+    border-width: 4px;
+  }
+
+  .faasLinkBottom {
+    top: calc(50% + 44px);
+    height: 28px;
+  }
+
+  .faasOnboardingBadge {
+    top: calc(50% + 84px);
+    min-height: 24px;
+    padding: 0 10px 0 8px;
+    font-size: 0.64rem;
+    gap: 6px;
+  }
+
+  .faasBadgeDot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .faasSystemsConnect {
+    width: min(100%, 350px);
+    min-height: 304px;
+  }
+
+  .faasSystemsMap path {
+    stroke-width: 1.8;
+  }
+
+  .faasSystemsMap circle {
+    r: 6.5;
+  }
+
+  .faasSystemsHub {
+    width: 88px;
+    height: 88px;
+    border-radius: 16px;
+    font-size: 0.68rem;
+  }
+
+  .faasSystemsHubLogo {
+    width: 22px;
+    height: 22px;
+  }
+
+  .faasSystemsNode {
+    width: 66px;
+    gap: 4px;
+    font-size: 0.5rem;
+  }
+
+  .faasSystemsNodeInner {
+    width: 54px;
+    height: 54px;
+    border-width: 8px;
+  }
+
+  .faasSystemsNodeTopLeft {
+    left: 30.6%;
+    top: 20.2%;
+  }
+
+  .faasSystemsNodeTopCenter {
+    left: 50%;
+    top: 16%;
+  }
+
+  .faasSystemsNodeTopRight {
+    left: 69.4%;
+    top: 20.2%;
+  }
+
+  .faasSystemsNodeMidLeft {
+    left: 15.5%;
+    top: 44%;
+  }
+
+  .faasSystemsNodeMidRight {
+    left: 84.5%;
+    top: 44%;
+  }
+
+  .faasSystemsNodeBottomCenter {
+    left: 50%;
+    top: 81.6%;
+  }
+
+  .faasSystemsNodeFortnox .faasSystemsNodeInner img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .faasSystemsNodeTopCenter .faasSystemsNodeInner img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .faasSystemsMap {
+    opacity: 0.92;
+  }
+
+  .insightsQuestion {
+    max-width: 100%;
+  }
+
+  .insightsBars {
+    height: 120px;
+    gap: 6px;
+    padding: 9px 7px 6px;
+  }
+
+  .insightsSummary {
+    font-size: 0.69rem;
+  }
+
+  .insightsInput {
+    min-height: 38px;
+    padding: 6px 7px 6px 10px;
+  }
+
+  .insightsInputText {
+    font-size: 0.65rem;
+  }
+
+  .insightsInputSend {
+    width: 22px;
+    height: 22px;
   }
 
   .cta {
-    height: 52px;
-    padding: 0 24px;
-    font-size: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .trustLine {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .container h2,
-  .step {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
+  .header,
+  .tabList,
+  .ctaWrap,
+  .panel,
+  .stepRow,
+  .tab,
+  .visualBeam,
   .cta {
     transition: none;
   }
 
-  .particle {
-    display: none;
+  .visible .header,
+  .tabList,
+  .ctaWrap,
+  .stepRow {
+    opacity: 1;
+    transform: none;
+  }
+
+  .visualBeam {
+    transform: none;
+  }
+
+  .connectPulseSource,
+  .connectPulseRight {
+    animation: none;
+    opacity: 0.7;
+    left: calc(50% - 9px);
+  }
+
+  .connectStatus::before {
+    animation: none;
+  }
+
+  .connectMock::after {
+    animation: none;
+    opacity: 0.75;
+  }
+
+  .connectTopStem,
+  .connectTopPulse,
+  .connectBottomStem,
+  .connectBottomPulse,
+  .stepOrb::after,
+  .stepSpineMarker::after,
+  .faasOnboardingHub,
+  .faasPulseLeft,
+  .faasPulseRight,
+  .faasPulseBottom,
+  .faasSystemsHub,
+  .faasSystemsNode,
+  .faasSystemsBranch,
+  .faasSystemsMap path,
+  .faasSystemsMap circle {
+    animation: none;
+  }
+
+  .stepOrb::after {
+    opacity: 0;
+  }
+
+  .insightsQuestion,
+  .insightsAnswer,
+  .insightsResult,
+  .insightsSummary,
+  .insightsInput,
+  .insightsBarCurrent .insightsBarFill,
+  .insightsBarPlan .insightsBarFill,
+  .insightsBarScenario .insightsBarFill,
+  .insightsInputHint,
+  .insightsInputTyped,
+  .insightsInputCaret,
+  .insightsInputSend,
+  .insightsThinking span,
+  .faasRealtimeLine polyline,
+  .faasRealtimeBar,
+  .faasRealtimeAlertDot {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .insightsThinking {
+    animation: none;
+    opacity: 0;
+    max-height: 0;
+  }
+
+  .insightsInputHint {
+    opacity: 0;
+  }
+
+  .insightsInputTyped {
+    width: 42ch;
+  }
+
+  .insightsBarFill {
+    transform: scaleY(1);
+  }
+
+  .faasRealtimeLine polyline {
+    stroke-dashoffset: 0;
+  }
+
+  .faasRealtimeBar {
+    transform: scaleY(1);
   }
 }

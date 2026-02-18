@@ -88,7 +88,7 @@ export default function Ending() {
             och trygghet i er tillväxt.
           </p>
           <a href="#hero" className={styles.primaryCta}>
-            Boka ett kostnadsfritt möte <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+            Boka demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
           </a>
         </div>
       </div>
