@@ -496,9 +496,11 @@ export default function HowItWorks() {
                             <span className={styles.stepOrb}>{stepNum}</span>
 
                             <div className={styles.stepCopy}>
-                              <span className={styles.stepMetaIcon} aria-hidden="true">
-                                <Icon size={16} />
-                              </span>
+                              {!isFaasSystemsStep && (
+                                <span className={styles.stepMetaIcon} aria-hidden="true">
+                                  <Icon size={16} />
+                                </span>
+                              )}
 
                               <h4>{step.title}</h4>
                               <p>{step.body}</p>
@@ -676,8 +678,17 @@ export default function HowItWorks() {
                         <div className={styles.faasRealtimeMock}>
                           <div className={styles.faasRealtimeHeader}>
                             <span className={styles.faasRealtimeBadge}>
-                              <Icon size={12} />
-                              <span>MinCFO Live</span>
+                              <span className={styles.faasRealtimeLogo} aria-hidden="true">
+                                <svg className={styles.faasRealtimeLogoMark} viewBox="0 0 50 50" role="img">
+                                  <g fill="currentColor">
+                                    <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
+                                    <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
+                                    <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
+                                    <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
+                                  </g>
+                                </svg>
+                                <span className={styles.faasRealtimeLogoWord}>MinCFO</span>
+                              </span>
                             </span>
                             <span className={styles.faasRealtimeStatus}>Uppdaterad nu</span>
                           </div>
@@ -698,7 +709,6 @@ export default function HowItWorks() {
                           </div>
 
                           <div className={styles.faasRealtimeChart}>
-                            <div className={styles.faasRealtimeGrid} />
                             <svg
                               className={styles.faasRealtimeLine}
                               viewBox={`0 0 ${faasRealtimeChartWidth} ${faasRealtimeChartHeight}`}
