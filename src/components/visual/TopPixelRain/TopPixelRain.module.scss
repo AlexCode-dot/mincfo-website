@@ -1,0 +1,75 @@
+.wrapper {
+  --rain-height: 52%;
+  --shade-height: 34%;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.wrapper::before,
+.wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.wrapper::before {
+  z-index: 2;
+  height: var(--shade-height);
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(2, 6, 18, 0.82) 0%,
+      rgba(2, 6, 18, 0.48) 20%,
+      rgba(2, 6, 18, 0.16) 44%,
+      rgba(2, 6, 18, 0) 100%
+    ),
+    radial-gradient(
+      120% 56% at 50% 0%,
+      rgba(18, 32, 86, 0.28) 0%,
+      rgba(18, 32, 86, 0.1) 42%,
+      rgba(18, 32, 86, 0) 100%
+    );
+}
+
+.wrapper::after {
+  z-index: 2;
+  height: var(--rain-height);
+  background:
+    linear-gradient(to right, rgba(2, 6, 18, 0.28) 0%, rgba(2, 6, 18, 0) 14%),
+    linear-gradient(to left, rgba(2, 6, 18, 0.28) 0%, rgba(2, 6, 18, 0) 14%);
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--rain-height);
+  z-index: 1;
+  opacity: 0.94;
+  pointer-events: none;
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.94) 28%,
+    rgba(0, 0, 0, 0.66) 52%,
+    rgba(0, 0, 0, 0.26) 72%,
+    rgba(0, 0, 0, 0.06) 86%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.94) 28%,
+    rgba(0, 0, 0, 0.66) 52%,
+    rgba(0, 0, 0, 0.26) 72%,
+    rgba(0, 0, 0, 0.06) 86%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}

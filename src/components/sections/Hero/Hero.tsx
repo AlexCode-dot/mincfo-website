@@ -3,6 +3,7 @@
 import { ChevronRight, Lock, Play } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import BeamBackground from "@/components/visual/BeamBackground/BeamBackground";
+import TopPixelRain from "@/components/visual/TopPixelRain/TopPixelRain";
 import styles from "./Hero.module.scss";
 
 const clamp = (value: number, min: number, max: number) =>
@@ -142,6 +143,7 @@ export default function Hero() {
   return (
     <section ref={sectionRef} id="hero" className={styles.hero}>
       <BeamBackground extendBottom={260} />
+      <TopPixelRain />
 
       <div className={styles.container}>
         <div className={styles.tag}>
