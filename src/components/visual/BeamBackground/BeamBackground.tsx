@@ -55,7 +55,7 @@ export default function BeamBackground({
     if (!canvas) return;
 
     reduceMotionRef.current = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     ).matches;
 
     const ctx = canvas.getContext("2d");
@@ -116,14 +116,19 @@ export default function BeamBackground({
         0,
         activeHeight * (1 - GRADIENT_HEIGHT),
         0,
-        height
+        height,
       );
       gradient.addColorStop(0, "rgba(20, 24, 32, 0)");
       gradient.addColorStop(0.56, "rgba(83, 90, 255, 0.44)");
       gradient.addColorStop(0.82, "rgba(83, 90, 255, 0.12)");
       gradient.addColorStop(1, "rgba(83, 90, 255, 0)");
       ctx.fillStyle = gradient;
-      ctx.fillRect(0, height * (1 - GRADIENT_HEIGHT), width, height * GRADIENT_HEIGHT);
+      ctx.fillRect(
+        0,
+        height * (1 - GRADIENT_HEIGHT),
+        width,
+        height * GRADIENT_HEIGHT,
+      );
 
       ctx.fillStyle = `rgba(120, 130, 255, ${DOT_ALPHA})`;
 
@@ -137,26 +142,45 @@ export default function BeamBackground({
         const yPos = dot.y + wave + wave2;
         if (yPos < activeHeight * 0.08) continue;
 
-        const fade = clamp((yPos - activeHeight * 0.06) / (activeHeight * 0.94), 0, 1);
+        const fade = clamp(
+          (yPos - activeHeight * 0.06) / (activeHeight * 0.94),
+          0,
+          1,
+        );
         const edgeFalloff = clamp((height - yPos) / tailZone, 0, 1);
         if (edgeFalloff < 0.05) continue;
-        const tailProgress = clamp((yPos - tailStart) / (height - tailStart), 0, 1);
+        const tailProgress = clamp(
+          (yPos - tailStart) / (height - tailStart),
+          0,
+          1,
+        );
         const tailAtten = 1 - tailProgress;
-        const lowerProgress = clamp((yPos - height * 0.62) / (height * 0.38), 0, 1);
+        const lowerProgress = clamp(
+          (yPos - height * 0.62) / (height * 0.38),
+          0,
+          1,
+        );
         const lowerAtten = 1 - lowerProgress;
-        const density = clamp((tailAtten ** 1.12) * (lowerAtten ** 0.78), 0.32, 1);
-        const noise = fract(Math.sin(dot.x * 12.9898 + dot.y * 78.233) * 43758.5453);
+        const density = clamp(tailAtten ** 1.12 * lowerAtten ** 0.78, 0.32, 1);
+        const noise = fract(
+          Math.sin(dot.x * 12.9898 + dot.y * 78.233) * 43758.5453,
+        );
         if (noise > density) continue;
         const radius = clamp(
           (1 + fade * 1.4) *
-          (0.42 + edgeFalloff * 0.28) *
-          (0.5 + tailAtten * 0.5) *
-          (0.58 + lowerAtten * 0.34),
+            (0.42 + edgeFalloff * 0.28) *
+            (0.5 + tailAtten * 0.5) *
+            (0.58 + lowerAtten * 0.34),
           0.44,
           2.2,
         );
 
-        ctx.globalAlpha = DOT_ALPHA * fade * edgeFalloff * tailAtten * (0.62 + lowerAtten * 0.38);
+        ctx.globalAlpha =
+          DOT_ALPHA *
+          fade *
+          edgeFalloff *
+          tailAtten *
+          (0.62 + lowerAtten * 0.38);
         ctx.beginPath();
         ctx.arc(dot.x, yPos, radius, 0, Math.PI * 2);
         ctx.fill();
@@ -187,7 +211,7 @@ export default function BeamBackground({
           1,
         );
         const lowerAtten = 1 - lowerProgress;
-        const density = clamp((tailAtten ** 1.06) * (lowerAtten ** 0.72), 0.34, 1);
+        const density = clamp(tailAtten ** 1.06 * lowerAtten ** 0.72, 0.34, 1);
         const noise = fract(
           Math.sin(particle.x * 12.9898 + particle.y * 78.233) * 43758.5453,
         );
@@ -198,7 +222,11 @@ export default function BeamBackground({
           (0.52 + tailAtten * 0.4) *
           (0.64 + lowerAtten * 0.3);
         ctx.globalAlpha =
-          particle.alpha * visibility * edgeFalloff * tailAtten * (0.62 + lowerAtten * 0.38);
+          particle.alpha *
+          visibility *
+          edgeFalloff *
+          tailAtten *
+          (0.62 + lowerAtten * 0.38);
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, renderedSize, 0, Math.PI * 2);
         ctx.fill();

@@ -1,8 +1,10 @@
 .hero {
   position: relative;
+  isolation: isolate;
   min-height: 100vh;
   padding: 230px 0 120px;
   overflow: visible;
+  background: #020305;
 }
 
 .container {

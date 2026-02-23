@@ -1,0 +1,58 @@
+.wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--hero-fluid-height, 620px);
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.98) 52%,
+    rgba(0, 0, 0, 0.84) 72%,
+    rgba(0, 0, 0, 0.5) 86%,
+    rgba(0, 0, 0, 0.22) 94%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.98) 52%,
+    rgba(0, 0, 0, 0.84) 72%,
+    rgba(0, 0, 0, 0.5) 86%,
+    rgba(0, 0, 0, 0.22) 94%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(2, 4, 10, 0.04) 0%,
+    rgba(2, 4, 10, 0.026) 42%,
+    rgba(2, 4, 10, 0.014) 72%,
+    rgba(2, 4, 10, 0.006) 90%,
+    rgba(2, 4, 10, 0) 100%
+  );
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: min(var(--hero-fluid-height, 620px), 420px);
+  }
+}
