@@ -12,18 +12,10 @@ export default function TopSwirlBackground() {
     const onChange = () => setPrefersReducedMotion(mediaQuery.matches);
 
     onChange();
-    if ("addEventListener" in mediaQuery) {
-      mediaQuery.addEventListener("change", onChange);
-    } else {
-      mediaQuery.addListener(onChange);
-    }
+    mediaQuery.addEventListener("change", onChange);
 
     return () => {
-      if ("removeEventListener" in mediaQuery) {
-        mediaQuery.removeEventListener("change", onChange);
-      } else {
-        mediaQuery.removeListener(onChange);
-      }
+      mediaQuery.removeEventListener("change", onChange);
     };
   }, []);
 
