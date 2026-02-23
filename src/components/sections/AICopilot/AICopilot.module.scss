@@ -5,6 +5,7 @@
   padding: clamp(156px, 18vh, 226px) 0 clamp(112px, 14vh, 172px);
   overflow: hidden;
   overflow-anchor: none;
+  isolation: isolate;
 }
 
 .curveCut {
@@ -30,7 +31,7 @@
   background:
     radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
     radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
-    linear-gradient(180deg, oklch(0.145 0.012 262 / 0.96) 0%, oklch(0.14 0.011 262 / 0.95) 50%, oklch(0.135 0.01 262 / 0.98) 100%);
+    linear-gradient(180deg, oklch(0.145 0.012 262 / 1) 0%, oklch(0.14 0.011 262 / 1) 50%, oklch(0.135 0.01 262 / 1) 100%);
 }
 
 .background::after {

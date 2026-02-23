@@ -1,8 +1,31 @@
 .hero {
   position: relative;
-  min-height: 100vh;
-  padding: 230px 0 120px;
+  min-height: 122vh;
+  padding: 0;
   overflow: visible;
+  background: var(--bg-0);
+}
+
+.topBackground {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  margin-bottom: -100vh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.topBackground::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: clamp(220px, 30vh, 360px);
+  background: linear-gradient(
+    180deg,
+    oklch(0.12 0.012 262 / 0) 0%,
+    oklch(0.12 0.012 262 / 1) 100%
+  );
 }
 
 .container {
@@ -10,8 +33,16 @@
   z-index: 2;
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 var(--container-pad);
+  padding: 230px var(--container-pad) 72px;
   text-align: center;
+}
+
+.intro {
+  position: relative;
+  z-index: 3;
+  transform: translate3d(0, 0, 0);
+  transition: transform 220ms ease, opacity 220ms ease;
+  will-change: transform, opacity;
 }
 
 .tag {
@@ -106,6 +137,10 @@
   margin-top: 114px;
   display: flex;
   justify-content: center;
+  transition: transform 240ms ease;
+  will-change: transform;
+  position: relative;
+  z-index: 4;
 }
 
 .card {
@@ -314,7 +349,16 @@
 
 @media (max-width: 900px) {
   .hero {
-    padding: 190px 0 100px;
+    min-height: 116vh;
+  }
+
+  .container {
+    padding: 190px var(--container-pad) 64px;
+  }
+
+  .topBackground {
+    height: 100vh;
+    margin-bottom: -100vh;
   }
 
   .card {
@@ -324,7 +368,16 @@
 
 @media (max-width: 600px) {
   .hero {
-    padding: 165px 0 90px;
+    min-height: 108vh;
+  }
+
+  .container {
+    padding: 165px var(--container-pad) 56px;
+  }
+
+  .topBackground {
+    height: 100vh;
+    margin-bottom: -100vh;
   }
 
   .subtitle {
@@ -343,9 +396,20 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .intro {
+    transition: none;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
   .ping::after,
   .playPulse {
     animation: none;
+  }
+
+  .cardWrap {
+    transition: none;
+    transform: none !important;
   }
 
   .playButton {

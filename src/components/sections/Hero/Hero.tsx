@@ -10,7 +10,9 @@ const clamp = (value: number, min: number, max: number) =>
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const introRef = useRef<HTMLDivElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
+  const cardWrapRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playRequestedRef = useRef(false);
   const rafRef = useRef<number | null>(null);
@@ -26,6 +28,8 @@ export default function Hero() {
   });
 
   useLayoutEffect(() => {
+    const sectionNode = sectionRef.current;
+    const introNode = introRef.current;
     const state = stateRef.current;
     state.reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -35,13 +39,27 @@ export default function Hero() {
     ).matches;
 
     const update = () => {
+      const intro = introRef.current;
       const card = cardRef.current;
-      if (!card) return;
+      const cardWrap = cardWrapRef.current;
+      if (!card || !cardWrap) return;
+
+      const introProgress = clamp((state.progress - 0.04) / 0.52, 0, 1);
+      const cardProgress = clamp((state.progress - 0.08) / 0.62, 0, 1);
 
       const baseRotateX = 16 - state.progress * 9;
       const baseScale = 1 - state.progress * 0.03;
       const mouseRotateX = state.hovering ? -state.mouseY * 4 : 0;
       const mouseRotateY = state.hovering ? state.mouseX * 6 : 0;
+      const travelY = state.reduceMotion ? 0 : cardProgress * 520;
+
+      if (intro) {
+        const introLift = state.reduceMotion ? 0 : introProgress * 180;
+        intro.style.transform = `translate3d(0, -${introLift}px, 0)`;
+        intro.style.opacity = `${1 - introProgress}`;
+      }
+
+      cardWrap.style.transform = `translate3d(0, -${travelY}px, 0)`;
 
       card.style.transform = `perspective(2000px) rotateX(${baseRotateX + mouseRotateX}deg) rotateY(${mouseRotateY}deg) scale(${baseScale})`;
     };
@@ -55,10 +73,10 @@ export default function Hero() {
     };
 
     const handleScroll = () => {
-      const section = sectionRef.current;
+      const section = sectionRef.current ?? sectionNode;
       if (!section) return;
       const rect = section.getBoundingClientRect();
-      const progress = clamp(-rect.top / rect.height, 0, 1);
+      const progress = clamp(-rect.top / (rect.height * 0.75), 0, 1);
       state.progress = progress;
       scheduleUpdate();
     };
@@ -92,6 +110,10 @@ export default function Hero() {
       return () => {
         window.removeEventListener("scroll", handleScroll);
         window.removeEventListener("resize", handleScroll);
+        if (introNode) {
+          introNode.style.transform = "";
+          introNode.style.opacity = "";
+        }
         card.removeEventListener("mousemove", handleMove);
         card.removeEventListener("mouseleave", handleLeave);
       };
@@ -100,6 +122,10 @@ export default function Hero() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
+      if (introNode) {
+        introNode.style.transform = "";
+        introNode.style.opacity = "";
+      }
     };
   }, []);
 
@@ -141,32 +167,36 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} id="hero" className={styles.hero}>
-      <BeamBackground extendBottom={260} />
+      <div className={styles.topBackground} aria-hidden="true">
+        <BeamBackground shaderOffsetY={-0.22} />
+      </div>
 
       <div className={styles.container}>
-        <div className={styles.tag}>
-          <span className={styles.ping} />
-          Financial Intelligence
+        <div className={styles.intro} ref={introRef}>
+          <div className={styles.tag}>
+            <span className={styles.ping} />
+            Financial Intelligence
+          </div>
+
+          <h1 className={styles.title}>
+            Den moderna ekonomitjänsten <br />– med AI som analyserar, förutser
+            och agerar
+          </h1>
+
+          <p className={styles.subtitle}>
+            MinCFO kombinerar automation, dashboards i realtid och en AI-copilot
+            som låter dig chatta med din data. Få insikter, prognoser och
+            proaktiva rekommendationer — utan att lägga tid på manuellt arbete.
+          </p>
+
+          <div className={styles.ctaRow}>
+            <a className={styles.primaryCta} href="#">
+              Boka en demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+            </a>
+          </div>
         </div>
 
-        <h1 className={styles.title}>
-          Den moderna ekonomitjänsten <br />– med AI som analyserar, förutser
-          och agerar
-        </h1>
-
-        <p className={styles.subtitle}>
-          MinCFO kombinerar automation, dashboards i realtid och en AI-copilot
-          som låter dig chatta med din data. Få insikter, prognoser och
-          proaktiva rekommendationer — utan att lägga tid på manuellt arbete.
-        </p>
-
-        <div className={styles.ctaRow}>
-          <a className={styles.primaryCta} href="#">
-            Boka en demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
-          </a>
-        </div>
-
-        <div className={styles.cardWrap}>
+        <div className={styles.cardWrap} ref={cardWrapRef}>
           <div className={`${styles.card} ${styles.glass}`} ref={cardRef}>
             <div className={styles.cardHeader}>
               <span className={styles.dot} />
