@@ -39,6 +39,9 @@ const HERO_TICKER_LOGOS = [
   { src: "/customers/logos/logo-swebal.avif", alt: "Swebal" },
 ] as const;
 
+const CARD_TRACER_PATH =
+  "M 0.8 7.2 A 6.4 6.4 0 0 1 7.2 0.8 H 92.8 A 6.4 6.4 0 0 1 99.2 7.2 V 92.8 A 6.4 6.4 0 0 1 92.8 99.2 H 7.2 A 6.4 6.4 0 0 1 0.8 92.8 Z";
+
 export default function SolutionPageTemplate({ content }: { content: SolutionPageContent }) {
   const impactVisuals = content.impactVisuals ?? ["realtime", "flow", "accuracy", "analysis"];
   const scenarioDescription = content.scenario.description ?? `Fråga: ${content.scenario.question}`;
@@ -118,6 +121,34 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             <div className={styles.challengeGrid}>
               {content.dilemmaCards.map((item) => (
                 <article key={item.title} className={styles.challengeCard}>
+                  <div className={styles.cardTracer} aria-hidden="true">
+                    <svg className={styles.cardTracerSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <path className={`${styles.stroke} ${styles.strokeAGlow}`} d={CARD_TRACER_PATH} pathLength={1}>
+                        <animate attributeName="stroke-dashoffset" from="0" to="-1" dur="8s" repeatCount="indefinite" />
+                      </path>
+                      <path className={`${styles.stroke} ${styles.strokeA}`} d={CARD_TRACER_PATH} pathLength={1}>
+                        <animate attributeName="stroke-dashoffset" from="0" to="-1" dur="8s" repeatCount="indefinite" />
+                      </path>
+                      <path className={`${styles.stroke} ${styles.strokeBGlow}`} d={CARD_TRACER_PATH} pathLength={1}>
+                        <animate
+                          attributeName="stroke-dashoffset"
+                          from="-0.5"
+                          to="-1.5"
+                          dur="8s"
+                          repeatCount="indefinite"
+                        />
+                      </path>
+                      <path className={`${styles.stroke} ${styles.strokeB}`} d={CARD_TRACER_PATH} pathLength={1}>
+                        <animate
+                          attributeName="stroke-dashoffset"
+                          from="-0.5"
+                          to="-1.5"
+                          dur="8s"
+                          repeatCount="indefinite"
+                        />
+                      </path>
+                    </svg>
+                  </div>
                   <span className={styles.iconNegative} aria-hidden="true">
                     <X size={16} />
                   </span>
@@ -141,6 +172,34 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             <div className={styles.solutionGrid}>
               {content.helpsCards.map((item) => (
                 <article key={item.title} className={styles.solutionCard}>
+                  <div className={styles.cardTracer} aria-hidden="true">
+                    <svg className={styles.cardTracerSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <path className={`${styles.stroke} ${styles.strokeAGlow}`} d={CARD_TRACER_PATH} pathLength={1}>
+                        <animate attributeName="stroke-dashoffset" from="0" to="-1" dur="8s" repeatCount="indefinite" />
+                      </path>
+                      <path className={`${styles.stroke} ${styles.strokeA}`} d={CARD_TRACER_PATH} pathLength={1}>
+                        <animate attributeName="stroke-dashoffset" from="0" to="-1" dur="8s" repeatCount="indefinite" />
+                      </path>
+                      <path className={`${styles.stroke} ${styles.strokeBGlow}`} d={CARD_TRACER_PATH} pathLength={1}>
+                        <animate
+                          attributeName="stroke-dashoffset"
+                          from="-0.5"
+                          to="-1.5"
+                          dur="8s"
+                          repeatCount="indefinite"
+                        />
+                      </path>
+                      <path className={`${styles.stroke} ${styles.strokeB}`} d={CARD_TRACER_PATH} pathLength={1}>
+                        <animate
+                          attributeName="stroke-dashoffset"
+                          from="-0.5"
+                          to="-1.5"
+                          dur="8s"
+                          repeatCount="indefinite"
+                        />
+                      </path>
+                    </svg>
+                  </div>
                   <span className={styles.iconPositive} aria-hidden="true">
                     <Check size={16} />
                   </span>
