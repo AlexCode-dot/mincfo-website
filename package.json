@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "content:export:gdocs": "node scripts/export-briefs-to-gdocs.mjs",
+    "content:import:gdocs": "node scripts/import-briefs-from-gdocs.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.34.0",

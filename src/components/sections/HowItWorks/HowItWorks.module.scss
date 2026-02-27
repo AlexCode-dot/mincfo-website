@@ -1715,7 +1715,7 @@
     0 8px 12px oklch(0.08 0.012 262 / 0.3);
 }
 
-@media (prefers-reduced-motion: reduce) {
+:global(html[data-motion="reduced"]) {
   .faasOnboardingHub,
   .faasHubSpinner {
     animation: none;
@@ -2992,7 +2992,7 @@
 
 }
 
-@media (prefers-reduced-motion: reduce) {
+:global(html[data-motion="reduced"]) {
   .header,
   .tabList,
   .panel,
@@ -3046,50 +3046,4 @@
     opacity: 0;
   }
 
-  .insightsQuestion,
-  .insightsAnswer,
-  .insightsResult,
-  .insightsSummary,
-  .insightsInput,
-  .insightsBarCurrent .insightsBarFill,
-  .insightsBarPlan .insightsBarFill,
-  .insightsBarScenario .insightsBarFill,
-  .insightsInputHint,
-  .insightsInputTyped,
-  .insightsInputCaret,
-  .insightsInputSend,
-  .insightsThinking span,
-  .faasRealtimeLine polyline,
-  .faasRealtimeBar,
-  .faasRealtimeAlertDot {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-
-  .insightsThinking {
-    animation: none;
-    opacity: 0;
-    max-height: 0;
-  }
-
-  .insightsInputHint {
-    opacity: 0;
-  }
-
-  .insightsInputTyped {
-    width: 42ch;
-  }
-
-  .insightsBarFill {
-    transform: scaleY(1);
-  }
-
-  .faasRealtimeLine polyline {
-    stroke-dashoffset: 0;
-  }
-
-  .faasRealtimeBar {
-    transform: scaleY(1);
-  }
 }

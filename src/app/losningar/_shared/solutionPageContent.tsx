@@ -69,12 +69,10 @@ export const CEO_FOUNDERS_CONTENT: SolutionPageContent = {
     </>
   ),
   heroTitleWide: false,
-  heroSubheadline:
-    "MinCFO samlar AI Copilot, dashboards i realtid, forecasting och strategisk rådgivning i en beslutsyta. Resultatet är snabbare prioriteringar, tydligare vägval och högre precision i varje tillväxtbeslut.",
+  heroSubheadline: "MinCFO samlar AI Copilot, dashboards i realtid, forecasting och strategisk rådgivning i en beslutsyta. Resultatet är snabbare prioriteringar, tydligare vägval och högre precision i varje tillväxtbeslut.",
   logoStripMicrocopy: "Betrodd av tillväxtteam som kräver finansiell precision i hög takt",
   dilemmaTitle: "The CEO Dilemma",
-  dilemmaSubtitle:
-    "Hög tillväxt kräver fart i beslut. Men splittrad data, manuell rapportering och osäker prognos gör att viktiga vägval tas för sent.",
+  dilemmaSubtitle: "Hög tillväxt kräver fart i beslut. Men splittrad data, manuell rapportering och osäker prognos gör att viktiga vägval tas för sent.",
   dilemmaCards: [
     {
       title: "Ingen samlad nulägesbild",
@@ -94,8 +92,7 @@ export const CEO_FOUNDERS_CONTENT: SolutionPageContent = {
     },
   ],
   helpsTitle: "Så hjälper MinCFO CEO & Founders",
-  helpsSubtitle:
-    "MinCFO kopplar samman data, analys och exekvering i ett och samma flöde, så att ledningen kan agera snabbare med högre precision.",
+  helpsSubtitle: "MinCFO kopplar samman data, analys och exekvering i ett och samma flöde, så att ledningen kan agera snabbare med högre precision.",
   helpsCards: [
     {
       title: "Live dashboard för ledning",
@@ -117,12 +114,8 @@ export const CEO_FOUNDERS_CONTENT: SolutionPageContent = {
   scenario: {
     heading: "Scenario visualization",
     description: "Ett konkret exempel på hur en CEO kan testa tillväxtbeslut och direkt se effekt på runway och EBITDA.",
-    question:
-      "Om vi ökar säljbudgeten med 18% från augusti och anställer två AE i september, hur påverkas runway och EBITDA till årsskiftet?",
-    answer: [
-      "Med nuvarande antaganden sjunker runway från 13.8 till 12.4 månader. EBITDA blir cirka 0.8 procentenheter svagare i Q4.",
-      "Om rekryteringen flyttas sex veckor framåt ligger runway fortsatt över 13 månader samtidigt som tillväxtmålet till årsskiftet kan behållas.",
-    ],
+    question: "Om vi ökar säljbudgeten med 18% från augusti och anställer två AE i september, hur påverkas runway och EBITDA till årsskiftet?",
+    answer: ["Med nuvarande antaganden sjunker runway från 13.8 till 12.4 månader. EBITDA blir cirka 0.8 procentenheter svagare i Q4.", "Om rekryteringen flyttas sex veckor framåt ligger runway fortsatt över 13 månader samtidigt som tillväxtmålet till årsskiftet kan behållas."],
     metrics: ["Runway (Current)", "Runway (Scenario)", "Runway forecast"],
     metricValues: ["13.8 mån", "12.4 mån"],
     metricHints: ["Nuvarande plan", "-1.4 månader"],
@@ -135,8 +128,7 @@ export const CEO_FOUNDERS_CONTENT: SolutionPageContent = {
       Direkt effekt.
     </>
   ),
-  impactSubtitle:
-    "Tydlig påverkan i både ledningsarbete och finansiell exekvering. Mindre administration, mer strategi.",
+  impactSubtitle: "Tydlig påverkan i både ledningsarbete och finansiell exekvering. Mindre administration, mer strategi.",
   impactCards: [
     {
       value: "30-50%",
@@ -161,8 +153,7 @@ export const CEO_FOUNDERS_CONTENT: SolutionPageContent = {
   ],
   impactVisuals: ["realtime", "flow", "proactive", "governance"],
   trustHeadline: "Redo för nästa steg?",
-  trustSub:
-    "Vi hjälper CEO & Founders att gå från reaktiv rapportering till proaktiv styrning med realtidsdata, AI Copilot, scenario-planering och rådgivning i samma beslutsflöde, så att varje prioritering blir tydligare och snabbare att exekvera.",
+  trustSub: "Vi hjälper CEO & Founders att gå från reaktiv rapportering till proaktiv styrning med realtidsdata, AI Copilot, scenario-planering och rådgivning i samma beslutsflöde, så att varje prioritering blir tydligare och snabbare att exekvera.",
 };
 
 export const CFO_FINANCE_CONTENT: SolutionPageContent = {
@@ -175,12 +166,10 @@ export const CFO_FINANCE_CONTENT: SolutionPageContent = {
     </>
   ),
   heroTitleWide: true,
-  heroSubheadline:
-    "MinCFO kopplar ihop datakällor, automatiserar finansflöden och ger teamet en plattform för analys, planering och strategisk uppföljning med AI, realtidsdata och säkrare forecasting.",
+  heroSubheadline: "MinCFO kopplar ihop datakällor, automatiserar finansflöden och ger teamet en plattform för analys, planering och strategisk uppföljning med AI, realtidsdata och säkrare forecasting.",
   logoStripMicrocopy: "Betrodd av team som vill kombinera finansiell kontroll med operativ hastighet",
   dilemmaTitle: "The Finance Dilemma",
-  dilemmaSubtitle:
-    "CFO-team behöver snabb precision i styrningen. Men manuella flöden och inaktuell prognos gör att viktiga beslut riskerar att tas för sent.",
+  dilemmaSubtitle: "CFO-team behöver snabb precision i styrningen. Men manuella flöden och inaktuell prognos gör att viktiga beslut riskerar att tas för sent.",
   dilemmaCards: [
     {
       title: "Manuella loopar bromsar finance",
@@ -200,8 +189,7 @@ export const CFO_FINANCE_CONTENT: SolutionPageContent = {
     },
   ],
   helpsTitle: "Så hjälper MinCFO CFO & Finance Team",
-  helpsSubtitle:
-    "MinCFO samlar data, automation och analys i ett gemensamt finance-flöde så att teamet kan leverera snabbare rapportering och bättre beslutsunderlag.",
+  helpsSubtitle: "MinCFO samlar data, automation och analys i ett gemensamt finance-flöde så att teamet kan leverera snabbare rapportering och bättre beslutsunderlag.",
   helpsCards: [
     {
       title: "AI Copilot med spårbar data",
@@ -222,13 +210,9 @@ export const CFO_FINANCE_CONTENT: SolutionPageContent = {
   ],
   scenario: {
     heading: "Scenario visualization",
-    description:
-      "Fråga Copilot om senaste kvartalets avvikelser och få direkt förklaring med drivare, drilldown och uppdaterad helårsprognos.",
+    description: "Fråga Copilot om senaste kvartalets avvikelser och få direkt förklaring med drivare, drilldown och uppdaterad helårsprognos.",
     question: "Vilka kostnadsdrivare förklarar EBITDA-avvikelsen mot budget i senaste kvartalet?",
-    answer: [
-      "68% av avvikelsen kommer från personalkostnad och lägre bruttomarginal i två affärsområden.",
-      "Om trenden kvarstår blir helårseffekten cirka -3,2 MSEK. Prioritera åtgärder i de två mest avvikande områdena först.",
-    ],
+    answer: ["68% av avvikelsen kommer från personalkostnad och lägre bruttomarginal i två affärsområden.", "Om trenden kvarstår blir helårseffekten cirka -3,2 MSEK. Prioritera åtgärder i de två mest avvikande områdena först."],
     metrics: ["Closing cycle", "Forecast delta", "Finance forecast"],
     metricValues: ["-32%", "2.8%"],
     metricHints: ["Snabbare periodstängning", "Nuvarande prognosavvikelse"],
@@ -241,8 +225,7 @@ export const CFO_FINANCE_CONTENT: SolutionPageContent = {
       Direkt effekt.
     </>
   ),
-  impactSubtitle:
-    "Starkare finansiell exekvering med mindre manuell administration och mer strategiskt fokus i teamet.",
+  impactSubtitle: "Starkare finansiell exekvering med mindre manuell administration och mer strategiskt fokus i teamet.",
   impactCards: [
     {
       value: "25-40%",
@@ -271,157 +254,30 @@ export const CFO_FINANCE_CONTENT: SolutionPageContent = {
       image: "/customers/testimonials/logo-rikard.avif",
       name: "Head of Finance",
       role: "B2B SaaS",
-      quote:
-        "Månadsstängning tog för lång tid och rapporteringen blev reaktiv. Med MinCFO standardiserade vi flödena och kan agera snabbare i varje period.",
+      quote: "Månadsstängning tog för lång tid och rapporteringen blev reaktiv. Med MinCFO standardiserade vi flödena och kan agera snabbare i varje period.",
     },
     {
       image: "/customers/testimonials/logo-oskar.avif",
       name: "CFO",
       role: "Growth bolag",
-      quote:
-        "Forecasting blev betydligt mer träffsäker när antaganden uppdateras löpande. Teamet lägger nu mer tid på analys och mindre på manuell administration.",
+      quote: "Forecasting blev betydligt mer träffsäker när antaganden uppdateras löpande. Teamet lägger nu mer tid på analys och mindre på manuell administration.",
     },
     {
       image: "/customers/testimonials/logo-aviv.avif",
       name: "Finance Director",
       role: "Scale-up",
-      quote:
-        "AI Copilot och realtidsdata gav oss snabbare svar på avvikelser. Vi har fått bättre kontroll utan att tappa operativ hastighet.",
+      quote: "AI Copilot och realtidsdata gav oss snabbare svar på avvikelser. Vi har fått bättre kontroll utan att tappa operativ hastighet.",
     },
   ],
   trustHeadline: "Stärk CFO-funktionen från dag ett.",
-  trustSub:
-    "MinCFO är byggt för team som vill kombinera finansiell kontroll med operativ hastighet, utan kompromisser i datakvalitet.",
-};
-
-export const SAAS_TECH_CONTENT: SolutionPageContent = {
-  eyebrow: "Lösning för SaaS / Tech",
-  heroHeadline: "Koppla produkttillväxt till ekonomi i realtid",
-  heroTitleWide: true,
-  heroSubheadline:
-    "MinCFO förenar SaaS-metrics, finansiell data och AI-driven analys i en plattform så ni kan styra tillväxt med kontroll på marginal, churn och burn.",
-  logoStripMicrocopy: "Betrodd av SaaS- och techteam som vill skala med bättre ekonomisk precision",
-  dilemmaTitle: "The SaaS Dilemma",
-  dilemmaSubtitle: "När SaaS-metrics och ekonomi inte möts i samma beslutsyta.",
-  dilemmaCards: [
-    {
-      title: "KPI:er och ekonomi lever i olika system",
-      body: "ARR/MRR följs separat från resultat och cash, vilket skapar motstridiga signaler och sänker beslutshastigheten.",
-    },
-    {
-      title: "Tillväxt styrs utan full kostnadsbild",
-      body: "Produkt- och GTM-initiativ prioriteras utan tydlig koppling till marginal, CAC payback och burn.",
-    },
-    {
-      title: "Churn-effekter syns för sent",
-      body: "Förändringar i churn och expansion upptäcks ofta först när den finansiella effekten redan hunnit slå igenom.",
-    },
-    {
-      title: "Scenarioarbete blir ad hoc",
-      body: "Pricing, headcount och GTM-planer jämförs manuellt, vilket gör uppföljning långsam och svår att förankra.",
-    },
-  ],
-  helpsTitle: "Så hjälper MinCFO SaaS / Tech",
-  helpsSubtitle:
-    "MinCFO samlar KPI:er, forecasting, automation och CFO-rådgivning i ett gemensamt flöde för snabbare och mer förankrade tillväxtbeslut.",
-  helpsCards: [
-    {
-      title: "AI Copilot förklarar samband",
-      body: "Copilot kopplar ihop tillväxt, churn, marginal och likviditet så att teamet snabbare förstår vad som driver utfallet.",
-    },
-    {
-      title: "Gemensam beslutsvy i realtid",
-      body: "SaaS-KPI:er och finansiella nyckeltal samlas i samma dashboard för tydlig, löpande styrning.",
-    },
-    {
-      title: "Forecasting på 12-18 månader",
-      body: "Churn, nyförsäljning och expansion modelleras kontinuerligt så att plan och verklighet hålls synkade.",
-    },
-    {
-      title: "Automatiserade workflows",
-      body: "Återkommande uppföljning, rapportering och kontrollmoment körs med mindre manuellt arbete och högre kvalitet.",
-    },
-  ],
-  scenario: {
-    heading: "Scenario visualization",
-    description: "Fråga: Vad händer med ARR, CAC payback och runway om churn minskar och säljkapaciteten ökar?",
-    question:
-      "Vad händer med ARR, CAC payback och runway om churn minskar 1,5 procentenheter och säljkapaciteten ökar?",
-    answer: [
-      "ARR ökar snabbare från Q3 när retention förbättras och nyförsäljningen skalar med högre effektivitet.",
-      "CAC payback förbättras med cirka två månader och runway stärks med omkring 1,3 månader jämfört med nuvarande plan.",
-    ],
-    metrics: ["CAC payback", "Runway delta", "SaaS growth forecast"],
-    metricValues: ["9.4 mån", "+1.3 mån"],
-    metricHints: ["Scenario", "Mot nuvarande plan"],
-    activeMonth: "Q3",
-  },
-  impactTitle: (
-    <>
-      Mätbara resultat.
-      <br />
-      Direkt effekt.
-    </>
-  ),
-  impactSubtitle:
-    "Starkare styrning mellan produkt, GTM och finance med färre manuella loopar och bättre precision i tillväxtbeslut.",
-  impactCards: [
-    {
-      value: "Snabbare",
-      title: "Beslut mellan produkt, GTM och finance",
-      description: "Tydligare koppling mellan operativa initiativ och finansiell effekt i realtid.",
-    },
-    {
-      value: "Bättre",
-      title: "Prioritering av initiativ",
-      description: "Fokus på åtgärder som förbättrar enhetsekonomi, payback och långsiktig tillväxtkvalitet.",
-    },
-    {
-      value: "Färre",
-      title: "Överraskningar i cash-utveckling",
-      description: "Kontinuerlig scenario-uppföljning gör risker synliga tidigare och minskar sena korrigeringar.",
-    },
-    {
-      value: "Starkare",
-      title: "Beslutsunderlag mot styrelse och investerare",
-      description: "Konsekventa KPI:er och tydliga scenarier stärker dialogen om tempo, risk och kapitalbehov.",
-    },
-  ],
-  impactVisuals: ["realtime", "flow", "radar", "report"],
-  testimonials: [
-    {
-      image: "/customers/testimonials/logo-rikard.avif",
-      name: "VP Finance",
-      role: "B2B SaaS",
-      quote:
-        "Vi fick äntligen ARR, churn och cash i samma styrbild. Det gav oss snabbare prioriteringar mellan produkt, sälj och kostnadsnivå.",
-    },
-    {
-      image: "/customers/testimonials/logo-oskar.avif",
-      name: "COO",
-      role: "Tech scale-up",
-      quote:
-        "När vi kunde simulera headcount och GTM i samma scenarioflöde blev besluten både snabbare och mer förankrade i ledningsgruppen.",
-    },
-    {
-      image: "/customers/testimonials/logo-aviv.avif",
-      name: "CEO",
-      role: "SaaS-bolag",
-      quote:
-        "MinCFO gav oss bättre kontroll över payback och runway utan att tappa tillväxttempo. Vi agerar på signaler tidigare än tidigare.",
-    },
-  ],
-  trustHeadline: "Skala snabbare med ekonomisk precision.",
-  trustSub:
-    "MinCFO passar SaaS- och techbolag som vill kombinera hög tillväxt med finansiell disciplin på enterprise-nivå.",
+  trustSub: "MinCFO är byggt för team som vill kombinera finansiell kontroll med operativ hastighet, utan kompromisser i datakvalitet.",
 };
 
 export const FRACTIONAL_CFO_CONTENT: SolutionPageContent = {
   eyebrow: "LÖSNING FÖR FRACTIONAL CFO",
   heroHeadline: "Leverera CFO-värde snabbare – med AI och realtidsdata",
   heroTitleWide: true,
-  heroSubheadline:
-    "MinCFO ger dig en modern plattform för analys, forecasting och beslutsunderlag. Mindre manuellt arbete – mer strategisk rådgivning med hög precision.",
+  heroSubheadline: "MinCFO ger dig en modern plattform för analys, forecasting och beslutsunderlag. Mindre manuellt arbete – mer strategisk rådgivning med hög precision.",
   logoStripMicrocopy: "Betrodd av team som kräver finansiell precision i hög takt",
   dilemmaTitle: "The Fractional CFO Dilemma",
   dilemmaSubtitle: "När varje kund kräver egen datastädning och rapportlogik.",
@@ -465,12 +321,8 @@ export const FRACTIONAL_CFO_CONTENT: SolutionPageContent = {
   ],
   scenario: {
     heading: "Scenario visualization",
-    question:
-      "Sammanfatta bolagets finansiella läge som till en styrelse – och visa största risk för runway nästa kvartal.",
-    answer: [
-      "Runway är 11,6 månader med nuvarande burn. Största risken är ökade CAC-kostnader i kombination med lägre retention i segment Y.",
-      "Rekommendation: prioritera churn-åtgärder och flytta rekrytering 6 veckor för att behålla runway över 12 månader.",
-    ],
+    question: "Sammanfatta bolagets finansiella läge som till en styrelse – och visa största risk för runway nästa kvartal.",
+    answer: ["Runway är 11,6 månader med nuvarande burn. Största risken är ökade CAC-kostnader i kombination med lägre retention i segment Y.", "Rekommendation: prioritera churn-åtgärder och flytta rekrytering 6 veckor för att behålla runway över 12 månader."],
     metrics: ["Runway", "Risk signal", "Next action"],
     metricValues: ["11,6 mån", "Hög"],
     metricHints: ["Nuvarande plan", "CAC + retention"],
@@ -514,16 +366,125 @@ export const FRACTIONAL_CFO_CONTENT: SolutionPageContent = {
     quote: "MinCFO gjorde att jag kunde leverera bättre underlag snabbare och lägga tiden på strategi.",
   },
   trustHeadline: "Bygg en modern CFO-leverans.",
-  trustSub:
-    "AI Copilot, dashboards och forecasting i en plattform — så du kan skapa värde snabbare för varje kund.",
+  trustSub: "AI Copilot, dashboards och forecasting i en plattform — så du kan skapa värde snabbare för varje kund.",
+};
+
+export const SAAS_TECH_CONTENT: SolutionPageContent = {
+  eyebrow: "Lösning för SaaS / Tech",
+  heroHeadline: "Koppla produkttillväxt till ekonomi i realtid",
+  heroTitleWide: true,
+  heroSubheadline: "MinCFO förenar SaaS-metrics, finansiell data och AI-driven analys i en plattform så ni kan styra tillväxt med kontroll på marginal, churn och burn.",
+  logoStripMicrocopy: "Betrodd av SaaS- och techteam som vill skala med bättre ekonomisk precision",
+  dilemmaTitle: "The SaaS Dilemma",
+  dilemmaSubtitle: "När SaaS-metrics och ekonomi inte möts i samma beslutsyta.",
+  dilemmaCards: [
+    {
+      title: "KPI",
+      body: "er och ekonomi lever i olika system: ARR/MRR följs separat från resultat och cash, vilket skapar motstridiga signaler och sänker beslutshastigheten.",
+    },
+    {
+      title: "Tillväxt styrs utan full kostnadsbild",
+      body: "Produkt- och GTM-initiativ prioriteras utan tydlig koppling till marginal, CAC payback och burn.",
+    },
+    {
+      title: "Churn-effekter syns för sent",
+      body: "Förändringar i churn och expansion upptäcks ofta först när den finansiella effekten redan hunnit slå igenom.",
+    },
+    {
+      title: "Scenarioarbete blir ad hoc",
+      body: "Pricing, headcount och GTM-planer jämförs manuellt, vilket gör uppföljning långsam och svår att förankra.",
+    },
+  ],
+  helpsTitle: "Så hjälper MinCFO SaaS / Tech",
+  helpsSubtitle: "MinCFO samlar KPI:er, forecasting, automation och CFO-rådgivning i ett gemensamt flöde för snabbare och mer förankrade tillväxtbeslut.",
+  helpsCards: [
+    {
+      title: "AI Copilot förklarar samband",
+      body: "Copilot kopplar ihop tillväxt, churn, marginal och likviditet så att teamet snabbare förstår vad som driver utfallet.",
+    },
+    {
+      title: "Gemensam beslutsvy i realtid",
+      body: "SaaS-KPI:er och finansiella nyckeltal samlas i samma dashboard för tydlig, löpande styrning.",
+    },
+    {
+      title: "Forecasting på 12-18 månader",
+      body: "Churn, nyförsäljning och expansion modelleras kontinuerligt så att plan och verklighet hålls synkade.",
+    },
+    {
+      title: "Automatiserade workflows",
+      body: "Återkommande uppföljning, rapportering och kontrollmoment körs med mindre manuellt arbete och högre kvalitet.",
+    },
+  ],
+  scenario: {
+    heading: "Scenario visualization",
+    description: "Fråga: Vad händer med ARR, CAC payback och runway om churn minskar och säljkapaciteten ökar?",
+    question: "Vad händer med ARR, CAC payback och runway om churn minskar 1,5 procentenheter och säljkapaciteten ökar?",
+    answer: ["ARR ökar snabbare från Q3 när retention förbättras och nyförsäljningen skalar med högre effektivitet.", "CAC payback förbättras med cirka två månader och runway stärks med omkring 1,3 månader jämfört med nuvarande plan."],
+    metrics: ["CAC payback", "Runway delta", "SaaS growth forecast"],
+    metricValues: ["9.4 mån", "+1.3 mån"],
+    metricHints: ["Scenario", "Mot nuvarande plan"],
+    activeMonth: "Q3",
+  },
+  impactTitle: (
+    <>
+      Mätbara resultat.
+      <br />
+      Direkt effekt.
+    </>
+  ),
+  impactSubtitle: "Starkare styrning mellan produkt, GTM och finance med färre manuella loopar och bättre precision i tillväxtbeslut.",
+  impactCards: [
+    {
+      value: "Snabbare",
+      title: "Beslut mellan produkt, GTM och finance",
+      description: "Tydligare koppling mellan operativa initiativ och finansiell effekt i realtid.",
+    },
+    {
+      value: "Bättre",
+      title: "Prioritering av initiativ",
+      description: "Fokus på åtgärder som förbättrar enhetsekonomi, payback och långsiktig tillväxtkvalitet.",
+    },
+    {
+      value: "Färre",
+      title: "Överraskningar i cash-utveckling",
+      description: "Kontinuerlig scenario-uppföljning gör risker synliga tidigare och minskar sena korrigeringar.",
+    },
+    {
+      value: "Starkare",
+      title: "Beslutsunderlag mot styrelse och investerare",
+      description: "Konsekventa KPI:er och tydliga scenarier stärker dialogen om tempo, risk och kapitalbehov.",
+    },
+  ],
+  impactVisuals: ["realtime", "flow", "radar", "report"],
+  testimonials: [
+    {
+      image: "/customers/testimonials/logo-rikard.avif",
+      name: "VP Finance",
+      role: "B2B SaaS",
+      quote: "Vi fick äntligen ARR, churn och cash i samma styrbild. Det gav oss snabbare prioriteringar mellan produkt, sälj och kostnadsnivå.",
+    },
+    {
+      image: "/customers/testimonials/logo-oskar.avif",
+      name: "COO",
+      role: "Tech scale-up",
+      quote: "När vi kunde simulera headcount och GTM i samma scenarioflöde blev besluten både snabbare och mer förankrade i ledningsgruppen.",
+    },
+    {
+      image: "/customers/testimonials/logo-aviv.avif",
+      name: "CEO",
+      role: "SaaS-bolag",
+      quote: "MinCFO gav oss bättre kontroll över payback och runway utan att tappa tillväxttempo. Vi agerar på signaler tidigare än tidigare.",
+    },
+  ],
+  trustHeadline: "Skala snabbare med ekonomisk precision.",
+  trustSub: "MinCFO passar SaaS- och techbolag som vill kombinera hög tillväxt med finansiell disciplin på enterprise-nivå.",
 };
 
 export const KONSULT_TJANSTER_CONTENT: SolutionPageContent = {
   eyebrow: "LÖSNING FÖR KONSULT & TJÄNSTER",
   heroHeadline: "Styr beläggning, marginal och cash – i realtid",
   heroTitleWide: true,
-  heroSubheadline:
-    "MinCFO kopplar projektdata, kostnader och kassaflöde i en beslutsyta. AI Copilot ger snabba svar på lönsamhet per kund, team och projekt — utan manuell rapportering.",
+  heroSubheadline: "MinCFO kopplar projektdata, kostnader och kassaflöde i en beslutsyta. AI Copilot ger snabba svar på lönsamhet per kund, team och projekt — utan manuell rapportering.",
   logoStripMicrocopy: "Betrodd av team som kräver finansiell precision i hög takt",
   dilemmaTitle: "The Services Dilemma",
   dilemmaSubtitle: "När projektlönsamhet syns efter att månaden är slut.",
@@ -546,8 +507,7 @@ export const KONSULT_TJANSTER_CONTENT: SolutionPageContent = {
     },
   ],
   helpsTitle: "Så hjälper MinCFO Konsult & Tjänster",
-  helpsSubtitle:
-    "Realtidsinsikt i projektutfall — med AI som förklarar avvikelser och nästa åtgärd.",
+  helpsSubtitle: "Realtidsinsikt i projektutfall — med AI som förklarar avvikelser och nästa åtgärd.",
   helpsCards: [
     {
       title: "Lönsamhet per kund/projekt",
@@ -568,12 +528,8 @@ export const KONSULT_TJANSTER_CONTENT: SolutionPageContent = {
   ],
   scenario: {
     heading: "Scenario visualization",
-    question:
-      "Vilka tre kunder drar ner marginalen mest – och vad händer om vi justerar priserna 5% på dem?",
-    answer: [
-      "Tre kunder står för 62% av marginalfallet, främst p.g.a. scope creep och låg debiteringsgrad.",
-      "En prisjustering på 5% förbättrar total bruttomarginal med cirka 1,1 pp och stärker cash med cirka 290 tkr över 90 dagar.",
-    ],
+    question: "Vilka tre kunder drar ner marginalen mest – och vad händer om vi justerar priserna 5% på dem?",
+    answer: ["Tre kunder står för 62% av marginalfallet, främst p.g.a. scope creep och låg debiteringsgrad.", "En prisjustering på 5% förbättrar total bruttomarginal med cirka 1,1 pp och stärker cash med cirka 290 tkr över 90 dagar."],
     metrics: ["Margin impact", "Cash impact", "Top drivers"],
     metricValues: ["+1,1 pp", "+290 tkr"],
     metricHints: ["Prisjustering 5%", "Över 90 dagar"],
@@ -617,16 +573,14 @@ export const KONSULT_TJANSTER_CONTENT: SolutionPageContent = {
     quote: "Vi såg marginal per kund i tid och kunde agera innan månaden var över.",
   },
   trustHeadline: "Gör projektstyrning finansiellt skarp.",
-  trustSub:
-    "Bygg med MinCFO och styr beläggning, marginal och cash med AI Copilot och realtidsdata.",
+  trustSub: "Bygg med MinCFO och styr beläggning, marginal och cash med AI Copilot och realtidsdata.",
 };
 
 export const EHANDEL_CONTENT: SolutionPageContent = {
   eyebrow: "LÖSNING FÖR E-HANDEL",
   heroHeadline: "Full kontroll på marginal och cash – i realtid",
   heroTitleWide: true,
-  heroSubheadline:
-    "MinCFO kopplar resultat, kassaflöde och nyckeltal så du kan styra tillväxt med kontroll på inköp, kampanjer och lönsamhet. AI Copilot förklarar avvikelser direkt.",
+  heroSubheadline: "MinCFO kopplar resultat, kassaflöde och nyckeltal så du kan styra tillväxt med kontroll på inköp, kampanjer och lönsamhet. AI Copilot förklarar avvikelser direkt.",
   logoStripMicrocopy: "Betrodd av team som kräver finansiell precision i hög takt",
   dilemmaTitle: "The E-commerce Dilemma",
   dilemmaSubtitle: "När inköp och kampanjer påverkar cash snabbare än rapporterna.",
@@ -671,10 +625,7 @@ export const EHANDEL_CONTENT: SolutionPageContent = {
   scenario: {
     heading: "Scenario visualization",
     question: "Hur påverkas cash om vi ökar lagernivån inför Q4 och kör 2 kampanjer med -15%?",
-    answer: [
-      "Ökat lager binder cirka 1,9 MSEK i cash under 60 dagar. Kampanjerna sänker bruttomarginal med cirka 1,4 pp men kan kompenseras med mix mot kategori A.",
-      "Rekommendation: fasa inköp i två steg och sätt marginalgolv per kampanj.",
-    ],
+    answer: ["Ökat lager binder cirka 1,9 MSEK i cash under 60 dagar. Kampanjerna sänker bruttomarginal med cirka 1,4 pp men kan kompenseras med mix mot kategori A.", "Rekommendation: fasa inköp i två steg och sätt marginalgolv per kampanj."],
     metrics: ["Cash impact", "Margin delta", "Runway delta"],
     metricValues: ["-1,9 MSEK", "-1,4 pp"],
     metricHints: ["60 dagar", "Kampanjperiod"],
@@ -718,6 +669,5 @@ export const EHANDEL_CONTENT: SolutionPageContent = {
     quote: "Vi kunde förutse cash-effekten av inköp och kampanjer och slapp obehagliga överraskningar.",
   },
   trustHeadline: "Skala e-handel med finansiell kontroll.",
-  trustSub:
-    "Bygg med MinCFO och styr marginal, cash och lager med AI Copilot och realtidsdata.",
+  trustSub: "Bygg med MinCFO och styr marginal, cash och lager med AI Copilot och realtidsdata.",
 };

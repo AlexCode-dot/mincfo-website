@@ -502,7 +502,7 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+:global(html[data-motion="reduced"]) {
   .card {
     transition: none;
     opacity: 1;
@@ -516,10 +516,16 @@
   .tickerTrack {
     animation: none;
     transform: none;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    padding: 10px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: max-content;
+    padding: 6px 0;
+  }
+
+  .tickerViewport {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 
   .tickerViewport::before,

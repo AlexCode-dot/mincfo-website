@@ -626,7 +626,7 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+:global(html[data-motion="reduced"]) {
   .card {
     transition: none;
     opacity: 1;

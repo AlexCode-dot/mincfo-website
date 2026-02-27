@@ -2,6 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./FloatingNav.module.scss";
 
 const HOMEPAGE_SECTIONS = [
@@ -13,30 +15,14 @@ const HOMEPAGE_SECTIONS = [
   "security",
 ] as const;
 
-const SOLUTION_GROUPS = [
-  {
-    title: "Efter roll",
-    items: [
-      { href: "/losningar/ceo-founders", label: "Founders & CEO" },
-      { href: "/losningar/cfo-finance", label: "CFO & Finance Team" },
-      { href: "/losningar/fractional-cfo", label: "Fractional CFO" },
-    ],
-  },
-  {
-    title: "Efter bransch",
-    items: [
-      { href: "/losningar/saas-tech", label: "SaaS / Tech" },
-      { href: "/losningar/konsult-tjanster", label: "Konsult & Tjänster" },
-      { href: "/losningar/ehandel", label: "E-handel" },
-    ],
-  },
-];
+const SOLUTION_GROUPS = HOME_PAGE_TEXT.navigation.groups;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 
 export default function FloatingNav() {
+  const { isReducedMotion } = useMotion();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<(typeof HOMEPAGE_SECTIONS)[number]>("hero");
@@ -131,12 +117,6 @@ export default function FloatingNav() {
   const heroHref = pathname === "/" ? "#hero" : "/#hero";
 
   const animateScrollTo = (targetY: number) => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) {
-      window.scrollTo(0, targetY);
-      return;
-    }
-
     if (scrollRafRef.current) {
       window.cancelAnimationFrame(scrollRafRef.current);
       scrollRafRef.current = null;
@@ -149,15 +129,18 @@ export default function FloatingNav() {
       return;
     }
 
-    const duration = Math.abs(distance) < 96
-      ? 520
-      : clamp(Math.abs(distance) * 1.12, 900, 1600);
+    const distanceAbs = Math.abs(distance);
+    const duration = isReducedMotion
+      ? clamp(distanceAbs * 0.32, 180, 360)
+      : distanceAbs < 96
+        ? 520
+        : clamp(distanceAbs * 1.12, 900, 1600);
     const startTime = performance.now();
 
     const tick = (now: number) => {
       const elapsed = now - startTime;
       const progress = clamp(elapsed / duration, 0, 1);
-      const eased = easeOutCubic(progress);
+      const eased = isReducedMotion ? progress : easeOutCubic(progress);
       window.scrollTo(0, startY + distance * eased);
 
       if (progress < 1) {
@@ -229,7 +212,7 @@ export default function FloatingNav() {
           className={`${styles.link} ${isActive("produkt") ? styles.linkActive : ""}`}
           onClick={(event) => handleSectionAnchorClick(event, sectionHref("produkt"))}
         >
-          Produkt
+          {HOME_PAGE_TEXT.navigation.produkt}
         </a>
         <div className={styles.menuWrap}>
           <a
@@ -238,14 +221,14 @@ export default function FloatingNav() {
             aria-current={isSolutionsPage ? "page" : undefined}
             onClick={(event) => handleSectionAnchorClick(event, sectionHref("losningar"))}
           >
-            Lösningar
+            {HOME_PAGE_TEXT.navigation.losningar}
           </a>
           <button
             type="button"
             className={`${styles.menuToggle} ${solutionsOpen ? styles.menuToggleOpen : ""}`}
             aria-expanded={solutionsOpen}
             aria-haspopup="true"
-            aria-label="Öppna lösningsmeny"
+            aria-label={HOME_PAGE_TEXT.navigation.openSolutionsAria}
             onClick={() => setSolutionsOpen((previous) => !previous)}
           >
             <span className={`${styles.chevron} ${solutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
@@ -277,28 +260,28 @@ export default function FloatingNav() {
           className={`${styles.link} ${styles.desktopOnly} ${isActive("customers") ? styles.linkActive : ""}`}
           onClick={(event) => handleSectionAnchorClick(event, sectionHref("customers"))}
         >
-          Kundcase
+          {HOME_PAGE_TEXT.navigation.kundcase}
         </a>
         <a
           href={sectionHref("how-it-works")}
           className={`${styles.link} ${styles.desktopOnly} ${isActive("how-it-works") ? styles.linkActive : ""}`}
           onClick={(event) => handleSectionAnchorClick(event, sectionHref("how-it-works"))}
         >
-          Hur det funkar
+          {HOME_PAGE_TEXT.navigation.hurDetFunkar}
         </a>
         <a
           href={sectionHref("security")}
           className={`${styles.link} ${styles.desktopOnly} ${isActive("security") ? styles.linkActive : ""}`}
           onClick={(event) => handleSectionAnchorClick(event, sectionHref("security"))}
         >
-          Säkerhet
+          {HOME_PAGE_TEXT.navigation.sakerhet}
         </a>
         <a
           href={heroHref}
           className={styles.cta}
           onClick={(event) => handleSectionAnchorClick(event, heroHref)}
         >
-          Kontakta oss
+          {HOME_PAGE_TEXT.navigation.kontaktaOss}
         </a>
       </div>
 
@@ -307,7 +290,7 @@ export default function FloatingNav() {
         className={`${styles.mobileToggle} ${mobileMenuOpen ? styles.mobileToggleOpen : ""}`}
         aria-expanded={mobileMenuOpen}
         aria-controls="mobile-nav-panel"
-        aria-label="Öppna meny"
+        aria-label={HOME_PAGE_TEXT.navigation.openMenuAria}
         onClick={() => setMobileMenuOpen((previous) => !previous)}
       >
         <span />
@@ -324,35 +307,35 @@ export default function FloatingNav() {
           onClick={(event) => handleSectionAnchorClick(event, sectionHref("produkt"), closeMobileMenu)}
           className={`${styles.mobileLink} ${isActive("produkt") ? styles.mobileLinkActive : ""}`}
         >
-          Produkt
+          {HOME_PAGE_TEXT.navigation.produkt}
         </a>
         <a
           href={sectionHref("losningar")}
           onClick={(event) => handleSectionAnchorClick(event, sectionHref("losningar"), closeMobileMenu)}
           className={`${styles.mobileLink} ${isActive("losningar") ? styles.mobileLinkActive : ""}`}
         >
-          Lösningar
+          {HOME_PAGE_TEXT.navigation.losningar}
         </a>
         <a
           href={sectionHref("customers")}
           onClick={(event) => handleSectionAnchorClick(event, sectionHref("customers"), closeMobileMenu)}
           className={`${styles.mobileLink} ${isActive("customers") ? styles.mobileLinkActive : ""}`}
         >
-          Kundcase
+          {HOME_PAGE_TEXT.navigation.kundcase}
         </a>
         <a
           href={sectionHref("how-it-works")}
           onClick={(event) => handleSectionAnchorClick(event, sectionHref("how-it-works"), closeMobileMenu)}
           className={`${styles.mobileLink} ${isActive("how-it-works") ? styles.mobileLinkActive : ""}`}
         >
-          Hur det funkar
+          {HOME_PAGE_TEXT.navigation.hurDetFunkar}
         </a>
         <a
           href={sectionHref("security")}
           onClick={(event) => handleSectionAnchorClick(event, sectionHref("security"), closeMobileMenu)}
           className={`${styles.mobileLink} ${isActive("security") ? styles.mobileLinkActive : ""}`}
         >
-          Säkerhet
+          {HOME_PAGE_TEXT.navigation.sakerhet}
         </a>
 
         <button
@@ -364,7 +347,7 @@ export default function FloatingNav() {
           aria-expanded={mobileSolutionsOpen}
           aria-controls="mobile-solutions-list"
         >
-          Lösningar
+          {HOME_PAGE_TEXT.navigation.losningar}
           <span className={`${styles.chevron} ${mobileSolutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
             ▾
           </span>
@@ -399,7 +382,7 @@ export default function FloatingNav() {
           className={styles.mobileCta}
           onClick={(event) => handleSectionAnchorClick(event, heroHref, closeMobileMenu)}
         >
-          Kontakta oss
+          {HOME_PAGE_TEXT.navigation.kontaktaOss}
         </a>
       </div>
     </nav>

@@ -2494,7 +2494,7 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+:global(html[data-motion="reduced"]) {
   .heroScrollCue,
   .heroScrollCueInner {
     animation: none;
@@ -3630,7 +3630,7 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+:global(html[data-motion="reduced"]) {
   .revealSection {
     opacity: 1;
     transform: none;

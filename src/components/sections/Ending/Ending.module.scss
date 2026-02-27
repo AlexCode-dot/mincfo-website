@@ -128,7 +128,7 @@
   transform: translateY(0);
 }
 
-@media (prefers-reduced-motion: reduce) {
+:global(html[data-motion="reduced"]) {
   .ctaPanel,
   .ctaPanel h2,
   .ctaPanel p,

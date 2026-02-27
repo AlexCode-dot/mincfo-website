@@ -1,6 +1,7 @@
 import FloatingNav from "@/components/layout/FloatingNav/FloatingNav";
 import Logo from "@/components/layout/Logo/Logo";
 import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
+import { SOLUTION_SHARED_CONTENT } from "@/content/solutionSharedContent";
 import {
   CircleDollarSign,
   Clock3,
@@ -65,10 +66,11 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
 
             <div className={styles.heroActions}>
               <a href="#kontakt" className={styles.primaryCta}>
-                Boka en demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+                {SOLUTION_SHARED_CONTENT.heroPrimaryCta}{" "}
+                <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
               </a>
               <a href="#utmaning" className={styles.secondaryCta}>
-                Se hur MinCFO löser det
+                {SOLUTION_SHARED_CONTENT.heroSecondaryCta}
               </a>
             </div>
 
@@ -103,7 +105,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             </div>
           </div>
           <div className={styles.heroScrollCueWrap}>
-            <span className={styles.heroScrollCueLabel}>Läs mer</span>
+            <span className={styles.heroScrollCueLabel}>{SOLUTION_SHARED_CONTENT.scrollLabel}</span>
             <a href="#utmaning" className={styles.heroScrollCue} aria-label="Scrolla till nästa sektion">
               <span className={styles.heroScrollCueInner}>
                 <ChevronDown size={18} />
@@ -163,7 +165,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             <header className={styles.sectionHead}>
               <p className={styles.overline}>
                 <Sparkles size={14} />
-                Hur MinCFO löser det
+                {SOLUTION_SHARED_CONTENT.helpsOverline}
               </p>
               <h2>{content.helpsTitle}</h2>
               <p>{content.helpsSubtitle}</p>
@@ -231,7 +233,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
         <RevealSection className={`${styles.section} ${styles.impactSection}`}>
           <div className={styles.impactIntro}>
             <div>
-              <p className={styles.impactTag}>Affärsvärde</p>
+              <p className={styles.impactTag}>{SOLUTION_SHARED_CONTENT.impactTag}</p>
               <h2 className={styles.impactHeadline}>{content.impactTitle}</h2>
             </div>
             <p className={styles.impactLead}>{content.impactSubtitle}</p>
@@ -403,15 +405,16 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           <div className={styles.closingCard}>
             <p className={styles.overline}>
               <Sparkles size={14} />
-              Trust & CTA
+              {SOLUTION_SHARED_CONTENT.closingOverline}
             </p>
             <h2>
               <span className={styles.closingTitleMain}>{content.trustHeadline}</span>
-              <span className={styles.closingTitleAccent}>Bygg med MinCFO.</span>
+              <span className={styles.closingTitleAccent}>{SOLUTION_SHARED_CONTENT.closingAccent}</span>
             </h2>
             <p>{content.trustSub}</p>
             <Link href="/#hero" className={styles.primaryCta}>
-              Boka demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+              {SOLUTION_SHARED_CONTENT.closingCta}{" "}
+              <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
             </Link>
           </div>
         </RevealSection>

@@ -2,6 +2,7 @@
 
 import { Check, ChevronDown, SendHorizontal } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import styles from "./AICopilot.module.scss";
 
 type CopilotStage = "idle" | "typing" | "sending" | "loading" | "answer" | "chart";
@@ -32,38 +33,17 @@ const cubic = (
   3 * (1 - t) * t ** 2 * p2 +
   t ** 3 * p3;
 
-const EXAMPLES: CopilotExample[] = [
-  {
-    question: "Hur ser vår runway ut baserat på Q3?",
-    answer:
-      "Med nuvarande burn-rate har ni cirka 11.4 månader runway. Största påverkan är SaaS-kostnader och rekrytering i november.",
-    chartTitle: "Runway forecast",
-    chartUnit: "Månader",
-    yTicks: ["12", "10", "8", "6"],
-    bars: [
-      { label: "Nu", value: "11.4", height: "92%" },
-      { label: "Okt", value: "10.2", height: "82%" },
-      { label: "Nov", value: "8.9", height: "71%" },
-      { label: "Dec", value: "7.4", height: "59%" },
-      { label: "Jan", value: "6.0", height: "48%" },
-    ],
-  },
-  {
-    question: "Hur stor del av kostnaderna är fasta vs rörliga?",
-    answer:
-      "Kostnadsbasen är ungefär 62% fasta kostnader och 38% rörliga. De rörliga kostnaderna drivs främst av marknadsföring och transaktionsavgifter.",
-    chartTitle: "Kostnadsfördelning",
-    chartUnit: "Andel %",
-    yTicks: ["80", "60", "40", "20"],
-    bars: [
-      { label: "Fasta", value: "62%", height: "78%" },
-      { label: "Rörliga", value: "38%", height: "48%" },
-    ],
-  },
-];
+const EXAMPLES: CopilotExample[] = HOME_PAGE_TEXT.aicopilot.examples.map((example) => ({
+  question: example.question,
+  answer: example.answer,
+  chartTitle: example.chartTitle,
+  chartUnit: example.chartUnit,
+  yTicks: [...example.yTicks],
+  bars: example.bars.map((bar) => ({ label: bar.label, value: bar.value, height: bar.height })),
+}));
 
-const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"] as const;
-const MONTH_LABELS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const;
+const MONTH_LABELS = HOME_PAGE_TEXT.aicopilot.dashboard.monthLabelsSv;
+const MONTH_LABELS_EN = HOME_PAGE_TEXT.aicopilot.planning.monthLabelsEn;
 const TREND_X_STEP = 760 / 11;
 const PLAN_X_STEP = 682 / 11;
 const ANALYSIS_NET_K = [14, 162, 101, 131, 176, 197, 204, 283, 207, 38, 307, 352];
@@ -72,16 +52,16 @@ const ANALYSIS_EBITDA_K = [168, 194, 183, 207, 229, 246, 259, 281, 268, 224, 301
 const ANALYSIS_GROSS_PROFIT_K = [258, 279, 271, 292, 307, 322, 337, 356, 344, 301, 372, 394];
 const TREND_AXIS_MIN_K = 0;
 const TREND_AXIS_MAX_K = 500;
-const TREND_AXIS_TICKS = ["500K", "375K", "250K", "125K", "0"];
+const TREND_AXIS_TICKS = HOME_PAGE_TEXT.aicopilot.dashboard.trendAxisTicks;
 const PLAN_FORECAST_BASE_K = [280, 298, 312, 326, 340, 352, 364, 379, 394, 409, 425, 442];
 const PLAN_ACTUAL_VARIANCE = [0.052, 0.034, -0.012, -0.026, 0.018, 0.029] as const;
 const PLAN_ACTUAL_CUTOFF_INDEX = 5; // Jun
 
 const ANALYSIS_METRICS: Array<{ id: AnalysisMetric; label: string; seriesK: number[] }> = [
-  { id: "netIncome", label: "Net Income", seriesK: ANALYSIS_NET_K },
-  { id: "ebit", label: "EBIT", seriesK: ANALYSIS_EBIT_K },
-  { id: "ebitda", label: "EBITDA", seriesK: ANALYSIS_EBITDA_K },
-  { id: "grossProfit", label: "Gross Profit", seriesK: ANALYSIS_GROSS_PROFIT_K },
+  { id: "netIncome", label: HOME_PAGE_TEXT.aicopilot.dashboard.metricOptions[0], seriesK: ANALYSIS_NET_K },
+  { id: "ebit", label: HOME_PAGE_TEXT.aicopilot.dashboard.metricOptions[1], seriesK: ANALYSIS_EBIT_K },
+  { id: "ebitda", label: HOME_PAGE_TEXT.aicopilot.dashboard.metricOptions[2], seriesK: ANALYSIS_EBITDA_K },
+  { id: "grossProfit", label: HOME_PAGE_TEXT.aicopilot.dashboard.metricOptions[3], seriesK: ANALYSIS_GROSS_PROFIT_K },
 ];
 
 const buildSmoothPath = (points: Array<[number, number]>) => {
@@ -115,7 +95,7 @@ function MiniMincfoBrand() {
           <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
         </g>
       </svg>
-      <span className={styles.visualWordmark}>MinCFO</span>
+      <span className={styles.visualWordmark}>{HOME_PAGE_TEXT.footer.brandWord}</span>
     </span>
   );
 }
@@ -299,11 +279,7 @@ export default function AICopilot() {
   }, []);
 
   useEffect(() => {
-    if (!visible) {
-      setStage("idle");
-      setTypedLength(0);
-      return;
-    }
+    if (!visible) return;
 
     let cancelled = false;
     const timers: Array<ReturnType<typeof setTimeout>> = [];
@@ -492,7 +468,9 @@ export default function AICopilot() {
   const planBaseTotalValue = planForecastBaseValues.reduce((sum, value) => sum + value, 0);
   const planTotalDelta = ((planTotalValue - planBaseTotalValue) / Math.max(planBaseTotalValue, 1)) * 100;
   const planActualCutoffX = PLAN_ACTUAL_CUTOFF_INDEX * PLAN_X_STEP;
-  const selectedPlanMode = planMonthIndex <= PLAN_ACTUAL_CUTOFF_INDEX ? "Actual" : "Forecast";
+  const selectedPlanMode = planMonthIndex <= PLAN_ACTUAL_CUTOFF_INDEX
+    ? HOME_PAGE_TEXT.aicopilot.planning.actualPrefix
+    : HOME_PAGE_TEXT.aicopilot.planning.forecastPrefix;
   const trendLinePath = buildSmoothPath(trendSeries);
   const trendAreaPath = `${trendLinePath} L760 290 L0 290 Z`;
   const latestMonthIndex = 11;
@@ -508,7 +486,7 @@ export default function AICopilot() {
     ((analysisSeries[previousMonthIndex] - analysisSeries[priorMonthIndex]) /
       Math.max(Math.abs(analysisSeries[priorMonthIndex]), 1)) *
     100;
-  const analysisCompareLabel = "Compared to previous period";
+  const analysisCompareLabel = HOME_PAGE_TEXT.aicopilot.dashboard.compareLabel;
   const formatSek = (value: number) => new Intl.NumberFormat("sv-SE").format(Math.round(value));
   const formatPercent = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
   useEffect(() => {
@@ -597,39 +575,29 @@ export default function AICopilot() {
 
       <div className={styles.container}>
         <div className={`${styles.left} ${styles.aiLeft}`}>
-          <span className={styles.pill}>Vad plattformen gör</span>
-          <h2 className={styles.title}>AI-copilot som analyserar och agerar</h2>
-          <p className={styles.text}>
-            Ställ frågor om resultat, kostnader och runway. Få svar, grafer och
-            rapporter direkt. AI kan även förbereda åtgärder i era
-            ekonomiflöden med full spårbarhet.
-          </p>
+          <span className={styles.pill}>{HOME_PAGE_TEXT.aicopilot.leftPill}</span>
+          <h2 className={styles.title}>{HOME_PAGE_TEXT.aicopilot.leftTitle}</h2>
+          <p className={styles.text}>{HOME_PAGE_TEXT.aicopilot.leftIntro}</p>
 
           <ul className={styles.list}>
-            <li>
-              <Check aria-hidden="true" size={14} />
-              Chatta med din data - direkta svar
-            </li>
-            <li>
-              <Check aria-hidden="true" size={14} />
-              Proaktiva insights och avvikelser
-            </li>
-            <li>
-              <Check aria-hidden="true" size={14} />
-              AI-stödda åtgärder med audit log
-            </li>
+            {HOME_PAGE_TEXT.aicopilot.leftBullets.map((item) => (
+              <li key={item}>
+                <Check aria-hidden="true" size={14} />
+                {item}
+              </li>
+            ))}
           </ul>
         </div>
 
         <div className={`${styles.right} ${styles.aiRight}`}>
           <div className={styles.glow} />
 
-          <article className={styles.panel} aria-label="AI Copilot">
+          <article className={styles.panel} aria-label={HOME_PAGE_TEXT.aicopilot.panelTitle}>
             <MiniMincfoBrand />
 
             <header className={styles.header}>
               <span className={styles.dot} />
-              <p>AI Copilot</p>
+              <p>{HOME_PAGE_TEXT.aicopilot.panelTitle}</p>
             </header>
 
             <div className={styles.body}>
@@ -644,7 +612,7 @@ export default function AICopilot() {
                   <div
                     className={styles.loadingAnswer}
                     role="status"
-                    aria-label="AI analyserar data"
+                    aria-label={HOME_PAGE_TEXT.aicopilot.loadingAria}
                   >
                     <span />
                     <span />
@@ -702,14 +670,14 @@ export default function AICopilot() {
                     <span className={styles.caret} aria-hidden="true" />
                   </>
                 )}
-                {isSending && "Skickar fråga..."}
-                {isLoading && "AI analyserar data..."}
+                {isSending && HOME_PAGE_TEXT.aicopilot.statusSending}
+                {isLoading && HOME_PAGE_TEXT.aicopilot.statusAnalyzing}
                 {(stage === "idle" || stage === "answer" || stage === "chart") &&
-                  "Fråga AI om ekonomi, forecast eller nästa åtgärd"}
+                  HOME_PAGE_TEXT.aicopilot.inputPlaceholder}
               </span>
               <button
                 type="button"
-                aria-label="Skicka fråga"
+                aria-label={HOME_PAGE_TEXT.aicopilot.sendAria}
                 className={`${isSending ? styles.sending : ""} ${isLoading ? styles.loading : ""}`}
               >
                 <SendHorizontal aria-hidden="true" size={14} />
@@ -744,17 +712,17 @@ export default function AICopilot() {
           className={`${styles.container} ${styles.dashboardContainer} ${dashboardVisible ? styles.dashboardVisible : ""}`}
         >
           <div className={`${styles.right} ${styles.dashboardRight}`}>
-            <article className={styles.dashboardPanel} aria-label="Dashboard Preview">
+            <article className={styles.dashboardPanel} aria-label={HOME_PAGE_TEXT.aicopilot.dashboard.previewAria}>
               <MiniMincfoBrand />
 
               <div className={styles.statGrid}>
                 <div className={styles.statCard}>
                   <div className={styles.statLabelRow}>
-                    <span>{activeMetric.label} (Current)</span>
+                    <span>{activeMetric.label} ({HOME_PAGE_TEXT.aicopilot.dashboard.currentLabel})</span>
                   </div>
                   <div className={styles.statAmount}>
                     <strong>{formatSek(selectedMetricAmount)}</strong>
-                    <span>SEK</span>
+                    <span>{HOME_PAGE_TEXT.aicopilot.dashboard.currencyLabel}</span>
                   </div>
                   <div className={`${styles.statDelta} ${selectedMetricDelta < 0 ? styles.down : ""}`}>
                     {formatPercent(selectedMetricDelta)}
@@ -764,11 +732,11 @@ export default function AICopilot() {
 
                 <div className={styles.statCard}>
                   <div className={styles.statLabelRow}>
-                    <span>{activeMetric.label} (Previous)</span>
+                    <span>{activeMetric.label} ({HOME_PAGE_TEXT.aicopilot.dashboard.previousLabel})</span>
                   </div>
                   <div className={styles.statAmount}>
                     <strong>{formatSek(selectedMetricPreviousAmount)}</strong>
-                    <span>SEK</span>
+                    <span>{HOME_PAGE_TEXT.aicopilot.dashboard.currencyLabel}</span>
                   </div>
                   <div className={`${styles.statDelta} ${selectedMetricPreviousDelta < 0 ? styles.down : ""}`}>
                     {formatPercent(selectedMetricPreviousDelta)}
@@ -779,7 +747,7 @@ export default function AICopilot() {
 
               <div className={`${styles.trendPanel} ${analysisUpdating ? styles.panelUpdating : ""}`}>
                 <header className={styles.trendHeader}>
-                  <p>Income Statement · 2025</p>
+                  <p>{HOME_PAGE_TEXT.aicopilot.dashboard.resultTitle}</p>
                   <div className={styles.trendHeaderRight} ref={trendMetricMenuRef}>
                     <button
                       type="button"
@@ -796,7 +764,7 @@ export default function AICopilot() {
                       />
                     </button>
                     {analysisMetricOpen && (
-                      <div className={styles.metricMenu} role="menu" aria-label="Välj metrisk">
+                      <div className={styles.metricMenu} role="menu" aria-label={HOME_PAGE_TEXT.aicopilot.dashboard.metricMenuAria}>
                         {ANALYSIS_METRICS.map((metric) => (
                           <button
                             key={metric.id}
@@ -868,27 +836,17 @@ export default function AICopilot() {
           </div>
 
           <div className={`${styles.left} ${styles.dashboardLeft}`}>
-            <span className={styles.pill}>Dashboard</span>
-            <h2 className={styles.title}>Analys &amp; översikt</h2>
-            <p className={styles.text}>
-              Tillgång till dashboard med de senaste finansiella nyckeltalen för
-              att ta informerade beslut. Få tydliga insikter för att identifiera
-              flaskhalsar och säkerställa bättre likviditet.
-            </p>
+            <span className={styles.pill}>{HOME_PAGE_TEXT.aicopilot.dashboard.pill}</span>
+            <h2 className={styles.title}>{HOME_PAGE_TEXT.aicopilot.dashboard.title}</h2>
+            <p className={styles.text}>{HOME_PAGE_TEXT.aicopilot.dashboard.intro}</p>
 
             <ul className={styles.list}>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Realtidsrapportering av nyckeltal
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Kassaflödesoptimering i realtid
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Identifiera möjligheter för optimerad ekonomistyrning
-              </li>
+              {HOME_PAGE_TEXT.aicopilot.dashboard.kpiBullets.map((item) => (
+                <li key={item}>
+                  <Check aria-hidden="true" size={14} />
+                  {item}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -919,74 +877,52 @@ export default function AICopilot() {
           className={`${styles.container} ${styles.planContainer} ${planVisible ? styles.planVisible : ""}`}
         >
           <div className={`${styles.left} ${styles.planLeft}`}>
-            <span className={styles.pill}>Planering &amp; Jämförelse</span>
-            <h2 className={styles.title}>Budgetering, prognoser och benchmarking</h2>
-            <p className={styles.text}>
-              Datadrivna prognoser och strukturerade dimensioner hjälper dig
-              att planera framåt, minska ekonomiska risker och prioritera rätt
-              initiativ både på kort och lång sikt.
-            </p>
+            <span className={styles.pill}>{HOME_PAGE_TEXT.aicopilot.planning.pill}</span>
+            <h2 className={styles.title}>{HOME_PAGE_TEXT.aicopilot.planning.title}</h2>
+            <p className={styles.text}>{HOME_PAGE_TEXT.aicopilot.planning.intro}</p>
 
             <ul className={styles.list}>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Automatiserade budgetprocesser
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Strukturera intäkter och kostnader med egna dimensioner
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Scenariohantering för framtiden
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Datadriven riskminimering
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Jämför mellan dimensioner och perioder
-              </li>
-              <li>
-                <Check aria-hidden="true" size={14} />
-                Identifiera avvikelser mellan segment
-              </li>
+              {HOME_PAGE_TEXT.aicopilot.planning.bullets.map((item) => (
+                <li key={item}>
+                  <Check aria-hidden="true" size={14} />
+                  {item}
+                </li>
+              ))}
             </ul>
           </div>
 
           <div className={`${styles.right} ${styles.planRight}`}>
-            <article className={styles.planPanel} aria-label="Planering och benchmarking">
+            <article className={styles.planPanel} aria-label={HOME_PAGE_TEXT.aicopilot.planning.panelAria}>
               <div className={styles.planPanelBody}>
               <div className={styles.planVisualStack}>
                 <div className={styles.planForecastShell}>
                   <MiniMincfoBrand />
 
                   <header className={styles.planPanelHeader}>
-                    <p>Forecast</p>
+                    <p>{HOME_PAGE_TEXT.aicopilot.planning.forecastTitle}</p>
                     <span className={styles.liveScenario}>
                       <span className={styles.liveDot} aria-hidden="true" />
-                      Live forecast
+                      {HOME_PAGE_TEXT.aicopilot.planning.liveLabel}
                     </span>
                   </header>
                     <div className={styles.planRecon}>
                       <div className={styles.planReconHead}>
-                        <p>Reconciliation</p>
-                        <span>2025 · Actuals through Jun</span>
+                        <p>{HOME_PAGE_TEXT.aicopilot.planning.reconciliationTitle}</p>
+                        <span>{HOME_PAGE_TEXT.aicopilot.planning.reconciliationSubtext}</span>
                       </div>
                       <div className={styles.planForecastStats}>
                         <div className={styles.planForecastStat}>
-                          <p>{selectedPlanMode} month ({MONTH_LABELS_EN[planMonthIndex]})</p>
+                          <p>{selectedPlanMode} ({MONTH_LABELS_EN[planMonthIndex]})</p>
                           <strong>{formatSek(animatedPlanValue * 1000)} kr</strong>
                         </div>
                         <div className={styles.planForecastStat}>
-                          <p>Vs previous month</p>
+                          <p>{HOME_PAGE_TEXT.aicopilot.planning.vsPrevious}</p>
                           <strong className={animatedSelectedPlanDelta < 0 ? styles.planStatDown : styles.planStatUp}>
                             {formatPercent(animatedSelectedPlanDelta)}
                           </strong>
                         </div>
                         <div className={styles.planForecastStat}>
-                          <p>Annual variance vs baseline</p>
+                          <p>{HOME_PAGE_TEXT.aicopilot.planning.annualVariance}</p>
                           <strong className={animatedPlanTotalDelta < 0 ? styles.planStatDown : styles.planStatUp}>
                             {formatPercent(animatedPlanTotalDelta)}
                           </strong>
@@ -1000,7 +936,7 @@ export default function AICopilot() {
                             className={`${styles.planMonth} ${planMonthIndex === index ? styles.planMonthSelected : ""}`}
                             onClick={() => setPlanMonthIndex(index)}
                             aria-pressed={planMonthIndex === index}
-                            aria-label={`Visa budget för ${month}`}
+                            aria-label={`${HOME_PAGE_TEXT.aicopilot.planning.monthAriaPrefix} ${month}`}
                           >
                             {month}
                           </button>
@@ -1013,7 +949,7 @@ export default function AICopilot() {
                           <line className={styles.planActualSplit} x1={planActualCutoffX} y1="16" x2={planActualCutoffX} y2="184" />
                         </svg>
                         <p className={styles.planForecastLegend} aria-hidden="true">
-                          Actuals: Jan-Jun · Forecast: Jul-Dec
+                          {HOME_PAGE_TEXT.aicopilot.planning.legend}
                         </p>
                         <div className={styles.planMonthAxis} aria-hidden="true">
                           {MONTH_LABELS_EN.map((month) => (

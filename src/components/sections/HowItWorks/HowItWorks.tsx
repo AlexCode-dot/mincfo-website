@@ -17,29 +17,22 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./HowItWorks.module.scss";
 
 type OfferKey = "platform" | "faas";
 
-type OfferStep = {
-  body: string;
-  highlights?: string[];
-  icon: LucideIcon;
-  title: string;
-};
-
 type OfferModel = {
-  ctaHref: string;
-  ctaLabel: string;
   isPrimary: boolean;
   key: OfferKey;
-  secondaryHref?: string;
-  secondaryLabel?: string;
-  subtitle: string;
   tabLabel: string;
-  title: string;
-  trustPoints: [string, string];
-  steps: OfferStep[];
+  steps: Array<{
+    body: string;
+    highlights?: string[];
+    icon: LucideIcon;
+    title: string;
+  }>;
 };
 
 const OFFER_ORDER: OfferKey[] = ["platform", "faas"];
@@ -61,101 +54,31 @@ const cubic = (p0: number, p1: number, p2: number, p3: number, t: number) => {
 const lerp = (start: number, end: number, t: number) =>
   start + (end - start) * t;
 
+const PLATFORM_ICONS: LucideIcon[] = [UserRound, Plug, BrainCircuit, Sparkles];
+const FAAS_ICONS: LucideIcon[] = [FolderPlus, Plug, Workflow, Sparkles];
 const OFFERS: Record<OfferKey, OfferModel> = {
   platform: {
     key: "platform",
-    tabLabel: "MinCFO Plattform",
-    title: "MinCFO Plattform",
-    subtitle: "Samma dashboard – ni gör jobbet själva eller med befintlig byrå",
     isPrimary: true,
-    ctaLabel: "Boka en demo",
-    ctaHref: "#hero",
-    secondaryLabel: "Se plattformen i action",
-    secondaryHref: "#produkt",
-    trustPoints: ["Inga startavgifter", "Kom igång på 2 min"],
-    steps: [
-      {
-        title: "Skapa konto",
-        body: "Kom igång direkt i plattformen.",
-        highlights: [
-          "Skapa konto på några minuter",
-          "Säker onboarding med verifiering",
-          "Direkt tillgång till plattformen",
-        ],
-        icon: UserRound,
-      },
-      {
-        title: "Koppla Fortnox",
-        body: "Ni kopplar Fortnox på några klick. MinCFO sätter upp dashboards och rapportstruktur.",
-        highlights: [
-          "Koppla Fortnox på några klick",
-          "Dashboards och rapportstruktur sätts upp",
-          "Data synkas löpande till MinCFO efter aktivering",
-        ],
-        icon: Plug,
-      },
-      {
-        title: "Realtidsinsikter & AI",
-        body: "AI som besvarar frågor om bolagets siffror, realtidsrapportering enligt anpassad struktur och automatiskt uppdaterad kassaflödesprognos.",
-        highlights: [
-          "Realtidsrapportering av nyckeltal",
-          "Kassaflödesoptimering i realtid",
-          "Identifiera möjligheter för optimerad ekonomistyrning",
-        ],
-        icon: BrainCircuit,
-      },
-    ],
+    tabLabel: HOME_PAGE_TEXT.howItWorks.offers.platform.tabLabel,
+    steps: HOME_PAGE_TEXT.howItWorks.offers.platform.steps.map((step, index) => ({
+      ...step,
+      icon: PLATFORM_ICONS[index] ?? Sparkles,
+    })),
   },
   faas: {
     key: "faas",
-    tabLabel: "Finance as a Service",
-    title: "Finance as a Service",
-    subtitle: "MinCFO-plattformen + att vi driver hela ekonomifunktionen",
     isPrimary: false,
-    ctaLabel: "Boka konsultation",
-    ctaHref: "#hero",
-    trustPoints: ["Dedikerad controller/CFO", "End-to-end leverans"],
-    steps: [
-      {
-        title: "Onboarding & scope",
-        body: "Vi sätter mål, struktur och omfattning: redovisning, lön, moms, bokslut, CFO-stöd m.m.",
-        highlights: [
-          "Gemensam målbild och prioriteringar",
-          "Tydlig scope för ansvar och leverans",
-          "Plan för redovisning, lön, moms och bokslut",
-        ],
-        icon: FolderPlus,
-      },
-      {
-        title: "Koppla system & behörigheter",
-        body: "Ni ger oss åtkomst till bank, Skatteverket och Fortnox/övriga system. MinCFO kopplas in som er gemensamma dashboard.",
-        highlights: [
-          "Säker åtkomst till bank och Skatteverket",
-          "Fortnox och övriga system kopplas in",
-          "Behörigheter och roller sätts upp korrekt",
-        ],
-        icon: Plug,
-      },
-      {
-        title: "Vi sköter ekonomin – ni följer i realtid",
-        body: "Vi hanterar hela ekonomiflödet end-to-end. Ni ser rapporter, kassaflöde, nyckeltal och avvikelser i MinCFO.",
-        highlights: [
-          "Rapporter och KPI:er uppdateras löpande i samma dashboard",
-          "Kassaflöde, likviditet och utfall följs i realtid",
-          "Avvikelser flaggas direkt med tydliga nästa steg",
-        ],
-        icon: Workflow,
-      },
-      {
-        title: "AI + proaktiv rådgivning",
-        body: "AI:n svarar på frågor om er data, flaggar risker och föreslår åtgärder. Ni har dessutom personlig controller/CFO on demand.",
-        icon: Sparkles,
-      },
-    ],
+    tabLabel: HOME_PAGE_TEXT.howItWorks.offers.faas.tabLabel,
+    steps: HOME_PAGE_TEXT.howItWorks.offers.faas.steps.map((step, index) => ({
+      ...step,
+      icon: FAAS_ICONS[index] ?? Sparkles,
+    })),
   },
 };
 
 export default function HowItWorks() {
+  const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const stepRefs = useRef<Array<HTMLElement | null>>([]);
   const [visible, setVisible] = useState(false);
@@ -212,8 +135,7 @@ export default function HowItWorks() {
       return () => window.clearTimeout(resetId);
     }
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) {
+    if (isReducedMotion) {
       const fullId = window.setTimeout(() => setRevealedSteps(currentOffer.steps.length), 0);
       return () => window.clearTimeout(fullId);
     }
@@ -250,13 +172,12 @@ export default function HowItWorks() {
       window.clearTimeout(resetId);
       observer.disconnect();
     };
-  }, [visible, activeOffer, currentOffer.steps.length]);
+  }, [visible, activeOffer, currentOffer.steps.length, isReducedMotion]);
 
   const handleSelectOffer = (nextOffer: OfferKey) => {
     if (nextOffer === activeOffer) return;
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) {
+    if (isReducedMotion) {
       setActiveOffer(nextOffer);
       return;
     }
@@ -349,14 +270,14 @@ export default function HowItWorks() {
 
       <div className={styles.container}>
         <header className={styles.header}>
-          <h2>Så funkar det</h2>
-          <p>Två sätt att arbeta med MinCFO. Samma plattform – olika ansvar.</p>
+          <h2>{HOME_PAGE_TEXT.howItWorks.sectionTitle}</h2>
+          <p>{HOME_PAGE_TEXT.howItWorks.sectionIntro}</p>
         </header>
 
         <div
           className={styles.tabList}
           role="tablist"
-          aria-label="Välj erbjudande"
+          aria-label={HOME_PAGE_TEXT.howItWorks.ui.tabListAria}
           onKeyDown={handleTabsKeyDown}
         >
           {OFFER_ORDER.map((offerKey) => {
@@ -404,7 +325,7 @@ export default function HowItWorks() {
               const isFaasOnboardingStep = currentOffer.key === "faas" && index === 0;
               const isFaasSystemsStep = currentOffer.key === "faas" && index === 1;
               const isFaasRealtimeStep = currentOffer.key === "faas" && index === 2;
-              const faasRealtimeMonths = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun"];
+              const faasRealtimeMonths = HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.months;
               const faasRealtimeCashflowK = [180, 205, 232, 261, 296, 320];
               const faasRealtimeRunwayMonths = [12.9, 13.2, 13.4, 13.7, 13.9, 14.2];
               const faasRealtimeVariancePct = [5.2, 4.7, 4.1, 3.6, 3.3, 3.1];
@@ -539,35 +460,37 @@ export default function HowItWorks() {
                       {isCreateAccountStep ? (
                         <div className={styles.accountMock}>
                           <div className={styles.accountHeader}>
-                            <span className={styles.accountBrand}>MinCFO</span>
-                            <span className={styles.accountSecure}>Säkert konto</span>
+                            <span className={styles.accountBrand}>{HOME_PAGE_TEXT.footer.brandWord}</span>
+                            <span className={styles.accountSecure}>{HOME_PAGE_TEXT.howItWorks.ui.account.secureLabel}</span>
                           </div>
 
                           <div className={styles.accountTabs}>
-                            <span className={`${styles.accountTab} ${styles.accountTabActive}`}>Skapa konto</span>
-                            <span className={styles.accountTab}>Logga in</span>
+                            <span className={`${styles.accountTab} ${styles.accountTabActive}`}>
+                              {HOME_PAGE_TEXT.howItWorks.ui.account.tabCreate}
+                            </span>
+                            <span className={styles.accountTab}>{HOME_PAGE_TEXT.howItWorks.ui.account.tabLogin}</span>
                           </div>
 
                           <div className={styles.accountInputGroup}>
-                            <span className={styles.accountInputLabel}>Arbetsmail</span>
+                            <span className={styles.accountInputLabel}>{HOME_PAGE_TEXT.howItWorks.ui.account.emailLabel}</span>
                             <span className={styles.accountField} />
                           </div>
 
                           <div className={styles.accountInputGroup}>
-                            <span className={styles.accountInputLabel}>Lösenord</span>
+                            <span className={styles.accountInputLabel}>{HOME_PAGE_TEXT.howItWorks.ui.account.passwordLabel}</span>
                             <span className={styles.accountFieldShort} />
                           </div>
 
                           <div className={styles.accountMetaRow}>
                             <span className={styles.accountCheck} />
-                            <span className={styles.accountMetaText}>Jag godkänner villkoren</span>
+                            <span className={styles.accountMetaText}>{HOME_PAGE_TEXT.howItWorks.ui.account.termsLabel}</span>
                           </div>
 
-                          <span className={styles.accountButton}>Skapa konto</span>
+                          <span className={styles.accountButton}>{HOME_PAGE_TEXT.howItWorks.ui.account.buttonLabel}</span>
 
                           <div className={styles.accountFooter}>
-                            <span className={styles.accountFooterText}>Redan konto?</span>
-                            <span className={styles.accountFooterLink}>Logga in</span>
+                            <span className={styles.accountFooterText}>{HOME_PAGE_TEXT.howItWorks.ui.account.existingAccountLabel}</span>
+                            <span className={styles.accountFooterLink}>{HOME_PAGE_TEXT.howItWorks.ui.account.loginLinkLabel}</span>
                           </div>
                         </div>
                       ) : isConnectFortnoxStep ? (
@@ -577,13 +500,13 @@ export default function HowItWorks() {
                               <Image
                                 className={styles.connectFortnoxLogo}
                                 src="/icons/fortnox-icon.png"
-                                alt="Fortnox"
+                                alt={HOME_PAGE_TEXT.howItWorks.ui.faasSystems.fortnoxAlt}
                                 width={88}
                                 height={88}
                               />
-                              <span className={styles.connectBrandWord}>Fortnox</span>
+                              <span className={styles.connectBrandWord}>{HOME_PAGE_TEXT.howItWorks.ui.connect.fortnoxWord}</span>
                             </div>
-                            <span className={styles.connectNodeMeta}>Konto kopplat</span>
+                            <span className={styles.connectNodeMeta}>{HOME_PAGE_TEXT.howItWorks.ui.connect.accountConnected}</span>
                           </div>
                           <div className={styles.connectBridge}>
                             <span className={styles.connectFlow} />
@@ -604,24 +527,24 @@ export default function HowItWorks() {
                                   <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
                                 </g>
                               </svg>
-                              <span className={styles.connectBrandWord}>MinCFO</span>
+                              <span className={styles.connectBrandWord}>{HOME_PAGE_TEXT.howItWorks.ui.connect.mincfoWord}</span>
                             </div>
-                            <span className={styles.connectNodeMeta}>Tar emot data</span>
+                            <span className={styles.connectNodeMeta}>{HOME_PAGE_TEXT.howItWorks.ui.connect.receivingData}</span>
                           </div>
                           <div className={styles.connectStatusWrap}>
-                            <div className={styles.connectStatus}>Integration aktiv</div>
-                            <span className={styles.connectSyncTime}>Senast synk: just nu</span>
+                            <div className={styles.connectStatus}>{HOME_PAGE_TEXT.howItWorks.ui.connect.integrationActive}</div>
+                            <span className={styles.connectSyncTime}>{HOME_PAGE_TEXT.howItWorks.ui.connect.lastSyncLabel}</span>
                           </div>
                         </div>
                       ) : isInsightsStep ? (
                         <div className={styles.insightsMock}>
                           <div className={styles.insightsHeader}>
                             <span className={styles.insightsDot} />
-                            <span className={styles.insightsTitle}>AI Copilot</span>
+                            <span className={styles.insightsTitle}>{HOME_PAGE_TEXT.howItWorks.ui.insights.title}</span>
                           </div>
 
                           <div className={styles.insightsQuestion}>
-                            Hur påverkas runway om vi ökar hiring i Q3?
+                            {HOME_PAGE_TEXT.howItWorks.ui.insights.question}
                           </div>
 
                           <div className={styles.insightsAnswer}>
@@ -629,43 +552,47 @@ export default function HowItWorks() {
                               <span />
                               <span />
                               <span />
-                              <em>AI analyserar data...</em>
+                              <em>{HOME_PAGE_TEXT.howItWorks.ui.insights.thinkingLabel}</em>
                             </div>
 
                             <div className={styles.insightsResult}>
                               <div className={styles.insightsAnswerHead}>
-                                <span>Genererad prognos</span>
-                                <span>Runway (mån)</span>
+                                <span>{HOME_PAGE_TEXT.howItWorks.ui.insights.generatedForecastLabel}</span>
+                                <span>{HOME_PAGE_TEXT.howItWorks.ui.insights.runwayMonthsLabel}</span>
                               </div>
 
                               <div className={styles.insightsBars}>
                                 <div className={`${styles.insightsBar} ${styles.insightsBarCurrent}`}>
                                   <span className={styles.insightsBarFill} />
-                                  <em>Nu</em>
+                                  <em>{HOME_PAGE_TEXT.howItWorks.ui.insights.barCurrent}</em>
                                 </div>
                                 <div className={`${styles.insightsBar} ${styles.insightsBarPlan}`}>
                                   <span className={styles.insightsBarFill} />
-                                  <em>Plan</em>
+                                  <em>{HOME_PAGE_TEXT.howItWorks.ui.insights.barPlan}</em>
                                 </div>
                                 <div className={`${styles.insightsBar} ${styles.insightsBarScenario}`}>
                                   <span className={styles.insightsBarFill} />
-                                  <em>Scenario</em>
+                                  <em>{HOME_PAGE_TEXT.howItWorks.ui.insights.barScenario}</em>
                                 </div>
                               </div>
 
-                              <div className={styles.insightsSummary}>AI svar: runway blir cirka 12.8 månader.</div>
+                              <div className={styles.insightsSummary}>{HOME_PAGE_TEXT.howItWorks.ui.insights.summary}</div>
                             </div>
                           </div>
 
                           <div className={styles.insightsInput}>
                             <span className={styles.insightsInputText}>
-                              <span className={styles.insightsInputHint}>Fråga AI om forecast eller avvikelser</span>
+                              <span className={styles.insightsInputHint}>{HOME_PAGE_TEXT.howItWorks.ui.insights.inputHint}</span>
                               <span className={styles.insightsInputTyped}>
-                                Hur påverkas runway om vi ökar hiring i Q3?
+                                {HOME_PAGE_TEXT.howItWorks.ui.insights.inputTyped}
                               </span>
                               <span className={styles.insightsInputCaret} aria-hidden="true" />
                             </span>
-                            <button type="button" className={styles.insightsInputSend} aria-label="Skicka fråga">
+                            <button
+                              type="button"
+                              className={styles.insightsInputSend}
+                              aria-label={HOME_PAGE_TEXT.howItWorks.ui.insights.sendAriaLabel}
+                            >
                               <ArrowRight aria-hidden="true" size={12} />
                             </button>
                           </div>
@@ -683,23 +610,25 @@ export default function HowItWorks() {
                                     <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
                                   </g>
                                 </svg>
-                                <span className={styles.faasRealtimeLogoWord}>MinCFO</span>
+                                <span className={styles.faasRealtimeLogoWord}>{HOME_PAGE_TEXT.footer.brandWord}</span>
                               </span>
                             </span>
-                            <span className={styles.faasRealtimeStatus}>Uppdaterad nu</span>
+                            <span className={styles.faasRealtimeStatus}>{HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.statusUpdated}</span>
                           </div>
 
                           <div className={styles.faasRealtimeStats}>
                             <div className={styles.faasRealtimeStat}>
-                              <span className={styles.faasRealtimeStatLabel}>Kassaflöde</span>
+                              <span className={styles.faasRealtimeStatLabel}>{HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.cashflowLabel}</span>
                               <strong>+{faasRealtimeCashflowK[faasRealtimeLatestIndex]} tkr</strong>
                             </div>
                             <div className={styles.faasRealtimeStat}>
-                              <span className={styles.faasRealtimeStatLabel}>Runway</span>
-                              <strong>{faasRealtimeRunwayMonths[faasRealtimeLatestIndex].toFixed(1)} mån</strong>
+                              <span className={styles.faasRealtimeStatLabel}>{HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.runwayLabel}</span>
+                              <strong>
+                                {faasRealtimeRunwayMonths[faasRealtimeLatestIndex].toFixed(1)} {HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.monthSuffix}
+                              </strong>
                             </div>
                             <div className={styles.faasRealtimeStat}>
-                              <span className={styles.faasRealtimeStatLabel}>Avvikelse</span>
+                              <span className={styles.faasRealtimeStatLabel}>{HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.deviationLabel}</span>
                               <strong>+{faasRealtimeVariancePct[faasRealtimeLatestIndex].toFixed(1)}%</strong>
                             </div>
                           </div>
@@ -734,13 +663,15 @@ export default function HowItWorks() {
                             <div className={styles.faasRealtimeAlert}>
                               <span className={styles.faasRealtimeAlertDot} />
                               <span>
-                                Personalkostnad ligger {faasRealtimeVariancePct[faasRealtimeLatestIndex].toFixed(1)}%
-                                {" "}över budget
+                                {HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.personnelAlertTemplate.replace(
+                                  "{value}",
+                                  faasRealtimeVariancePct[faasRealtimeLatestIndex].toFixed(1),
+                                )}
                               </span>
                             </div>
                             <div className={styles.faasRealtimeAlert}>
                               <span className={styles.faasRealtimeAlertDot} />
-                              <span>Kundinbetalningar ligger 4 dagar efter plan</span>
+                              <span>{HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.latePaymentsAlert}</span>
                             </div>
                           </div>
                         </div>
@@ -784,7 +715,7 @@ export default function HowItWorks() {
 
                           <div className={styles.faasOnboardingBadge}>
                             <span className={styles.faasBadgeDot} />
-                            <span>Onboarding</span>
+                            <span>{HOME_PAGE_TEXT.howItWorks.ui.faasOnboarding.badgeLabel}</span>
                           </div>
                         </div>
                       ) : isFaasSystemsStep ? (
@@ -827,46 +758,56 @@ export default function HowItWorks() {
                                 </g>
                               </svg>
                             </span>
-                            <span>MinCFO</span>
+                            <span>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.hubLabel}</span>
                           </div>
 
                           <div className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeTopLeft}`}>
                             <span className={styles.faasSystemsNodeInner}>
                               <Building2 size={20} />
                             </span>
-                            <em>Bank</em>
+                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.bankLabel}</em>
                           </div>
                           <div className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeTopCenter}`}>
                             <span className={styles.faasSystemsNodeInner}>
-                              <Image src="/icons/skatteverket-logo.svg" alt="Skatteverket" width={26} height={26} />
+                              <Image
+                                src="/icons/skatteverket-logo.svg"
+                                alt={HOME_PAGE_TEXT.howItWorks.ui.faasSystems.skatteverketAlt}
+                                width={26}
+                                height={26}
+                              />
                             </span>
-                            <em>Skatteverket</em>
+                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.skatteverketLabel}</em>
                           </div>
                           <div
                             className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeTopRight} ${styles.faasSystemsNodeFortnox}`}
                           >
                             <span className={styles.faasSystemsNodeInner}>
-                              <Image src="/icons/fortnox-icon.png" alt="Fortnox" width={26} height={26} />
+                              <Image
+                                src="/icons/fortnox-icon.png"
+                                alt={HOME_PAGE_TEXT.howItWorks.ui.faasSystems.fortnoxAlt}
+                                width={26}
+                                height={26}
+                              />
                             </span>
-                            <em>Fortnox</em>
+                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.fortnoxLabel}</em>
                           </div>
                           <div className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeMidLeft}`}>
                             <span className={styles.faasSystemsNodeInner}>
                               <ReceiptText size={20} />
                             </span>
-                            <em>Lönesystem</em>
+                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.payrollLabel}</em>
                           </div>
                           <div className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeMidRight}`}>
                             <span className={styles.faasSystemsNodeInner}>
                               <CreditCard size={20} />
                             </span>
-                            <em>Betalningar</em>
+                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.paymentsLabel}</em>
                           </div>
                           <div className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeBottomCenter}`}>
                             <span className={styles.faasSystemsNodeInner} aria-hidden="true">
                               <UsersRound size={20} />
                             </span>
-                            <em>Kundteam</em>
+                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.customerTeamLabel}</em>
                           </div>
                         </div>
                       ) : (

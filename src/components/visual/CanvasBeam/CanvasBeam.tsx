@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./CanvasBeam.module.scss";
 
 // Tweak knobs: beamRadius, dotSpacing, sharpness, glowStrength, baseBloom, intensityThreshold.
@@ -27,10 +28,10 @@ const hash = (x: number, y: number, t: number) => {
 };
 
 export default function CanvasBeam() {
+  const { isReducedMotion } = useMotion();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const rainRef = useRef<RainStreak[]>([]);
-  const reduceMotionRef = useRef(false);
   const sizeRef = useRef({ width: 0, height: 0, dpr: 1 });
   const runningRef = useRef(true);
   const frameRef = useRef(0);
@@ -38,10 +39,6 @@ export default function CanvasBeam() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
-    reduceMotionRef.current = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -178,7 +175,7 @@ export default function CanvasBeam() {
     };
 
     const loop = () => {
-      frameRef.current += 1;
+      frameRef.current += isReducedMotion ? 0.35 : 1;
       render(frameRef.current * 0.016);
       if (!runningRef.current) return;
       rafRef.current = window.requestAnimationFrame(loop);
@@ -190,7 +187,7 @@ export default function CanvasBeam() {
         window.cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
       }
-      if (runningRef.current && !reduceMotionRef.current) {
+      if (runningRef.current) {
         rafRef.current = window.requestAnimationFrame(loop);
       }
     };
@@ -199,11 +196,7 @@ export default function CanvasBeam() {
     observer.observe(canvas.parentElement ?? canvas);
     resize();
 
-    if (reduceMotionRef.current) {
-      render(0);
-    } else {
-      rafRef.current = window.requestAnimationFrame(loop);
-    }
+    rafRef.current = window.requestAnimationFrame(loop);
 
     document.addEventListener("visibilitychange", handleVisibility);
 
@@ -214,7 +207,7 @@ export default function CanvasBeam() {
         window.cancelAnimationFrame(rafRef.current);
       }
     };
-  }, []);
+  }, [isReducedMotion]);
 
   return <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />;
 }

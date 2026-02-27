@@ -93,13 +93,13 @@
   margin-top: clamp(34px, 5vh, 52px);
   padding-top: 18px;
   border-top: 1px solid var(--border-subtle);
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
 }
 
-.bottom span,
+.copy,
 .bottom a {
   color: oklch(0.74 0.016 258 / 0.86);
   font-size: 0.88rem;
@@ -111,6 +111,75 @@
 
 .bottom a:hover {
   color: var(--text-primary);
+}
+
+.copy {
+  justify-self: start;
+}
+
+.centerLink {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.linkedinIcon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+  opacity: 0.9;
+}
+
+.motionControl {
+  justify-self: end;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0;
+}
+
+.motionLabel {
+  color: oklch(0.72 0.014 258 / 0.74);
+  font-size: 0.72rem;
+  font-weight: 560;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.motionButtons {
+  display: inline-flex;
+  align-items: stretch;
+  padding: 2px;
+  border-radius: 999px;
+  background: oklch(0.16 0.011 262 / 0.56);
+  border: 1px solid oklch(0.44 0.018 262 / 0.16);
+  gap: 2px;
+}
+
+.motionBtn {
+  min-height: 24px;
+  min-width: 58px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: oklch(0.72 0.014 258 / 0.78);
+  font-size: 0.72rem;
+  font-weight: 560;
+  line-height: 1;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.motionBtn:hover {
+  color: oklch(0.84 0.012 258 / 0.94);
+}
+
+.motionBtnActive {
+  background: oklch(0.28 0.02 262 / 0.54);
+  color: oklch(0.9 0.01 258 / 0.96);
 }
 
 .careersCta {
@@ -166,8 +235,25 @@
   }
 
   .bottom {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     align-items: flex-start;
+  }
+
+  .centerLink {
+    justify-self: center;
+  }
+
+  .motionControl {
+    justify-self: start;
+    align-items: center;
+  }
+
+  .motionButtons {
+    width: auto;
+  }
+
+  .motionBtn {
+    min-width: 56px;
   }
 
   .careersCta {

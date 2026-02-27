@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Database, Loader2, Lock } from "lucide-react";
+import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import styles from "./Security.module.scss";
 
 export default function Security() {
@@ -33,12 +34,9 @@ export default function Security() {
 
       <div className={styles.container}>
         <header className={styles.header}>
-          <span className={styles.pill}>Säkerhet &amp; Compliance</span>
-          <h2>Enterprise-grade säkerhet</h2>
-          <p>
-            Vi hanterar känslig finansiell data med högsta krav på säkerhet,
-            integritet och efterlevnad.
-          </p>
+          <span className={styles.pill}>{HOME_PAGE_TEXT.security.pill}</span>
+          <h2>{HOME_PAGE_TEXT.security.title}</h2>
+          <p>{HOME_PAGE_TEXT.security.intro}</p>
         </header>
 
         <div className={styles.grid}>
@@ -66,12 +64,8 @@ export default function Security() {
               </svg>
               <Lock className={styles.visualIcon} size={24} aria-hidden="true" />
             </div>
-            <h3>Dataskydd &amp; integritet</h3>
-            <p>
-              MinCFO hanterar all kunddata konfidentiellt och i enlighet med
-              gällande dataskyddslagstiftning. Åtkomst är strikt begränsad och
-              loggas kontinuerligt.
-            </p>
+            <h3>{HOME_PAGE_TEXT.security.cards[0].title}</h3>
+            <p>{HOME_PAGE_TEXT.security.cards[0].body}</p>
           </article>
 
           <article className={styles.card}>
@@ -91,11 +85,8 @@ export default function Security() {
                 aria-hidden="true"
               />
             </div>
-            <h3>Säker infrastruktur</h3>
-            <p>
-              Systemen är byggda med moderna säkerhetsprinciper och skyddas
-              genom kryptering, övervakning och regelbundna säkerhetskontroller.
-            </p>
+            <h3>{HOME_PAGE_TEXT.security.cards[1].title}</h3>
+            <p>{HOME_PAGE_TEXT.security.cards[1].body}</p>
           </article>
 
           <article className={styles.card}>
@@ -104,12 +95,8 @@ export default function Security() {
               <span className={styles.coreRing} aria-hidden="true" />
               <Database className={styles.visualIcon} size={24} aria-hidden="true" />
             </div>
-            <h3>EU &amp; GDPR-efterlevnad</h3>
-            <p>
-              All behandling av person- och företagsdata sker i enlighet med
-              GDPR. Data hanteras inom EU och enligt tydliga
-              personuppgiftsbiträdesavtal.
-            </p>
+            <h3>{HOME_PAGE_TEXT.security.cards[2].title}</h3>
+            <p>{HOME_PAGE_TEXT.security.cards[2].body}</p>
           </article>
         </div>
       </div>

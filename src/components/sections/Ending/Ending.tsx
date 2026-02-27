@@ -2,6 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import styles from "./Ending.module.scss";
 
 const cubic = (
@@ -101,14 +102,10 @@ export default function Ending() {
 
       <div className={styles.container}>
         <div className={styles.ctaPanel}>
-          <h2>Ta nästa steg mot en smartare ekonomifunktion</h2>
-          <p>
-            Ta kontroll över ditt bolags ekonomiska framtid med MinCFO. Boka ett
-            kostnadsfritt möte och se hur vårt team kan skapa mer fart, struktur
-            och trygghet i er tillväxt.
-          </p>
+          <h2>{HOME_PAGE_TEXT.ending.title}</h2>
+          <p>{HOME_PAGE_TEXT.ending.body}</p>
           <a href="#hero" className={styles.primaryCta}>
-            Boka demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+            {HOME_PAGE_TEXT.ending.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
           </a>
         </div>
       </div>

@@ -2,6 +2,8 @@
 
 import { ChevronRight, Lock, Play } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
+import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useMotion } from "@/components/system/MotionProvider";
 import BeamBackground from "@/components/visual/BeamBackground/BeamBackground";
 import styles from "./Hero.module.scss";
 
@@ -9,6 +11,7 @@ const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
 export default function Hero() {
+  const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const introRef = useRef<HTMLDivElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
@@ -31,9 +34,7 @@ export default function Hero() {
     const sectionNode = sectionRef.current;
     const introNode = introRef.current;
     const state = stateRef.current;
-    state.reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    state.reduceMotion = isReducedMotion;
     state.allowPointer = window.matchMedia(
       "(hover: hover) and (pointer: fine)",
     ).matches;
@@ -127,7 +128,7 @@ export default function Hero() {
         introNode.style.opacity = "";
       }
     };
-  }, []);
+  }, [isReducedMotion]);
 
   const handlePlayDemo = async () => {
     const video = videoRef.current;
@@ -175,23 +176,20 @@ export default function Hero() {
         <div className={styles.intro} ref={introRef}>
           <div className={styles.tag}>
             <span className={styles.ping} />
-            Financial Intelligence
+            {HOME_PAGE_TEXT.hero.tagline}
           </div>
 
           <h1 className={styles.title}>
-            Den moderna ekonomitjänsten <br />– med AI som analyserar, förutser
-            och agerar
+            {HOME_PAGE_TEXT.hero.titleLine1} <br />– {HOME_PAGE_TEXT.hero.titleLine2}
           </h1>
 
           <p className={styles.subtitle}>
-            MinCFO kombinerar automation, dashboards i realtid och en AI-copilot
-            som låter dig chatta med din data. Få insikter, prognoser och
-            proaktiva rekommendationer — utan att lägga tid på manuellt arbete.
+            {HOME_PAGE_TEXT.hero.body}
           </p>
 
           <div className={styles.ctaRow}>
             <a className={styles.primaryCta} href="#">
-              Boka en demo <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+              {HOME_PAGE_TEXT.hero.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
             </a>
           </div>
         </div>
@@ -204,7 +202,7 @@ export default function Hero() {
               <span className={styles.dot} />
               <div className={styles.address}>
                 <Lock aria-hidden="true" size={12} />
-                app.mincfo.com/dashboard
+                {HOME_PAGE_TEXT.hero.address}
               </div>
             </div>
 
@@ -216,7 +214,7 @@ export default function Hero() {
                   className={styles.playButton}
                   type="button"
                   onClick={handlePlayDemo}
-                  aria-label="Play demo video"
+                  aria-label={HOME_PAGE_TEXT.hero.playAriaLabel}
                 >
                   <span className={styles.playPulse} />
                   <Play aria-hidden="true" size={30} />
@@ -230,7 +228,7 @@ export default function Hero() {
                 controls={isPlaying}
                 playsInline
                 preload={useFullVideo ? "metadata" : "auto"}
-                aria-label="Demo video of MinCFO dashboard"
+                aria-label={HOME_PAGE_TEXT.hero.videoAriaLabel}
                 onCanPlay={handleVideoCanPlay}
               >
                 {useFullVideo ? (
@@ -241,7 +239,7 @@ export default function Hero() {
                 ) : (
                   <source src="/videos/mincfo-demo-video-preview.m4v" type="video/mp4" />
                 )}
-                Din webbläsare kan inte spela upp videon.
+                {HOME_PAGE_TEXT.hero.videoFallback}
               </video>
             </div>
           </div>

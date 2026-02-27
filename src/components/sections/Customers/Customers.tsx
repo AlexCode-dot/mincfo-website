@@ -1,6 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./Customers.module.scss";
 
 type Testimonial = {
@@ -29,65 +32,21 @@ const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 
-const TESTIMONIALS: Testimonial[] = [
-  {
-    avatarFile: "logo-rikard.avif",
-    company: "Qsid",
-    quote:
-      "MinCFO har gett oss en ny nivå av ekonomisk insikt. Med automatiserad bokföring och realtidsdata kan vi nu fatta snabbare beslut och lägga mer tid på att utveckla vår verksamhet.",
-    person: "Rikard Jonsson",
-    role: "VD, Sid Marketing",
-  },
-  {
-    accent: true,
-    avatarFile: "logo-aviv.avif",
-    company: "Showcase",
-    quote:
-      "Att anlita MinCFO är ett av våra bästa beslut. Vi har fått proaktiv rådgivning som gjort att vi kunnat minska kostnader och frigöra kapital. En komplett lösning för vår ekonomi.",
-    person: "Aviv Fahri",
-    role: "VD, Showcase",
-  },
-  {
-    avatarFile: "logo-joakim.avif",
-    company: "SweBal",
-    quote:
-      "Med MinCFO slipper vi lägga värdefull tid på rapportering, finansiella analyser och administration. Istället kan vi fokusera fullt ut på vår kärnverksamhet och projekteringen av ny fabrik.",
-    person: "Joakim Sjöholm",
-    role: "VD, Swebal AB",
-  },
-  {
-    accent: true,
-    avatarFile: "logo-oskar.avif",
-    company: "Hälsa Hemma",
-    quote:
-      "MinCFO är ett viktigt stöd i vår tillväxt. De avlastar det administrativa och levererar snabba, korrekta svar, så att vi kan fokusera på verksamheten.",
-    person: "Oskar Nordmark",
-    role: "Financial Controller, Hälsa Hemma",
-  },
-];
+const TESTIMONIALS: Testimonial[] = HOME_PAGE_TEXT.customers.testimonials.map((item) => ({
+  ...item,
+}));
 
-const TRUSTED_LOGOS = [
-  { name: "Swedish Algae Factory", file: "logo-algae.avif" },
-  { name: "BAM", file: "logo-bam.avif" },
-  { name: "Eloize", file: "logo-eloize.avif" },
-  { name: "Fler", file: "logo-fler.avif" },
-  { name: "Hälsa Hemma", file: "logo-hälsa.avif" },
-  { name: "Lawster", file: "logo-lawster.avif" },
-  { name: "Qsid", file: "logo-qsid.avif" },
-  { name: "Realforce", file: "logo-realforce.avif" },
-  { name: "Rossoneri", file: "logo-rossoneri.avif" },
-  { name: "Runway", file: "logo-runway.webp" },
-  { name: "Showcase", file: "logo-showcase.avif" },
-  { name: "SweBal", file: "logo-swebal.avif" },
-];
-const TRUSTED_LOGO_BY_NAME = new Map(TRUSTED_LOGOS.map((logo) => [logo.name, logo.file]));
+const TRUSTED_LOGOS = HOME_PAGE_TEXT.customers.trustedLogos.map((logo) => ({ ...logo }));
+const TRUSTED_LOGO_BY_NAME = new Map<string, string>(
+  TRUSTED_LOGOS.map((logo) => [logo.name, logo.file]),
+);
 
 export default function Customers() {
+  const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
   const [curveProgress, setCurveProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(1);
-  const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -130,20 +89,12 @@ export default function Customers() {
   }, []);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReduceMotion(mediaQuery.matches);
-    sync();
-    mediaQuery.addEventListener("change", sync);
-    return () => mediaQuery.removeEventListener("change", sync);
-  }, []);
-
-  useEffect(() => {
-    if (!visible || reduceMotion) return;
+    if (!visible || isReducedMotion) return;
     const id = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
     }, 4600);
     return () => clearInterval(id);
-  }, [visible, reduceMotion]);
+  }, [visible, isReducedMotion]);
 
   const prevIndex = (activeIndex - 1 + TESTIMONIALS.length) % TESTIMONIALS.length;
   const nextIndex = (activeIndex + 1) % TESTIMONIALS.length;
@@ -170,6 +121,7 @@ export default function Customers() {
   const goNext = () => {
     setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
   };
+  const tickerLogos = isReducedMotion ? TRUSTED_LOGOS : [...TRUSTED_LOGOS, ...TRUSTED_LOGOS];
 
   return (
     <section
@@ -194,12 +146,9 @@ export default function Customers() {
 
       <div className={styles.container}>
         <header className={styles.header}>
-          <span className={styles.pill}>Kunder</span>
-          <h2>Kundresultat från team som växer med MinCFO</h2>
-          <p>
-            Kundcase, omdömen och logotyper visar vad vi faktiskt levererar
-            i praktiken. Här är ett urval kundröster.
-          </p>
+          <span className={styles.pill}>{HOME_PAGE_TEXT.customers.pill}</span>
+          <h2>{HOME_PAGE_TEXT.customers.title}</h2>
+          <p>{HOME_PAGE_TEXT.customers.intro}</p>
         </header>
 
         <div className={styles.cardsShell}>
@@ -218,12 +167,13 @@ export default function Customers() {
               >
                 <div className={styles.companyBrand}>
                   {companyLogoFile ? (
-                    <img
+                    <Image
                       className={`${styles.companyLogo} ${item.company === "Showcase" ? styles.logoSoft : ""}`}
                       src={`/customers/logos/${companyLogoFile}`}
                       alt={`${item.company} logo`}
+                      width={220}
+                      height={44}
                       loading="lazy"
-                      decoding="async"
                     />
                   ) : (
                     <p className={styles.company}>{item.company}</p>
@@ -232,11 +182,12 @@ export default function Customers() {
                 <p className={styles.quote}>&quot;{item.quote}&quot;</p>
                 <footer className={styles.person}>
                   <span className={styles.avatar}>
-                    <img
+                    <Image
                       src={`/customers/testimonials/${item.avatarFile}`}
                       alt={`${item.person} portratt`}
+                      width={40}
+                      height={40}
                       loading="lazy"
-                      decoding="async"
                     />
                   </span>
                   <span>
@@ -249,38 +200,28 @@ export default function Customers() {
           })}
         </div>
 
-        <div className={styles.controls} aria-label="Bläddra kundomdömen">
-          <button type="button" onClick={goPrev} className={styles.controlBtn} aria-label="Föregående omdöme">
+        <div className={styles.controls} aria-label={HOME_PAGE_TEXT.customers.controlsAria}>
+          <button type="button" onClick={goPrev} className={styles.controlBtn} aria-label={HOME_PAGE_TEXT.customers.prevAria}>
             <span aria-hidden="true">‹</span>
           </button>
-          <button type="button" onClick={goNext} className={styles.controlBtn} aria-label="Nästa omdöme">
+          <button type="button" onClick={goNext} className={styles.controlBtn} aria-label={HOME_PAGE_TEXT.customers.nextAria}>
             <span aria-hidden="true">›</span>
           </button>
         </div>
 
-        <div className={styles.trustedTicker} aria-label="Kunder som litar på oss">
-          <p className={styles.trustedLabel}>Betrodd av team som använder MinCFO varje månad</p>
+        <div className={styles.trustedTicker} aria-label={HOME_PAGE_TEXT.customers.trustedAria}>
+          <p className={styles.trustedLabel}>{HOME_PAGE_TEXT.customers.tickerLabel}</p>
           <div className={styles.tickerViewport}>
             <div className={styles.tickerTrack}>
-              {TRUSTED_LOGOS.map((logo, index) => (
-                <span key={`a-${logo.file}-${index}`} className={styles.tickerItem}>
-                  <img
+              {tickerLogos.map((logo, index) => (
+                <span key={`${logo.file}-${index}`} className={styles.tickerItem}>
+                  <Image
                     className={`${styles.tickerLogo} ${logo.name === "Showcase" ? styles.logoSoft : ""}`}
                     src={`/customers/logos/${logo.file}`}
                     alt={`${logo.name} logo`}
+                    width={160}
+                    height={42}
                     loading="lazy"
-                    decoding="async"
-                  />
-                </span>
-              ))}
-              {TRUSTED_LOGOS.map((logo, index) => (
-                <span key={`b-${logo.file}-${index}`} className={styles.tickerItem}>
-                  <img
-                    className={`${styles.tickerLogo} ${logo.name === "Showcase" ? styles.logoSoft : ""}`}
-                    src={`/customers/logos/${logo.file}`}
-                    alt={`${logo.name} logo`}
-                    loading="lazy"
-                    decoding="async"
                   />
                 </span>
               ))}
