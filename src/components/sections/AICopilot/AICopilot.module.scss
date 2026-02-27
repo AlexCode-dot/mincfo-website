@@ -726,7 +726,6 @@
     0 18px 34px rgba(4, 8, 16, 0.34),
     inset 0 0 0 1px rgba(123, 160, 225, 0.2);
   transition: transform 520ms ease, box-shadow 520ms ease;
-  animation: forecastLayerCycle 13s ease-in-out infinite;
 }
 
 .visualBrand {
@@ -755,8 +754,7 @@
   font-family: var(--font-geist-sans), "Geist", "Segoe UI", sans-serif;
 }
 
-.planRecon,
-.planDimensions {
+.planRecon {
   padding: 14px;
   border-radius: 12px;
   background: oklch(0.17 0.022 258 / 0.9);
@@ -771,22 +769,6 @@
   transition: transform 260ms ease, box-shadow 260ms ease;
 }
 
-.planDimensions {
-  position: absolute;
-  z-index: 3;
-  width: min(472px, calc(100% - 8px));
-  right: -28px;
-  top: 426px;
-  background: linear-gradient(165deg, oklch(0.22 0.03 258 / 0.94), oklch(0.17 0.024 258 / 0.95));
-  box-shadow:
-    0 18px 38px rgba(2, 7, 15, 0.54),
-    0 8px 18px rgba(7, 18, 35, 0.45),
-    inset 0 0 0 1px rgba(139, 173, 232, 0.26);
-  backdrop-filter: blur(6px);
-  transition: transform 520ms ease, box-shadow 520ms ease;
-  animation: dimensionsLayerCycle 13s ease-in-out infinite;
-}
-
 .planForecastShell:hover {
   z-index: 6;
   transform: translateY(-4px);
@@ -798,20 +780,6 @@
 .planForecastShell:hover .planForecastChart {
   background: rgba(6, 12, 23, 0.96);
   box-shadow: inset 0 0 0 1px rgba(109, 143, 205, 0.24);
-}
-
-.planDimensions:hover {
-  z-index: 6;
-  transform: translateY(-3px);
-  box-shadow:
-    0 22px 44px rgba(2, 7, 15, 0.6),
-    0 10px 22px rgba(7, 18, 35, 0.48),
-    inset 0 0 0 1px rgba(149, 182, 240, 0.3);
-}
-
-.planVisualStack:hover .planForecastShell,
-.planVisualStack:hover .planDimensions {
-  animation-play-state: paused;
 }
 
 .planVisualStack::before {
@@ -828,16 +796,14 @@
   pointer-events: none;
 }
 
-.planReconHead,
-.planDimensionsHead {
+.planReconHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
 
-.planReconHead p,
-.planDimensionsHead p {
+.planReconHead p {
   margin: 0;
   color: rgba(214, 225, 243, 0.92);
   font-size: 0.82rem;
@@ -922,6 +888,8 @@
 }
 
 .planForecastChart {
+  position: relative;
+  overflow: hidden;
   margin-top: 14px;
   border-radius: 10px;
   padding: 9px 11px 11px;
@@ -930,7 +898,26 @@
   transition: transform 260ms ease, box-shadow 260ms ease, background 260ms ease;
 }
 
+.planForecastChart::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 24%,
+    rgba(114, 156, 224, 0.02) 40%,
+    rgba(114, 156, 224, 0.16) 50%,
+    rgba(114, 156, 224, 0.02) 60%,
+    transparent 76%
+  );
+  transform: translateX(-130%);
+  animation: planForecastSweep 5.8s ease-in-out infinite;
+}
+
 .planForecastChart svg {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 210px;
 }
@@ -941,12 +928,16 @@
   stroke-width: 2.6;
   stroke-linecap: round;
   stroke-linejoin: round;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: planForecastDraw 4.8s cubic-bezier(0.28, 0.11, 0.22, 1) infinite;
   transition: stroke 260ms ease;
 }
 
 .planForecastArea {
   fill: var(--chart-fill);
-  opacity: 1;
+  opacity: 0;
+  animation: planForecastAreaReveal 4.8s ease infinite;
   transition: fill 260ms ease, opacity 260ms ease;
 }
 
@@ -954,6 +945,7 @@
   stroke: oklch(0.68 0.05 264 / 0.44);
   stroke-width: 1.4;
   stroke-dasharray: 3 8;
+  animation: planActualSplitFlow 2.1s linear infinite;
 }
 
 .planMonthAxis {
@@ -967,6 +959,8 @@
 }
 
 .planForecastLegend {
+  position: relative;
+  z-index: 1;
   margin: 6px 0 2px;
   color: var(--chart-label);
   font-size: 0.62rem;
@@ -974,52 +968,9 @@
   text-align: right;
 }
 
-.planDimensionsHead button {
-  height: 28px;
-  padding: 0 10px;
-  border: none;
-  border-radius: 8px;
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-text);
-  font-size: 0.66rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.planDimensionRows {
-  margin-top: 10px;
-  display: grid;
-  gap: 6px;
-}
-
-.planDimensionRow {
-  height: 34px;
-  padding: 0 10px;
-  border-radius: 8px;
-  background: rgba(21, 33, 52, 0.68);
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 10px;
-}
-
-.planDimensionRow p {
-  margin: 0;
-  color: rgba(183, 199, 224, 0.92);
-  font-size: 0.73rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.planDimensionRow span {
-  color: rgba(158, 174, 201, 0.88);
-  font-size: 0.7rem;
-}
-
-.planDimensionPositive {
-  color: rgba(114, 224, 189, 0.96) !important;
-  font-weight: 600;
+.planMonthAxis {
+  position: relative;
+  z-index: 1;
 }
 
 .statGrid {
@@ -1373,82 +1324,57 @@
   }
 }
 
-@keyframes forecastLayerCycle {
-  0%,
-  45% {
-    z-index: 6;
-    transform: translateY(-4px);
-    box-shadow:
-      0 24px 42px rgba(3, 10, 20, 0.5),
-      inset 0 0 0 1px rgba(136, 170, 228, 0.24);
-  }
-  50%,
-  95% {
-    z-index: 2;
-    transform: translateY(0);
-    box-shadow:
-      0 18px 34px rgba(4, 8, 16, 0.34),
-      inset 0 0 0 1px rgba(123, 160, 225, 0.2);
-  }
-  100% {
-    z-index: 6;
-    transform: translateY(-4px);
-    box-shadow:
-      0 24px 42px rgba(3, 10, 20, 0.5),
-      inset 0 0 0 1px rgba(136, 170, 228, 0.24);
-  }
-}
-
-@keyframes dimensionsLayerCycle {
-  0%,
-  45% {
-    z-index: 3;
-    transform: translateY(0);
-    box-shadow:
-      0 18px 38px rgba(2, 7, 15, 0.54),
-      0 8px 18px rgba(7, 18, 35, 0.45),
-      inset 0 0 0 1px rgba(139, 173, 232, 0.26);
-  }
-  50%,
-  95% {
-    z-index: 6;
-    transform: translateY(-3px);
-    box-shadow:
-      0 22px 44px rgba(2, 7, 15, 0.6),
-      0 10px 22px rgba(7, 18, 35, 0.48),
-      inset 0 0 0 1px rgba(149, 182, 240, 0.3);
-  }
-  100% {
-    z-index: 3;
-    transform: translateY(0);
-    box-shadow:
-      0 18px 38px rgba(2, 7, 15, 0.54),
-      0 8px 18px rgba(7, 18, 35, 0.45),
-      inset 0 0 0 1px rgba(139, 173, 232, 0.26);
-  }
-}
-
 @keyframes planForecastDraw {
   0%,
-  8% {
-    stroke-dashoffset: 900;
+  12% {
+    stroke-dashoffset: 1200;
   }
-  44% {
+  65%,
+  85% {
     stroke-dashoffset: 0;
   }
   100% {
-    stroke-dashoffset: 0;
+    stroke-dashoffset: 1200;
   }
 }
 
 @keyframes planForecastAreaReveal {
   0%,
-  14% {
+  16% {
     opacity: 0;
   }
-  44%,
-  100% {
+  65%,
+  85% {
     opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes planForecastSweep {
+  0%,
+  32% {
+    transform: translateX(-130%);
+    opacity: 0;
+  }
+  45%,
+  72% {
+    opacity: 1;
+  }
+  84%,
+  100% {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
+
+@keyframes planActualSplitFlow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -44;
   }
 }
 
@@ -1545,21 +1471,6 @@
     display: none;
   }
 
-  .planDimensions {
-    position: relative;
-    width: calc(100% - 46px);
-    right: auto;
-    top: auto;
-    margin-top: -74px;
-    margin-left: auto;
-    margin-right: 6px;
-    border-radius: 14px;
-    box-shadow:
-      0 20px 42px rgba(2, 7, 15, 0.62),
-      0 10px 20px rgba(7, 18, 35, 0.5),
-      inset 0 0 0 1px rgba(149, 182, 240, 0.28);
-  }
-
   .planForecastShell:hover {
     transform: none;
   }
@@ -1568,10 +1479,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .planForecastShell,
-  .planDimensions {
-    animation: none;
-  }
 }
 
 @media (max-width: 600px) {
@@ -1720,12 +1627,6 @@
     padding-bottom: 24px;
   }
 
-  .planDimensions {
-    width: calc(100% - 26px);
-    margin-top: -58px;
-    margin-right: 2px;
-  }
-
   .visualBrand {
     top: 13px;
     left: 13px;
@@ -1747,10 +1648,6 @@
 
   .planForecastChart svg {
     height: 118px;
-  }
-
-  .planDimensionRow {
-    height: 34px;
   }
 
   .inputRow {
@@ -1777,9 +1674,9 @@
   .sending svg,
   .loading svg,
   .planForecastShell,
-  .planDimensions,
   .planForecastLine,
   .planForecastArea,
+  .planActualSplit,
   .trendLine,
   .trendArea,
   .trendPoints circle,
@@ -1803,5 +1700,10 @@
   .trendPoints circle {
     opacity: 1;
     transform: none;
+  }
+
+  .planForecastChart::after {
+    animation: none;
+    opacity: 0;
   }
 }

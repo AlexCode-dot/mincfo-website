@@ -77,13 +77,6 @@ const PLAN_FORECAST_BASE_K = [280, 298, 312, 326, 340, 352, 364, 379, 394, 409, 
 const PLAN_ACTUAL_VARIANCE = [0.052, 0.034, -0.012, -0.026, 0.018, 0.029] as const;
 const PLAN_ACTUAL_CUTOFF_INDEX = 5; // Jun
 
-const PLAN_DIMENSION_BASE = [
-  { name: "Recurring - Revenue", amount: 200000 },
-  { name: "Partner Sales", amount: 144000 },
-  { name: "Consulting - Strategic", amount: 150000 },
-  { name: "Project Delivery", amount: 160000 },
-] as const;
-
 const ANALYSIS_METRICS: Array<{ id: AnalysisMetric; label: string; seriesK: number[] }> = [
   { id: "netIncome", label: "Net Income", seriesK: ANALYSIS_NET_K },
   { id: "ebit", label: "EBIT", seriesK: ANALYSIS_EBIT_K },
@@ -149,6 +142,15 @@ export default function AICopilot() {
   const [planMonthIndex, setPlanMonthIndex] = useState(11);
   const [analysisUpdating, setAnalysisUpdating] = useState(false);
   const [planUpdating, setPlanUpdating] = useState(false);
+  const [animatedPlanValue, setAnimatedPlanValue] = useState(0);
+  const [animatedSelectedPlanDelta, setAnimatedSelectedPlanDelta] = useState(0);
+  const [animatedPlanTotalDelta, setAnimatedPlanTotalDelta] = useState(0);
+  const planStatTweenFrameRef = useRef<number | null>(null);
+  const planStatSnapshotRef = useRef<{
+    selectedDelta: number;
+    selectedValue: number;
+    totalDelta: number;
+  } | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -509,14 +511,55 @@ export default function AICopilot() {
   const analysisCompareLabel = "Compared to previous period";
   const formatSek = (value: number) => new Intl.NumberFormat("sv-SE").format(Math.round(value));
   const formatPercent = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
-  const benchmarkTarget = 12.4 + planTotalDelta * 0.52;
-  const dimensionMonthModifier = 1 + (planMonthIndex / 11 - 0.5) * 0.08;
-  const selectedMonthPlanGap = selectedPlanValue / Math.max(planForecastBaseValues[planMonthIndex], 1) - 1;
-  const planDimensionRows = PLAN_DIMENSION_BASE.map((row, index) => {
-    const rowBias = 1 + (index - 1.5) * 0.02;
-    const amount = row.amount * (1 + selectedMonthPlanGap * 0.9) * dimensionMonthModifier * rowBias;
-    return { name: row.name, amount };
-  });
+  useEffect(() => {
+    const target = {
+      selectedValue: selectedPlanValue,
+      selectedDelta: selectedPlanDelta,
+      totalDelta: planTotalDelta,
+    };
+    const startValues = planStatSnapshotRef.current ?? target;
+    if (planStatTweenFrameRef.current !== null) {
+      cancelAnimationFrame(planStatTweenFrameRef.current);
+      planStatTweenFrameRef.current = null;
+    }
+
+    const duration = 280;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = clamp((now - start) / duration, 0, 1);
+      const eased = 1 - (1 - t) ** 3;
+      const nextValue = lerp(startValues.selectedValue, target.selectedValue, eased);
+      const nextSelectedDelta = lerp(startValues.selectedDelta, target.selectedDelta, eased);
+      const nextTotalDelta = lerp(startValues.totalDelta, target.totalDelta, eased);
+
+      planStatSnapshotRef.current = {
+        selectedValue: nextValue,
+        selectedDelta: nextSelectedDelta,
+        totalDelta: nextTotalDelta,
+      };
+
+      setAnimatedPlanValue(nextValue);
+      setAnimatedSelectedPlanDelta(nextSelectedDelta);
+      setAnimatedPlanTotalDelta(nextTotalDelta);
+
+      if (t < 1) {
+        planStatTweenFrameRef.current = requestAnimationFrame(tick);
+        return;
+      }
+      planStatTweenFrameRef.current = null;
+      planStatSnapshotRef.current = target;
+    };
+
+    planStatTweenFrameRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      if (planStatTweenFrameRef.current !== null) {
+        cancelAnimationFrame(planStatTweenFrameRef.current);
+        planStatTweenFrameRef.current = null;
+      }
+    };
+  }, [selectedPlanValue, selectedPlanDelta, planTotalDelta]);
+
   const currentExample = EXAMPLES[exampleIndex];
   const typedQuestion = currentExample.question.slice(0, typedLength);
   const isTyping = stage === "typing";
@@ -844,7 +887,7 @@ export default function AICopilot() {
               </li>
               <li>
                 <Check aria-hidden="true" size={14} />
-                Identifiera lönsamma segment
+                Identifiera möjligheter för optimerad ekonomistyrning
               </li>
             </ul>
           </div>
@@ -934,18 +977,18 @@ export default function AICopilot() {
                       <div className={styles.planForecastStats}>
                         <div className={styles.planForecastStat}>
                           <p>{selectedPlanMode} month ({MONTH_LABELS_EN[planMonthIndex]})</p>
-                          <strong>{formatSek(selectedPlanValue * 1000)} kr</strong>
+                          <strong>{formatSek(animatedPlanValue * 1000)} kr</strong>
                         </div>
                         <div className={styles.planForecastStat}>
                           <p>Vs previous month</p>
-                          <strong className={selectedPlanDelta < 0 ? styles.planStatDown : styles.planStatUp}>
-                            {formatPercent(selectedPlanDelta)}
+                          <strong className={animatedSelectedPlanDelta < 0 ? styles.planStatDown : styles.planStatUp}>
+                            {formatPercent(animatedSelectedPlanDelta)}
                           </strong>
                         </div>
                         <div className={styles.planForecastStat}>
                           <p>Annual variance vs baseline</p>
-                          <strong className={planTotalDelta < 0 ? styles.planStatDown : styles.planStatUp}>
-                            {formatPercent(planTotalDelta)}
+                          <strong className={animatedPlanTotalDelta < 0 ? styles.planStatDown : styles.planStatUp}>
+                            {formatPercent(animatedPlanTotalDelta)}
                           </strong>
                         </div>
                       </div>
@@ -981,24 +1024,6 @@ export default function AICopilot() {
                     </div>
                   </div>
 
-                  <div className={styles.planDimensions}>
-                    <div className={styles.planDimensionsHead}>
-                      <p>Dimensions</p>
-                      <button type="button">+ New Dimension</button>
-                    </div>
-                    <div className={styles.planDimensionRows}>
-                      {planDimensionRows.map((row) => (
-                        <div key={row.name} className={styles.planDimensionRow}>
-                          <p>{row.name}</p>
-                          <span>{formatSek(row.amount)} kr</span>
-                        </div>
-                      ))}
-                      <div className={styles.planDimensionRow}>
-                        <p>Benchmark target</p>
-                        <span className={styles.planDimensionPositive}>{formatPercent(benchmarkTarget)}</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </article>

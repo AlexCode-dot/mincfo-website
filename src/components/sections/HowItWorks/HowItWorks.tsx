@@ -7,6 +7,7 @@ import {
   CreditCard,
   FolderPlus,
   Plug,
+  RefreshCw,
   ReceiptText,
   Sparkles,
   UserRound,
@@ -85,11 +86,11 @@ const OFFERS: Record<OfferKey, OfferModel> = {
       },
       {
         title: "Koppla Fortnox",
-        body: "Automatisk integration på några klick. MinCFO sätter upp dashboards och rapportstruktur.",
+        body: "Ni kopplar Fortnox på några klick. MinCFO sätter upp dashboards och rapportstruktur.",
         highlights: [
-          "Automatisk synk med Fortnox",
-          "Enhetlig rapportstruktur direkt",
-          "All data samlad i samma vy",
+          "Koppla Fortnox på några klick",
+          "Dashboards och rapportstruktur sätts upp",
+          "Data synkas löpande till MinCFO efter aktivering",
         ],
         icon: Plug,
       },
@@ -99,7 +100,7 @@ const OFFERS: Record<OfferKey, OfferModel> = {
         highlights: [
           "Realtidsrapportering av nyckeltal",
           "Kassaflödesoptimering i realtid",
-          "Identifiera lönsamma segment",
+          "Identifiera möjligheter för optimerad ekonomistyrning",
         ],
         icon: BrainCircuit,
       },
@@ -571,15 +572,23 @@ export default function HowItWorks() {
                         </div>
                       ) : isConnectFortnoxStep ? (
                         <div className={styles.connectMock}>
-                          <div className={styles.connectTopConnector}>
-                            <span className={styles.connectTopIcon} aria-hidden="true">
-                              <Icon size={14} />
-                            </span>
-                            <span>Systemkälla</span>
+                          <div className={`${styles.connectNode} ${styles.connectNodeFortnox}`}>
+                            <div className={styles.connectBrand}>
+                              <Image
+                                className={styles.connectFortnoxLogo}
+                                src="/icons/fortnox-icon.png"
+                                alt="Fortnox"
+                                width={88}
+                                height={88}
+                              />
+                              <span className={styles.connectBrandWord}>Fortnox</span>
+                            </div>
+                            <span className={styles.connectNodeMeta}>Konto kopplat</span>
                           </div>
-                          <span className={styles.connectTopStem} aria-hidden="true">
-                            <span className={styles.connectTopPulse} />
-                          </span>
+                          <div className={styles.connectBridge}>
+                            <span className={styles.connectFlow} />
+                            <span className={styles.connectDataDot} />
+                          </div>
                           <div className={styles.connectNode}>
                             <div className={styles.connectBrand}>
                               <svg
@@ -597,25 +606,12 @@ export default function HowItWorks() {
                               </svg>
                               <span className={styles.connectBrandWord}>MinCFO</span>
                             </div>
+                            <span className={styles.connectNodeMeta}>Tar emot data</span>
                           </div>
-                          <div className={styles.connectBridge}>
-                            <span className={styles.connectFlow} />
-                            <span className={styles.connectPulseSource} />
-                            <span className={styles.connectPulseRight} />
+                          <div className={styles.connectStatusWrap}>
+                            <div className={styles.connectStatus}>Integration aktiv</div>
+                            <span className={styles.connectSyncTime}>Senast synk: just nu</span>
                           </div>
-                          <div className={`${styles.connectNode} ${styles.connectNodeFortnox}`}>
-                            <Image
-                              className={styles.connectFortnoxLogo}
-                              src="/icons/fortnox-icon.png"
-                              alt="Fortnox"
-                              width={88}
-                              height={88}
-                            />
-                          </div>
-                          <span className={styles.connectBottomStem} aria-hidden="true">
-                            <span className={styles.connectBottomPulse} />
-                          </span>
-                          <div className={styles.connectStatus}>Synkroniserad</div>
                         </div>
                       ) : isInsightsStep ? (
                         <div className={styles.insightsMock}>
@@ -757,7 +753,9 @@ export default function HowItWorks() {
                           </div>
 
                           <div className={styles.faasOnboardingHub}>
-                            <span className={styles.faasHubSpinner} aria-hidden="true" />
+                            <span className={styles.faasHubSpinner} aria-hidden="true">
+                              <RefreshCw size={18} strokeWidth={1.9} />
+                            </span>
                           </div>
 
                           <div className={styles.faasNodeMincfo}>

@@ -73,11 +73,14 @@ const TRUSTED_LOGOS = [
   { name: "Fler", file: "logo-fler.avif" },
   { name: "Hälsa Hemma", file: "logo-hälsa.avif" },
   { name: "Lawster", file: "logo-lawster.avif" },
+  { name: "Qsid", file: "logo-qsid.avif" },
   { name: "Realforce", file: "logo-realforce.avif" },
   { name: "Rossoneri", file: "logo-rossoneri.avif" },
   { name: "Runway", file: "logo-runway.webp" },
+  { name: "Showcase", file: "logo-showcase.avif" },
   { name: "SweBal", file: "logo-swebal.avif" },
 ];
+const TRUSTED_LOGO_BY_NAME = new Map(TRUSTED_LOGOS.map((logo) => [logo.name, logo.file]));
 
 export default function Customers() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -205,6 +208,7 @@ export default function Customers() {
             if (index === activeIndex) positionClass = styles.centerCard;
             else if (index === prevIndex) positionClass = styles.leftCard;
             else if (index === nextIndex) positionClass = styles.rightCard;
+            const companyLogoFile = TRUSTED_LOGO_BY_NAME.get(item.company);
 
             return (
               <article
@@ -212,8 +216,20 @@ export default function Customers() {
                 data-card-index={index}
                 className={`${styles.card} ${item.accent ? styles.cardAccent : ""} ${positionClass}`}
               >
-                <p className={styles.company}>{item.company}</p>
-                <p className={styles.quote}>"{item.quote}"</p>
+                <div className={styles.companyBrand}>
+                  {companyLogoFile ? (
+                    <img
+                      className={`${styles.companyLogo} ${item.company === "Showcase" ? styles.logoSoft : ""}`}
+                      src={`/customers/logos/${companyLogoFile}`}
+                      alt={`${item.company} logo`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : (
+                    <p className={styles.company}>{item.company}</p>
+                  )}
+                </div>
+                <p className={styles.quote}>&quot;{item.quote}&quot;</p>
                 <footer className={styles.person}>
                   <span className={styles.avatar}>
                     <img
@@ -249,7 +265,7 @@ export default function Customers() {
               {TRUSTED_LOGOS.map((logo, index) => (
                 <span key={`a-${logo.file}-${index}`} className={styles.tickerItem}>
                   <img
-                    className={styles.tickerLogo}
+                    className={`${styles.tickerLogo} ${logo.name === "Showcase" ? styles.logoSoft : ""}`}
                     src={`/customers/logos/${logo.file}`}
                     alt={`${logo.name} logo`}
                     loading="lazy"
@@ -260,7 +276,7 @@ export default function Customers() {
               {TRUSTED_LOGOS.map((logo, index) => (
                 <span key={`b-${logo.file}-${index}`} className={styles.tickerItem}>
                   <img
-                    className={styles.tickerLogo}
+                    className={`${styles.tickerLogo} ${logo.name === "Showcase" ? styles.logoSoft : ""}`}
                     src={`/customers/logos/${logo.file}`}
                     alt={`${logo.name} logo`}
                     loading="lazy"

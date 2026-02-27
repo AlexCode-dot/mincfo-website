@@ -180,6 +180,11 @@
   opacity: 0.92;
 }
 
+.logoSoft {
+  filter: grayscale(1) brightness(0.84);
+  opacity: 0.82;
+}
+
 .controlBtn {
   width: 42px;
   height: 42px;
@@ -301,6 +306,22 @@
   font-weight: 650;
   letter-spacing: 0.01em;
   text-transform: uppercase;
+  opacity: 0.94;
+}
+
+.companyBrand {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.companyLogo {
+  display: block;
+  width: auto;
+  max-width: min(220px, 72%);
+  height: clamp(28px, 2.9vw, 36px);
+  object-fit: contain;
+  filter: grayscale(1) brightness(1.04);
   opacity: 0.94;
 }
 
@@ -440,6 +461,15 @@
     border-radius: 18px;
     opacity: 0;
     pointer-events: none;
+  }
+
+  .companyBrand {
+    min-height: 34px;
+  }
+
+  .companyLogo {
+    max-width: 78%;
+    height: 30px;
   }
 
   .visible .centerCard {

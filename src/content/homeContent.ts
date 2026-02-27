@@ -91,7 +91,7 @@ export const HOME_SERVICE_MODELS: ServiceModel[] = [
       },
       {
         title: "Koppla Fortnox",
-        body: "Ni kopplar Fortnox på några klick. MinCFO sätter upp samma dashboards och rapportstruktur.",
+        body: "Ni kopplar Fortnox på några klick. MinCFO sätter upp dashboards och rapportstruktur.",
       },
       {
         title: "Realtidsinsikter & AI",
