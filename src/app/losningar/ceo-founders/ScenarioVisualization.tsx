@@ -3,6 +3,7 @@
 import { ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./page.module.scss";
+import SectionTopCurve from "./SectionTopCurve";
 
 type ScenarioStage = "typing" | "sending" | "loading" | "result";
 
@@ -72,21 +73,18 @@ export default function ScenarioVisualization({
   useEffect(() => {
     const node = sectionRef.current;
     if (!node) return;
-    let revealTimer: ReturnType<typeof setTimeout> | null = null;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
-        revealTimer = setTimeout(() => setVisible(true), 140);
-        observer.disconnect();
+        setVisible(entry.isIntersecting && entry.intersectionRatio > 0.08);
       },
-      { threshold: 0.18, rootMargin: "0px 0px -10% 0px" },
+      { threshold: [0, 0.08, 0.18], rootMargin: "0px 0px -8% 0px" },
     );
 
     observer.observe(node);
+
     return () => {
       observer.disconnect();
-      if (revealTimer) clearTimeout(revealTimer);
     };
   }, []);
 
@@ -153,45 +151,51 @@ export default function ScenarioVisualization({
       ref={sectionRef}
       className={`${styles.section} ${styles.scenarioSection} ${styles.revealSection}${visible ? ` ${styles.revealVisible}` : ""}`}
     >
-      <header className={styles.sectionHead}>
-        <h2>{heading}</h2>
-        <p>{description}</p>
-      </header>
+      <SectionTopCurve
+        shape="dipDown"
+        fillClassName={styles.topCurveScenarioFill}
+      />
 
-      <div className={styles.scenarioShell}>
-        <div className={styles.scenarioShellHead}>
-          <div className={styles.scenarioBrand}>
-            <svg viewBox="0 0 50 50" aria-hidden="true">
-              <g fill="currentColor">
-                <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
-                <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
-                <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
-                <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
-              </g>
-            </svg>
-            <span>MinCFO</span>
-          </div>
-          <div className={styles.scenarioShellCopilot}>
-            <span className={styles.scenarioShellDot} aria-hidden="true" />
-            <p>AI Copilot</p>
-          </div>
-        </div>
+      <div className={styles.sectionContent}>
+        <header className={styles.sectionHead}>
+          <h2>{heading}</h2>
+          <p>{description}</p>
+        </header>
 
-        <div className={styles.scenarioFlow}>
-          <div className={styles.scenarioQueryRow}>
-            <p className={`${styles.scenarioQuestion} ${showLoading ? styles.questionConfirmed : ""}`}>
-              {typedQuestion}
-              {stage === "typing" && <span className={styles.typingCaret} aria-hidden="true" />}
-            </p>
-            <span className={styles.scenarioUserBadge} aria-hidden="true">
-              <svg viewBox="0 0 24 24" role="img">
-                <path
-                  d="M12 12.2a4.1 4.1 0 1 0-4.1-4.1 4.1 4.1 0 0 0 4.1 4.1Zm0 1.8c-3.05 0-5.9 1.4-5.9 3.55V19h11.8v-1.45C17.9 15.4 15.05 14 12 14Z"
-                  fill="currentColor"
-                />
+        <div className={styles.scenarioShell}>
+          <div className={styles.scenarioShellHead}>
+            <div className={styles.scenarioBrand}>
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <g fill="currentColor">
+                  <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
+                  <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
+                  <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
+                  <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
+                </g>
               </svg>
-            </span>
+              <span>MinCFO</span>
+            </div>
+            <div className={styles.scenarioShellCopilot}>
+              <span className={styles.scenarioShellDot} aria-hidden="true" />
+              <p>AI Copilot</p>
+            </div>
           </div>
+
+          <div className={styles.scenarioFlow}>
+            <div className={styles.scenarioQueryRow}>
+              <p className={`${styles.scenarioQuestion} ${showLoading ? styles.questionConfirmed : ""}`}>
+                {typedQuestion}
+                {stage === "typing" && <span className={styles.typingCaret} aria-hidden="true" />}
+              </p>
+              <span className={styles.scenarioUserBadge} aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="img">
+                  <path
+                    d="M12 12.2a4.1 4.1 0 1 0-4.1-4.1 4.1 4.1 0 0 0 4.1 4.1Zm0 1.8c-3.05 0-5.9 1.4-5.9 3.55V19h11.8v-1.45C17.9 15.4 15.05 14 12 14Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </div>
 
           <div
             className={`${styles.scenarioResultRow} ${
@@ -287,14 +291,15 @@ export default function ScenarioVisualization({
             </article>
           </div>
 
-          <div className={styles.scenarioFooter}>
-            <div className={styles.scenarioPrompt}>
-              <span>{inputText}</span>
-              <button type="button" aria-label="Kör scenariot igen" onClick={() => setRunId((prev) => prev + 1)}>
-                <ChevronRight size={16} />
-              </button>
+            <div className={styles.scenarioFooter}>
+              <div className={styles.scenarioPrompt}>
+                <span>{inputText}</span>
+                <button type="button" aria-label="Kör scenariot igen" onClick={() => setRunId((prev) => prev + 1)}>
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+              <p className={styles.scenarioDisclaimer}>MinCFO can make mistakes. Verify important financial data.</p>
             </div>
-            <p className={styles.scenarioDisclaimer}>MinCFO can make mistakes. Verify important financial data.</p>
           </div>
         </div>
       </div>

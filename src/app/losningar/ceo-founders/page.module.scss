@@ -2,7 +2,7 @@
   --page-section-gap: clamp(88px, 11vh, 138px);
   position: relative;
   display: grid;
-  gap: var(--page-section-gap);
+  gap: 0;
   min-height: 100vh;
   padding: 102px 0 96px;
   overflow: hidden;
@@ -520,6 +520,94 @@
   gap: 26px;
 }
 
+.sectionContent {
+  position: relative;
+  z-index: 2;
+}
+
+.section > :not(.topCurveRoot) {
+  position: relative;
+  z-index: 2;
+}
+
+.topCurveRoot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.topCurve {
+  position: absolute;
+  inset: 0 0 auto;
+  left: 50%;
+  width: 100vw;
+  height: 190px;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.topCurve path {
+  fill: transparent;
+  stroke: oklch(0.62 0.03 262 / 0.06);
+  stroke-width: 0.9;
+}
+
+.topCurveFill {
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.topCurveScenarioFill {
+  background: var(--scenario-surface-bg);
+}
+
+.topCurveScenarioFill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--scenario-surface-overlay);
+  background-size: var(--scenario-surface-overlay-size, auto);
+  opacity: var(--scenario-surface-overlay-opacity, 0);
+}
+
+.topCurveImpactFill {
+  background: var(--impact-surface-bg);
+}
+
+.topCurveImpactFill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--impact-surface-overlay);
+  background-size: var(--impact-surface-overlay-size, auto);
+  opacity: var(--impact-surface-overlay-opacity, 0);
+}
+
+.topCurveProblemSectionFill {
+  background:
+    radial-gradient(82% 66% at 50% -8%, var(--ambient-spot-1), transparent 72%),
+    linear-gradient(180deg, oklch(0.14 0.011 262 / 0.985) 0%, oklch(0.13 0.01 262 / 0.995) 100%);
+}
+
+.topCurveProblemSectionFill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--chart-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--chart-grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at 50% 24%, rgba(0, 0, 0, 0.92) 28%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at 50% 24%, rgba(0, 0, 0, 0.92) 28%, transparent 100%);
+  opacity: 0.26;
+}
+
 .sectionPart {
   display: grid;
   gap: 24px;
@@ -532,121 +620,136 @@
 .animatedBreak {
   position: relative;
   z-index: 1;
+  isolation: isolate;
   width: 100vw;
-  height: clamp(74px, 9.2vh, 118px);
-  margin-top: calc(var(--page-section-gap) * -1);
-  margin-bottom: calc(var(--page-section-gap) * -1);
+  height: clamp(52px, 6.4vh, 82px);
   margin-left: 50%;
   transform: translateX(-50%);
   pointer-events: none;
+  background: var(--animated-break-bottom-bg, transparent);
 }
 
-.animatedBreakDip {
-  background:
-    radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
-    radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
-    linear-gradient(180deg, oklch(0.145 0.012 262 / 1) 0%, oklch(0.14 0.011 262 / 1) 50%, oklch(0.135 0.01 262 / 1) 100%);
-}
-
-.animatedBreakDip::before {
+.animatedBreak::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -2px 0 0;
   pointer-events: none;
+  background: var(--animated-break-bottom-overlay, none);
+  background-size: var(--animated-break-bottom-overlay-size, auto);
+  opacity: var(--animated-break-bottom-overlay-opacity, 0);
   z-index: 0;
-  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
-  background-size: 8px 8px;
-  opacity: 0.14;
 }
 
 .animatedBreakCurve {
   position: absolute;
   inset: -2px 0 auto;
   width: 100%;
-  height: 156px;
-  z-index: 2;
-  opacity: 0.78;
-  mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  height: 118px;
+  z-index: 3;
+  opacity: 0.62;
 }
 
 .animatedBreakCurve path {
   fill: transparent;
-  stroke: rgba(104, 150, 227, 0.2);
-  stroke-width: 1;
+  stroke: rgba(104, 150, 227, 0.17);
+  stroke-width: 0.9;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 3px rgba(88, 130, 214, 0.1));
+  filter: none;
+  shape-rendering: geometricPrecision;
+  vector-effect: non-scaling-stroke;
 }
 
-.animatedBreakBackground {
+.animatedBreakTop {
   position: absolute;
   inset: -2px 0 0;
-  z-index: 1;
-  background: transparent;
+  background: var(--animated-break-top-bg, transparent);
   opacity: 1;
+  z-index: 1;
 }
 
-.animatedBreakBackground::after {
+.animatedBreakTop::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
+  background: var(--animated-break-top-overlay, none);
+  background-size: var(--animated-break-top-overlay-size, auto);
+  opacity: var(--animated-break-top-overlay-opacity, 0);
 }
 
 .animatedBreakDip .animatedBreakCurve path {
-  stroke: rgba(95, 136, 219, 0.22);
+  stroke: rgba(95, 136, 219, 0.16);
 }
 
 .animatedBreakRise .animatedBreakCurve path {
-  stroke: rgba(117, 160, 234, 0.24);
+  stroke: rgba(117, 160, 234, 0.18);
 }
 
 .animatedBreakSoft .animatedBreakCurve path {
-  stroke: rgba(86, 128, 210, 0.18);
-  stroke-width: 0.95;
+  stroke: rgba(86, 128, 210, 0.14);
+  stroke-width: 0.85;
 }
 
-.animatedBreakRise .animatedBreakBackground {
-  background:
+.animatedBreakRise {
+  --animated-break-top-bg:
+    radial-gradient(82% 66% at 50% -8%, var(--ambient-spot-1), transparent 72%),
+    linear-gradient(180deg, oklch(0.14 0.011 262 / 0.985) 0%, oklch(0.13 0.01 262 / 0.995) 100%);
+  --animated-break-top-overlay:
+    linear-gradient(to right, var(--chart-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--chart-grid) 1px, transparent 1px);
+  --animated-break-top-overlay-size: 40px 40px;
+  --animated-break-top-overlay-opacity: 0;
+  --animated-break-bottom-bg:
     radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
     radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
     linear-gradient(180deg, oklch(0.145 0.012 262 / 1) 0%, oklch(0.14 0.011 262 / 1) 50%, oklch(0.135 0.01 262 / 1) 100%);
+  --animated-break-bottom-overlay: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
+  --animated-break-bottom-overlay-size: 8px 8px;
+  --animated-break-bottom-overlay-opacity: 0;
 }
 
-.animatedBreakRise .animatedBreakBackground::after {
-  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
-  background-size: 8px 8px;
-  opacity: 0.14;
-}
-
-.animatedBreakDip .animatedBreakBackground {
-  background:
+.animatedBreakDip {
+  --animated-break-top-bg:
+    radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
+    radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
+    linear-gradient(180deg, oklch(0.145 0.012 262 / 1) 0%, oklch(0.14 0.011 262 / 1) 50%, oklch(0.135 0.01 262 / 1) 100%);
+  --animated-break-top-overlay: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
+  --animated-break-top-overlay-size: 8px 8px;
+  --animated-break-top-overlay-opacity: 0;
+  --animated-break-bottom-bg:
     radial-gradient(64% 48% at 18% 18%, oklch(0.32 0.028 262 / 0.08), transparent 76%),
     radial-gradient(68% 52% at 82% 24%, oklch(0.3 0.024 262 / 0.08), transparent 78%),
     linear-gradient(180deg, oklch(0.15 0.017 262 / 0.99) 0%, oklch(0.14 0.016 262 / 0.99) 46%, oklch(0.145 0.017 262 / 0.995) 100%);
-}
-
-.animatedBreakDip .animatedBreakBackground::after {
-  background:
+  --animated-break-bottom-overlay:
     linear-gradient(180deg, oklch(0.74 0.03 260 / 0.03), transparent 32%),
     repeating-linear-gradient(90deg, var(--chart-grid) 0 1px, transparent 1px 28px);
-  opacity: 0.14;
+  --animated-break-bottom-overlay-opacity: 0;
 }
 
-.animatedBreakSoft .animatedBreakBackground {
-  background:
+.animatedBreakSoft {
+  --animated-break-top-bg:
     radial-gradient(82% 66% at 50% -8%, var(--ambient-spot-1), transparent 72%),
     linear-gradient(180deg, oklch(0.14 0.011 262 / 0.985) 0%, oklch(0.13 0.01 262 / 0.995) 100%);
-}
-
-.animatedBreakSoft .animatedBreakBackground::after {
-  background-image:
+  --animated-break-top-overlay:
     linear-gradient(to right, var(--chart-grid) 1px, transparent 1px),
     linear-gradient(to bottom, var(--chart-grid) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: radial-gradient(circle at 50% 24%, rgba(0, 0, 0, 0.92) 28%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle at 50% 24%, rgba(0, 0, 0, 0.92) 28%, transparent 100%);
-  opacity: 0.18;
+  --animated-break-top-overlay-size: 40px 40px;
+  --animated-break-top-overlay-opacity: 0;
+  --animated-break-bottom-bg:
+    radial-gradient(82% 66% at 50% -8%, var(--ambient-spot-1), transparent 72%),
+    linear-gradient(180deg, oklch(0.14 0.011 262 / 0.985) 0%, oklch(0.13 0.01 262 / 0.995) 100%);
+  --animated-break-bottom-overlay:
+    linear-gradient(to right, var(--chart-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--chart-grid) 1px, transparent 1px);
+  --animated-break-bottom-overlay-size: 40px 40px;
+  --animated-break-bottom-overlay-opacity: 0;
+}
+
+.animatedBreakRise .animatedBreakTop::after,
+.animatedBreakSoft .animatedBreakTop::after,
+.animatedBreakSoft::before {
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
 .problemSection,
@@ -657,7 +760,7 @@
 .problemSection.solutionSection::before {
   content: "";
   position: absolute;
-  top: 0;
+  top: 190px;
   bottom: 0;
   left: 50%;
   width: 100vw;
@@ -672,7 +775,7 @@
 .problemSection.solutionSection::after {
   content: "";
   position: absolute;
-  top: 0;
+  top: 190px;
   bottom: 0;
   left: 50%;
   width: 100vw;
@@ -709,71 +812,84 @@
 
 .impactSection {
   max-width: 1540px;
+  margin-top: -96px;
+  padding-top: calc(clamp(58px, 7.4vh, 104px) + 96px);
+  padding-bottom: clamp(20px, 3.2vh, 46px);
+  --impact-surface-bg:
+    radial-gradient(64% 48% at 18% 18%, oklch(0.32 0.028 262 / 0.08), transparent 76%),
+    radial-gradient(68% 52% at 82% 24%, oklch(0.3 0.024 262 / 0.08), transparent 78%),
+    linear-gradient(180deg, oklch(0.15 0.017 262 / 0.99) 0%, oklch(0.14 0.016 262 / 0.99) 46%, oklch(0.145 0.017 262 / 0.995) 100%);
+  --impact-surface-overlay:
+    linear-gradient(180deg, oklch(0.74 0.03 260 / 0.03), transparent 32%),
+    repeating-linear-gradient(90deg, var(--chart-grid) 0 1px, transparent 1px 28px);
+  --impact-surface-overlay-opacity: 0.14;
 }
 
 .impactSection::before {
-  content: "";
+  content: none;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 50%;
   width: 100vw;
   transform: translateX(-50%);
-  background:
-    radial-gradient(64% 48% at 18% 18%, oklch(0.32 0.028 262 / 0.08), transparent 76%),
-    radial-gradient(68% 52% at 82% 24%, oklch(0.3 0.024 262 / 0.08), transparent 78%),
-    linear-gradient(180deg, oklch(0.15 0.017 262 / 0.99) 0%, oklch(0.14 0.016 262 / 0.99) 46%, oklch(0.145 0.017 262 / 0.995) 100%);
+  background: var(--impact-surface-bg);
   pointer-events: none;
   z-index: -2;
 }
 
 .impactSection::after {
-  content: "";
+  content: none;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 50%;
   width: 100vw;
   transform: translateX(-50%);
-  background:
-    linear-gradient(180deg, oklch(0.74 0.03 260 / 0.03), transparent 32%),
-    repeating-linear-gradient(90deg, var(--chart-grid) 0 1px, transparent 1px 28px);
-  opacity: 0.14;
+  background: var(--impact-surface-overlay);
+  background-size: var(--impact-surface-overlay-size, auto);
+  opacity: var(--impact-surface-overlay-opacity, 0);
   pointer-events: none;
   z-index: -1;
 }
 
 .scenarioSection {
-  padding-block: clamp(20px, 3.2vw, 44px);
+  margin-top: -96px;
+  padding-top: calc(clamp(62px, 8vh, 116px) + 96px);
+  padding-bottom: clamp(140px, 16vw, 240px);
+  --scenario-surface-bg:
+    radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
+    radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
+    linear-gradient(180deg, oklch(0.145 0.012 262 / 1) 0%, oklch(0.14 0.011 262 / 1) 50%, oklch(0.135 0.01 262 / 1) 100%);
+  --scenario-surface-overlay: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
+  --scenario-surface-overlay-size: 8px 8px;
+  --scenario-surface-overlay-opacity: 0.16;
 }
 
 .scenarioSection::before {
-  content: "";
+  content: none;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 50%;
   width: 100vw;
   transform: translateX(-50%);
-  background:
-    radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
-    radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
-    linear-gradient(180deg, oklch(0.145 0.012 262 / 1) 0%, oklch(0.14 0.011 262 / 1) 50%, oklch(0.135 0.01 262 / 1) 100%);
+  background: var(--scenario-surface-bg);
   pointer-events: none;
   z-index: -2;
 }
 
 .scenarioSection::after {
-  content: "";
+  content: none;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 50%;
   width: 100vw;
   transform: translateX(-50%);
-  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
-  background-size: 8px 8px;
-  opacity: 0.16;
+  background: var(--scenario-surface-overlay);
+  background-size: var(--scenario-surface-overlay-size, auto);
+  opacity: var(--scenario-surface-overlay-opacity, 0);
   pointer-events: none;
   z-index: -1;
 }
@@ -865,8 +981,9 @@
 }
 
 .problemSection {
-  margin-top: 28px;
-  padding-block: clamp(42px, 6vw, 72px);
+  margin-top: 72px;
+  padding-top: clamp(126px, 14vw, 198px);
+  padding-bottom: clamp(140px, 16vw, 240px);
 }
 
 .solutionSection .solutionGrid {
@@ -995,8 +1112,7 @@
 }
 
 .challengeCard p,
-.solutionCard p,
-.impactCard p {
+.solutionCard p {
   margin-top: 10px;
   color: var(--text-secondary);
   line-height: 1.56;
@@ -1011,6 +1127,8 @@
   position: relative;
   overflow: hidden;
   contain: paint;
+  display: flex;
+  flex-direction: column;
   min-height: 430px;
   padding: 24px 22px 22px;
   border-radius: 20px;
@@ -1064,7 +1182,7 @@
   z-index: 2;
   width: 100%;
   height: 182px;
-  margin-bottom: 10px;
+  margin-bottom: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1086,7 +1204,7 @@
 }
 
 .impactVisualRealtime {
-  margin-bottom: 8px;
+  margin-bottom: 32px;
 }
 
 .impactVisualHalo {
@@ -1360,24 +1478,6 @@
 
 .impactVisualCore::before {
   content: none;
-}
-
-.impactVisualAccuracy,
-.impactVisualAnalysis {
-  margin-bottom: 8px;
-}
-
-.impactVisualScale {
-  margin-bottom: 8px;
-}
-
-.impactVisualCash {
-  margin-bottom: 8px;
-}
-
-.impactVisualRadar,
-.impactVisualReport {
-  margin-bottom: 8px;
 }
 
 .impactAccuracyOuterRing {
@@ -1947,7 +2047,7 @@
 .impactSection .impactCard h3 {
   margin-top: 10px;
   color: rgba(235, 243, 255, 0.94);
-  font-size: clamp(1.38rem, 1.8vw, 1.72rem);
+  font-size: clamp(1.22rem, 1.45vw, 1.52rem);
   line-height: 1.2;
   letter-spacing: -0.01em;
   position: relative;
@@ -2522,9 +2622,9 @@
 
 .impactMetric {
   display: block;
-  margin-top: 2px;
+  margin-top: 4px;
   color: rgba(241, 246, 255, 0.98);
-  font-size: clamp(2.85rem, 3.9vw, 3.9rem);
+  font-size: clamp(2.35rem, 3.15vw, 3.15rem);
   line-height: 1;
   letter-spacing: -0.03em;
   position: relative;
@@ -2544,22 +2644,22 @@
 .impactDescription {
   margin-top: 10px;
   color: rgba(173, 192, 223, 0.92);
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.55;
   position: relative;
   z-index: 2;
 }
 
 .impactCardRealtime .impactMetric {
-  margin-top: 2px;
-  font-size: clamp(2.85rem, 3.9vw, 3.9rem);
+  margin-top: 4px;
+  font-size: clamp(2.35rem, 3.15vw, 3.15rem);
   letter-spacing: -0.03em;
 }
 
 .impactCardRealtime h3 {
   margin-top: 10px;
   color: rgba(235, 243, 255, 0.94);
-  font-size: clamp(1.38rem, 1.8vw, 1.72rem);
+  font-size: clamp(1.22rem, 1.45vw, 1.52rem);
   line-height: 1.2;
   letter-spacing: -0.01em;
   font-weight: 600;
@@ -2569,7 +2669,7 @@
   margin-top: 10px;
   max-width: none;
   color: rgba(173, 192, 223, 0.92);
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.55;
 }
 
@@ -3494,15 +3594,15 @@
   .page {
     --page-section-gap: 62px;
     padding: 80px 0 72px;
-    gap: var(--page-section-gap);
+    gap: 0;
   }
 
   .animatedBreak {
-    height: 82px;
+    height: 58px;
   }
 
   .animatedBreakCurve {
-    height: 128px;
+    height: 92px;
   }
 
   .heroCard,

@@ -16,21 +16,18 @@ export default function RevealSection({ children, className, id }: RevealSection
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    let revealTimer: ReturnType<typeof setTimeout> | null = null;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
-        revealTimer = setTimeout(() => setVisible(true), 140);
-        observer.disconnect();
+        setVisible(entry.isIntersecting && entry.intersectionRatio > 0.08);
       },
-      { threshold: 0.18, rootMargin: "0px 0px -10% 0px" },
+      { threshold: [0, 0.08, 0.18], rootMargin: "0px 0px -8% 0px" },
     );
 
     observer.observe(node);
+
     return () => {
       observer.disconnect();
-      if (revealTimer) clearTimeout(revealTimer);
     };
   }, []);
 

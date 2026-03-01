@@ -1,0 +1,12 @@
+@import "./ProductsSection.module.scss";
+
+.shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.shownDelayed {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 80ms;
+}

@@ -1,0 +1,248 @@
+import { Check, ChevronDown } from "lucide-react";
+import type { CSSProperties, RefObject } from "react";
+import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import styles from "./DashboardSection.module.scss";
+
+type AnalysisMetric = "netIncome" | "ebit" | "ebitda" | "grossProfit";
+
+type DashboardMetric = { id: AnalysisMetric; label: string; seriesK: number[] };
+
+type DashboardSectionProps = {
+  dashboardSectionRef: RefObject<HTMLDivElement | null>;
+  waveHeight: number;
+  dashboardCurvePath: string;
+  dashboardCurveClip: string;
+  dashboardVisible: boolean;
+  analysisUpdating: boolean;
+  trendAnimating: boolean;
+  trendResetting: boolean;
+  trendSeries: Array<[number, number]>;
+  trendAreaPath: string;
+  trendLinePath: string;
+  analysisMetricOpen: boolean;
+  trendMetricMenuRef: RefObject<HTMLDivElement | null>;
+  activeMetric: DashboardMetric;
+  analysisMetric: AnalysisMetric;
+  analysisMetrics: DashboardMetric[];
+  selectedMetricAmount: number;
+  selectedMetricPreviousAmount: number;
+  selectedMetricDelta: number;
+  selectedMetricPreviousDelta: number;
+  analysisCompareLabel: string;
+  onToggleMetricMenu: () => void;
+  onSelectMetric: (metric: AnalysisMetric) => void;
+  formatSek: (value: number) => string;
+  formatPercent: (value: number) => string;
+  monthLabels: string[];
+  trendAxisTicks: string[];
+};
+
+function MiniMincfoBrand() {
+  return (
+    <span className={styles.visualBrand} aria-hidden="true">
+      <svg className={styles.visualMark} viewBox="0 0 50 50" role="img">
+        <g fill="currentColor">
+          <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
+          <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
+          <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
+          <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
+        </g>
+      </svg>
+      <span className={styles.visualWordmark}>{HOME_PAGE_TEXT.footer.brandWord}</span>
+    </span>
+  );
+}
+
+export function DashboardSection({
+  dashboardSectionRef,
+  waveHeight,
+  dashboardCurvePath,
+  dashboardCurveClip,
+  dashboardVisible,
+  analysisUpdating,
+  trendAnimating,
+  trendResetting,
+  trendSeries,
+  trendAreaPath,
+  trendLinePath,
+  analysisMetricOpen,
+  trendMetricMenuRef,
+  activeMetric,
+  analysisMetric,
+  analysisMetrics,
+  selectedMetricAmount,
+  selectedMetricPreviousAmount,
+  selectedMetricDelta,
+  selectedMetricPreviousDelta,
+  analysisCompareLabel,
+  onToggleMetricMenu,
+  onSelectMetric,
+  formatSek,
+  formatPercent,
+  monthLabels,
+  trendAxisTicks,
+}: DashboardSectionProps) {
+  return (
+    <div className={styles.dashboardSection} ref={dashboardSectionRef}>
+      <svg
+        className={styles.dashboardCut}
+        viewBox={`0 0 1440 ${waveHeight}`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path d={dashboardCurvePath} />
+      </svg>
+
+      <div
+        className={styles.dashboardBackground}
+        aria-hidden="true"
+        style={
+          {
+            clipPath: dashboardCurveClip,
+            WebkitClipPath: dashboardCurveClip,
+          } as CSSProperties
+        }
+      />
+
+      <div
+        className={`${styles.container} ${styles.dashboardContainer} ${dashboardVisible ? styles.dashboardVisible : ""}`}
+      >
+        <div className={`${styles.right} ${styles.dashboardRight} ${dashboardVisible ? styles.shownDelayed : ""}`}>
+          <article className={styles.dashboardPanel} aria-label={HOME_PAGE_TEXT.aicopilot.dashboard.previewAria}>
+            <MiniMincfoBrand />
+
+            <div className={styles.statGrid}>
+              <div className={styles.statCard}>
+                <div className={styles.statLabelRow}>
+                  <span>{activeMetric.label} ({HOME_PAGE_TEXT.aicopilot.dashboard.currentLabel})</span>
+                </div>
+                <div className={styles.statAmount}>
+                  <strong>{formatSek(selectedMetricAmount)}</strong>
+                  <span>{HOME_PAGE_TEXT.aicopilot.dashboard.currencyLabel}</span>
+                </div>
+                <div className={`${styles.statDelta} ${selectedMetricDelta < 0 ? styles.down : ""}`}>
+                  {formatPercent(selectedMetricDelta)}
+                </div>
+                <p className={styles.statMeta}>{analysisCompareLabel}</p>
+              </div>
+
+              <div className={styles.statCard}>
+                <div className={styles.statLabelRow}>
+                  <span>{activeMetric.label} ({HOME_PAGE_TEXT.aicopilot.dashboard.previousLabel})</span>
+                </div>
+                <div className={styles.statAmount}>
+                  <strong>{formatSek(selectedMetricPreviousAmount)}</strong>
+                  <span>{HOME_PAGE_TEXT.aicopilot.dashboard.currencyLabel}</span>
+                </div>
+                <div className={`${styles.statDelta} ${selectedMetricPreviousDelta < 0 ? styles.down : ""}`}>
+                  {formatPercent(selectedMetricPreviousDelta)}
+                </div>
+                <p className={styles.statMeta}>{analysisCompareLabel}</p>
+              </div>
+            </div>
+
+            <div className={`${styles.trendPanel} ${analysisUpdating ? styles.panelUpdating : ""}`}>
+              <header className={styles.trendHeader}>
+                <p>{HOME_PAGE_TEXT.aicopilot.dashboard.resultTitle}</p>
+                <div className={styles.trendHeaderRight} ref={trendMetricMenuRef}>
+                  <button
+                    type="button"
+                    className={styles.metricTrigger}
+                    aria-haspopup="menu"
+                    aria-expanded={analysisMetricOpen}
+                    onClick={onToggleMetricMenu}
+                  >
+                    {activeMetric.label}
+                    <ChevronDown
+                      aria-hidden="true"
+                      size={14}
+                      className={`${styles.metricTriggerIcon} ${analysisMetricOpen ? styles.metricTriggerIconOpen : ""}`}
+                    />
+                  </button>
+                  {analysisMetricOpen && (
+                    <div className={styles.metricMenu} role="menu" aria-label={HOME_PAGE_TEXT.aicopilot.dashboard.metricMenuAria}>
+                      {analysisMetrics.map((metric) => (
+                        <button
+                          key={metric.id}
+                          type="button"
+                          role="menuitemradio"
+                          aria-checked={analysisMetric === metric.id}
+                          className={`${styles.metricOption} ${analysisMetric === metric.id ? styles.metricOptionActive : ""}`}
+                          onClick={() => onSelectMetric(metric.id)}
+                        >
+                          {metric.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <div className={styles.trendLegend}>
+                    <span className={styles.trendDot} />
+                    {activeMetric.label}
+                  </div>
+                </div>
+              </header>
+
+              <div className={styles.trendChartWrap}>
+                <div className={styles.trendAxisY} aria-hidden="true">
+                  {trendAxisTicks.map((tick) => (
+                    <span key={tick}>{tick}</span>
+                  ))}
+                </div>
+
+                <div className={styles.trendSvgWrap}>
+                  <svg
+                    className={`${styles.trendSvg} ${trendAnimating ? styles.trendVisible : ""} ${trendResetting ? styles.trendReset : ""}`}
+                    viewBox="0 0 760 290"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      className={styles.trendArea}
+                      d={trendAreaPath}
+                    />
+                    <path
+                      className={styles.trendLine}
+                      d={trendLinePath}
+                    />
+                    <g className={styles.trendPoints}>
+                      {trendSeries.map(([x, y], index) => (
+                        <circle
+                          key={`${x}-${y}`}
+                          cx={x}
+                          cy={y}
+                          r="4"
+                          style={{ "--point-delay": `${index * 170 + 180}ms` } as CSSProperties}
+                        />
+                      ))}
+                    </g>
+                  </svg>
+
+                  <div className={styles.trendMonths} aria-hidden="true">
+                    {monthLabels.map((month) => (
+                      <span key={month}>{month}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div className={`${styles.left} ${styles.dashboardLeft} ${dashboardVisible ? styles.shown : ""}`}>
+          <span className={styles.pill}>{HOME_PAGE_TEXT.aicopilot.dashboard.pill}</span>
+          <h2 className={styles.title}>{HOME_PAGE_TEXT.aicopilot.dashboard.title}</h2>
+          <p className={styles.text}>{HOME_PAGE_TEXT.aicopilot.dashboard.intro}</p>
+
+          <ul className={styles.list}>
+            {HOME_PAGE_TEXT.aicopilot.dashboard.kpiBullets.map((item) => (
+              <li key={item}>
+                <Check aria-hidden="true" size={14} />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}

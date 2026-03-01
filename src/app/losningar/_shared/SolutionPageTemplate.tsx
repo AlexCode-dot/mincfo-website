@@ -21,8 +21,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import AnimatedSectionBreak from "../ceo-founders/AnimatedSectionBreak";
 import RevealSection from "../ceo-founders/RevealSection";
+import SectionTopCurve from "../ceo-founders/SectionTopCurve";
 import ScenarioVisualization from "../ceo-founders/ScenarioVisualization";
 import TestimonialSpotlight from "../ceo-founders/TestimonialSpotlight";
 import styles from "../ceo-founders/page.module.scss";
@@ -115,6 +115,11 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
         </RevealSection>
 
         <RevealSection className={`${styles.section} ${styles.problemSection} ${styles.solutionSection}`} id="utmaning">
+          <SectionTopCurve
+            shape="archUp"
+            fillClassName={styles.topCurveProblemSectionFill}
+          />
+
           <div className={styles.sectionPart}>
             <header className={styles.sectionHead}>
               <h2>{content.dilemmaTitle}</h2>
@@ -212,8 +217,6 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             </div>
           </div>
         </RevealSection>
-        <AnimatedSectionBreak variant="rise" />
-
         <ScenarioVisualization
           heading={content.scenario.heading}
           description={scenarioDescription}
@@ -228,9 +231,12 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           activeMonth={content.scenario.activeMonth}
           chartSubtitle={content.scenario.metrics[2]}
         />
-        <AnimatedSectionBreak variant="dip" />
 
         <RevealSection className={`${styles.section} ${styles.impactSection}`}>
+          <SectionTopCurve
+            shape="archUp"
+            fillClassName={styles.topCurveImpactFill}
+          />
           <div className={styles.impactIntro}>
             <div>
               <p className={styles.impactTag}>{SOLUTION_SHARED_CONTENT.impactTag}</p>
