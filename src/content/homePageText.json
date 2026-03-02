@@ -354,6 +354,18 @@
       {
         "name": "SweBal",
         "file": "logo-swebal.avif"
+      },
+      {
+        "name": "Growbit",
+        "file": "logo-growbit.svg"
+      },
+      {
+        "name": "Safetly",
+        "file": "logo-safetly.svg"
+      },
+      {
+        "name": "Azeea",
+        "file": "logo-azeea.svg"
       }
     ]
   },

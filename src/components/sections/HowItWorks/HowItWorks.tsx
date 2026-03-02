@@ -218,7 +218,7 @@ export default function HowItWorks() {
     }
   };
 
-  const sideY = lerp(6, 86, curveProgress);
+  const sideY = lerp(6, 72, curveProgress);
   const centerY = lerp(6, 2, curveProgress);
   const cutPath = `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`;
   const curvePoints: string[] = [];

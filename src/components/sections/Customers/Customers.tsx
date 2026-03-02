@@ -40,6 +40,10 @@ const TRUSTED_LOGOS = HOME_PAGE_TEXT.customers.trustedLogos.map((logo) => ({ ...
 const TRUSTED_LOGO_BY_NAME = new Map<string, string>(
   TRUSTED_LOGOS.map((logo) => [logo.name, logo.file]),
 );
+const TICKER_LOGO_CLASS_BY_NAME: Record<string, string> = {
+  Growbit: styles.logoGrowbit,
+  Azeea: styles.logoAzeea,
+};
 
 export default function Customers() {
   const { isReducedMotion } = useMotion();
@@ -216,7 +220,7 @@ export default function Customers() {
               {tickerLogos.map((logo, index) => (
                 <span key={`${logo.file}-${index}`} className={styles.tickerItem}>
                   <Image
-                    className={`${styles.tickerLogo} ${logo.name === "Showcase" ? styles.logoSoft : ""}`}
+                    className={`${styles.tickerLogo} ${logo.name === "Showcase" ? styles.logoSoft : ""} ${TICKER_LOGO_CLASS_BY_NAME[logo.name] ?? ""}`}
                     src={`/customers/logos/${logo.file}`}
                     alt={`${logo.name} logo`}
                     width={160}

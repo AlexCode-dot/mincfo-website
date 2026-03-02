@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="120" viewBox="0 0 700 120" role="img" aria-label="Azeea ĀTTĀ Technologies logo">
+  <style>
+    .logo { color:#A6AFB9; }
+    .title { font: 600 42px/1.15 system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif; letter-spacing:0.2px; }
+    .tag   { font: 500 22px/1.2 system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif; opacity:0.75; }
+  </style>
+
+  <g class="logo">
+
+    <!-- Icon -->
+    <g transform="translate(24,10)">
+      <!-- subtle circle like screenshot logos -->
+      <circle cx="50" cy="50" r="50" fill="currentColor" opacity="0.18"/>
+
+      <!-- inner mark -->
+      <g fill="currentColor" transform="scale(0.5)">
+        <path d="M160.66,161.03c.85,2.08-.68,4.35-2.92,4.35h-21.31c-1.46,0-2.78-.89-3.33-2.24,0,0-27.34-68.28-30.8-75.79-1-2.18-4.13-2.07-4.99.16l-30.47,75.63c-.6,1.47-2.03,2.43-3.62,2.41l-20.7-.21c-2.43-.02-4.08-2.49-3.17-4.74,0,0,37.87-93.09,43.31-106.42,1.22-3,3.87-4.6,7.1-4.58l21.92-.21c2.67.01,5.06,1.68,6,4.19l42.98,107.47Z"/>
+        <path d="M124.84,20.19l-49.65-.07c-3.46,0-6.27,2.8-6.27,6.26v6.49c0,3.46,2.8,6.26,6.26,6.26h49.65c3.46,0,6.26-2.8,6.26-6.26v-6.41c0-3.46-2.8-6.26-6.25-6.26Z"/>
+      </g>
+    </g>
+
+    <!-- Wordmark -->
+    <text x="140" y="56" class="title" fill="currentColor">Azeea ĀTTĀ Technologies</text>
+    <text x="140" y="90" class="tag" fill="currentColor">Ambient Emergent Intelligence</text>
+
+  </g>
+</svg>

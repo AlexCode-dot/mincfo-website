@@ -4,7 +4,7 @@ import { ChevronRight, Lock, Play } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import { useMotion } from "@/components/system/MotionProvider";
-import BeamBackground from "@/components/visual/BeamBackground/BeamBackground";
+import HeroFluidTop from "@/components/visual/HeroFluidTop/HeroFluidTop";
 import styles from "./Hero.module.scss";
 
 const clamp = (value: number, min: number, max: number) =>
@@ -45,19 +45,19 @@ export default function Hero() {
       const cardWrap = cardWrapRef.current;
       if (!card || !cardWrap) return;
 
-      const introProgress = clamp((state.progress - 0.04) / 0.52, 0, 1);
-      const cardProgress = clamp((state.progress - 0.08) / 0.62, 0, 1);
+      const introProgress = clamp(state.progress / 0.5, 0, 1);
+      const cardProgress = clamp((state.progress - 0.08) / 0.84, 0, 1);
 
       const baseRotateX = 16 - state.progress * 9;
       const baseScale = 1 - state.progress * 0.03;
       const mouseRotateX = state.hovering ? -state.mouseY * 4 : 0;
       const mouseRotateY = state.hovering ? state.mouseX * 6 : 0;
-      const travelY = state.reduceMotion ? 0 : cardProgress * 520;
+      const travelY = state.reduceMotion ? 0 : cardProgress * 480;
 
       if (intro) {
-        const introLift = state.reduceMotion ? 0 : introProgress * 180;
+        const introLift = state.reduceMotion ? 0 : introProgress * 320;
         intro.style.transform = `translate3d(0, -${introLift}px, 0)`;
-        intro.style.opacity = `${1 - introProgress}`;
+        intro.style.opacity = `${Math.pow(1 - introProgress, 1.8)}`;
       }
 
       cardWrap.style.transform = `translate3d(0, -${travelY}px, 0)`;
@@ -77,7 +77,8 @@ export default function Hero() {
       const section = sectionRef.current ?? sectionNode;
       if (!section) return;
       const rect = section.getBoundingClientRect();
-      const progress = clamp(-rect.top / (rect.height * 0.75), 0, 1);
+      const maxScroll = Math.max(rect.height - window.innerHeight, 1);
+      const progress = clamp(-rect.top / (maxScroll * 1.35), 0, 1);
       state.progress = progress;
       scheduleUpdate();
     };
@@ -169,7 +170,7 @@ export default function Hero() {
   return (
     <section ref={sectionRef} id="hero" className={styles.hero}>
       <div className={styles.topBackground} aria-hidden="true">
-        <BeamBackground shaderOffsetY={-0.22} />
+        <HeroFluidTop height="100%" />
       </div>
 
       <div className={styles.container}>
