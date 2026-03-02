@@ -225,7 +225,7 @@ export default function Customers() {
                     alt={`${logo.name} logo`}
                     width={160}
                     height={42}
-                    loading="lazy"
+                    loading="eager"
                   />
                 </span>
               ))}

@@ -113,11 +113,12 @@
 }
 
 .trustedLabel {
-  margin: 0 0 14px;
+  margin: 0 0 34px;
   text-align: center;
   color: var(--text-secondary);
-  font-size: 0.84rem;
-  letter-spacing: 0.04em;
+  font-size: clamp(1.12rem, 1.45vw, 1.38rem);
+  letter-spacing: 0.01em;
+  font-weight: 600;
 }
 
 .tickerViewport {
@@ -153,12 +154,16 @@
 }
 
 .tickerTrack {
+  --ticker-gap: 58px;
   display: inline-flex;
   align-items: center;
-  gap: 58px;
+  gap: var(--ticker-gap);
   width: max-content;
   padding: 6px 0;
   animation: trustedTickerMove 34s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 .tickerItem {
@@ -227,10 +232,10 @@
 
 @keyframes trustedTickerMove {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translate3d(calc(-50% - (var(--ticker-gap) / 2)), 0, 0);
   }
 }
 
@@ -445,12 +450,12 @@
   }
 
   .trustedLabel {
-    margin-bottom: 8px;
-    font-size: 0.74rem;
+    margin-bottom: 22px;
+    font-size: 1.05rem;
   }
 
   .tickerTrack {
-    gap: 42px;
+    --ticker-gap: 42px;
     padding: 10px 0;
     animation-duration: 28s;
   }
