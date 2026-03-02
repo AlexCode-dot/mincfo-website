@@ -114,11 +114,51 @@
 
 .trustedLabel {
   margin: 0 0 34px;
+  position: relative;
   text-align: center;
   color: var(--text-secondary);
   font-size: clamp(1.12rem, 1.45vw, 1.38rem);
   letter-spacing: 0.01em;
   font-weight: 600;
+  isolation: isolate;
+}
+
+.trustedLabel::before,
+.trustedLabel::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.trustedLabel::before {
+  bottom: -14px;
+  width: clamp(150px, 20vw, 250px);
+  height: 6px;
+  background: radial-gradient(
+    68% 100% at 50% 50%,
+    color-mix(in oklab, var(--btn-primary-bg) 42%, white 10%) 0%,
+    transparent 74%
+  );
+  filter: blur(2px);
+  opacity: 0.34;
+}
+
+.trustedLabel::after {
+  bottom: -12px;
+  width: clamp(132px, 18vw, 220px);
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--btn-primary-bg) 52%, white 12%) 24%,
+    color-mix(in oklab, var(--btn-primary-bg) 66%, white 6%) 50%,
+    color-mix(in oklab, var(--btn-primary-bg) 52%, white 12%) 76%,
+    transparent 100%
+  );
+  opacity: 0.78;
 }
 
 .tickerViewport {
@@ -452,6 +492,17 @@
   .trustedLabel {
     margin-bottom: 22px;
     font-size: 1.05rem;
+  }
+
+  .trustedLabel::before {
+    bottom: -13px;
+    width: clamp(126px, 48vw, 210px);
+    height: 5px;
+  }
+
+  .trustedLabel::after {
+    bottom: -11px;
+    width: clamp(112px, 42vw, 185px);
   }
 
   .tickerTrack {
