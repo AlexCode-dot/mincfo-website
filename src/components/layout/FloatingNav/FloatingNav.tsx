@@ -16,7 +16,6 @@ const HOMEPAGE_SECTIONS = [
 ] as const;
 
 const SOLUTION_GROUPS = HOME_PAGE_TEXT.navigation.groups;
-
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
@@ -54,15 +53,6 @@ export default function FloatingNav() {
   }, []);
 
   useEffect(() => {
-    return () => {
-      if (scrollRafRef.current) {
-        window.cancelAnimationFrame(scrollRafRef.current);
-        scrollRafRef.current = null;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     const media = window.matchMedia("(min-width: 981px)");
     const onChange = (event: MediaQueryListEvent) => {
       if (!event.matches) return;
@@ -72,6 +62,35 @@ export default function FloatingNav() {
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (!scrollRafRef.current) return;
+      window.cancelAnimationFrame(scrollRafRef.current);
+      scrollRafRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (pathname !== "/") return;
+
+    const previousRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    const navEntry = performance.getEntriesByType("navigation")[0] as
+      | PerformanceNavigationTiming
+      | undefined;
+
+    if (navEntry?.type === "reload") {
+      window.requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      });
+    }
+
+    return () => {
+      window.history.scrollRestoration = previousRestoration;
+    };
+  }, [pathname]);
 
   useEffect(() => {
     const onPointerDown = (event: PointerEvent) => {
@@ -124,24 +143,23 @@ export default function FloatingNav() {
 
     const startY = window.scrollY;
     const distance = targetY - startY;
-    if (Math.abs(distance) < 2) {
-      window.scrollTo(0, targetY);
+    const distanceAbs = Math.abs(distance);
+
+    if (distanceAbs < 2 || isReducedMotion) {
+      window.scrollTo({ top: targetY, left: 0, behavior: "auto" });
       return;
     }
 
-    const distanceAbs = Math.abs(distance);
-    const duration = isReducedMotion
-      ? clamp(distanceAbs * 0.32, 180, 360)
-      : distanceAbs < 96
-        ? 520
-        : clamp(distanceAbs * 1.12, 900, 1600);
+    const duration = distanceAbs < 160
+      ? 420
+      : clamp(distanceAbs * 0.78, 620, 1350);
     const startTime = performance.now();
 
     const tick = (now: number) => {
       const elapsed = now - startTime;
       const progress = clamp(elapsed / duration, 0, 1);
-      const eased = isReducedMotion ? progress : easeOutCubic(progress);
-      window.scrollTo(0, startY + distance * eased);
+      const eased = easeOutCubic(progress);
+      window.scrollTo({ top: startY + distance * eased, left: 0, behavior: "auto" });
 
       if (progress < 1) {
         scrollRafRef.current = window.requestAnimationFrame(tick);

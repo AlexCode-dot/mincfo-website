@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="420" height="120" viewBox="0 0 420 120" role="img" aria-label="growbit logo">
   <style>
     .logo { color:#8A8F98; }
-    .word { font: 550 64px/1.1 system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif; letter-spacing:0.2px; }
+    .word { font: 550 70px/1.1 system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif; letter-spacing:0.2px; }
   </style>
 
   <g class="logo" fill="currentColor" opacity="0.85">
     <!-- Icon: two nested right-angle brackets -->
-    <g transform="translate(26,22)">
+    <g transform="translate(22,16) scale(1.14)">
       <!-- outer L -->
       <rect x="68" y="0"  width="14" height="64" rx="2"/>
       <rect x="18" y="0"  width="64" height="14" rx="2"/>
@@ -16,6 +16,6 @@
     </g>
 
     <!-- Wordmark -->
-    <text x="150" y="82" class="word">growbit</text>
+    <text x="165" y="82" class="word">growbit</text>
   </g>
 </svg>

@@ -16,9 +16,18 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type CSSProperties,
+  type FormEvent,
+  type KeyboardEvent,
+} from "react";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import { useMotion } from "@/components/system/MotionProvider";
+import BeamBackgroundMain from "@/components/visual/BeamBackgroundMain/BeamBackgroundMain";
 import styles from "./HowItWorks.module.scss";
 
 type OfferKey = "platform" | "faas";
@@ -37,6 +46,44 @@ type OfferModel = {
 
 const OFFER_ORDER: OfferKey[] = ["platform", "faas"];
 const CUT_HEIGHT = 190;
+const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
+const subscribeHydration = () => () => {};
+const getHydratedSnapshot = () => true;
+const getHydratedServerSnapshot = () => false;
+
+function GoogleIcon() {
+  return (
+    <svg className={styles.accountProviderIcon} viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M23.49 12.27c0-.79-.07-1.54-.2-2.27H12v4.3h6.46a5.53 5.53 0 0 1-2.39 3.63v3.01h3.87c2.27-2.09 3.55-5.18 3.55-8.67Z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 24c3.24 0 5.95-1.07 7.93-2.9l-3.87-3.01c-1.07.72-2.45 1.14-4.06 1.14-3.12 0-5.76-2.11-6.7-4.95H1.3v3.1A12 12 0 0 0 12 24Z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.3 14.28A7.2 7.2 0 0 1 4.92 12c0-.79.14-1.56.38-2.28v-3.1H1.3A12 12 0 0 0 0 12c0 1.94.46 3.78 1.3 5.38l4-3.1Z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 4.77c1.76 0 3.34.6 4.58 1.78l3.44-3.44C17.95 1.18 15.24 0 12 0A12 12 0 0 0 1.3 6.62l4 3.1c.94-2.84 3.58-4.95 6.7-4.95Z"
+      />
+    </svg>
+  );
+}
+
+function MicrosoftIcon() {
+  return (
+    <svg className={styles.accountProviderIcon} viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="2" y="2" width="9" height="9" fill="#F25022" />
+      <rect x="13" y="2" width="9" height="9" fill="#7FBA00" />
+      <rect x="2" y="13" width="9" height="9" fill="#00A4EF" />
+      <rect x="13" y="13" width="9" height="9" fill="#FFB900" />
+    </svg>
+  );
+}
 
 const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));
@@ -86,6 +133,12 @@ export default function HowItWorks() {
   const [activeOffer, setActiveOffer] = useState<OfferKey>("platform");
   const [switching, setSwitching] = useState(false);
   const [revealedSteps, setRevealedSteps] = useState(0);
+  const [signupEmail, setSignupEmail] = useState("");
+  const isClientReady = useSyncExternalStore(
+    subscribeHydration,
+    getHydratedSnapshot,
+    getHydratedServerSnapshot,
+  );
 
   const currentOffer = OFFERS[activeOffer];
 
@@ -216,6 +269,11 @@ export default function HowItWorks() {
       event.preventDefault();
       handleSelectOffer(OFFER_ORDER[OFFER_ORDER.length - 1]);
     }
+  };
+
+  const handleAccountHandoff = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    window.location.href = APP_LOGIN_URL;
   };
 
   const sideY = lerp(6, 72, curveProgress);
@@ -454,44 +512,80 @@ export default function HowItWorks() {
                     } ${isFaasSystemsStep ? styles.stepVisualFaasSystems : ""
                     } ${isFaasRealtimeStep ? styles.stepVisualFaasRealtime : ""
                     }`}
-                    aria-hidden="true"
+                    aria-hidden={!isCreateAccountStep}
                   >
                     <div className={styles.visualSurface}>
                       {isCreateAccountStep ? (
-                        <div className={styles.accountMock}>
-                          <div className={styles.accountHeader}>
-                            <span className={styles.accountBrand}>{HOME_PAGE_TEXT.footer.brandWord}</span>
-                            <span className={styles.accountSecure}>{HOME_PAGE_TEXT.howItWorks.ui.account.secureLabel}</span>
+                        <div className={styles.accountMiniScene}>
+                          <div className={styles.accountMiniBackdrop} aria-hidden="true">
+                            <BeamBackgroundMain
+                              className={styles.accountMiniBeam}
+                              extendBottom={260}
+                            />
+                          </div>
+                          <div className={styles.accountMiniBrand}>
+                            <svg className={styles.accountMiniMark} viewBox="0 0 50 50" aria-hidden="true">
+                              <g fill="currentColor">
+                                <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
+                                <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
+                                <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
+                                <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
+                              </g>
+                            </svg>
+                            <span>{HOME_PAGE_TEXT.footer.brandWord}</span>
                           </div>
 
-                          <div className={styles.accountTabs}>
-                            <span className={`${styles.accountTab} ${styles.accountTabActive}`}>
-                              {HOME_PAGE_TEXT.howItWorks.ui.account.tabCreate}
-                            </span>
-                            <span className={styles.accountTab}>{HOME_PAGE_TEXT.howItWorks.ui.account.tabLogin}</span>
-                          </div>
+                          <form className={styles.accountMock} onSubmit={handleAccountHandoff}>
+                            <div className={styles.accountWelcomeWrap}>
+                              <h5 className={styles.accountWelcomeTitle}>Welcome back</h5>
+                              <p className={styles.accountWelcomeSub}>Sign in to continue</p>
+                            </div>
 
-                          <div className={styles.accountInputGroup}>
-                            <span className={styles.accountInputLabel}>{HOME_PAGE_TEXT.howItWorks.ui.account.emailLabel}</span>
-                            <span className={styles.accountField} />
-                          </div>
+                            <div className={styles.accountSsoStack}>
+                              <a
+                                href={APP_LOGIN_URL}
+                                className={`${styles.accountTab} ${styles.accountTabLink}`}
+                              >
+                                <GoogleIcon />
+                                <span>Continue with Google</span>
+                              </a>
+                              <a
+                                href={APP_LOGIN_URL}
+                                className={`${styles.accountTab} ${styles.accountTabLink}`}
+                              >
+                                <MicrosoftIcon />
+                                <span>Continue with Microsoft</span>
+                              </a>
+                            </div>
 
-                          <div className={styles.accountInputGroup}>
-                            <span className={styles.accountInputLabel}>{HOME_PAGE_TEXT.howItWorks.ui.account.passwordLabel}</span>
-                            <span className={styles.accountFieldShort} />
-                          </div>
+                            <div className={styles.accountDivider} aria-hidden="true">
+                              <span>OR</span>
+                            </div>
 
-                          <div className={styles.accountMetaRow}>
-                            <span className={styles.accountCheck} />
-                            <span className={styles.accountMetaText}>{HOME_PAGE_TEXT.howItWorks.ui.account.termsLabel}</span>
-                          </div>
+                            <div className={styles.accountInputGroup}>
+                              {isClientReady ? (
+                                <input
+                                  id="how-it-works-account-email"
+                                  type="email"
+                                  inputMode="email"
+                                  autoComplete="email"
+                                  suppressHydrationWarning
+                                  aria-label="Enter email address"
+                                  placeholder="Enter email address"
+                                  required
+                                  value={signupEmail}
+                                  onChange={(event) => setSignupEmail(event.target.value)}
+                                  className={styles.accountField}
+                                />
+                              ) : (
+                                <span className={styles.accountField} aria-hidden="true" />
+                              )}
+                            </div>
 
-                          <span className={styles.accountButton}>{HOME_PAGE_TEXT.howItWorks.ui.account.buttonLabel}</span>
-
-                          <div className={styles.accountFooter}>
-                            <span className={styles.accountFooterText}>{HOME_PAGE_TEXT.howItWorks.ui.account.existingAccountLabel}</span>
-                            <span className={styles.accountFooterLink}>{HOME_PAGE_TEXT.howItWorks.ui.account.loginLinkLabel}</span>
-                          </div>
+                            <button type="submit" className={styles.accountButton} suppressHydrationWarning>
+                              Continue
+                            </button>
+                          </form>
                         </div>
                       ) : isConnectFortnoxStep ? (
                         <div className={styles.connectMock}>

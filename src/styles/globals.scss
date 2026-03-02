@@ -15,15 +15,8 @@ body {
 }
 
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 96px;
   scrollbar-gutter: stable;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
 }
 
 body {
