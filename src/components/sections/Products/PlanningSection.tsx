@@ -17,7 +17,8 @@ type PlanningSectionProps = {
   animatedPlanTotalDelta: number;
   planForecastAreaPath: string;
   planForecastLinePath: string;
-  planActualCutoffX: number;
+  selectedPlanPointX: number;
+  selectedPlanPointY: number;
   formatSek: (value: number) => string;
   formatPercent: (value: number) => string;
   onSelectPlanMonth: (index: number) => void;
@@ -54,7 +55,8 @@ export function PlanningSection({
   animatedPlanTotalDelta,
   planForecastAreaPath,
   planForecastLinePath,
-  planActualCutoffX,
+  selectedPlanPointX,
+  selectedPlanPointY,
   formatSek,
   formatPercent,
   onSelectPlanMonth,
@@ -152,11 +154,23 @@ export function PlanningSection({
                       ))}
                     </div>
                     <div className={`${styles.planForecastChart} ${planUpdating ? styles.panelUpdating : ""}`}>
-                      <svg viewBox="0 0 682 190" preserveAspectRatio="none" aria-hidden="true">
-                        <path className={styles.planForecastArea} d={planForecastAreaPath} />
-                        <path className={styles.planForecastLine} d={planForecastLinePath} />
-                        <line className={styles.planActualSplit} x1={planActualCutoffX} y1="16" x2={planActualCutoffX} y2="184" />
-                      </svg>
+                      <div className={styles.planForecastPlot}>
+                        <svg viewBox="0 0 682 190" preserveAspectRatio="none" aria-hidden="true">
+                          <path className={styles.planForecastArea} d={planForecastAreaPath} />
+                          <path className={styles.planForecastLine} d={planForecastLinePath} />
+                          <line className={styles.planSelectedGuide} x1={selectedPlanPointX} y1="16" x2={selectedPlanPointX} y2="184" />
+                        </svg>
+                        <span
+                          className={styles.planSelectedPointDot}
+                          aria-hidden="true"
+                          style={
+                            {
+                              "--plan-selected-x": `${(selectedPlanPointX / 682) * 100}%`,
+                              "--plan-selected-y": `${(selectedPlanPointY / 190) * 100}%`,
+                            } as CSSProperties
+                          }
+                        />
+                      </div>
                       <p className={styles.planForecastLegend} aria-hidden="true">
                         {HOME_PAGE_TEXT.aicopilot.planning.legend}
                       </p>

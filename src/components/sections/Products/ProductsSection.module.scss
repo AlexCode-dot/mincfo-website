@@ -911,8 +911,7 @@
     rgba(114, 156, 224, 0.02) 60%,
     transparent 76%
   );
-  transform: translateX(-130%);
-  animation: planForecastSweep 5.8s ease-in-out infinite;
+  opacity: 0.42;
 }
 
 .planForecastChart svg {
@@ -920,6 +919,16 @@
   z-index: 1;
   width: 100%;
   height: 210px;
+}
+
+.planForecastPlot {
+  position: relative;
+  height: 210px;
+}
+
+.planForecastPlot svg {
+  width: 100%;
+  height: 100%;
 }
 
 .planForecastLine {
@@ -930,22 +939,45 @@
   stroke-linejoin: round;
   stroke-dasharray: 1200;
   stroke-dashoffset: 1200;
-  animation: planForecastDraw 4.8s cubic-bezier(0.28, 0.11, 0.22, 1) infinite;
   transition: stroke 260ms ease;
 }
 
 .planForecastArea {
   fill: var(--chart-fill);
   opacity: 0;
-  animation: planForecastAreaReveal 4.8s ease infinite;
   transition: fill 260ms ease, opacity 260ms ease;
 }
 
-.planActualSplit {
-  stroke: oklch(0.68 0.05 264 / 0.44);
-  stroke-width: 1.4;
-  stroke-dasharray: 3 8;
-  animation: planActualSplitFlow 2.1s linear infinite;
+.planVisible .planForecastLine {
+  animation: planForecastDraw 950ms cubic-bezier(0.28, 0.11, 0.22, 1) both;
+}
+
+.planVisible .planForecastArea {
+  animation: planForecastAreaReveal 1100ms ease both;
+}
+
+.planSelectedGuide {
+  stroke: oklch(0.79 0.07 272 / 0.5);
+  stroke-width: 1.35;
+  stroke-dasharray: 4 6;
+  opacity: 0.95;
+}
+
+.planSelectedPointDot {
+  --plan-selected-x: 50%;
+  --plan-selected-y: 50%;
+  position: absolute;
+  left: var(--plan-selected-x);
+  top: var(--plan-selected-y);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--chart-line) 84%, white 14%);
+  border: 1.35px solid rgba(203, 220, 255, 0.9);
+  box-shadow: 0 0 7px rgba(95, 122, 255, 0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .planMonthAxis {
@@ -1040,11 +1072,13 @@
   border-radius: 14px;
   background: rgba(9, 16, 30, 0.88);
   box-shadow: inset 0 0 0 1px rgba(112, 145, 197, 0.18);
-  overflow: hidden;
+  overflow: visible;
   transition: transform 260ms ease, box-shadow 260ms ease;
 }
 
 .trendHeader {
+  position: relative;
+  z-index: 12;
   height: 58px;
   padding: 0 18px;
   display: flex;
@@ -1110,6 +1144,10 @@
   transform: rotate(180deg);
 }
 
+.metricTriggerIconAuto {
+  color: rgba(224, 236, 255, 0.96);
+}
+
 .metricMenu {
   position: absolute;
   top: 38px;
@@ -1147,6 +1185,12 @@
 .metricOptionActive {
   background: rgba(72, 95, 229, 0.34);
   color: rgba(238, 245, 255, 0.98);
+}
+
+.metricOptionPreview {
+  background: rgba(90, 115, 247, 0.26);
+  color: rgba(236, 244, 255, 0.98);
+  box-shadow: inset 0 0 0 1px rgba(123, 150, 255, 0.44);
 }
 
 .trendDot {
@@ -1194,9 +1238,20 @@
   height: 100%;
 }
 
+.trendPlot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.trendPlot .trendSvg {
+  width: 100%;
+  height: 100%;
+}
+
 .trendLine,
 .trendArea,
-.trendPoints circle {
+.trendPointMarker {
   transition: opacity 420ms ease, transform 420ms ease;
 }
 
@@ -1217,16 +1272,24 @@
   transition: opacity 900ms ease 480ms;
 }
 
-.trendPoints circle {
-  fill: var(--chart-line);
-  stroke: color-mix(in oklab, var(--chart-line) 42%, white);
-  stroke-width: 1.4;
+.trendPointMarker {
+  --point-x: 50%;
+  --point-y: 50%;
+  position: absolute;
+  left: var(--point-x);
+  top: var(--point-y);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--chart-line);
+  border: 1.4px solid color-mix(in oklab, var(--chart-line) 42%, white);
+  box-shadow: 0 0 0 1px rgba(88, 108, 210, 0.22);
   opacity: 0;
-  transform: scale(0.8);
-  transform-origin: center;
+  transform: translate(-50%, -50%) scale(0.8);
   transition:
     opacity 520ms ease var(--point-delay),
     transform 520ms cubic-bezier(0.24, 0.78, 0.22, 1) var(--point-delay);
+  pointer-events: none;
 }
 
 .trendVisible .trendLine {
@@ -1237,14 +1300,14 @@
   opacity: 1;
 }
 
-.trendVisible .trendPoints circle {
+.trendPointVisible {
   opacity: 1;
-  transform: scale(1);
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .trendReset .trendLine,
 .trendReset .trendArea,
-.trendReset .trendPoints circle {
+.trendPointReset {
   transition: none;
 }
 
@@ -1256,9 +1319,9 @@
   opacity: 0;
 }
 
-.trendReset .trendPoints circle {
+.trendPointReset {
   opacity: 0;
-  transform: scale(0.8);
+  transform: translate(-50%, -50%) scale(0.8);
 }
 
 .trendMonths {
@@ -1325,56 +1388,20 @@
 }
 
 @keyframes planForecastDraw {
-  0%,
-  12% {
+  0% {
     stroke-dashoffset: 1200;
-  }
-  65%,
-  85% {
-    stroke-dashoffset: 0;
   }
   100% {
-    stroke-dashoffset: 1200;
+    stroke-dashoffset: 0;
   }
 }
 
 @keyframes planForecastAreaReveal {
-  0%,
-  16% {
+  0% {
     opacity: 0;
-  }
-  65%,
-  85% {
-    opacity: 1;
   }
   100% {
-    opacity: 0;
-  }
-}
-
-@keyframes planForecastSweep {
-  0%,
-  32% {
-    transform: translateX(-130%);
-    opacity: 0;
-  }
-  45%,
-  72% {
     opacity: 1;
-  }
-  84%,
-  100% {
-    transform: translateX(130%);
-    opacity: 0;
-  }
-}
-
-@keyframes planActualSplitFlow {
-  from {
-    stroke-dashoffset: 0;
-  }
-  to {
-    stroke-dashoffset: -44;
   }
 }
 
@@ -1676,10 +1703,9 @@
   .planForecastShell,
   .planForecastLine,
   .planForecastArea,
-  .planActualSplit,
   .trendLine,
   .trendArea,
-  .trendPoints circle,
+  .trendPointMarker,
   .liveDot {
     transition: none;
     animation: none;
@@ -1697,9 +1723,9 @@
 
   .trendArea,
   .planForecastArea,
-  .trendPoints circle {
+  .trendPointMarker {
     opacity: 1;
-    transform: none;
+    transform: translate(-50%, -50%) scale(1);
   }
 
   .planForecastChart::after {

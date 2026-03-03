@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./HeroFluidTop.module.scss";
 
 type HeroFluidTopProps = {
@@ -439,11 +439,23 @@ const getResolution = (
 export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: HeroFluidTopProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
+    let unmounted = false;
+    const enableFallback = () => {
+      if (!unmounted) setShowFallback(true);
+    };
+    const disableFallback = () => {
+      if (!unmounted) setShowFallback(false);
+    };
+
     const wrapper = wrapperRef.current;
     const canvas = canvasRef.current;
-    if (!wrapper || !canvas) return;
+    if (!wrapper || !canvas) {
+      enableFallback();
+      return;
+    }
 
     const gl = canvas.getContext("webgl2", {
       alpha: true,
@@ -452,10 +464,18 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
       antialias: false,
       preserveDrawingBuffer: false,
     });
-    if (!gl) return;
+    if (!gl) {
+      enableFallback();
+      return;
+    }
 
     const colorBufferExt = gl.getExtension("EXT_color_buffer_float");
-    if (!colorBufferExt) return;
+    if (!colorBufferExt) {
+      enableFallback();
+      return;
+    }
+
+    disableFallback();
 
     const config: FlowConfig = {
       simResolution: 128,
@@ -469,9 +489,6 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
       splatForce: 1380,
     };
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
     const allowPointer = window.matchMedia(
       "(hover: hover) and (pointer: fine)",
     ).matches;
@@ -488,10 +505,16 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
       display: createProgram(gl, baseVertexShader, displayShader),
     };
 
-    if (Object.values(programs).some((program) => !program)) return;
+    if (Object.values(programs).some((program) => !program)) {
+      enableFallback();
+      return;
+    }
 
     const quad = gl.createBuffer();
-    if (!quad) return;
+    if (!quad) {
+      enableFallback();
+      return;
+    }
     gl.bindBuffer(gl.ARRAY_BUFFER, quad);
     gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -1050,7 +1073,7 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
     pointer.y = canvas.height * 0.2;
 
     let rafId: number | null = null;
-    let running = !prefersReducedMotion;
+    let running = true;
     let lastTs = performance.now();
 
     const frame = (timestamp: number) => {
@@ -1144,7 +1167,7 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
           window.cancelAnimationFrame(rafId);
           rafId = null;
         }
-      } else if (!prefersReducedMotion) {
+      } else {
         running = true;
         lastTs = performance.now();
         rafId = window.requestAnimationFrame(frame);
@@ -1152,7 +1175,7 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
     };
 
     const onPointerMove = (event: PointerEvent) => {
-      if (!allowPointer || prefersReducedMotion) return;
+      if (!allowPointer) return;
       const rect = wrapper.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
 
@@ -1170,14 +1193,10 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
 
-    if (prefersReducedMotion) {
-      step(0.016);
-      render();
-    } else {
-      rafId = window.requestAnimationFrame(frame);
-    }
+    rafId = window.requestAnimationFrame(frame);
 
     return () => {
+      unmounted = true;
       running = false;
       if (rafId) window.cancelAnimationFrame(rafId);
       window.removeEventListener("resize", resizeCanvas);
@@ -1202,6 +1221,7 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
       style={wrapperStyle}
       aria-hidden="true"
     >
+      {showFallback && <div className={styles.fallback} />}
       <canvas ref={canvasRef} className={styles.canvas} />
       <div className={styles.overlay} />
     </div>

@@ -33,6 +33,20 @@
   pointer-events: none;
 }
 
+.fallback {
+  position: absolute;
+  inset: -8%;
+  pointer-events: none;
+  background:
+    radial-gradient(56% 42% at 22% 14%, rgba(86, 118, 238, 0.22), rgba(86, 118, 238, 0) 72%),
+    radial-gradient(50% 36% at 82% 20%, rgba(72, 108, 226, 0.18), rgba(72, 108, 226, 0) 74%),
+    radial-gradient(64% 48% at 50% 72%, rgba(54, 84, 196, 0.18), rgba(54, 84, 196, 0) 78%);
+  filter: blur(24px) saturate(1.08);
+  mix-blend-mode: screen;
+  opacity: 0.72;
+  animation: fallbackDrift 15s ease-in-out infinite alternate;
+}
+
 .overlay {
   position: absolute;
   inset: 0;
@@ -49,5 +63,17 @@
 @media (max-width: 768px) {
   .wrapper {
     height: min(var(--hero-fluid-height, 620px), 420px);
+  }
+}
+
+@keyframes fallbackDrift {
+  0% {
+    transform: translate3d(-1.8%, -0.8%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2.4%, 1.2%, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(-1%, 1.8%, 0) scale(1.02);
   }
 }

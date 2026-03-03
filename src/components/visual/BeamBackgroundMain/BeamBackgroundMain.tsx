@@ -45,7 +45,6 @@ export default function BeamBackground({
   const rafRef = useRef<number | null>(null);
   const dotsRef = useRef<Dot[]>([]);
   const particlesRef = useRef<Particle[]>([]);
-  const reduceMotionRef = useRef(false);
   const sizeRef = useRef({ width: 0, height: 0, dpr: 1 });
   const runningRef = useRef(true);
   const timeRef = useRef(0);
@@ -53,10 +52,6 @@ export default function BeamBackground({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
-    reduceMotionRef.current = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -234,7 +229,7 @@ export default function BeamBackground({
         window.cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
       }
-      if (runningRef.current && !reduceMotionRef.current) {
+      if (runningRef.current) {
         rafRef.current = window.requestAnimationFrame(loop);
       }
     };
@@ -243,11 +238,7 @@ export default function BeamBackground({
     observer.observe(canvas.parentElement ?? canvas);
     resize();
 
-    if (reduceMotionRef.current) {
-      render();
-    } else {
-      rafRef.current = window.requestAnimationFrame(loop);
-    }
+    rafRef.current = window.requestAnimationFrame(loop);
 
     document.addEventListener("visibilitychange", handleVisibility);
 

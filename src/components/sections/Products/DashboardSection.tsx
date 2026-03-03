@@ -29,6 +29,8 @@ type DashboardSectionProps = {
   selectedMetricDelta: number;
   selectedMetricPreviousDelta: number;
   analysisCompareLabel: string;
+  autoplayPreviewMetric: AnalysisMetric | null;
+  autoplayMenuAnimating: boolean;
   onToggleMetricMenu: () => void;
   onSelectMetric: (metric: AnalysisMetric) => void;
   formatSek: (value: number) => string;
@@ -75,6 +77,8 @@ export function DashboardSection({
   selectedMetricDelta,
   selectedMetricPreviousDelta,
   analysisCompareLabel,
+  autoplayPreviewMetric,
+  autoplayMenuAnimating,
   onToggleMetricMenu,
   onSelectMetric,
   formatSek,
@@ -156,7 +160,7 @@ export function DashboardSection({
                     <ChevronDown
                       aria-hidden="true"
                       size={14}
-                      className={`${styles.metricTriggerIcon} ${analysisMetricOpen ? styles.metricTriggerIconOpen : ""}`}
+                      className={`${styles.metricTriggerIcon} ${analysisMetricOpen ? styles.metricTriggerIconOpen : ""} ${autoplayMenuAnimating ? styles.metricTriggerIconAuto : ""}`}
                     />
                   </button>
                   {analysisMetricOpen && (
@@ -167,7 +171,7 @@ export function DashboardSection({
                           type="button"
                           role="menuitemradio"
                           aria-checked={analysisMetric === metric.id}
-                          className={`${styles.metricOption} ${analysisMetric === metric.id ? styles.metricOptionActive : ""}`}
+                          className={`${styles.metricOption} ${analysisMetric === metric.id ? styles.metricOptionActive : ""} ${autoplayPreviewMetric === metric.id ? styles.metricOptionPreview : ""}`}
                           onClick={() => onSelectMetric(metric.id)}
                         >
                           {metric.label}
@@ -190,32 +194,37 @@ export function DashboardSection({
                 </div>
 
                 <div className={styles.trendSvgWrap}>
-                  <svg
-                    className={`${styles.trendSvg} ${trendAnimating ? styles.trendVisible : ""} ${trendResetting ? styles.trendReset : ""}`}
-                    viewBox="0 0 760 290"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      className={styles.trendArea}
-                      d={trendAreaPath}
-                    />
-                    <path
-                      className={styles.trendLine}
-                      d={trendLinePath}
-                    />
-                    <g className={styles.trendPoints}>
-                      {trendSeries.map(([x, y], index) => (
-                        <circle
-                          key={`${x}-${y}`}
-                          cx={x}
-                          cy={y}
-                          r="4"
-                          style={{ "--point-delay": `${index * 170 + 180}ms` } as CSSProperties}
-                        />
-                      ))}
-                    </g>
-                  </svg>
+                  <div className={styles.trendPlot}>
+                    <svg
+                      className={`${styles.trendSvg} ${trendAnimating ? styles.trendVisible : ""} ${trendResetting ? styles.trendReset : ""}`}
+                      viewBox="0 0 760 290"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        className={styles.trendArea}
+                        d={trendAreaPath}
+                      />
+                      <path
+                        className={styles.trendLine}
+                        d={trendLinePath}
+                      />
+                    </svg>
+                    {trendSeries.map(([x, y], index) => (
+                      <span
+                        key={`${x}-${y}`}
+                        className={`${styles.trendPointMarker} ${trendAnimating ? styles.trendPointVisible : ""} ${trendResetting ? styles.trendPointReset : ""}`}
+                        style={
+                          {
+                            "--point-delay": `${index * 170 + 180}ms`,
+                            "--point-x": `${(x / 760) * 100}%`,
+                            "--point-y": `${(y / 290) * 100}%`,
+                          } as CSSProperties
+                        }
+                        aria-hidden="true"
+                      />
+                    ))}
+                  </div>
 
                   <div className={styles.trendMonths} aria-hidden="true">
                     {monthLabels.map((month) => (

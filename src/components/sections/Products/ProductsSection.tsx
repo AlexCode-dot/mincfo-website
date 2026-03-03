@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import styles from "./ProductsSection.module.scss";
 import { CopilotChatSection } from "./CopilotChatSection";
@@ -21,6 +21,10 @@ type CopilotExample = {
 
 const MONTH_LABELS = HOME_PAGE_TEXT.aicopilot.dashboard.monthLabelsSv;
 const MONTH_LABELS_EN = HOME_PAGE_TEXT.aicopilot.planning.monthLabelsEn;
+const DEFAULT_PLAN_MONTH_INDEX = 8;
+const PLAN_MONTH_AUTOPLAY_SEQUENCE = [8, 1, 7, 11, 4, 9, 2, 10, 5] as const;
+const PLAN_MONTH_AUTOPLAY_DELAY_MS = 3400;
+const PLAN_MONTH_AUTOPLAY_PAUSE_AFTER_MANUAL_MS = 6000;
 const TREND_X_STEP = 760 / 11;
 const PLAN_X_STEP = 682 / 11;
 const TREND_AXIS_MIN_K = 0;
@@ -50,11 +54,21 @@ const ANALYSIS_METRICS: Array<{ id: AnalysisMetric; label: string; seriesK: numb
   { id: "ebitda", label: HOME_PAGE_TEXT.aicopilot.dashboard.metricOptions[2], seriesK: ANALYSIS_EBITDA_K },
   { id: "grossProfit", label: HOME_PAGE_TEXT.aicopilot.dashboard.metricOptions[3], seriesK: ANALYSIS_GROSS_PROFIT_K },
 ];
+const ANALYSIS_METRIC_AUTOPLAY_SEQUENCE: AnalysisMetric[] = [
+  "netIncome",
+  "ebit",
+  "ebitda",
+  "grossProfit",
+];
+const ANALYSIS_METRIC_AUTOPLAY_DELAY_MS = 3600;
+const ANALYSIS_METRIC_AUTOPLAY_PAUSE_AFTER_MANUAL_MS = 6000;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
+const lerpSeries = (from: number[], to: number[], t: number) =>
+  to.map((targetValue, index) => lerp(from[index] ?? targetValue, targetValue, t));
 
 const cubic = (
   p0: number,
@@ -98,8 +112,6 @@ export default function AICopilot() {
   const [visible, setVisible] = useState(false);
   const [dashboardVisible, setDashboardVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
-  const [trendAnimating, setTrendAnimating] = useState(false);
-  const [trendResetting, setTrendResetting] = useState(false);
   const [curveProgress, setCurveProgress] = useState(0);
   const [dashboardCurveProgress, setDashboardCurveProgress] = useState(0);
   const [planCurveProgress, setPlanCurveProgress] = useState(0);
@@ -108,19 +120,54 @@ export default function AICopilot() {
   const [stage, setStage] = useState<CopilotStage>("idle");
   const [analysisMetric, setAnalysisMetric] = useState<AnalysisMetric>("netIncome");
   const [analysisMetricOpen, setAnalysisMetricOpen] = useState(false);
-  const [planMonthIndex, setPlanMonthIndex] = useState(11);
+  const [analysisAutoplayPreviewMetric, setAnalysisAutoplayPreviewMetric] = useState<AnalysisMetric | null>(null);
+  const [analysisAutoplayMenuAnimating, setAnalysisAutoplayMenuAnimating] = useState(false);
+  const [planMonthIndex, setPlanMonthIndex] = useState(DEFAULT_PLAN_MONTH_INDEX);
   const [analysisUpdating, setAnalysisUpdating] = useState(false);
   const [planUpdating, setPlanUpdating] = useState(false);
   const [animatedPlanValue, setAnimatedPlanValue] = useState(0);
   const [animatedSelectedPlanDelta, setAnimatedSelectedPlanDelta] = useState(0);
   const [animatedPlanTotalDelta, setAnimatedPlanTotalDelta] = useState(0);
+  const [animatedPlanSeriesK, setAnimatedPlanSeriesK] = useState<number[]>([]);
+  const [animatedPlanMarkerIndex, setAnimatedPlanMarkerIndex] = useState(DEFAULT_PLAN_MONTH_INDEX);
+  const [animatedAnalysisSeriesK, setAnimatedAnalysisSeriesK] = useState<number[]>([]);
+  const [animatedSelectedMetricAmount, setAnimatedSelectedMetricAmount] = useState<number>(Number.NaN);
+  const [animatedSelectedMetricPreviousAmount, setAnimatedSelectedMetricPreviousAmount] = useState<number>(Number.NaN);
+  const [animatedSelectedMetricDelta, setAnimatedSelectedMetricDelta] = useState<number>(Number.NaN);
+  const [animatedSelectedMetricPreviousDelta, setAnimatedSelectedMetricPreviousDelta] = useState<number>(Number.NaN);
 
   const planStatTweenFrameRef = useRef<number | null>(null);
+  const planChartTweenFrameRef = useRef<number | null>(null);
+  const analysisChartTweenFrameRef = useRef<number | null>(null);
+  const analysisStatTweenFrameRef = useRef<number | null>(null);
   const planStatSnapshotRef = useRef<{
     selectedDelta: number;
     selectedValue: number;
     totalDelta: number;
   } | null>(null);
+  const planChartSnapshotRef = useRef<{
+    markerIndex: number;
+    series: number[];
+  } | null>(null);
+  const analysisChartSnapshotRef = useRef<number[] | null>(null);
+  const analysisStatSnapshotRef = useRef<{
+    selectedAmount: number;
+    previousAmount: number;
+    selectedDelta: number;
+    previousDelta: number;
+  } | null>(null);
+  const analysisAutoplayPositionRef = useRef(
+    Math.max(ANALYSIS_METRIC_AUTOPLAY_SEQUENCE.indexOf("netIncome"), 0),
+  );
+  const analysisAutoplayPausedUntilRef = useRef(0);
+  const analysisAutoplaySequenceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const analysisAutoplayStepTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const analysisMetricOpenRef = useRef(false);
+  const analysisAutoplayMenuAnimatingRef = useRef(false);
+  const planAutoplayPositionRef = useRef(
+    Math.max(PLAN_MONTH_AUTOPLAY_SEQUENCE.indexOf(DEFAULT_PLAN_MONTH_INDEX), 0),
+  );
+  const planAutoplayPausedUntilRef = useRef(0);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -166,7 +213,13 @@ export default function AICopilot() {
       const menu = trendMetricMenuRef.current;
       if (!menu) return;
       if (menu.contains(event.target as Node)) return;
+      if (analysisAutoplayStepTimeoutRef.current) {
+        clearTimeout(analysisAutoplayStepTimeoutRef.current);
+        analysisAutoplayStepTimeoutRef.current = null;
+      }
       setAnalysisMetricOpen(false);
+      setAnalysisAutoplayPreviewMetric(null);
+      setAnalysisAutoplayMenuAnimating(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -174,23 +227,12 @@ export default function AICopilot() {
   }, []);
 
   useEffect(() => {
-    if (!dashboardVisible) return;
-    let resetTimer: ReturnType<typeof setTimeout> | null = null;
-    let animateTimer: ReturnType<typeof setTimeout> | null = null;
+    analysisMetricOpenRef.current = analysisMetricOpen;
+  }, [analysisMetricOpen]);
 
-    const startTimer = setTimeout(() => {
-      setTrendResetting(true);
-      setTrendAnimating(false);
-      resetTimer = setTimeout(() => setTrendResetting(false), 90);
-      animateTimer = setTimeout(() => setTrendAnimating(true), 220);
-    }, 0);
-
-    return () => {
-      clearTimeout(startTimer);
-      if (resetTimer) clearTimeout(resetTimer);
-      if (animateTimer) clearTimeout(animateTimer);
-    };
-  }, [dashboardVisible, analysisMetric]);
+  useEffect(() => {
+    analysisAutoplayMenuAnimatingRef.current = analysisAutoplayMenuAnimating;
+  }, [analysisAutoplayMenuAnimating]);
 
   useEffect(() => {
     if (!dashboardVisible) return;
@@ -203,14 +245,109 @@ export default function AICopilot() {
   }, [analysisMetric, dashboardVisible]);
 
   useEffect(() => {
+    if (!dashboardVisible || ANALYSIS_METRIC_AUTOPLAY_SEQUENCE.length < 2) return;
+
+    const clearTimers = () => {
+      if (analysisAutoplaySequenceTimeoutRef.current) {
+        clearTimeout(analysisAutoplaySequenceTimeoutRef.current);
+        analysisAutoplaySequenceTimeoutRef.current = null;
+      }
+      if (analysisAutoplayStepTimeoutRef.current) {
+        clearTimeout(analysisAutoplayStepTimeoutRef.current);
+        analysisAutoplayStepTimeoutRef.current = null;
+      }
+    };
+
+    clearTimers();
+
+    const scheduleNext = () => {
+      analysisAutoplaySequenceTimeoutRef.current = setTimeout(() => {
+        const now = Date.now();
+        if (
+          now < analysisAutoplayPausedUntilRef.current ||
+          analysisMetricOpenRef.current ||
+          analysisAutoplayMenuAnimatingRef.current
+        ) {
+          scheduleNext();
+          return;
+        }
+
+        const nextIndex =
+          (analysisAutoplayPositionRef.current + 1) % ANALYSIS_METRIC_AUTOPLAY_SEQUENCE.length;
+        const nextMetric = ANALYSIS_METRIC_AUTOPLAY_SEQUENCE[nextIndex];
+        const targetPreviewIndex = Math.max(
+          ANALYSIS_METRIC_AUTOPLAY_SEQUENCE.indexOf(nextMetric),
+          0,
+        );
+        setAnalysisAutoplayMenuAnimating(true);
+        setAnalysisMetricOpen(true);
+
+        let previewIndex = 0;
+        const runPreviewStep = () => {
+          setAnalysisAutoplayPreviewMetric(
+            ANALYSIS_METRIC_AUTOPLAY_SEQUENCE[previewIndex],
+          );
+
+          if (previewIndex < targetPreviewIndex) {
+            previewIndex += 1;
+            analysisAutoplayStepTimeoutRef.current = setTimeout(runPreviewStep, 140);
+            return;
+          }
+
+          analysisAutoplayStepTimeoutRef.current = setTimeout(() => {
+            setAnalysisMetric(nextMetric);
+            analysisAutoplayPositionRef.current = nextIndex;
+            setAnalysisMetricOpen(false);
+            setAnalysisAutoplayPreviewMetric(null);
+            setAnalysisAutoplayMenuAnimating(false);
+            scheduleNext();
+          }, 260);
+        };
+
+        analysisAutoplayStepTimeoutRef.current = setTimeout(runPreviewStep, 180);
+      }, ANALYSIS_METRIC_AUTOPLAY_DELAY_MS);
+    };
+
+    scheduleNext();
+    return () => {
+      clearTimers();
+    };
+  }, [dashboardVisible]);
+
+  useEffect(() => {
     if (!planVisible) return;
     const startTimer = setTimeout(() => setPlanUpdating(true), 0);
-    const timeoutId = setTimeout(() => setPlanUpdating(false), 260);
+    const timeoutId = setTimeout(() => setPlanUpdating(false), 760);
     return () => {
       clearTimeout(startTimer);
       clearTimeout(timeoutId);
     };
   }, [planMonthIndex, planVisible]);
+
+  useEffect(() => {
+    if (!planVisible || PLAN_MONTH_AUTOPLAY_SEQUENCE.length < 2) return;
+
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    const scheduleNext = () => {
+      timeoutId = setTimeout(() => {
+        const now = Date.now();
+        if (now < planAutoplayPausedUntilRef.current) {
+          scheduleNext();
+          return;
+        }
+        const nextIndex =
+          (planAutoplayPositionRef.current + 1) % PLAN_MONTH_AUTOPLAY_SEQUENCE.length;
+        planAutoplayPositionRef.current = nextIndex;
+        setPlanMonthIndex(PLAN_MONTH_AUTOPLAY_SEQUENCE[nextIndex]);
+        scheduleNext();
+      }, PLAN_MONTH_AUTOPLAY_DELAY_MS);
+    };
+
+    scheduleNext();
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [planVisible]);
 
   useEffect(() => {
     const updateCurve = () => {
@@ -377,6 +514,23 @@ export default function AICopilot() {
   const activeMetric =
     ANALYSIS_METRICS.find((metric) => metric.id === analysisMetric) ?? ANALYSIS_METRICS[0];
   const analysisSeries = activeMetric.seriesK;
+  const latestMonthIndex = 11;
+  const previousMonthIndex = 10;
+  const priorMonthIndex = 9;
+
+  const targetSelectedMetricAmount = analysisSeries[latestMonthIndex] * 1000;
+  const targetSelectedMetricPreviousAmount = analysisSeries[previousMonthIndex] * 1000;
+  const targetSelectedMetricDelta =
+    ((analysisSeries[latestMonthIndex] - analysisSeries[previousMonthIndex]) /
+      Math.max(Math.abs(analysisSeries[previousMonthIndex]), 1)) *
+    100;
+  const targetSelectedMetricPreviousDelta =
+    ((analysisSeries[previousMonthIndex] - analysisSeries[priorMonthIndex]) /
+      Math.max(Math.abs(analysisSeries[priorMonthIndex]), 1)) *
+    100;
+
+  const renderedAnalysisSeriesK =
+    animatedAnalysisSeriesK.length === analysisSeries.length ? animatedAnalysisSeriesK : analysisSeries;
 
   const mapTrendY = (valueK: number) => {
     const top = 32;
@@ -389,45 +543,94 @@ export default function AICopilot() {
     return top + (bottom - top) * ratio;
   };
 
-  const trendSeries: Array<[number, number]> = analysisSeries.map((value, index) => [
+  const trendSeries: Array<[number, number]> = renderedAnalysisSeriesK.map((value, index) => [
     index * TREND_X_STEP,
     mapTrendY(value),
   ]);
 
-  const planForecastBaseValues = PLAN_FORECAST_BASE_K.map((base, index) => {
-    const seasonal = 1 + Math.sin((((index - 1) / 12) * Math.PI * 2)) * 0.018;
-    return base * seasonal;
-  });
+  const planForecastBaseValues = useMemo(
+    () =>
+      PLAN_FORECAST_BASE_K.map((base, index) => {
+        const seasonal = 1 + Math.sin((((index - 1) / 12) * Math.PI * 2)) * 0.018;
+        return base * seasonal;
+      }),
+    [],
+  );
 
-  const planActualValues = planForecastBaseValues.map((base, index) => {
-    if (index > PLAN_ACTUAL_CUTOFF_INDEX) return base;
-    return base * (1 + PLAN_ACTUAL_VARIANCE[index]);
-  });
+  const planActualValues = useMemo(
+    () =>
+      planForecastBaseValues.map((base, index) => {
+        if (index > PLAN_ACTUAL_CUTOFF_INDEX) return base;
+        return base * (1 + PLAN_ACTUAL_VARIANCE[index]);
+      }),
+    [planForecastBaseValues],
+  );
 
-  const trailingThreeActuals = planActualValues
-    .slice(Math.max(PLAN_ACTUAL_CUTOFF_INDEX - 2, 0), PLAN_ACTUAL_CUTOFF_INDEX + 1);
-  const trailingAvg =
-    trailingThreeActuals.reduce((sum, value) => sum + value, 0) /
-    Math.max(trailingThreeActuals.length, 1);
+  const trailingAvg = useMemo(() => {
+    const trailingThreeActuals = planActualValues
+      .slice(Math.max(PLAN_ACTUAL_CUTOFF_INDEX - 2, 0), PLAN_ACTUAL_CUTOFF_INDEX + 1);
+    return (
+      trailingThreeActuals.reduce((sum, value) => sum + value, 0) /
+      Math.max(trailingThreeActuals.length, 1)
+    );
+  }, [planActualValues]);
 
-  const planForecastValues = planForecastBaseValues.map((base, index) => {
-    if (index <= PLAN_ACTUAL_CUTOFF_INDEX) return planActualValues[index];
-    const monthsAhead = index - PLAN_ACTUAL_CUTOFF_INDEX;
-    const futureMonths = Math.max(12 - PLAN_ACTUAL_CUTOFF_INDEX, 1);
-    const phase = monthsAhead / futureMonths;
-    const dipDistance = (phase - 0.32) / 0.2;
-    const dip = -0.055 * Math.exp(-(dipDistance ** 2));
-    const recovery = 0.11 * phase ** 1.7;
-    const crossoverTilt = -0.012 + 0.02 * phase;
-    const shapedVariance = dip + recovery + crossoverTilt;
-    const momentum = ((trailingAvg - base) / Math.max(base, 1)) * (1 - phase * 0.55);
-    const driverAdjustment = 1 + Math.sin(((index + 2) / 12) * Math.PI * 2) * 0.024;
-    const projected = base * (1 + shapedVariance + momentum) * driverAdjustment;
-    return clamp(projected, base * 0.7, base * 1.48);
-  });
+  const planForecastBaselineValues = useMemo(
+    () =>
+      planForecastBaseValues.map((base, index) => {
+        if (index <= PLAN_ACTUAL_CUTOFF_INDEX) return planActualValues[index];
+        const monthsAhead = index - PLAN_ACTUAL_CUTOFF_INDEX;
+        const futureMonths = Math.max(12 - PLAN_ACTUAL_CUTOFF_INDEX, 1);
+        const phase = monthsAhead / futureMonths;
+        const dipDistance = (phase - 0.32) / 0.2;
+        const dip = -0.055 * Math.exp(-(dipDistance ** 2));
+        const recovery = 0.11 * phase ** 1.7;
+        const crossoverTilt = -0.012 + 0.02 * phase;
+        const shapedVariance = dip + recovery + crossoverTilt;
+        const momentum = ((trailingAvg - base) / Math.max(base, 1)) * (1 - phase * 0.55);
+        const driverAdjustment = 1 + Math.sin(((index + 2) / 12) * Math.PI * 2) * 0.024;
+        const projected = base * (1 + shapedVariance + momentum) * driverAdjustment;
+        return clamp(projected, base * 0.7, base * 1.48);
+      }),
+    [planActualValues, planForecastBaseValues, trailingAvg],
+  );
 
-  const planForecastMin = Math.min(...planForecastBaseValues, ...planForecastValues);
-  const planForecastMax = Math.max(...planForecastBaseValues, ...planForecastValues);
+  const planForecastValues = useMemo(
+    () =>
+      planForecastBaselineValues.map((baselineValue, index) => {
+        const distance = Math.abs(index - planMonthIndex);
+        const influence = Math.exp(-((distance / 4.7) ** 2));
+
+        if (index <= PLAN_ACTUAL_CUTOFF_INDEX) {
+          const actualPulse = Math.sin((planMonthIndex + 1) * 0.72 + index * 0.46) * 0.009;
+          return baselineValue * (1 + actualPulse * influence);
+        }
+
+        const horizonSpan = Math.max(11 - PLAN_ACTUAL_CUTOFF_INDEX, 1);
+        const selectionPhase = (planMonthIndex - PLAN_ACTUAL_CUTOFF_INDEX) / horizonSpan;
+        const horizonTilt = clamp(selectionPhase, -0.22, 1.16) * 0.128 - 0.05;
+        const monthsAheadFromSelection = index - planMonthIndex;
+        const directionalWeight = clamp(monthsAheadFromSelection / Math.max(11 - planMonthIndex, 1), -1, 1);
+        const localWave = Math.sin((index + 1) * 0.64 + planMonthIndex * 0.48) * 0.024 * influence;
+        const kneeCompression =
+          -0.022 *
+          Math.exp(-(((index - (PLAN_ACTUAL_CUTOFF_INDEX + 2.6)) / 1.9) ** 2));
+        const selectionLift =
+          0.038 * Math.exp(-(((index - planMonthIndex) / 1.75) ** 2));
+        const adjustment =
+          1 + horizonTilt * directionalWeight + localWave + kneeCompression + selectionLift;
+
+        return clamp(
+          baselineValue * adjustment,
+          planForecastBaseValues[index] * 0.64,
+          planForecastBaseValues[index] * 1.62,
+        );
+      }),
+    [planForecastBaselineValues, planMonthIndex, planForecastBaseValues],
+  );
+
+  const planForecastMin = Math.min(...planForecastBaseValues, ...planForecastValues, ...planForecastBaselineValues);
+  const planForecastMax = Math.max(...planForecastBaseValues, ...planForecastValues, ...planForecastBaselineValues);
   const planForecastPadding = Math.max((planForecastMax - planForecastMin) * 0.18, 24);
 
   const mapPlanY = (valueK: number) => {
@@ -439,13 +642,28 @@ export default function AICopilot() {
     return top + (bottom - top) * ratio;
   };
 
-  const planForecastSeries: Array<[number, number]> = planForecastValues.map((value, index) => [
+  const renderedPlanSeriesK =
+    animatedPlanSeriesK.length === planForecastValues.length ? animatedPlanSeriesK : planForecastValues;
+
+  const planForecastSeries: Array<[number, number]> = renderedPlanSeriesK.map((value, index) => [
     index * PLAN_X_STEP,
     mapPlanY(value),
   ]);
 
   const planForecastLinePath = buildSmoothPath(planForecastSeries);
   const planForecastAreaPath = `${planForecastLinePath} L682 190 L0 190 Z`;
+  const clampIndex = (index: number) => clamp(index, 0, renderedPlanSeriesK.length - 1);
+  const markerIndexClamped = clampIndex(animatedPlanMarkerIndex);
+  const markerBaseIndex = Math.floor(markerIndexClamped);
+  const markerNextIndex = Math.min(markerBaseIndex + 1, renderedPlanSeriesK.length - 1);
+  const markerT = markerIndexClamped - markerBaseIndex;
+  const markerValueK = lerp(
+    renderedPlanSeriesK[markerBaseIndex] ?? planForecastValues[planMonthIndex],
+    renderedPlanSeriesK[markerNextIndex] ?? planForecastValues[planMonthIndex],
+    markerT,
+  );
+  const selectedPlanPointX = markerIndexClamped * PLAN_X_STEP;
+  const selectedPlanPointY = mapPlanY(markerValueK);
 
   const selectedPlanValue = planForecastValues[planMonthIndex];
   const previousPlanValue = planForecastValues[Math.max(planMonthIndex - 1, 0)];
@@ -457,7 +675,6 @@ export default function AICopilot() {
   const planTotalDelta =
     ((planTotalValue - planBaseTotalValue) / Math.max(planBaseTotalValue, 1)) * 100;
 
-  const planActualCutoffX = PLAN_ACTUAL_CUTOFF_INDEX * PLAN_X_STEP;
   const selectedPlanMode =
     planMonthIndex <= PLAN_ACTUAL_CUTOFF_INDEX
       ? HOME_PAGE_TEXT.aicopilot.planning.actualPrefix
@@ -466,23 +683,124 @@ export default function AICopilot() {
   const trendLinePath = buildSmoothPath(trendSeries);
   const trendAreaPath = `${trendLinePath} L760 290 L0 290 Z`;
 
-  const latestMonthIndex = 11;
-  const previousMonthIndex = 10;
-  const priorMonthIndex = 9;
-  const selectedMetricAmount = analysisSeries[latestMonthIndex] * 1000;
-  const selectedMetricPreviousAmount = analysisSeries[previousMonthIndex] * 1000;
-  const selectedMetricDelta =
-    ((analysisSeries[latestMonthIndex] - analysisSeries[previousMonthIndex]) /
-      Math.max(Math.abs(analysisSeries[previousMonthIndex]), 1)) *
-    100;
-  const selectedMetricPreviousDelta =
-    ((analysisSeries[previousMonthIndex] - analysisSeries[priorMonthIndex]) /
-      Math.max(Math.abs(analysisSeries[priorMonthIndex]), 1)) *
-    100;
+  const selectedMetricAmount = Number.isFinite(animatedSelectedMetricAmount)
+    ? animatedSelectedMetricAmount
+    : targetSelectedMetricAmount;
+  const selectedMetricPreviousAmount = Number.isFinite(animatedSelectedMetricPreviousAmount)
+    ? animatedSelectedMetricPreviousAmount
+    : targetSelectedMetricPreviousAmount;
+  const selectedMetricDelta = Number.isFinite(animatedSelectedMetricDelta)
+    ? animatedSelectedMetricDelta
+    : targetSelectedMetricDelta;
+  const selectedMetricPreviousDelta = Number.isFinite(animatedSelectedMetricPreviousDelta)
+    ? animatedSelectedMetricPreviousDelta
+    : targetSelectedMetricPreviousDelta;
 
   const analysisCompareLabel = HOME_PAGE_TEXT.aicopilot.dashboard.compareLabel;
   const formatSek = (value: number) => new Intl.NumberFormat("sv-SE").format(Math.round(value));
   const formatPercent = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
+  const trendAnimating = dashboardVisible;
+  const trendResetting = false;
+
+  useEffect(() => {
+    const targetSeries = analysisSeries;
+    const startSeries =
+      analysisChartSnapshotRef.current &&
+      analysisChartSnapshotRef.current.length === targetSeries.length
+        ? analysisChartSnapshotRef.current
+        : targetSeries;
+
+    if (analysisChartTweenFrameRef.current !== null) {
+      cancelAnimationFrame(analysisChartTweenFrameRef.current);
+      analysisChartTweenFrameRef.current = null;
+    }
+
+    const duration = 920;
+    const startedAt = performance.now();
+
+    const tick = (now: number) => {
+      const t = clamp((now - startedAt) / duration, 0, 1);
+      const eased = t < 0.5 ? 4 * t ** 3 : 1 - ((-2 * t + 2) ** 3) / 2;
+      const nextSeries = lerpSeries(startSeries, targetSeries, eased);
+
+      analysisChartSnapshotRef.current = nextSeries;
+      setAnimatedAnalysisSeriesK(nextSeries);
+
+      if (t < 1) {
+        analysisChartTweenFrameRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      analysisChartTweenFrameRef.current = null;
+      analysisChartSnapshotRef.current = targetSeries;
+    };
+
+    analysisChartTweenFrameRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      if (analysisChartTweenFrameRef.current !== null) {
+        cancelAnimationFrame(analysisChartTweenFrameRef.current);
+        analysisChartTweenFrameRef.current = null;
+      }
+    };
+  }, [analysisSeries]);
+
+  useEffect(() => {
+    const target = {
+      selectedAmount: targetSelectedMetricAmount,
+      previousAmount: targetSelectedMetricPreviousAmount,
+      selectedDelta: targetSelectedMetricDelta,
+      previousDelta: targetSelectedMetricPreviousDelta,
+    };
+    const start = analysisStatSnapshotRef.current ?? target;
+
+    if (analysisStatTweenFrameRef.current !== null) {
+      cancelAnimationFrame(analysisStatTweenFrameRef.current);
+      analysisStatTweenFrameRef.current = null;
+    }
+
+    const duration = 860;
+    const startedAt = performance.now();
+
+    const tick = (now: number) => {
+      const t = clamp((now - startedAt) / duration, 0, 1);
+      const eased = t < 0.5 ? 4 * t ** 3 : 1 - ((-2 * t + 2) ** 3) / 2;
+      const next = {
+        selectedAmount: lerp(start.selectedAmount, target.selectedAmount, eased),
+        previousAmount: lerp(start.previousAmount, target.previousAmount, eased),
+        selectedDelta: lerp(start.selectedDelta, target.selectedDelta, eased),
+        previousDelta: lerp(start.previousDelta, target.previousDelta, eased),
+      };
+
+      analysisStatSnapshotRef.current = next;
+      setAnimatedSelectedMetricAmount(next.selectedAmount);
+      setAnimatedSelectedMetricPreviousAmount(next.previousAmount);
+      setAnimatedSelectedMetricDelta(next.selectedDelta);
+      setAnimatedSelectedMetricPreviousDelta(next.previousDelta);
+
+      if (t < 1) {
+        analysisStatTweenFrameRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      analysisStatTweenFrameRef.current = null;
+      analysisStatSnapshotRef.current = target;
+    };
+
+    analysisStatTweenFrameRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      if (analysisStatTweenFrameRef.current !== null) {
+        cancelAnimationFrame(analysisStatTweenFrameRef.current);
+        analysisStatTweenFrameRef.current = null;
+      }
+    };
+  }, [
+    targetSelectedMetricAmount,
+    targetSelectedMetricPreviousAmount,
+    targetSelectedMetricDelta,
+    targetSelectedMetricPreviousDelta,
+  ]);
 
   useEffect(() => {
     const target = {
@@ -497,12 +815,12 @@ export default function AICopilot() {
       planStatTweenFrameRef.current = null;
     }
 
-    const duration = 280;
+    const duration = 720;
     const start = performance.now();
 
     const tick = (now: number) => {
       const t = clamp((now - start) / duration, 0, 1);
-      const eased = 1 - (1 - t) ** 3;
+      const eased = t < 0.5 ? 4 * t ** 3 : 1 - ((-2 * t + 2) ** 3) / 2;
       const nextValue = lerp(startValues.selectedValue, target.selectedValue, eased);
       const nextSelectedDelta = lerp(startValues.selectedDelta, target.selectedDelta, eased);
       const nextTotalDelta = lerp(startValues.totalDelta, target.totalDelta, eased);
@@ -536,6 +854,59 @@ export default function AICopilot() {
     };
   }, [selectedPlanValue, selectedPlanDelta, planTotalDelta]);
 
+  useEffect(() => {
+    const target = {
+      markerIndex: planMonthIndex,
+      series: planForecastValues,
+    };
+    const startSnapshot = planChartSnapshotRef.current;
+    const start =
+      startSnapshot &&
+      startSnapshot.series.length === target.series.length
+        ? startSnapshot
+        : target;
+
+    if (planChartTweenFrameRef.current !== null) {
+      cancelAnimationFrame(planChartTweenFrameRef.current);
+      planChartTweenFrameRef.current = null;
+    }
+
+    const duration = 1100;
+    const startedAt = performance.now();
+
+    const tick = (now: number) => {
+      const t = clamp((now - startedAt) / duration, 0, 1);
+      const eased = t < 0.5 ? 4 * t ** 3 : 1 - ((-2 * t + 2) ** 3) / 2;
+      const nextSeries = lerpSeries(start.series, target.series, eased);
+      const nextMarkerIndex = lerp(start.markerIndex, target.markerIndex, eased);
+
+      planChartSnapshotRef.current = {
+        series: nextSeries,
+        markerIndex: nextMarkerIndex,
+      };
+
+      setAnimatedPlanSeriesK(nextSeries);
+      setAnimatedPlanMarkerIndex(nextMarkerIndex);
+
+      if (t < 1) {
+        planChartTweenFrameRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      planChartTweenFrameRef.current = null;
+      planChartSnapshotRef.current = target;
+    };
+
+    planChartTweenFrameRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      if (planChartTweenFrameRef.current !== null) {
+        cancelAnimationFrame(planChartTweenFrameRef.current);
+        planChartTweenFrameRef.current = null;
+      }
+    };
+  }, [planForecastValues, planMonthIndex]);
+
   const currentExample = EXAMPLES[exampleIndex];
   const typedQuestion = currentExample.question.slice(0, typedLength);
   const isTyping = stage === "typing";
@@ -544,6 +915,43 @@ export default function AICopilot() {
   const showAnswerText = stage === "answer" || stage === "chart";
   const showChart = stage === "chart";
   const showQuestionBubble = stage !== "idle" && stage !== "typing";
+  const handleToggleAnalysisMetricMenu = () => {
+    if (analysisAutoplayStepTimeoutRef.current) {
+      clearTimeout(analysisAutoplayStepTimeoutRef.current);
+      analysisAutoplayStepTimeoutRef.current = null;
+    }
+    const nextOpen = !analysisMetricOpen;
+    setAnalysisMetricOpen(nextOpen);
+    setAnalysisAutoplayPreviewMetric(null);
+    setAnalysisAutoplayMenuAnimating(false);
+    analysisAutoplayPausedUntilRef.current =
+      Date.now() + ANALYSIS_METRIC_AUTOPLAY_PAUSE_AFTER_MANUAL_MS;
+  };
+  const handleSelectAnalysisMetric = (metric: AnalysisMetric) => {
+    if (analysisAutoplayStepTimeoutRef.current) {
+      clearTimeout(analysisAutoplayStepTimeoutRef.current);
+      analysisAutoplayStepTimeoutRef.current = null;
+    }
+    setAnalysisMetric(metric);
+    setAnalysisMetricOpen(false);
+    setAnalysisAutoplayPreviewMetric(null);
+    setAnalysisAutoplayMenuAnimating(false);
+    analysisAutoplayPausedUntilRef.current =
+      Date.now() + ANALYSIS_METRIC_AUTOPLAY_PAUSE_AFTER_MANUAL_MS;
+    const sequenceIndex = ANALYSIS_METRIC_AUTOPLAY_SEQUENCE.indexOf(metric);
+    if (sequenceIndex >= 0) {
+      analysisAutoplayPositionRef.current = sequenceIndex;
+    }
+  };
+  const handleSelectPlanMonth = (index: number) => {
+    setPlanMonthIndex(index);
+    planAutoplayPausedUntilRef.current =
+      Date.now() + PLAN_MONTH_AUTOPLAY_PAUSE_AFTER_MANUAL_MS;
+    const sequenceIndex = PLAN_MONTH_AUTOPLAY_SEQUENCE.indexOf(index);
+    if (sequenceIndex >= 0) {
+      planAutoplayPositionRef.current = sequenceIndex;
+    }
+  };
 
   return (
     <section
@@ -606,11 +1014,10 @@ export default function AICopilot() {
         selectedMetricDelta={selectedMetricDelta}
         selectedMetricPreviousDelta={selectedMetricPreviousDelta}
         analysisCompareLabel={analysisCompareLabel}
-        onToggleMetricMenu={() => setAnalysisMetricOpen((previous) => !previous)}
-        onSelectMetric={(metric) => {
-          setAnalysisMetric(metric);
-          setAnalysisMetricOpen(false);
-        }}
+        autoplayPreviewMetric={analysisAutoplayPreviewMetric}
+        autoplayMenuAnimating={analysisAutoplayMenuAnimating}
+        onToggleMetricMenu={handleToggleAnalysisMetricMenu}
+        onSelectMetric={handleSelectAnalysisMetric}
         formatSek={formatSek}
         formatPercent={formatPercent}
         monthLabels={MONTH_LABELS}
@@ -631,10 +1038,11 @@ export default function AICopilot() {
         animatedPlanTotalDelta={animatedPlanTotalDelta}
         planForecastAreaPath={planForecastAreaPath}
         planForecastLinePath={planForecastLinePath}
-        planActualCutoffX={planActualCutoffX}
+        selectedPlanPointX={selectedPlanPointX}
+        selectedPlanPointY={selectedPlanPointY}
         formatSek={formatSek}
         formatPercent={formatPercent}
-        onSelectPlanMonth={setPlanMonthIndex}
+        onSelectPlanMonth={handleSelectPlanMonth}
         monthLabelsEn={MONTH_LABELS_EN}
       />
     </section>

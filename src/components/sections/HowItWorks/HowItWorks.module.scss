@@ -905,12 +905,6 @@
   transform: translateY(0) scale(1);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .accountMiniBeam {
-    filter: saturate(1.08) brightness(0.95);
-  }
-}
-
 .connectMock {
   position: relative;
   width: min(100%, 700px);

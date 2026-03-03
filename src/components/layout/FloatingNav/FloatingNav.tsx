@@ -14,6 +14,7 @@ const HOMEPAGE_SECTIONS = [
   "how-it-works",
   "security",
 ] as const;
+const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
 
 const SOLUTION_GROUPS = HOME_PAGE_TEXT.navigation.groups;
 const clamp = (value: number, min: number, max: number) =>
@@ -132,8 +133,6 @@ export default function FloatingNav() {
 
   const sectionHref = (id: (typeof HOMEPAGE_SECTIONS)[number]) =>
     pathname === "/" ? `#${id}` : `/#${id}`;
-
-  const heroHref = pathname === "/" ? "#hero" : "/#hero";
 
   const animateScrollTo = (targetY: number) => {
     if (scrollRafRef.current) {
@@ -295,9 +294,8 @@ export default function FloatingNav() {
           {HOME_PAGE_TEXT.navigation.sakerhet}
         </a>
         <a
-          href={heroHref}
+          href={APP_LOGIN_URL}
           className={styles.cta}
-          onClick={(event) => handleSectionAnchorClick(event, heroHref)}
         >
           {HOME_PAGE_TEXT.navigation.kontaktaOss}
         </a>
@@ -396,9 +394,9 @@ export default function FloatingNav() {
         </div>
 
         <a
-          href={heroHref}
+          href={APP_LOGIN_URL}
           className={styles.mobileCta}
-          onClick={(event) => handleSectionAnchorClick(event, heroHref, closeMobileMenu)}
+          onClick={closeMobileMenu}
         >
           {HOME_PAGE_TEXT.navigation.kontaktaOss}
         </a>
