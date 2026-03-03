@@ -52,6 +52,8 @@ type PairPattern = "default" | "outline_frame" | "parallel_bands";
 const DEFAULT_HEIGHT = 640;
 const DPR_CAP = 2;
 const DEBUG = false;
+const INITIAL_IDLE_PAIR_PATTERN: PairPattern = "outline_frame";
+const INITIAL_IDLE_PAIR_SWAP_SIDES = false;
 const FALLBACK_VIDEO_MP4 = "/videos/hero-fumes-fallback.mp4";
 const FALLBACK_VIDEO_MOV = "/videos/hero-fumes-fallback.mov";
 
@@ -861,6 +863,7 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
       nextPairStartTs: performance.now() + 220,
       pairWasActive: false,
       pairSwapSides: false,
+      hasStartedFirstPair: false,
       lastPairPattern: null as PairPattern | null,
       strokes: [
         createAutoStroke("left", "top", 0),
@@ -1246,8 +1249,13 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
       if (timestamp - idleState.lastUserTs > 850) {
         const allInactive = idleState.strokes.every((stroke) => !stroke.active);
         if (allInactive && timestamp >= idleState.nextPairStartTs) {
-          idleState.pairSwapSides = Math.random() < 0.5;
-          const pairPattern = choosePairPattern();
+          const isFirstPair = !idleState.hasStartedFirstPair;
+          idleState.pairSwapSides = isFirstPair
+            ? INITIAL_IDLE_PAIR_SWAP_SIDES
+            : Math.random() < 0.5;
+          const pairPattern = isFirstPair
+            ? INITIAL_IDLE_PAIR_PATTERN
+            : choosePairPattern();
           if (pairPattern === "outline_frame" || pairPattern === "parallel_bands") {
             idleState.pairSwapSides = false;
           }
@@ -1261,6 +1269,7 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
           }
           idleState.lastPairPattern = pairPattern;
           idleState.pairWasActive = true;
+          idleState.hasStartedFirstPair = true;
         }
 
         for (const stroke of idleState.strokes) {
