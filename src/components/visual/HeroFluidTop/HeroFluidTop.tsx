@@ -52,6 +52,8 @@ type PairPattern = "default" | "outline_frame" | "parallel_bands";
 const DEFAULT_HEIGHT = 640;
 const DPR_CAP = 2;
 const DEBUG = false;
+const FALLBACK_VIDEO_MP4 = "/videos/hero-fumes-fallback.mp4";
+const FALLBACK_VIDEO_MOV = "/videos/hero-fumes-fallback.mov";
 
 const debugLog = (...args: unknown[]) => {
   if (!DEBUG) return;
@@ -439,7 +441,164 @@ const getResolution = (
 export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: HeroFluidTopProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const fallbackCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const fallbackVideoRef = useRef<HTMLVideoElement | null>(null);
   const [showFallback, setShowFallback] = useState(false);
+  const [, setFallbackVideoReady] = useState(false);
+  const [fallbackVideoFailed, setFallbackVideoFailed] = useState(false);
+  const showFallbackVideo = showFallback && !fallbackVideoFailed;
+  const showFallbackCanvas = showFallback && fallbackVideoFailed;
+
+  useEffect(() => {
+    if (!showFallback) {
+      setFallbackVideoReady(false);
+      setFallbackVideoFailed(false);
+    }
+  }, [showFallback]);
+
+  useEffect(() => {
+    if (!showFallbackVideo) return;
+    const video = fallbackVideoRef.current;
+    if (!video) return;
+    const tryPlay = () => {
+      void video.play().catch(() => {
+        setFallbackVideoFailed(true);
+      });
+    };
+    tryPlay();
+  }, [showFallbackVideo]);
+
+  useEffect(() => {
+    if (!showFallbackCanvas) return;
+    const wrapper = wrapperRef.current;
+    const canvas = fallbackCanvasRef.current;
+    if (!wrapper || !canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    type Blob = {
+      xRatio: number;
+      yRatio: number;
+      radiusRatio: number;
+      alpha: number;
+      driftX: number;
+      driftY: number;
+      speed: number;
+      phase: number;
+      color: [number, number, number];
+    };
+
+    const blobs: Blob[] = [
+      {
+        xRatio: 0.2,
+        yRatio: 0.16,
+        radiusRatio: 0.34,
+        alpha: 0.25,
+        driftX: 0.06,
+        driftY: 0.045,
+        speed: 0.22,
+        phase: 0.7,
+        color: [92, 132, 248],
+      },
+      {
+        xRatio: 0.8,
+        yRatio: 0.22,
+        radiusRatio: 0.3,
+        alpha: 0.22,
+        driftX: 0.05,
+        driftY: 0.04,
+        speed: 0.19,
+        phase: 1.9,
+        color: [82, 122, 238],
+      },
+      {
+        xRatio: 0.5,
+        yRatio: 0.68,
+        radiusRatio: 0.42,
+        alpha: 0.24,
+        driftX: 0.04,
+        driftY: 0.04,
+        speed: 0.17,
+        phase: 2.8,
+        color: [64, 98, 220],
+      },
+    ];
+
+    let rafId: number | null = null;
+    let running = true;
+    let startTs = performance.now();
+
+    const resize = () => {
+      const rect = wrapper.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+      canvas.width = Math.max(1, Math.round(rect.width * dpr));
+      canvas.height = Math.max(1, Math.round(rect.height * dpr));
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const draw = (timestamp: number) => {
+      const elapsed = (timestamp - startTs) / 1000;
+      const width = canvas.width / (window.devicePixelRatio || 1);
+      const height = canvas.height / (window.devicePixelRatio || 1);
+      ctx.clearRect(0, 0, width, height);
+      ctx.globalCompositeOperation = "screen";
+
+      for (const blob of blobs) {
+        const x =
+          width *
+          (blob.xRatio + Math.sin(elapsed * blob.speed + blob.phase) * blob.driftX);
+        const y =
+          height *
+          (blob.yRatio + Math.cos(elapsed * blob.speed * 0.82 + blob.phase) * blob.driftY);
+        const radius = Math.max(width, height) * blob.radiusRatio;
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        gradient.addColorStop(
+          0,
+          `rgba(${blob.color[0]}, ${blob.color[1]}, ${blob.color[2]}, ${blob.alpha})`,
+        );
+        gradient.addColorStop(
+          0.55,
+          `rgba(${blob.color[0]}, ${blob.color[1]}, ${blob.color[2]}, ${blob.alpha * 0.45})`,
+        );
+        gradient.addColorStop(1, `rgba(${blob.color[0]}, ${blob.color[1]}, ${blob.color[2]}, 0)`);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+      }
+
+      if (!running) return;
+      rafId = window.requestAnimationFrame(draw);
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === "hidden") {
+        running = false;
+        if (rafId) {
+          window.cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+      } else {
+        running = true;
+        startTs = performance.now();
+        rafId = window.requestAnimationFrame(draw);
+      }
+    };
+
+    const observer = new ResizeObserver(() => resize());
+    observer.observe(wrapper);
+    resize();
+    rafId = window.requestAnimationFrame(draw);
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      running = false;
+      if (rafId) window.cancelAnimationFrame(rafId);
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [showFallbackCanvas]);
 
   useEffect(() => {
     let unmounted = false;
@@ -780,9 +939,9 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
       const minY = canvas.height * 0.06;
       const maxY = canvas.height * 0.9;
       const laneMinY =
-        stroke.lane === "top" ? canvas.height * 0.08 : canvas.height * 0.54;
+        stroke.lane === "top" ? canvas.height * 0.05 : canvas.height * 0.68;
       const laneMaxY =
-        stroke.lane === "top" ? canvas.height * 0.46 : canvas.height * 0.9;
+        stroke.lane === "top" ? canvas.height * 0.3 : canvas.height * 0.94;
 
       const forcedStartSide = stroke.preferredSide;
       // Outside-only entry: keep idle drags as curved bezier strokes
@@ -855,12 +1014,12 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
             fromX = -offscreenPad;
             fromY = canvas.height * (0.08 + Math.random() * 0.03);
             toX = clamp(canvas.width * (0.9 + Math.random() * 0.06), minX, maxX);
-            toY = clamp(canvas.height * (0.16 + Math.random() * 0.05), bandMinY, bandMaxY);
+            toY = clamp(canvas.height * (0.12 + Math.random() * 0.04), bandMinY, bandMaxY);
 
             stroke.ctrl1X = clamp(canvas.width * (0.22 + Math.random() * 0.08), minX, maxX);
-            stroke.ctrl1Y = clamp(canvas.height * (0.3 + Math.random() * 0.06), bandMinY, bandMaxY);
+            stroke.ctrl1Y = clamp(canvas.height * (0.2 + Math.random() * 0.05), bandMinY, bandMaxY);
             stroke.ctrl2X = clamp(canvas.width * (0.72 + Math.random() * 0.08), minX, maxX);
-            stroke.ctrl2Y = clamp(canvas.height * (0.04 + Math.random() * 0.04), bandMinY, bandMaxY);
+            stroke.ctrl2Y = clamp(canvas.height * (0.03 + Math.random() * 0.04), bandMinY, bandMaxY);
 
             stroke.emitIntensity = 0.8;
             stroke.emitIntervalMs = 30 + Math.random() * 12;
@@ -869,12 +1028,12 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
             fromX = canvas.width + offscreenPad;
             fromY = canvas.height * (0.94 + Math.random() * 0.03);
             toX = clamp(canvas.width * (0.06 + Math.random() * 0.06), minX, maxX);
-            toY = clamp(canvas.height * (0.94 + Math.random() * 0.03), bandMinY, bandMaxY);
+            toY = clamp(canvas.height * (0.95 + Math.random() * 0.02), bandMinY, bandMaxY);
 
             stroke.ctrl1X = clamp(canvas.width * (0.78 - Math.random() * 0.08), minX, maxX);
-            stroke.ctrl1Y = clamp(canvas.height * (0.68 + Math.random() * 0.08), bandMinY, bandMaxY);
+            stroke.ctrl1Y = clamp(canvas.height * (0.78 + Math.random() * 0.08), bandMinY, bandMaxY);
             stroke.ctrl2X = clamp(canvas.width * (0.28 - Math.random() * 0.1), minX, maxX);
-            stroke.ctrl2Y = clamp(canvas.height * (0.995 - Math.random() * 0.02), bandMinY, bandMaxY);
+            stroke.ctrl2Y = clamp(canvas.height * (0.995 - Math.random() * 0.015), bandMinY, bandMaxY);
 
             stroke.emitIntensity = 0.96;
             stroke.emitIntervalMs = 26 + Math.random() * 10;
@@ -888,12 +1047,12 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
             fromX = -offscreenPad;
             fromY = canvas.height * (0.1 + Math.random() * 0.03);
             toX = clamp(canvas.width * (0.72 + Math.random() * 0.08), minX, maxX);
-            toY = clamp(canvas.height * (0.58 + Math.random() * 0.08), contourMinY, contourMaxY);
+            toY = clamp(canvas.height * (0.72 + Math.random() * 0.09), contourMinY, contourMaxY);
 
             stroke.ctrl1X = clamp(canvas.width * (0.04 + Math.random() * 0.04), minX, maxX);
             stroke.ctrl1Y = clamp(canvas.height * (0.84 + Math.random() * 0.08), contourMinY, contourMaxY);
             stroke.ctrl2X = clamp(canvas.width * (0.48 + Math.random() * 0.1), minX, maxX);
-            stroke.ctrl2Y = clamp(canvas.height * (0.86 + Math.random() * 0.08), contourMinY, contourMaxY);
+            stroke.ctrl2Y = clamp(canvas.height * (0.9 + Math.random() * 0.06), contourMinY, contourMaxY);
 
             stroke.emitIntensity = 1.16;
             stroke.emitIntervalMs = 22 + Math.random() * 10;
@@ -902,12 +1061,12 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
             fromX = canvas.width + offscreenPad;
             fromY = canvas.height * (0.88 + Math.random() * 0.06);
             toX = clamp(canvas.width * (0.2 + Math.random() * 0.08), minX, maxX);
-            toY = clamp(canvas.height * (0.3 + Math.random() * 0.08), contourMinY, contourMaxY);
+            toY = clamp(canvas.height * (0.16 + Math.random() * 0.07), contourMinY, contourMaxY);
 
             stroke.ctrl1X = clamp(canvas.width * (0.94 - Math.random() * 0.03), minX, maxX);
-            stroke.ctrl1Y = clamp(canvas.height * (0.12 + Math.random() * 0.08), contourMinY, contourMaxY);
+            stroke.ctrl1Y = clamp(canvas.height * (0.06 + Math.random() * 0.08), contourMinY, contourMaxY);
             stroke.ctrl2X = clamp(canvas.width * (0.62 + Math.random() * 0.1), minX, maxX);
-            stroke.ctrl2Y = clamp(canvas.height * (0.14 + Math.random() * 0.1), contourMinY, contourMaxY);
+            stroke.ctrl2Y = clamp(canvas.height * (0.08 + Math.random() * 0.08), contourMinY, contourMaxY);
 
             stroke.emitIntensity = 0.72;
             stroke.emitIntervalMs = 34 + Math.random() * 14;
@@ -1222,6 +1381,29 @@ export default function HeroFluidTop({ height = DEFAULT_HEIGHT, className }: Her
       aria-hidden="true"
     >
       {showFallback && <div className={styles.fallback} />}
+      {showFallbackVideo && (
+        <video
+          ref={fallbackVideoRef}
+          className={styles.fallbackVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          onLoadedMetadata={() => setFallbackVideoReady(true)}
+          onCanPlay={() => setFallbackVideoReady(true)}
+          onPlaying={() => setFallbackVideoReady(true)}
+          onLoadedData={() => setFallbackVideoReady(true)}
+          onError={() => {
+            setFallbackVideoFailed(true);
+            setFallbackVideoReady(false);
+          }}
+        >
+          <source src={FALLBACK_VIDEO_MP4} type="video/mp4" />
+          <source src={FALLBACK_VIDEO_MOV} type="video/quicktime" />
+        </video>
+      )}
+      {showFallbackCanvas && <canvas ref={fallbackCanvasRef} className={styles.fallbackCanvas} />}
       <canvas ref={canvasRef} className={styles.canvas} />
       <div className={styles.overlay} />
     </div>
