@@ -2,6 +2,7 @@ export type MotionPreference = "full" | "reduced";
 export type ResolvedMotionMode = MotionPreference;
 
 export const MOTION_PREFERENCE_KEY = "mincfo-motion-preference";
+export const MOTION_PREFERENCE_EXPLICIT_KEY = "mincfo-motion-preference-explicit";
 
 export const isMotionPreference = (value: string | null): value is MotionPreference =>
   value === "full" || value === "reduced";

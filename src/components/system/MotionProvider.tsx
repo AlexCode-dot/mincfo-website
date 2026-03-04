@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import {
+  MOTION_PREFERENCE_EXPLICIT_KEY,
   isMotionPreference,
   MOTION_PREFERENCE_KEY,
   resolveMotionMode,
@@ -28,15 +29,29 @@ const MotionContext = createContext<MotionContextValue | null>(null);
 export function MotionProvider({ children }: { children: ReactNode }) {
   const [preference, setPreferenceState] = useState<MotionPreference>(() => {
     if (typeof window === "undefined") return "full";
+    const explicit = window.localStorage.getItem(MOTION_PREFERENCE_EXPLICIT_KEY);
+    if (explicit !== "1") return "full";
     const saved = window.localStorage.getItem(MOTION_PREFERENCE_KEY);
     return isMotionPreference(saved) ? saved : "full";
   });
 
   useEffect(() => {
     const onStorage = (event: StorageEvent) => {
-      if (event.key !== MOTION_PREFERENCE_KEY) return;
-      if (!isMotionPreference(event.newValue)) return;
-      setPreferenceState(event.newValue);
+      if (
+        event.key !== MOTION_PREFERENCE_KEY &&
+        event.key !== MOTION_PREFERENCE_EXPLICIT_KEY
+      ) {
+        return;
+      }
+
+      const explicit = window.localStorage.getItem(MOTION_PREFERENCE_EXPLICIT_KEY);
+      if (explicit !== "1") {
+        setPreferenceState("full");
+        return;
+      }
+
+      const saved = window.localStorage.getItem(MOTION_PREFERENCE_KEY);
+      setPreferenceState(isMotionPreference(saved) ? saved : "full");
     };
 
     window.addEventListener("storage", onStorage);
@@ -61,6 +76,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
       resolvedMode,
       setPreference: (next: MotionPreference) => {
         setPreferenceState(next);
+        window.localStorage.setItem(MOTION_PREFERENCE_EXPLICIT_KEY, "1");
         window.localStorage.setItem(MOTION_PREFERENCE_KEY, next);
       },
     }),
