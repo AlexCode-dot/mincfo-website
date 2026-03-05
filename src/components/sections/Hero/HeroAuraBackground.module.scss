@@ -4,59 +4,58 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  filter: brightness(1.08);
+  filter: brightness(1.1) hue-rotate(10deg);
+  mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent);
 }
 
 .auraLayer {
   position: absolute;
   inset: 0;
   z-index: 0;
-  isolation: isolate;
-  opacity: 0;
-  transition: opacity 220ms ease-out;
 
   :global(canvas) {
-    filter:
-      brightness(1.08)
-      contrast(1.24)
-      sepia(1)
-      hue-rotate(172deg)
-      saturate(5)
-      drop-shadow(0 0 10px color-mix(in oklab, var(--btn-primary-bg) 68%, transparent))
-      drop-shadow(0 0 24px color-mix(in oklab, var(--btn-primary-bg) 48%, transparent));
+    filter: brightness(0.78) contrast(1.2) hue-rotate(24deg) saturate(1.34);
   }
 }
 
-.auraLayerReady {
-  opacity: 1;
-}
-
-.auraLayer::before {
-  content: "";
+.ambientGradient {
   position: absolute;
   inset: 0;
-  background: var(--btn-primary-bg);
-  mix-blend-mode: screen;
-  opacity: 0.36;
+  z-index: 1;
+  background: linear-gradient(to bottom, #020408 0%, #050a14 45%, #020408 100%);
+  opacity: 0.62;
 }
 
-.auraLayer::after {
-  content: "";
+.topGlow {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  filter: blur(84px);
+  background: rgb(30 58 138 / 0.2);
+  opacity: 0.26;
+  z-index: 2;
+}
+
+.dotMatrix {
   position: absolute;
   inset: 0;
-  background: var(--btn-primary-bg);
-  mix-blend-mode: multiply;
-  opacity: 0.44;
-  mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
+  z-index: 3;
+  background-image: radial-gradient(rgb(56 189 248 / 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(circle at center, black, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
+  opacity: 0.26;
 }
 
-:global(html[data-motion="reduced"]) {
-  .wrapper {
-    filter: none;
-  }
-
-  .auraLayer {
-    display: none;
+@media (max-width: 900px) {
+  .topGlow {
+    width: 620px;
+    height: 620px;
+    top: -24%;
   }
 }

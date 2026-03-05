@@ -1,63 +1,31 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useMotion } from "@/components/system/MotionProvider";
+import { useEffect } from "react";
 import styles from "./HeroAuraBackground.module.scss";
 
 const UNICORN_SCRIPT_SRC =
   "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js";
-const AURA_PROJECT_ID = "bKN5upvoulAmWvInmHza";
+const AURA_PROJECT_ID = "NMlvqnkICwYYJ6lYb064";
 
 declare global {
   interface Window {
     UnicornStudio?: {
       init?: () => void;
+      isInitialized?: boolean;
     };
   }
 }
 
 export default function HeroAuraBackground() {
-  const { isReducedMotion } = useMotion();
-  const [isAuraReady, setIsAuraReady] = useState(false);
-  const auraHostRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
-    if (isReducedMotion) return;
-
-    const revealWhenCanvasReady = () => {
-      let rafId: number | null = null;
-      let attempts = 0;
-
-      const check = () => {
-        const host = auraHostRef.current;
-        const canvas = host?.querySelector("canvas");
-        if (canvas && canvas.width > 0 && canvas.height > 0) {
-          window.requestAnimationFrame(() => {
-            window.requestAnimationFrame(() => {
-              setIsAuraReady(true);
-            });
-          });
-          return;
-        }
-
-        attempts += 1;
-        if (attempts < 120) {
-          rafId = window.requestAnimationFrame(check);
-        }
-      };
-
-      setIsAuraReady(false);
-      rafId = window.requestAnimationFrame(check);
-
-      return () => {
-        if (rafId) window.cancelAnimationFrame(rafId);
-      };
-    };
-
     const initAura = () => {
-      window.UnicornStudio?.init?.();
-      const cleanup = revealWhenCanvasReady();
-      return cleanup;
+      if (!window.UnicornStudio?.init) return;
+      if (window.UnicornStudio.isInitialized) {
+        window.UnicornStudio.init();
+        return;
+      }
+      window.UnicornStudio.init();
+      window.UnicornStudio.isInitialized = true;
     };
 
     const existingScript = document.querySelector<HTMLScriptElement>(
@@ -66,16 +34,9 @@ export default function HeroAuraBackground() {
 
     if (existingScript) {
       if (window.UnicornStudio?.init) {
-        const cleanup = initAura();
-        return cleanup;
+        initAura();
       } else {
-        const onLoad = () => {
-          const cleanup = initAura();
-          if (cleanup) {
-            // Cleanup handles any pending RAF checks if unmounted shortly after load.
-          }
-        };
-        existingScript.addEventListener("load", onLoad, { once: true });
+        existingScript.addEventListener("load", initAura, { once: true });
       }
       return;
     }
@@ -83,21 +44,16 @@ export default function HeroAuraBackground() {
     const script = document.createElement("script");
     script.src = UNICORN_SCRIPT_SRC;
     script.async = true;
-    script.onload = () => {
-      initAura();
-    };
+    script.onload = initAura;
     document.head.appendChild(script);
-  }, [isReducedMotion]);
+  }, []);
 
   return (
     <div className={styles.wrapper} aria-hidden="true">
-      {!isReducedMotion && (
-        <div
-          ref={auraHostRef}
-          className={`${styles.auraLayer} ${isAuraReady ? styles.auraLayerReady : ""}`}
-          data-us-project={AURA_PROJECT_ID}
-        />
-      )}
+      <div className={styles.auraLayer} data-us-project={AURA_PROJECT_ID} />
+      <div className={styles.ambientGradient} />
+      <div className={styles.topGlow} />
+      <div className={styles.dotMatrix} />
     </div>
   );
 }
