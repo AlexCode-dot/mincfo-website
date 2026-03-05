@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./HeroParticleGlobe.module.scss";
 
 const MAX_DPR = 1.5;
@@ -513,6 +514,7 @@ const globeFragmentShader = `
 `;
 
 export default function HeroParticleGlobe() {
+  const { isReducedMotion } = useMotion();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -521,7 +523,7 @@ export default function HeroParticleGlobe() {
     const wrapper = wrapperRef.current;
     if (!container || !wrapper) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = isReducedMotion;
     const isMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
     const allowPointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
@@ -753,7 +755,7 @@ export default function HeroParticleGlobe() {
         container.removeChild(renderer.domElement);
       }
     };
-  }, []);
+  }, [isReducedMotion]);
 
   return (
     <div
