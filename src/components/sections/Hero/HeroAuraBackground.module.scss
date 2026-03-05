@@ -12,6 +12,8 @@
   inset: 0;
   z-index: 0;
   isolation: isolate;
+  opacity: 0;
+  transition: opacity 220ms ease-out;
 
   :global(canvas) {
     filter:
@@ -23,6 +25,10 @@
       drop-shadow(0 0 10px color-mix(in oklab, var(--btn-primary-bg) 68%, transparent))
       drop-shadow(0 0 24px color-mix(in oklab, var(--btn-primary-bg) 48%, transparent));
   }
+}
+
+.auraLayerReady {
+  opacity: 1;
 }
 
 .auraLayer::before {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useState } from "react";
 import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./HeroAuraBackground.module.scss";
 
@@ -18,12 +19,14 @@ declare global {
 
 export default function HeroAuraBackground() {
   const { isReducedMotion } = useMotion();
+  const [isAuraReady, setIsAuraReady] = useState(false);
 
   useEffect(() => {
     if (isReducedMotion) return;
 
     const initAura = () => {
       window.UnicornStudio?.init?.();
+      setIsAuraReady(true);
     };
 
     const existingScript = document.querySelector<HTMLScriptElement>(
@@ -49,7 +52,10 @@ export default function HeroAuraBackground() {
   return (
     <div className={styles.wrapper} aria-hidden="true">
       {!isReducedMotion && (
-        <div className={styles.auraLayer} data-us-project={AURA_PROJECT_ID} />
+        <div
+          className={`${styles.auraLayer} ${isAuraReady ? styles.auraLayerReady : ""}`}
+          data-us-project={AURA_PROJECT_ID}
+        />
       )}
     </div>
   );
