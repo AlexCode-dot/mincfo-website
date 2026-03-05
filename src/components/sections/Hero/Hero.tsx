@@ -1,7 +1,13 @@
 "use client";
 
 import { ChevronRight, Lock, Maximize2, Minimize2, Play } from "lucide-react";
-import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import { useMotion } from "@/components/system/MotionProvider";
 import HeroParticleGlobe from "./HeroParticleGlobe";
@@ -47,7 +53,7 @@ export default function Hero() {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const mediaSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const mediaElementRef = useRef<HTMLVideoElement | null>(null);
-  const audioDataRef = useRef<Uint8Array | null>(null);
+  const audioDataRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
   const audioFrameRef = useRef<number | null>(null);
   const introProgressFrameRef = useRef<number | null>(null);
   const fullscreenRedirectRef = useRef(false);
@@ -135,7 +141,7 @@ export default function Hero() {
 
     const card = cardRef.current;
     if (card && state.allowPointer && !state.reduceMotion) {
-      const handleMove = (event: MouseEvent) => {
+      const handleMove = (event: globalThis.MouseEvent) => {
         const bounds = card.getBoundingClientRect();
         const x = (event.clientX - bounds.left) / bounds.width;
         const y = (event.clientY - bounds.top) / bounds.height;
@@ -291,7 +297,9 @@ export default function Hero() {
       analyser.fftSize = 256;
       analyser.smoothingTimeConstant = 0.2;
       analyserRef.current = analyser;
-      audioDataRef.current = new Uint8Array(analyser.frequencyBinCount);
+      audioDataRef.current = new Uint8Array(
+        new ArrayBuffer(analyser.frequencyBinCount),
+      );
     }
 
     if (analyserRef.current && mediaElementRef.current !== video) {
@@ -531,7 +539,7 @@ export default function Hero() {
     }
   };
 
-  const handleVideoDoubleClick = (event: MouseEvent<HTMLVideoElement>) => {
+  const handleVideoDoubleClick = (event: ReactMouseEvent<HTMLVideoElement>) => {
     event.preventDefault();
     void handleToggleFullscreen();
   };
