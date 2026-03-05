@@ -70,10 +70,7 @@ export default function HeroAuraBackground() {
         return cleanup;
       } else {
         const onLoad = () => {
-          const cleanup = initAura();
-          if (cleanup) {
-            // Cleanup handles any pending RAF checks if unmounted shortly after load.
-          }
+          initAura();
         };
         existingScript.addEventListener("load", onLoad, { once: true });
       }
