@@ -4,7 +4,7 @@ import { ChevronRight, Lock, Maximize2, Minimize2, Play } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import { useMotion } from "@/components/system/MotionProvider";
-import HeroFluidTop from "@/components/visual/HeroFluidTop/HeroFluidTop";
+import HeroParticleGlobe from "./HeroParticleGlobe";
 import styles from "./Hero.module.scss";
 
 const clamp = (value: number, min: number, max: number) =>
@@ -539,7 +539,7 @@ export default function Hero() {
   return (
     <section ref={sectionRef} id="hero" className={styles.hero}>
       <div className={styles.topBackground} aria-hidden="true">
-        <HeroFluidTop height="100%" />
+        <HeroParticleGlobe />
       </div>
 
       <div className={styles.container}>

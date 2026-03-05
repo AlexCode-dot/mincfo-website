@@ -24,7 +24,6 @@ import Link from "next/link";
 import RevealSection from "../ceo-founders/RevealSection";
 import SectionTopCurve from "../ceo-founders/SectionTopCurve";
 import ScenarioVisualization from "../ceo-founders/ScenarioVisualization";
-import TestimonialSpotlight from "../ceo-founders/TestimonialSpotlight";
 import styles from "../ceo-founders/page.module.scss";
 import type { SolutionPageContent } from "./solutionPageContent";
 
@@ -46,7 +45,6 @@ const CARD_TRACER_PATH =
 export default function SolutionPageTemplate({ content }: { content: SolutionPageContent }) {
   const impactVisuals = content.impactVisuals ?? ["realtime", "flow", "accuracy", "analysis"];
   const scenarioDescription = content.scenario.description ?? `Fråga: ${content.scenario.question}`;
-  const testimonialItems = content.testimonials ?? (content.testimonial ? [content.testimonial] : undefined);
 
   return (
     <>
@@ -404,8 +402,6 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
               );
             })}
           </div>
-
-          {testimonialItems ? <TestimonialSpotlight testimonials={testimonialItems} /> : <TestimonialSpotlight />}
         </RevealSection>
         <RevealSection className={styles.closing} id="kontakt">
           <div className={styles.closingCard}>
