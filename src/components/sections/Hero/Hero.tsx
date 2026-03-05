@@ -10,7 +10,7 @@ import {
 } from "react";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import { useMotion } from "@/components/system/MotionProvider";
-import HeroParticleGlobe from "./HeroParticleGlobe";
+import HeroAuraBackground from "./HeroAuraBackground";
 import styles from "./Hero.module.scss";
 
 const clamp = (value: number, min: number, max: number) =>
@@ -547,7 +547,7 @@ export default function Hero() {
   return (
     <section ref={sectionRef} id="hero" className={styles.hero}>
       <div className={styles.topBackground} aria-hidden="true">
-        <HeroParticleGlobe />
+        <HeroAuraBackground />
       </div>
 
       <div className={styles.container}>

@@ -1,0 +1,56 @@
+.wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  filter: brightness(1.08);
+}
+
+.auraLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  isolation: isolate;
+
+  :global(canvas) {
+    filter:
+      brightness(1.08)
+      contrast(1.24)
+      sepia(1)
+      hue-rotate(172deg)
+      saturate(5)
+      drop-shadow(0 0 10px color-mix(in oklab, var(--btn-primary-bg) 68%, transparent))
+      drop-shadow(0 0 24px color-mix(in oklab, var(--btn-primary-bg) 48%, transparent));
+  }
+}
+
+.auraLayer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--btn-primary-bg);
+  mix-blend-mode: screen;
+  opacity: 0.36;
+}
+
+.auraLayer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--btn-primary-bg);
+  mix-blend-mode: multiply;
+  opacity: 0.44;
+  mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
+}
+
+:global(html[data-motion="reduced"]) {
+  .wrapper {
+    filter: none;
+  }
+
+  .auraLayer {
+    display: none;
+  }
+}
