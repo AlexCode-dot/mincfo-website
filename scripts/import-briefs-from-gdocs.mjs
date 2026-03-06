@@ -320,11 +320,87 @@ function extractSectionsFromDocument(doc) {
         if (!element) continue;
         parsedRows.push({ element, value });
       }
-      sections.set(currentHeading, parsedRows);
+      const existingRows = sections.get(currentHeading) ?? [];
+      sections.set(currentHeading, existingRows.concat(parsedRows));
     }
   }
 
   return sections;
+}
+
+const SOLUTION_SECTION_ALIASES = {
+  "CEO & Founders": [
+    "VD:ar och grundare",
+    "VDar och grundare",
+    "VD och grundare",
+  ],
+  "CFO & Finance Team": [
+    "CFO & Ekonomifunktion",
+    "CFO & Ekonomifunktionen",
+  ],
+};
+
+function normalizeSectionTitle(value) {
+  return String(value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, " och ")
+    .replace(/\band\b/g, "och")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function stripSolutionPrefix(value) {
+  return value.replace(/^losning for\s+/i, "").trim();
+}
+
+function buildSolutionHeadingCandidates(page) {
+  const labels = new Set();
+
+  if (typeof page?.key === "string" && page.key.trim()) {
+    labels.add(page.key.trim());
+    const aliases = SOLUTION_SECTION_ALIASES[page.key.trim()];
+    if (Array.isArray(aliases)) {
+      aliases.forEach((alias) => labels.add(alias));
+    }
+  }
+
+  if (typeof page?.eyebrow === "string" && page.eyebrow.trim()) {
+    labels.add(page.eyebrow.trim());
+  }
+
+  if (typeof page?.heroHeadline?.second === "string" && page.heroHeadline.second.trim()) {
+    labels.add(page.heroHeadline.second.trim());
+  }
+
+  const candidates = new Set();
+  for (const label of labels) {
+    const normalized = normalizeSectionTitle(label);
+    if (!normalized) continue;
+    candidates.add(normalized);
+    candidates.add(stripSolutionPrefix(normalized));
+  }
+
+  return candidates;
+}
+
+function resolveSolutionSectionRows(page, solutionsSections, usedHeadings) {
+  const candidates = buildSolutionHeadingCandidates(page);
+
+  for (const [heading, rows] of solutionsSections.entries()) {
+    if (usedHeadings.has(heading)) continue;
+    const normalizedHeading = normalizeSectionTitle(heading);
+    if (!normalizedHeading) continue;
+    const headingWithoutPrefix = stripSolutionPrefix(normalizedHeading);
+    if (candidates.has(normalizedHeading) || candidates.has(headingWithoutPrefix)) {
+      usedHeadings.add(heading);
+      return rows;
+    }
+  }
+
+  return null;
 }
 
 function buildBindingsFromValue(value, rawKey, label, path, options = {}) {
@@ -629,10 +705,36 @@ async function main() {
   }
 
   const solutionsBindings = buildSolutionsSectionBindings(solutionsTemplate);
-  for (const [sectionTitle, bindings] of solutionsBindings.entries()) {
-    const rows = solutionsSections.get(sectionTitle);
-    if (!rows?.length) continue;
-    applyRowsToBindings(solutionsTemplate, bindings, rows);
+  const usedSolutionHeadings = new Set();
+
+  const sharedBindings = solutionsBindings.get("Gemensamma texter");
+  if (sharedBindings) {
+    const sharedRows = solutionsSections.get("Gemensamma texter");
+    if (!sharedRows?.length) {
+      console.warn('Varning: Sektionen "Gemensamma texter" hittades inte i lösningsdokumentet.');
+    } else {
+      usedSolutionHeadings.add("Gemensamma texter");
+      applyRowsToBindings(solutionsTemplate, sharedBindings, sharedRows);
+    }
+  }
+
+  if (Array.isArray(solutionsTemplate.pages)) {
+    solutionsTemplate.pages.forEach((page, pageIndex) => {
+      const sectionTitle = page?.key;
+      if (typeof sectionTitle !== "string") return;
+
+      const bindings = solutionsBindings.get(sectionTitle);
+      if (!bindings?.length) return;
+
+      const rows = resolveSolutionSectionRows(page, solutionsSections, usedSolutionHeadings);
+      if (!rows?.length) {
+        console.warn(
+          `Varning: Kunde inte matcha lösningssektion för "${sectionTitle}" (index ${pageIndex}).`,
+        );
+        return;
+      }
+      applyRowsToBindings(solutionsTemplate, bindings, rows);
+    });
   }
 
   writeJson(HOME_PAGE_TEXT_JSON_PATH, homeTemplate);

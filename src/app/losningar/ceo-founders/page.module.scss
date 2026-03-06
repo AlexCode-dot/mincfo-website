@@ -952,6 +952,10 @@
   text-transform: uppercase;
 }
 
+.keepCase {
+  text-transform: none;
+}
+
 .challengeGrid,
 .solutionGrid,
 .impactGrid {

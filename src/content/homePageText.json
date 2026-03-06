@@ -5,7 +5,7 @@
     "kundcase": "Kundcase",
     "sakerhet": "Säkerhet",
     "hurDetFunkar": "Hur det funkar",
-    "kontaktaOss": "Logga in / Sign up",
+    "kontaktaOss": "Kontakta oss",
     "openSolutionsAria": "Öppna lösningsmeny",
     "openMenuAria": "Öppna meny",
     "groups": [
@@ -267,7 +267,7 @@
     "pill": "Kunder",
     "title": "Kundresultat från team som växer med MinCFO",
     "intro": "Kundcase, omdömen och logotyper visar vad vi faktiskt levererar i praktiken. Här är ett urval kundröster.",
-    "tickerLabel": "Några av MinCFOs nöjda kunder",
+    "tickerLabel": "Betrodd av team som använder MinCFO varje månad",
     "controlsAria": "Bläddra kundomdömen",
     "prevAria": "Föregående omdöme",
     "nextAria": "Nästa omdöme",
