@@ -129,10 +129,16 @@ const LABEL_OVERRIDES = {
   closingOverline: "Avslut-overline",
   closingAccent: "Avslut accent",
   closingCta: "Avslut CTA",
+  demoCta: "Navbar demo-knapp",
+  loginSignupLabel: "Logga in / Sign up label",
   first: "Rad 1",
   second: "Rad 2",
   answer1: "Svar 1",
   answer2: "Svar 2",
+};
+
+const ELEMENT_LABEL_ALIASES = {
+  "Logga in / Sign up label": ["Kontakta Oss"],
 };
 
 function normalize(text) {
@@ -510,8 +516,22 @@ function applyRowsToBindings(targetObj, bindings, rows) {
     rowBuckets.get(row.element).push(row.value ?? "");
   }
 
+  const resolveQueue = (element) => {
+    const direct = rowBuckets.get(element);
+    if (direct?.length) return direct;
+
+    const aliases = ELEMENT_LABEL_ALIASES[element];
+    if (!Array.isArray(aliases)) return null;
+
+    for (const alias of aliases) {
+      const queue = rowBuckets.get(alias);
+      if (queue?.length) return queue;
+    }
+    return null;
+  };
+
   for (const binding of bindings) {
-    const queue = rowBuckets.get(binding.element);
+    const queue = resolveQueue(binding.element);
     if (!queue?.length) continue;
     const nextValue = queue.shift();
     setAtPath(targetObj, binding.path, nextValue);

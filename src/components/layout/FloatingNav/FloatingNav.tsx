@@ -145,11 +145,18 @@ export default function FloatingNav() {
   const sectionHref = (id: (typeof HOMEPAGE_SECTIONS)[number]) =>
     pathname === "/" ? `#${id}` : `/#${id}`;
   const demoHref = pathname === "/" ? "#kontakt" : "/#kontakt";
-  const loginLabels = HOME_PAGE_TEXT.navigation.kontaktaOss
+  const legacyLoginLabel = (HOME_PAGE_TEXT.navigation as Record<string, string>).kontaktaOss;
+  const loginSignupLabel =
+    HOME_PAGE_TEXT.navigation.loginSignupLabel ??
+    legacyLoginLabel ??
+    "Logga in / Sign up";
+  const navDemoCta =
+    HOME_PAGE_TEXT.navigation.demoCta ?? HOME_PAGE_TEXT.hero.primaryCta;
+  const loginLabels = loginSignupLabel
     .split("/")
     .map((label) => label.trim())
     .filter(Boolean);
-  const loginPrimaryLabel = loginLabels[0] ?? HOME_PAGE_TEXT.navigation.kontaktaOss;
+  const loginPrimaryLabel = loginLabels[0] ?? loginSignupLabel;
   const loginSecondaryLabel = loginLabels[1] ?? "";
   const holdMs = 5200;
   const fadeOutMs = 2000;
@@ -392,7 +399,7 @@ export default function FloatingNav() {
             className={styles.cta}
             onClick={(event) => handleSectionAnchorClick(event, demoHref)}
           >
-            {HOME_PAGE_TEXT.hero.primaryCta}
+            {navDemoCta}
             <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
           </a>
         </div>
@@ -494,7 +501,7 @@ export default function FloatingNav() {
             className={styles.mobileCta}
             onClick={(event) => handleSectionAnchorClick(event, demoHref, closeMobileMenu)}
           >
-            {HOME_PAGE_TEXT.hero.primaryCta}
+            {navDemoCta}
           </a>
 
           <a
@@ -502,12 +509,12 @@ export default function FloatingNav() {
             className={styles.mobileCtaSecondary}
             onClick={closeMobileMenu}
           >
-            {HOME_PAGE_TEXT.navigation.kontaktaOss}
+            {loginSignupLabel}
           </a>
         </div>
       </nav>
 
-      <a href={APP_LOGIN_URL} className={styles.loginFloat} aria-label={HOME_PAGE_TEXT.navigation.kontaktaOss}>
+      <a href={APP_LOGIN_URL} className={styles.loginFloat} aria-label={loginSignupLabel}>
         <span
           className={`${styles.loginIconWrap} ${loginIconPulse ? styles.loginIconWrapPulse : ""}`}
           style={{ "--login-pulse-duration": `${pulseDurationMs}ms` } as CSSProperties}
@@ -517,7 +524,7 @@ export default function FloatingNav() {
         </span>
         <span className={styles.loginLabel}>
           {!loginSecondaryLabel ? (
-            HOME_PAGE_TEXT.navigation.kontaktaOss
+            loginSignupLabel
           ) : (
             <span className={styles.loginLabelSwap} aria-hidden="true">
               <span
