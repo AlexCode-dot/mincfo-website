@@ -161,6 +161,8 @@ const LABEL_OVERRIDES = {
   closingOverline: "Avslut-overline",
   closingAccent: "Avslut accent",
   closingCta: "Avslut CTA",
+  demoCta: "Navbar demo-knapp",
+  loginSignupLabel: "Logga in / Sign up label",
   first: "Rad 1",
   second: "Rad 2",
   answer1: "Svar 1",
