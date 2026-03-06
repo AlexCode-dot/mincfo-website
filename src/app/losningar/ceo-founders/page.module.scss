@@ -301,12 +301,17 @@
 }
 
 .heroTickerTrack {
+  --ticker-gap: 92px;
+  --ticker-duration: 52s;
   display: inline-flex;
   align-items: center;
-  gap: 92px;
+  gap: var(--ticker-gap);
   width: max-content;
   padding: 16px 0;
-  animation: heroTickerMove 34s linear infinite;
+  animation: heroTickerMove var(--ticker-duration) linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 .heroTickerItem {
@@ -367,10 +372,10 @@
 
 @keyframes heroTickerMove {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translate3d(calc(-50% - (var(--ticker-gap) / 2)), 0, 0);
   }
 }
 
@@ -2599,6 +2604,10 @@
 }
 
 :global(html[data-motion="reduced"]) {
+  .heroTickerTrack {
+    animation: none;
+  }
+
   .heroScrollCue,
   .heroScrollCueInner {
     animation: none;
@@ -3708,7 +3717,8 @@
   }
 
   .heroTickerTrack {
-    gap: 64px;
+    --ticker-gap: 64px;
+    --ticker-duration: 44s;
     padding: 12px 0;
   }
 
