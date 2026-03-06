@@ -145,7 +145,7 @@ export default function FloatingNav() {
   const sectionHref = (id: (typeof HOMEPAGE_SECTIONS)[number]) =>
     pathname === "/" ? `#${id}` : `/#${id}`;
   const demoHref = pathname === "/" ? "#kontakt" : "/#kontakt";
-  const legacyLoginLabel = (HOME_PAGE_TEXT.navigation as Record<string, string>).kontaktaOss;
+  const legacyLoginLabel = (HOME_PAGE_TEXT.navigation as unknown as { kontaktaOss?: string }).kontaktaOss;
   const loginSignupLabel =
     HOME_PAGE_TEXT.navigation.loginSignupLabel ??
     legacyLoginLabel ??
