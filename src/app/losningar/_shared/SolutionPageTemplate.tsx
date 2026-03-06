@@ -1,6 +1,7 @@
 import FloatingNav from "@/components/layout/FloatingNav/FloatingNav";
 import Logo from "@/components/layout/Logo/Logo";
 import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
+import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import { SOLUTION_SHARED_CONTENT } from "@/content/solutionSharedContent";
 import {
   CircleDollarSign,
@@ -27,17 +28,10 @@ import ScenarioVisualization from "../ceo-founders/ScenarioVisualization";
 import styles from "../ceo-founders/page.module.scss";
 import type { SolutionPageContent } from "./solutionPageContent";
 
-const HERO_TICKER_LOGOS = [
-  { src: "/customers/logos/logo-algae.avif", alt: "Swedish Algae Factory" },
-  { src: "/customers/logos/logo-bam.avif", alt: "BAM" },
-  { src: "/customers/logos/logo-eloize.avif", alt: "Eloize" },
-  { src: "/customers/logos/logo-fler.avif", alt: "Fler" },
-  { src: "/customers/logos/logo-lawster.avif", alt: "Lawster" },
-  { src: "/customers/logos/logo-realforce.avif", alt: "Realforce" },
-  { src: "/customers/logos/logo-rossoneri.avif", alt: "Rossoneri" },
-  { src: "/customers/logos/logo-runway.webp", alt: "Runway" },
-  { src: "/customers/logos/logo-swebal.avif", alt: "Swebal" },
-] as const;
+const HERO_TICKER_LOGOS = HOME_PAGE_TEXT.customers.trustedLogos.map((logo) => ({
+  src: `/customers/logos/${logo.file}`,
+  alt: logo.name,
+}));
 
 const CARD_TRACER_PATH =
   "M 0.8 7.2 A 6.4 6.4 0 0 1 7.2 0.8 H 92.8 A 6.4 6.4 0 0 1 99.2 7.2 V 92.8 A 6.4 6.4 0 0 1 92.8 99.2 H 7.2 A 6.4 6.4 0 0 1 0.8 92.8 Z";

@@ -195,12 +195,13 @@
 
 .tickerTrack {
   --ticker-gap: 58px;
+  --ticker-duration: 52s;
   display: inline-flex;
   align-items: center;
   gap: var(--ticker-gap);
   width: max-content;
   padding: 6px 0;
-  animation: trustedTickerMove 34s linear infinite;
+  animation: trustedTickerMove var(--ticker-duration) linear infinite;
   will-change: transform;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
@@ -507,8 +508,8 @@
 
   .tickerTrack {
     --ticker-gap: 42px;
+    --ticker-duration: 44s;
     padding: 10px 0;
-    animation-duration: 28s;
   }
 
   .tickerItem {
