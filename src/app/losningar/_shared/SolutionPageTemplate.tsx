@@ -56,7 +56,9 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           <div className={styles.heroCard}>
             <div className={styles.heroBackdrop} aria-hidden="true" />
 
-            <span className={styles.eyebrow}>{content.eyebrow}</span>
+            <span className={styles.eyebrow}>
+              <span className={styles.keepCase}>{content.eyebrow}</span>
+            </span>
             <h1 className={`${styles.title}${content.heroTitleWide === false ? "" : ` ${styles.titleWide}`}`}>
               {content.heroHeadline}
             </h1>
@@ -103,7 +105,9 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             </div>
           </div>
           <div className={styles.heroScrollCueWrap}>
-            <span className={styles.heroScrollCueLabel}>{SOLUTION_SHARED_CONTENT.scrollLabel}</span>
+            <span className={styles.heroScrollCueLabel}>
+              <span className={styles.keepCase}>{SOLUTION_SHARED_CONTENT.scrollLabel}</span>
+            </span>
             <a href="#utmaning" className={styles.heroScrollCue} aria-label="Scrolla till nästa sektion">
               <span className={styles.heroScrollCueInner}>
                 <ChevronDown size={18} />
@@ -168,7 +172,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             <header className={styles.sectionHead}>
               <p className={styles.overline}>
                 <Sparkles size={14} />
-                {SOLUTION_SHARED_CONTENT.helpsOverline}
+                <span className={styles.keepCase}>{SOLUTION_SHARED_CONTENT.helpsOverline}</span>
               </p>
               <h2>{content.helpsTitle}</h2>
               <p>{content.helpsSubtitle}</p>
@@ -237,7 +241,9 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           />
           <div className={styles.impactIntro}>
             <div>
-              <p className={styles.impactTag}>{SOLUTION_SHARED_CONTENT.impactTag}</p>
+              <p className={styles.impactTag}>
+                <span className={styles.keepCase}>{SOLUTION_SHARED_CONTENT.impactTag}</span>
+              </p>
               <h2 className={styles.impactHeadline}>{content.impactTitle}</h2>
             </div>
             <p className={styles.impactLead}>{content.impactSubtitle}</p>
@@ -407,7 +413,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           <div className={styles.closingCard}>
             <p className={styles.overline}>
               <Sparkles size={14} />
-              {SOLUTION_SHARED_CONTENT.closingOverline}
+              <span className={styles.keepCase}>{SOLUTION_SHARED_CONTENT.closingOverline}</span>
             </p>
             <h2>
               <span className={styles.closingTitleMain}>{content.trustHeadline}</span>
