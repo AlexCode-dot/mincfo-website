@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./HeroParticleGlobe.module.scss";
 
-const MAX_DPR = 1.5;
+const MAX_DPR = 1.1;
 const MOBILE_BREAKPOINT = 900;
 const GLOBE_RADIUS = 10;
 const GLOBE_SPHERE_RADIUS = GLOBE_RADIUS * 0.78;
@@ -61,10 +61,10 @@ type GlobeProfile = {
 
 const GLOBE_PROFILES: Record<GlobeVariant, GlobeProfile> = {
   premium: {
-    desktopCount: 24000,
-    mobileCount: 13000,
+    desktopCount: 19000,
+    mobileCount: 11000,
     rotationSpeed: 0.1,
-    breathAmplitude: 0.023,
+    breathAmplitude: 0.048,
     cameraZ: 27.8,
     groupY: 0,
     pointSizeDesktop: 4.8,
@@ -88,10 +88,10 @@ const GLOBE_PROFILES: Record<GlobeVariant, GlobeProfile> = {
     brightColor: "#98aaff",
   },
   showy: {
-    desktopCount: 30000,
-    mobileCount: 17000,
+    desktopCount: 24000,
+    mobileCount: 13000,
     rotationSpeed: 0.12,
-    breathAmplitude: 0.028,
+    breathAmplitude: 0.055,
     cameraZ: 27,
     groupY: 0,
     pointSizeDesktop: 5.6,
@@ -525,8 +525,6 @@ export default function HeroParticleGlobe() {
 
     const reduceMotion = isReducedMotion;
     const isMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
-    const allowPointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
     const globeCount = isMobile
       ? ACTIVE_PROFILE.mobileCount
       : ACTIVE_PROFILE.desktopCount;
@@ -535,15 +533,6 @@ export default function HeroParticleGlobe() {
     const parallaxCurrent = { x: 0, y: 0 };
     const spotlightTarget = { y: 42 };
     const spotlightCurrent = { y: 42 };
-    const mouseNdc = new THREE.Vector2(2, 2);
-    const raycaster = new THREE.Raycaster();
-    const pointerLocalScratch = new THREE.Vector3();
-    const pointerLocalTarget = new THREE.Vector3(0, 0, GLOBE_RADIUS * 0.25);
-    const pointerLocalLag = new THREE.Vector3(0, 0, GLOBE_RADIUS * 0.25);
-    const pointerLocalCurrent = new THREE.Vector3(0, 0, GLOBE_RADIUS * 0.25);
-    let pointerStrengthTarget = 0;
-    let pointerStrengthCurrent = 0;
-    let isPointerInside = false;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 120);
@@ -551,7 +540,7 @@ export default function HeroParticleGlobe() {
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: false,
       powerPreference: "high-performance",
     });
     renderer.setClearColor(0x000000, 0);
@@ -592,12 +581,6 @@ export default function HeroParticleGlobe() {
     const globePoints = new THREE.Points(globeGeometry, globeMaterial);
     globeGroup.add(globePoints);
 
-    const hoverSphere = new THREE.Mesh(
-      new THREE.SphereGeometry(GLOBE_SPHERE_RADIUS, 24, 18),
-      new THREE.MeshBasicMaterial({ visible: false }),
-    );
-    globeGroup.add(hoverSphere);
-
     const resize = () => {
       const { clientWidth, clientHeight } = container;
       if (!clientWidth || !clientHeight) return;
@@ -619,23 +602,6 @@ export default function HeroParticleGlobe() {
       spotlightTarget.y = 36 + progress * 18;
     };
 
-    const handlePointerMove = (event: MouseEvent) => {
-      if (!allowPointer || reduceMotion) return;
-      const rect = wrapper.getBoundingClientRect();
-      const nx = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      const ny = ((event.clientY - rect.top) / rect.height) * 2 - 1;
-      mouseNdc.set(nx, -ny);
-      isPointerInside = true;
-      parallaxTarget.x = THREE.MathUtils.clamp(nx, -1, 1) * ACTIVE_PROFILE.parallaxStrength;
-      parallaxTarget.y = THREE.MathUtils.clamp(ny, -1, 1) * ACTIVE_PROFILE.parallaxStrength;
-    };
-
-    const handlePointerLeave = () => {
-      isPointerInside = false;
-      parallaxTarget.x = 0;
-      parallaxTarget.y = 0;
-    };
-
     resize();
     updateSpotlightFromScroll();
 
@@ -643,16 +609,20 @@ export default function HeroParticleGlobe() {
     window.addEventListener("scroll", updateSpotlightFromScroll, { passive: true });
     window.addEventListener("resize", updateSpotlightFromScroll);
 
-    if (allowPointer) {
-      window.addEventListener("mousemove", handlePointerMove, { passive: true });
-      wrapper.addEventListener("mouseleave", handlePointerLeave);
-    }
-
     const clock = new THREE.Clock();
     let rafId = 0;
     let spinAngle = 0;
+    let isVisible = !document.hidden;
+    let isInViewport = true;
+
+    const scheduleFrame = () => {
+      if (!isVisible || !isInViewport) return;
+      rafId = window.requestAnimationFrame(renderFrame);
+    };
 
     const renderFrame = () => {
+      if (!isVisible || !isInViewport) return;
+
       const delta = Math.min(clock.getDelta(), 0.05);
       const elapsed = clock.elapsedTime;
 
@@ -683,29 +653,6 @@ export default function HeroParticleGlobe() {
       globeMaterial.uniforms.uVoidRadius.value =
         COLLAPSE_VOID_RADIUS + COLLAPSE_VOID_RADIUS * 0.08 * collapseMix;
 
-      if (allowPointer && !reduceMotion && isPointerInside) {
-        globeGroup.updateWorldMatrix(true, false);
-        raycaster.setFromCamera(mouseNdc, camera);
-
-        const hits = raycaster.intersectObject(hoverSphere, false);
-        if (hits.length > 0) {
-          pointerLocalScratch.copy(hits[0].point);
-          globePoints.worldToLocal(pointerLocalScratch);
-          pointerLocalTarget.copy(pointerLocalScratch);
-          pointerStrengthTarget = 1;
-        } else {
-          pointerStrengthTarget = 0;
-        }
-      } else {
-        pointerStrengthTarget = 0;
-      }
-
-      pointerLocalLag.lerp(pointerLocalTarget, 0.08);
-      pointerLocalCurrent.lerp(pointerLocalLag, 0.14);
-      pointerStrengthCurrent += (pointerStrengthTarget - pointerStrengthCurrent) * 0.11;
-      globeMaterial.uniforms.uPointer.value.copy(pointerLocalCurrent);
-      globeMaterial.uniforms.uPointerStrength.value = pointerStrengthCurrent;
-
       parallaxCurrent.x += (parallaxTarget.x - parallaxCurrent.x) * 0.08;
       parallaxCurrent.y += (parallaxTarget.y - parallaxCurrent.y) * 0.08;
       spotlightCurrent.y += (spotlightTarget.y - spotlightCurrent.y) * 0.08;
@@ -720,8 +667,42 @@ export default function HeroParticleGlobe() {
       renderer.render(scene, camera);
 
       globeGroup.scale.divideScalar(breath);
-      rafId = window.requestAnimationFrame(renderFrame);
+      scheduleFrame();
     };
+
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isInViewport = entry.isIntersecting;
+        if (isInViewport && !document.hidden) {
+          isVisible = true;
+          clock.getDelta();
+          if (!rafId) {
+            scheduleFrame();
+          }
+        } else if (rafId) {
+          window.cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+      },
+      { threshold: 0.02 },
+    );
+
+    visibilityObserver.observe(wrapper);
+
+    const handleVisibilityChange = () => {
+      isVisible = !document.hidden;
+      if (isVisible && isInViewport) {
+        clock.getDelta();
+        if (!rafId) {
+          scheduleFrame();
+        }
+      } else if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     if (reduceMotion) {
       globeGroup.rotation.y = 0.35;
@@ -734,20 +715,18 @@ export default function HeroParticleGlobe() {
       globeMaterial.uniforms.uPointerStrength.value = 0;
       renderer.render(scene, camera);
     } else {
-      rafId = window.requestAnimationFrame(renderFrame);
+      scheduleFrame();
     }
 
     return () => {
       if (rafId) window.cancelAnimationFrame(rafId);
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("resize", resize);
       window.removeEventListener("scroll", updateSpotlightFromScroll);
       window.removeEventListener("resize", updateSpotlightFromScroll);
-      window.removeEventListener("mousemove", handlePointerMove);
-      wrapper.removeEventListener("mouseleave", handlePointerLeave);
 
       globeGeometry.dispose();
-      hoverSphere.geometry.dispose();
-      (hoverSphere.material as THREE.Material).dispose();
       globeMaterial.dispose();
       renderer.dispose();
 
