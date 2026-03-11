@@ -411,7 +411,6 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             </p>
             <h2>
               <span className={styles.closingTitleMain}>{content.trustHeadline}</span>
-              <span className={styles.closingTitleAccent}>{SOLUTION_SHARED_CONTENT.closingAccent}</span>
             </h2>
             <p>{content.trustSub}</p>
             <Link href="/#hero" className={styles.primaryCta}>
