@@ -6,12 +6,11 @@ import {
   Blocks,
   Building2,
   CircleDot,
-  FileCheck2,
-  Siren,
   Sparkles,
 } from "lucide-react";
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -35,6 +34,7 @@ const OFFERING_ICONS = {
 } as const;
 const SHOWCASE_ORDER: HomeOfferingMode[] = ["platform", "full-service", "partner"];
 const AUTOPLAY_INTERVAL_MS = 5200;
+const AUTOPLAY_INITIAL_DELAY_MS = 3200;
 const AUTOPLAY_PAUSE_AFTER_INTERACTION_MS = 12000;
 const SCROLL_PROGRESS_STEP = 0.01;
 const clamp = (value: number, min: number, max: number) =>
@@ -80,79 +80,55 @@ function FullServiceVisual({
 }) {
   return (
     <div className={styles.serviceGraphCard}>
-      <div className={styles.serviceChipRow}>
-        <span className={`${styles.serviceChip} ${styles.serviceChipOwnership}`}>
-          <span className={styles.serviceChipDot} aria-hidden="true" />
-          <span>{content.chipOwnership}</span>
-        </span>
-        <span className={`${styles.serviceChip} ${styles.serviceChipDelivery}`}>
-          <span className={styles.serviceChipDot} aria-hidden="true" />
-          <span>{content.chipDelivery}</span>
-        </span>
-        <span className={`${styles.serviceChip} ${styles.serviceChipLeadership}`}>
-          <span className={styles.serviceChipDot} aria-hidden="true" />
-          <span>{content.chipLeadership}</span>
-        </span>
-      </div>
-
       <div className={styles.serviceHeroPanel}>
-        <span className={styles.serviceHeroGlow} aria-hidden="true" />
-        <span className={styles.serviceHeroVignette} aria-hidden="true" />
-
         <div className={styles.serviceHeroHeader}>
-          <div>
-            <p className={styles.serviceHeroEyebrow}>{content.eyebrow}</p>
-            <strong className={styles.serviceGraphTitle}>{content.title}</strong>
-          </div>
+          <p className={styles.serviceHeroEyebrow}>{content.eyebrow}</p>
 
           <span className={styles.serviceHeroBadge}>
-            <Sparkles size={15} aria-hidden="true" />
             <span>{content.badge}</span>
           </span>
         </div>
 
-        <div className={styles.serviceOrbitStage}>
-          <span className={styles.serviceOrbitRail} aria-hidden="true" />
-          <span className={styles.serviceOrbitHalo} aria-hidden="true" />
+        <div className={styles.serviceHeroIntro}>
+          <strong className={styles.serviceGraphTitle}>{content.title}</strong>
 
+          <div className={styles.serviceChipRow}>
+            <span className={`${styles.serviceChip} ${styles.serviceChipOwnership}`}>
+              <span className={styles.serviceChipDot} aria-hidden="true" />
+              <span>{content.chipOwnership}</span>
+            </span>
+            <span className={`${styles.serviceChip} ${styles.serviceChipDelivery}`}>
+              <span className={styles.serviceChipDot} aria-hidden="true" />
+              <span>{content.chipDelivery}</span>
+            </span>
+            <span className={`${styles.serviceChip} ${styles.serviceChipLeadership}`}>
+              <span className={styles.serviceChipDot} aria-hidden="true" />
+              <span>{content.chipLeadership}</span>
+            </span>
+          </div>
+        </div>
+
+        <div className={styles.serviceOrbitStage}>
           <div className={styles.serviceOrbitNodes}>
-            <div className={styles.serviceOrbitStep}>
-              <span className={styles.serviceNodeDot} />
-              <span>{content.steps[0]}</span>
-            </div>
-            <div className={styles.serviceOrbitStep}>
-              <span className={`${styles.serviceNodeDot} ${styles.serviceNodeDotActive}`} />
-              <span>{content.steps[1]}</span>
-            </div>
-            <div className={styles.serviceOrbitStep}>
-              <span className={styles.serviceNodeDot} />
-              <span>{content.steps[2]}</span>
-            </div>
-            <div className={styles.serviceOrbitStep}>
-              <span className={styles.serviceNodeDot} />
-              <span>{content.steps[3]}</span>
-            </div>
+            {content.steps.map((step, index) => (
+              <div key={step} className={styles.serviceOrbitStep}>
+                <span
+                  className={`${styles.serviceNodeDot} ${index === 1 ? styles.serviceNodeDotActive : ""}`}
+                />
+                <span>{step}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       <div className={styles.serviceSummaryCompact}>
         <div className={styles.serviceSummaryCard}>
-          <span className={styles.serviceSummaryLabel}>
-            <span className={styles.serviceSummaryIcon} aria-hidden="true">
-              <FileCheck2 size={14} />
-            </span>
-            <span>{content.summaryReportLabel}</span>
-          </span>
+          <span className={styles.serviceSummaryLabel}>{content.summaryReportLabel}</span>
           <strong>{content.summaryReportValue}</strong>
         </div>
         <div className={styles.serviceSummaryCard}>
-          <span className={styles.serviceSummaryLabel}>
-            <span className={styles.serviceSummaryIcon} aria-hidden="true">
-              <Siren size={14} />
-            </span>
-            <span>{content.summaryAlertsLabel}</span>
-          </span>
+          <span className={styles.serviceSummaryLabel}>{content.summaryAlertsLabel}</span>
           <strong>{content.summaryAlertsValue}</strong>
         </div>
       </div>
@@ -172,10 +148,14 @@ export default function HeroOfferingShowcase() {
   const visualCardRef = useRef<HTMLDivElement | null>(null);
   const charRefs = useRef<Array<HTMLSpanElement | null>>([]);
   const autoplayPauseUntilRef = useRef(0);
+  const showcaseSettledRef = useRef(false);
+  const positionedRef = useRef(false);
+  const previewLabelReadyRef = useRef(false);
   const lastProgressRef = useRef(-1);
   const [activeShowcase, setActiveShowcase] = useState<HomeOfferingMode>(
     siteOffering ?? DEFAULT_HOME_OFFERING_MODE,
   );
+  const [isPositioned, setIsPositioned] = useState(false);
   const [previewLabelReady, setPreviewLabelReady] = useState(false);
   const showcase = shared.offering.showcase;
   const introLines = showcase.introLines;
@@ -184,7 +164,7 @@ export default function HeroOfferingShowcase() {
     setActiveShowcase(siteOffering);
   }, [siteOffering]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let frame = 0;
 
     const update = () => {
@@ -233,9 +213,23 @@ export default function HeroOfferingShowcase() {
       scrollHint.style.opacity = `${scrollHintReveal}`;
       showcaseNode.style.opacity = `${showcaseOpacity}`;
       showcaseNode.style.transform = `translate3d(0, ${showcaseTranslate}px, 0)`;
+      if (!positionedRef.current) {
+        positionedRef.current = true;
+        setIsPositioned(true);
+      }
 
       const shouldShowPreviewLabel = isReducedMotion || showcaseOpacity >= 0.96;
-      setPreviewLabelReady((current) => (current === shouldShowPreviewLabel ? current : shouldShowPreviewLabel));
+      if (shouldShowPreviewLabel && !showcaseSettledRef.current) {
+        autoplayPauseUntilRef.current = Math.max(
+          autoplayPauseUntilRef.current,
+          window.performance.now() + AUTOPLAY_INITIAL_DELAY_MS,
+        );
+      }
+      showcaseSettledRef.current = shouldShowPreviewLabel;
+      if (previewLabelReadyRef.current !== shouldShowPreviewLabel) {
+        previewLabelReadyRef.current = shouldShowPreviewLabel;
+        setPreviewLabelReady(shouldShowPreviewLabel);
+      }
 
       optionSlotRefs.current.forEach((node, index) => {
         if (!node) return;
@@ -334,7 +328,7 @@ export default function HeroOfferingShowcase() {
       <div className={styles.stickyFrame}>
         <div
           ref={introStageRef}
-          className={styles.introStage}
+          className={`${styles.introStage} ${isPositioned ? styles.stageReady : ""}`}
         >
           <div className={styles.splitTitle} aria-label={introLines.join(" ")} role="heading" aria-level={2}>
             {introLines.map((line, lineIndex) => {
@@ -376,7 +370,7 @@ export default function HeroOfferingShowcase() {
 
         <div
           ref={showcaseRef}
-          className={styles.showcase}
+          className={`${styles.showcase} ${isPositioned ? styles.stageReady : ""}`}
         >
           <div className={styles.panel}>
             <div className={styles.controlsHeader}>
@@ -444,37 +438,39 @@ export default function HeroOfferingShowcase() {
                 ref={copyCardRef}
                 className={styles.copyCard}
               >
-                <span className={styles.copyEyebrow}>
-                  <ActiveEyebrowIcon size={13} aria-hidden="true" />
-                  <span>{visual.eyebrow}</span>
-                </span>
-                <h2>{visual.title}</h2>
-                <p className={styles.copyBody}>{visual.body}</p>
-
-                <div className={styles.copyBullets}>
-                  {options
-                    .find((option) => option.id === activeShowcase)
-                    ?.bullets.map((bullet) => (
-                      <div key={bullet} className={styles.bullet}>
-                        <CircleDot size={14} aria-hidden="true" />
-                        <span>{bullet}</span>
-                      </div>
-                    ))}
-                </div>
-
-                <a
-                  href={visual.ctaHref}
-                  className={`${styles.inlineCta} ${isCurrentShowcasePage ? styles.inlineCtaCurrentPage : ""}`}
-                >
-                  <span>
-                    {isCurrentShowcasePage ? showcase.currentPageCtaLabel : visual.ctaLabel}
+                <div key={activeShowcase} className={styles.copyContent}>
+                  <span className={styles.copyEyebrow}>
+                    <ActiveEyebrowIcon size={13} aria-hidden="true" />
+                    <span>{visual.eyebrow}</span>
                   </span>
-                  {isCurrentShowcasePage ? (
-                    <ArrowDown size={19} aria-hidden="true" />
-                  ) : (
-                    <ArrowUpRight size={18} aria-hidden="true" />
-                  )}
-                </a>
+                  <h2>{visual.title}</h2>
+                  <p className={styles.copyBody}>{visual.body}</p>
+
+                  <div className={styles.copyBullets}>
+                    {options
+                      .find((option) => option.id === activeShowcase)
+                      ?.bullets.map((bullet) => (
+                        <div key={bullet} className={styles.bullet}>
+                          <CircleDot size={14} aria-hidden="true" />
+                          <span>{bullet}</span>
+                        </div>
+                      ))}
+                  </div>
+
+                  <a
+                    href={visual.ctaHref}
+                    className={`${styles.inlineCta} ${isCurrentShowcasePage ? styles.inlineCtaCurrentPage : ""}`}
+                  >
+                    <span>
+                      {isCurrentShowcasePage ? showcase.currentPageCtaLabel : visual.ctaLabel}
+                    </span>
+                    {isCurrentShowcasePage ? (
+                      <ArrowDown size={19} aria-hidden="true" />
+                    ) : (
+                      <ArrowUpRight size={18} aria-hidden="true" />
+                    )}
+                  </a>
+                </div>
               </article>
 
               <div
@@ -482,42 +478,44 @@ export default function HeroOfferingShowcase() {
                 className={styles.visualCard}
                 aria-hidden="true"
               >
-                <div className={styles.visualChrome}>
-                  <span />
-                  <span />
-                  <span />
-                  <div className={styles.visualBrand}>
-                    <svg viewBox="0 0 50 50" aria-hidden="true">
-                      <g fill="currentColor">
-                        <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
-                        <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
-                        <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
-                        <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
-                      </g>
-                    </svg>
-                    <span>MinCFO</span>
-                  </div>
-                </div>
-
-                <div className={styles.visualBody}>
-                  {metricStats && (
-                    <div className={styles.metricGrid}>
-                      {metricStats.map((item) => (
-                        <div key={item.label} className={styles.metricCard}>
-                          <span>{item.label}</span>
-                          <strong>{item.value}</strong>
-                        </div>
-                      ))}
+                <div key={activeShowcase} className={styles.visualContent}>
+                  <div className={styles.visualChrome}>
+                    <span />
+                    <span />
+                    <span />
+                    <div className={styles.visualBrand}>
+                      <svg viewBox="0 0 50 50" aria-hidden="true">
+                        <g fill="currentColor">
+                          <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
+                          <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
+                          <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
+                          <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
+                        </g>
+                      </svg>
+                      <span>MinCFO</span>
                     </div>
-                  )}
+                  </div>
 
-                  {activeShowcase === "platform" && (
-                    <ShowcaseGradientBarChart />
-                  )}
-                  {activeShowcase === "full-service" && (
-                    <FullServiceVisual content={showcase["full-service"].serviceVisual} />
-                  )}
-                  {activeShowcase === "partner" && <ShowcaseClippedAreaChart />}
+                  <div className={styles.visualBody}>
+                    {metricStats && (
+                      <div className={styles.metricGrid}>
+                        {metricStats.map((item) => (
+                          <div key={item.label} className={styles.metricCard}>
+                            <span>{item.label}</span>
+                            <strong>{item.value}</strong>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {activeShowcase === "platform" && (
+                      <ShowcaseGradientBarChart />
+                    )}
+                    {activeShowcase === "full-service" && (
+                      <FullServiceVisual content={showcase["full-service"].serviceVisual} />
+                    )}
+                    {activeShowcase === "partner" && <ShowcaseClippedAreaChart />}
+                  </div>
                 </div>
               </div>
             </div>
