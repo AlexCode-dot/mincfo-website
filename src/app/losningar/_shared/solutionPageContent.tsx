@@ -129,7 +129,6 @@ const IMPACT_VISUALS_BY_KEY: Record<
 > = {
   "CEO & Founders": ["realtime", "flow", "proactive", "governance"],
   "CFO & Finance Team": ["realtime", "flow", "accuracy", "analysis"],
-  "Fractional CFO": ["time", "flow", "accuracy", "scale"],
   "SaaS / Tech": ["realtime", "flow", "radar", "report"],
   "Konsult & Tjänster": ["analysis", "flow", "cash", "scale"],
   "E-handel": ["cash", "flow", "radar", "analysis"],
@@ -138,7 +137,6 @@ const IMPACT_VISUALS_BY_KEY: Record<
 const HERO_TITLE_WIDE_BY_KEY: Record<string, boolean> = {
   "CEO & Founders": false,
   "CFO & Finance Team": true,
-  "Fractional CFO": true,
   "SaaS / Tech": true,
   "Konsult & Tjänster": true,
   "E-handel": true,
@@ -247,7 +245,6 @@ function getPageContent(key: string): SolutionPageContent {
 
 export const CEO_FOUNDERS_CONTENT = getPageContent("CEO & Founders");
 export const CFO_FINANCE_CONTENT = getPageContent("CFO & Finance Team");
-export const FRACTIONAL_CFO_CONTENT = getPageContent("Fractional CFO");
 export const SAAS_TECH_CONTENT = getPageContent("SaaS / Tech");
 export const KONSULT_TJANSTER_CONTENT = getPageContent("Konsult & Tjänster");
 export const EHANDEL_CONTENT = getPageContent("E-handel");

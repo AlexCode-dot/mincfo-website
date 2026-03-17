@@ -20,10 +20,6 @@
           {
             "href": "/losningar/cfo-finance",
             "label": "CFO & Finance Team"
-          },
-          {
-            "href": "/losningar/fractional-cfo",
-            "label": "Fractional CFO"
           }
         ]
       },
@@ -237,12 +233,6 @@
         "title": "CFO & Finance Team",
         "text": "Mindre manuella loopar och bättre forecast med dashboards, automation och spårbar analys.",
         "icon": "briefcase"
-      },
-      {
-        "href": "/losningar/fractional-cfo",
-        "title": "Fractional CFO",
-        "text": "Leverera board-ready underlag snabbare med ett skalbart arbetssätt och hög leveransprecision.",
-        "icon": "handshake"
       },
       {
         "href": "/losningar/saas-tech",

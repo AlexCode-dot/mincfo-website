@@ -241,7 +241,7 @@ export default function HeroOfferingShowcase() {
         if (!node) return;
         const optionReveal = isReducedMotion
           ? 1
-          : getStaggeredProgress(controlsReveal, 0, 1, index, optionSlotRefs.current.length, 0.22);
+          : getStaggeredProgress(controlsReveal, 0, 1, index, options.length, 0.22);
         node.style.opacity = `${optionReveal}`;
         node.style.transform = `translate3d(0, ${(1 - optionReveal) * 24}px, 0) scale(${0.96 + optionReveal * 0.04})`;
       });
@@ -301,7 +301,7 @@ export default function HeroOfferingShowcase() {
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, [isReducedMotion]);
+  }, [isReducedMotion, options.length]);
 
   useEffect(() => {
     if (isReducedMotion) return;
@@ -323,10 +323,6 @@ export default function HeroOfferingShowcase() {
     activeShowcase === "full-service" ? null : showcase[activeShowcase].stats;
   const ActiveEyebrowIcon = OFFERING_ICONS[activeShowcase];
   const currentPageOption = options.find((option) => option.id === siteOffering) ?? options[0];
-  const orderedOptions =
-    options.length === 3 && currentPageOption
-      ? [...options.filter((option) => option.id !== currentPageOption.id).slice(0, 1), currentPageOption, ...options.filter((option) => option.id !== currentPageOption.id).slice(1)]
-      : options;
   const isCurrentShowcasePage = currentPageOption?.id === activeShowcase;
 
   const pauseAutoplay = () => {
@@ -402,7 +398,7 @@ export default function HeroOfferingShowcase() {
             </div>
 
             <div className={styles.controls} aria-label={showcase.tabListAriaLabel}>
-              {orderedOptions.map((option, index) => {
+              {options.map((option, index) => {
                 const Icon = OFFERING_ICONS[option.id];
                 const active = activeShowcase === option.id;
                 const isCurrentPage = currentPageOption?.id === option.id;
