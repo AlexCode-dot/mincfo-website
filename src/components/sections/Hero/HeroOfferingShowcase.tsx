@@ -319,6 +319,8 @@ export default function HeroOfferingShowcase() {
     return () => window.clearInterval(interval);
   }, [isReducedMotion]);
   const visual = showcase[activeShowcase];
+  const metricStats =
+    activeShowcase === "full-service" ? null : showcase[activeShowcase].stats;
   const ActiveEyebrowIcon = OFFERING_ICONS[activeShowcase];
   const currentPageOption = options.find((option) => option.id === siteOffering) ?? options[0];
   const orderedOptions =
@@ -502,9 +504,9 @@ export default function HeroOfferingShowcase() {
                 </div>
 
                 <div className={styles.visualBody}>
-                  {activeShowcase !== "full-service" && (
+                  {metricStats && (
                     <div className={styles.metricGrid}>
-                      {visual.stats.map((item) => (
+                      {metricStats.map((item) => (
                         <div key={item.label} className={styles.metricCard}>
                           <span>{item.label}</span>
                           <strong>{item.value}</strong>

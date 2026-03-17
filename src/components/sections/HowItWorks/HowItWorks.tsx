@@ -178,7 +178,7 @@ export default function HowItWorks() {
     PartnerWorkspaceView,
     {
       actionLabel: string;
-      columns: [string, string, string];
+      columns: string[];
       rows: Array<{
         detail: string;
         label: string;

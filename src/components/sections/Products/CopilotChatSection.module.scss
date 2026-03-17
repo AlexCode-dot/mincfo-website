@@ -1,4 +1,4 @@
-@import "./ProductsSection.module.scss";
+@use "./ProductsSection.module.scss" as *;
 
 .shown {
   opacity: 1;

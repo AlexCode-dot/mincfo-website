@@ -14,6 +14,7 @@ type CopilotExample = {
 };
 
 type CopilotChatSectionProps = {
+  anchorId?: string;
   currentExample: CopilotExample;
   visible: boolean;
   showQuestionBubble: boolean;
@@ -45,6 +46,7 @@ function MiniMincfoBrand() {
 }
 
 export function CopilotChatSection({
+  anchorId,
   currentExample,
   visible,
   showQuestionBubble,
@@ -59,7 +61,11 @@ export function CopilotChatSection({
   const { content } = useHomeOffering();
 
   return (
-    <div className={styles.container}>
+    <div
+      id={anchorId}
+      className={styles.container}
+      style={{ scrollMarginTop: "clamp(88px, 12vh, 140px)" } as CSSProperties}
+    >
       <div className={`${styles.left} ${styles.aiLeft} ${visible ? styles.shown : ""}`}>
         <span className={styles.pill}>{content.aicopilot.leftPill}</span>
         <h2 className={styles.title}>{content.aicopilot.leftTitle}</h2>

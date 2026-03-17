@@ -962,7 +962,6 @@ export default function AICopilot() {
   return (
     <section
       ref={sectionRef}
-      id="produkt"
       className={`${styles.section} ${visible ? styles.visible : ""}`}
     >
       <svg
@@ -986,6 +985,7 @@ export default function AICopilot() {
       />
 
       <CopilotChatSection
+        anchorId="produkt"
         currentExample={currentExample}
         visible={visible}
         showQuestionBubble={showQuestionBubble}

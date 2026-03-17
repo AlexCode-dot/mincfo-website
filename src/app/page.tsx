@@ -24,8 +24,9 @@ type HomePageProps = {
 
 export default async function Home({ searchParams }: HomePageProps) {
   const params = searchParams ? await searchParams : undefined;
-  const initialOffering: HomeOfferingMode | undefined = isHomeOfferingMode(params?.offering ?? null)
-    ? params?.offering
+  const offeringParam = params?.offering ?? null;
+  const initialOffering: HomeOfferingMode | undefined = isHomeOfferingMode(offeringParam)
+    ? offeringParam
     : undefined;
 
   return (
