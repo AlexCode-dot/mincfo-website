@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./Customers.module.scss";
 
@@ -32,25 +32,24 @@ const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 
-const TESTIMONIALS: Testimonial[] = HOME_PAGE_TEXT.customers.testimonials.map((item) => ({
-  ...item,
-}));
-
-const TRUSTED_LOGOS = HOME_PAGE_TEXT.customers.trustedLogos.map((logo) => ({ ...logo }));
-const TRUSTED_LOGO_BY_NAME = new Map<string, string>(
-  TRUSTED_LOGOS.map((logo) => [logo.name, logo.file]),
-);
 const TICKER_LOGO_CLASS_BY_NAME: Record<string, string> = {
   Growbit: styles.logoGrowbit,
   Azeea: styles.logoAzeea,
 };
 
 export default function Customers() {
+  const { content } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
+  const lastCurveProgressRef = useRef(-1);
   const [visible, setVisible] = useState(false);
   const [curveProgress, setCurveProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(1);
+  const testimonials: Testimonial[] = content.customers.testimonials.map((item) => ({ ...item }));
+  const trustedLogos = content.customers.trustedLogos.map((logo) => ({ ...logo }));
+  const trustedLogoByName = new Map<string, string>(
+    trustedLogos.map((logo) => [logo.name, logo.file]),
+  );
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -74,12 +73,18 @@ export default function Customers() {
       const rect = section.getBoundingClientRect();
       const viewport = window.innerHeight;
       if (rect.top >= viewport) {
-        setCurveProgress(0);
+        if (lastCurveProgressRef.current !== 0) {
+          lastCurveProgressRef.current = 0;
+          setCurveProgress(0);
+        }
       } else {
         const start = viewport * 0.92;
         const end = viewport * 0.46;
-        const progress = clamp((start - rect.top) / (start - end), 0, 1);
-        setCurveProgress(progress);
+        const progress = Math.round(clamp((start - rect.top) / (start - end), 0, 1) * 120) / 120;
+        if (progress !== lastCurveProgressRef.current) {
+          lastCurveProgressRef.current = progress;
+          setCurveProgress(progress);
+        }
       }
     };
 
@@ -95,13 +100,13 @@ export default function Customers() {
   useEffect(() => {
     if (!visible || isReducedMotion) return;
     const id = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+      setActiveIndex((prev) => (prev + 1) % testimonials.length);
     }, 4600);
     return () => clearInterval(id);
-  }, [visible, isReducedMotion]);
+  }, [visible, isReducedMotion, testimonials.length]);
 
-  const prevIndex = (activeIndex - 1 + TESTIMONIALS.length) % TESTIMONIALS.length;
-  const nextIndex = (activeIndex + 1) % TESTIMONIALS.length;
+  const prevIndex = (activeIndex - 1 + testimonials.length) % testimonials.length;
+  const nextIndex = (activeIndex + 1) % testimonials.length;
   const sideY = 6;
   const centerY = lerp(6, 86, curveProgress);
   const cutPath = `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`;
@@ -120,12 +125,20 @@ export default function Customers() {
   }
   const cutClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
   const goPrev = () => {
-    setActiveIndex((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
+    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
   const goNext = () => {
-    setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+    setActiveIndex((prev) => (prev + 1) % testimonials.length);
   };
-  const tickerLogos = isReducedMotion ? TRUSTED_LOGOS : [...TRUSTED_LOGOS, ...TRUSTED_LOGOS];
+  const focusCard = (index: number) => {
+    setActiveIndex(index);
+  };
+  const handleCardKeyDown = (event: KeyboardEvent<HTMLElement>, index: number) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    focusCard(index);
+  };
+  const tickerLogos = isReducedMotion ? trustedLogos : [...trustedLogos, ...trustedLogos];
 
   return (
     <section
@@ -150,24 +163,30 @@ export default function Customers() {
 
       <div className={styles.container}>
         <header className={styles.header}>
-          <span className={styles.pill}>{HOME_PAGE_TEXT.customers.pill}</span>
-          <h2>{HOME_PAGE_TEXT.customers.title}</h2>
-          <p>{HOME_PAGE_TEXT.customers.intro}</p>
+          <span className={styles.pill}>{content.customers.pill}</span>
+          <h2>{content.customers.title}</h2>
+          <p>{content.customers.intro}</p>
         </header>
 
         <div className={styles.cardsShell}>
-          {TESTIMONIALS.map((item, index) => {
+          {testimonials.map((item, index) => {
             let positionClass = styles.hiddenCard;
             if (index === activeIndex) positionClass = styles.centerCard;
             else if (index === prevIndex) positionClass = styles.leftCard;
             else if (index === nextIndex) positionClass = styles.rightCard;
-            const companyLogoFile = TRUSTED_LOGO_BY_NAME.get(item.company);
+            const companyLogoFile = trustedLogoByName.get(item.company);
 
             return (
               <article
                 key={`${item.company}-${item.person}`}
                 data-card-index={index}
                 className={`${styles.card} ${item.accent ? styles.cardAccent : ""} ${positionClass}`}
+                role="button"
+                tabIndex={index === activeIndex || index === prevIndex || index === nextIndex ? 0 : -1}
+                aria-label={`Visa omdöme från ${item.person} på ${item.company}`}
+                aria-pressed={index === activeIndex}
+                onClick={() => focusCard(index)}
+                onKeyDown={(event) => handleCardKeyDown(event, index)}
               >
                 <div className={styles.companyBrand}>
                   {companyLogoFile ? (
@@ -204,17 +223,17 @@ export default function Customers() {
           })}
         </div>
 
-        <div className={styles.controls} aria-label={HOME_PAGE_TEXT.customers.controlsAria}>
-          <button type="button" onClick={goPrev} className={styles.controlBtn} aria-label={HOME_PAGE_TEXT.customers.prevAria}>
+        <div className={styles.controls} aria-label={content.customers.controlsAria}>
+          <button type="button" onClick={goPrev} className={styles.controlBtn} aria-label={content.customers.prevAria}>
             <span aria-hidden="true">‹</span>
           </button>
-          <button type="button" onClick={goNext} className={styles.controlBtn} aria-label={HOME_PAGE_TEXT.customers.nextAria}>
+          <button type="button" onClick={goNext} className={styles.controlBtn} aria-label={content.customers.nextAria}>
             <span aria-hidden="true">›</span>
           </button>
         </div>
 
-        <div className={styles.trustedTicker} aria-label={HOME_PAGE_TEXT.customers.trustedAria}>
-          <p className={styles.trustedLabel}>{HOME_PAGE_TEXT.customers.tickerLabel}</p>
+        <div className={styles.trustedTicker} aria-label={content.customers.trustedAria}>
+          <p className={styles.trustedLabel}>{content.customers.tickerLabel}</p>
           <div className={styles.tickerViewport}>
             <div className={styles.tickerTrack}>
               {tickerLogos.map((logo, index) => (

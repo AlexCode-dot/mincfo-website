@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import styles from "./ProductsSection.module.scss";
 import { CopilotChatSection } from "./CopilotChatSection";
 import { DashboardSection } from "./DashboardSection";
@@ -19,8 +19,6 @@ type CopilotExample = {
   yTicks: string[];
 };
 
-const MONTH_LABELS = HOME_PAGE_TEXT.aicopilot.dashboard.monthLabelsSv;
-const MONTH_LABELS_EN = HOME_PAGE_TEXT.aicopilot.planning.monthLabelsEn;
 const DEFAULT_PLAN_MONTH_INDEX = 8;
 const PLAN_MONTH_AUTOPLAY_SEQUENCE = [8, 1, 7, 11, 4, 9, 2, 10, 5];
 const PLAN_MONTH_AUTOPLAY_DELAY_MS = 3400;
@@ -29,7 +27,6 @@ const TREND_X_STEP = 760 / 11;
 const PLAN_X_STEP = 682 / 11;
 const TREND_AXIS_MIN_K = 0;
 const TREND_AXIS_MAX_K = 500;
-const TREND_AXIS_TICKS = HOME_PAGE_TEXT.aicopilot.dashboard.trendAxisTicks;
 const PLAN_ACTUAL_VARIANCE = [0.052, 0.034, -0.012, -0.026, 0.018, 0.029] as const;
 const PLAN_ACTUAL_CUTOFF_INDEX = 5;
 const PLAN_FORECAST_BASE_K = [280, 298, 312, 326, 340, 352, 364, 379, 394, 409, 425, 442];
@@ -39,21 +36,6 @@ const ANALYSIS_EBIT_K = [122, 148, 139, 161, 178, 194, 207, 226, 212, 166, 242, 
 const ANALYSIS_EBITDA_K = [168, 194, 183, 207, 229, 246, 259, 281, 268, 224, 301, 323];
 const ANALYSIS_GROSS_PROFIT_K = [258, 279, 271, 292, 307, 322, 337, 356, 344, 301, 372, 394];
 
-const EXAMPLES: CopilotExample[] = HOME_PAGE_TEXT.aicopilot.examples.map((example) => ({
-  question: example.question,
-  answer: example.answer,
-  chartTitle: example.chartTitle,
-  chartUnit: example.chartUnit,
-  yTicks: [...example.yTicks],
-  bars: example.bars.map((bar) => ({ label: bar.label, value: bar.value, height: bar.height })),
-}));
-
-const ANALYSIS_METRICS: Array<{ id: AnalysisMetric; label: string; seriesK: number[] }> = [
-  { id: "netIncome", label: HOME_PAGE_TEXT.aicopilot.dashboard.metricOptions[0], seriesK: ANALYSIS_NET_K },
-  { id: "ebit", label: HOME_PAGE_TEXT.aicopilot.dashboard.metricOptions[1], seriesK: ANALYSIS_EBIT_K },
-  { id: "ebitda", label: HOME_PAGE_TEXT.aicopilot.dashboard.metricOptions[2], seriesK: ANALYSIS_EBITDA_K },
-  { id: "grossProfit", label: HOME_PAGE_TEXT.aicopilot.dashboard.metricOptions[3], seriesK: ANALYSIS_GROSS_PROFIT_K },
-];
 const ANALYSIS_METRIC_AUTOPLAY_SEQUENCE: AnalysisMetric[] = [
   "netIncome",
   "ebit",
@@ -103,6 +85,7 @@ const buildSmoothPath = (points: Array<[number, number]>) => {
 };
 
 export default function AICopilot() {
+  const { content } = useHomeOffering();
   const sectionRef = useRef<HTMLElement | null>(null);
   const dashboardSectionRef = useRef<HTMLDivElement | null>(null);
   const planSectionRef = useRef<HTMLDivElement | null>(null);
@@ -168,6 +151,29 @@ export default function AICopilot() {
     Math.max(PLAN_MONTH_AUTOPLAY_SEQUENCE.indexOf(DEFAULT_PLAN_MONTH_INDEX), 0),
   );
   const planAutoplayPausedUntilRef = useRef(0);
+  const monthLabels = content.aicopilot.dashboard.monthLabelsSv;
+  const monthLabelsEn = content.aicopilot.planning.monthLabelsEn;
+  const trendAxisTicks = content.aicopilot.dashboard.trendAxisTicks;
+  const examples = useMemo<CopilotExample[]>(
+    () => content.aicopilot.examples.map((example) => ({
+      question: example.question,
+      answer: example.answer,
+      chartTitle: example.chartTitle,
+      chartUnit: example.chartUnit,
+      yTicks: [...example.yTicks],
+      bars: example.bars.map((bar) => ({ label: bar.label, value: bar.value, height: bar.height })),
+    })),
+    [content],
+  );
+  const analysisMetrics = useMemo<Array<{ id: AnalysisMetric; label: string; seriesK: number[] }>>(
+    () => [
+      { id: "netIncome", label: content.aicopilot.dashboard.metricOptions[0], seriesK: ANALYSIS_NET_K },
+      { id: "ebit", label: content.aicopilot.dashboard.metricOptions[1], seriesK: ANALYSIS_EBIT_K },
+      { id: "ebitda", label: content.aicopilot.dashboard.metricOptions[2], seriesK: ANALYSIS_EBITDA_K },
+      { id: "grossProfit", label: content.aicopilot.dashboard.metricOptions[3], seriesK: ANALYSIS_GROSS_PROFIT_K },
+    ],
+    [content],
+  );
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -415,7 +421,7 @@ export default function AICopilot() {
 
     const runCycle = (index: number) => {
       if (cancelled) return;
-      const example = EXAMPLES[index];
+      const example = examples[index];
       const typingTick = 34;
       const typingDuration = example.question.length * typingTick;
       setExampleIndex(index);
@@ -441,7 +447,7 @@ export default function AICopilot() {
       queueTimeout(() => setStage("loading"), typingDuration + 900);
       queueTimeout(() => setStage("answer"), typingDuration + 2050);
       queueTimeout(() => setStage("chart"), typingDuration + 2850);
-      queueTimeout(() => runCycle((index + 1) % EXAMPLES.length), typingDuration + 6900);
+      queueTimeout(() => runCycle((index + 1) % examples.length), typingDuration + 6900);
     };
 
     runCycle(0);
@@ -450,7 +456,7 @@ export default function AICopilot() {
       timers.forEach((timer) => clearTimeout(timer));
       intervals.forEach((interval) => clearInterval(interval));
     };
-  }, [visible]);
+  }, [examples, visible]);
 
   const waveHeight = curveScale < 0.7 ? 160 : 190;
   const curveValue = (start: number, end: number, progress: number) =>
@@ -512,7 +518,7 @@ export default function AICopilot() {
   const planCurveClip = `polygon(${planCurvePoints.join(", ")}, 100% 100%, 0% 100%)`;
 
   const activeMetric =
-    ANALYSIS_METRICS.find((metric) => metric.id === analysisMetric) ?? ANALYSIS_METRICS[0];
+    analysisMetrics.find((metric) => metric.id === analysisMetric) ?? analysisMetrics[0];
   const analysisSeries = activeMetric.seriesK;
   const latestMonthIndex = 11;
   const previousMonthIndex = 10;
@@ -677,8 +683,8 @@ export default function AICopilot() {
 
   const selectedPlanMode =
     planMonthIndex <= PLAN_ACTUAL_CUTOFF_INDEX
-      ? HOME_PAGE_TEXT.aicopilot.planning.actualPrefix
-      : HOME_PAGE_TEXT.aicopilot.planning.forecastPrefix;
+      ? content.aicopilot.planning.actualPrefix
+      : content.aicopilot.planning.forecastPrefix;
 
   const trendLinePath = buildSmoothPath(trendSeries);
   const trendAreaPath = `${trendLinePath} L760 290 L0 290 Z`;
@@ -696,7 +702,7 @@ export default function AICopilot() {
     ? animatedSelectedMetricPreviousDelta
     : targetSelectedMetricPreviousDelta;
 
-  const analysisCompareLabel = HOME_PAGE_TEXT.aicopilot.dashboard.compareLabel;
+  const analysisCompareLabel = content.aicopilot.dashboard.compareLabel;
   const formatSek = (value: number) => new Intl.NumberFormat("sv-SE").format(Math.round(value));
   const formatPercent = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
   const trendAnimating = dashboardVisible;
@@ -907,7 +913,7 @@ export default function AICopilot() {
     };
   }, [planForecastValues, planMonthIndex]);
 
-  const currentExample = EXAMPLES[exampleIndex];
+  const currentExample = examples[exampleIndex];
   const typedQuestion = currentExample.question.slice(0, typedLength);
   const isTyping = stage === "typing";
   const isSending = stage === "sending";
@@ -1008,7 +1014,7 @@ export default function AICopilot() {
         trendMetricMenuRef={trendMetricMenuRef}
         activeMetric={activeMetric}
         analysisMetric={analysisMetric}
-        analysisMetrics={ANALYSIS_METRICS}
+        analysisMetrics={analysisMetrics}
         selectedMetricAmount={selectedMetricAmount}
         selectedMetricPreviousAmount={selectedMetricPreviousAmount}
         selectedMetricDelta={selectedMetricDelta}
@@ -1020,8 +1026,8 @@ export default function AICopilot() {
         onSelectMetric={handleSelectAnalysisMetric}
         formatSek={formatSek}
         formatPercent={formatPercent}
-        monthLabels={MONTH_LABELS}
-        trendAxisTicks={TREND_AXIS_TICKS}
+        monthLabels={monthLabels}
+        trendAxisTicks={trendAxisTicks}
       />
 
       <PlanningSection
@@ -1043,7 +1049,7 @@ export default function AICopilot() {
         formatSek={formatSek}
         formatPercent={formatPercent}
         onSelectPlanMonth={handleSelectPlanMonth}
-        monthLabelsEn={MONTH_LABELS_EN}
+        monthLabelsEn={monthLabelsEn}
       />
     </section>
   );

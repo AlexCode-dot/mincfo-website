@@ -5,6 +5,11 @@ import crypto from "node:crypto";
 const ROOT = process.cwd();
 const HOME_PAGE_TEXT_JSON_PATH = path.join(ROOT, "src", "content", "homePageText.json");
 const SOLUTION_PAGES_TEXT_JSON_PATH = path.join(ROOT, "src", "content", "solutionPagesText.json");
+const HOME_CONTENT_DIR = path.join(ROOT, "src", "content", "home");
+const HOME_SHARED_JSON_PATH = path.join(HOME_CONTENT_DIR, "shared.json");
+const HOME_PLATFORM_JSON_PATH = path.join(HOME_CONTENT_DIR, "platform.json");
+const HOME_FULL_SERVICE_JSON_PATH = path.join(HOME_CONTENT_DIR, "full-service.json");
+const HOME_PARTNER_JSON_PATH = path.join(HOME_CONTENT_DIR, "partner.json");
 
 const DOCS_CONFIG = [
   {
@@ -74,7 +79,6 @@ const NON_TEXT_KEYS = new Set([
 ]);
 
 const VISUAL_KEYS = new Set([
-  "ui",
   "monthLabelsSv",
   "monthLabelsEn",
   "metricOptions",
@@ -366,19 +370,47 @@ function visualRowsFromValue(value, rawKey = "", label = "", context = "", pathP
   return rows;
 }
 
-function buildMainDocumentModel(homePageText) {
-  const sections = [
-    ["navigation", "Navigering", homePageText.navigation],
-    ["hero", "Hero", homePageText.hero],
-    ["aicopilot", "Produkt (AI Copilot)", homePageText.aicopilot],
-    ["solutions", "Lösningar", homePageText.solutions],
-    ["customers", "Kundcase", homePageText.customers],
-    ["howItWorks", "Så här fungerar det", homePageText.howItWorks],
-    ["ending", "Avslut / CTA", homePageText.ending],
-    ["security", "Säkerhet", homePageText.security],
-    ["footer", "Footer", homePageText.footer],
-  ];
+function loadJsonIfExists(filePath, fallback = {}) {
+  if (!fs.existsSync(filePath)) return fallback;
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
 
+function loadHomeContentBundle() {
+  if (fs.existsSync(HOME_SHARED_JSON_PATH) && fs.existsSync(HOME_PLATFORM_JSON_PATH)) {
+    return {
+      shared: loadJsonIfExists(HOME_SHARED_JSON_PATH),
+      modes: {
+        platform: loadJsonIfExists(HOME_PLATFORM_JSON_PATH),
+        "full-service": loadJsonIfExists(HOME_FULL_SERVICE_JSON_PATH),
+        partner: loadJsonIfExists(HOME_PARTNER_JSON_PATH),
+      },
+    };
+  }
+
+  const legacy = JSON.parse(fs.readFileSync(HOME_PAGE_TEXT_JSON_PATH, "utf8"));
+  return {
+    shared: {
+      navigation: legacy.navigation ?? {},
+      offering: legacy.offering ?? {},
+      howItWorks: legacy.howItWorks ?? {},
+      security: legacy.security ?? {},
+      footer: legacy.footer ?? {},
+    },
+    modes: {
+      platform: {
+        hero: legacy.hero ?? {},
+        aicopilot: legacy.aicopilot ?? {},
+        solutions: legacy.solutions ?? {},
+        customers: legacy.customers ?? {},
+        ending: legacy.ending ?? {},
+      },
+      "full-service": {},
+      partner: {},
+    },
+  };
+}
+
+function buildMainDocumentModel(homeContent) {
   const blocks = [
     { kind: "heading", level: 1, text: "MinCFO Textbrief (SV) - Fullständig" },
     { kind: "heading", level: 2, text: "Instruktioner för redigering" },
@@ -389,6 +421,17 @@ function buildMainDocumentModel(homePageText) {
   ];
 
   const visualSections = [];
+  const sharedSections = [
+    ["navigation", "Gemensamt - Navigering", homeContent.shared.navigation],
+    ["offering", "Gemensamt - Erbjudande", homeContent.shared.offering],
+    ["security", "Gemensamt - Säkerhet", homeContent.shared.security],
+    ["footer", "Gemensamt - Footer", homeContent.shared.footer],
+  ];
+  const modeConfigs = [
+    { key: "platform", title: "Plattform", content: homeContent.modes.platform ?? {} },
+    { key: "full-service", title: "Helhetslösning", content: homeContent.modes["full-service"] ?? {} },
+    { key: "partner", title: "För byråer", content: homeContent.modes.partner ?? {} },
+  ];
 
   const collectVisualSection = (sectionKey, title, sectionValue) => {
     const visualRows = [];
@@ -402,7 +445,139 @@ function buildMainDocumentModel(homePageText) {
     }
   };
 
-  for (const [sectionKey, title, sectionValue] of sections) {
+  for (const [sectionKey, title, sectionValue] of sharedSections) {
+    const rows = [];
+    Object.entries(sectionValue ?? {}).forEach(([key, value]) => {
+      rows.push(
+        ...rowsFromValue(value, key, labelForKey(key, toHeading(key)), "", [sectionKey, key]),
+      );
+    });
+    blocks.push({
+      kind: "section",
+      title,
+      rows,
+    });
+    collectVisualSection(sectionKey, title, sectionValue);
+  }
+
+  const howItWorksValue = homeContent.shared.howItWorks ?? {};
+  const howOverviewRows = [];
+  if ("sectionTitle" in howItWorksValue) {
+    howOverviewRows.push({
+      element: labelForKey("sectionTitle", toHeading("sectionTitle")),
+      value: String(howItWorksValue.sectionTitle ?? ""),
+    });
+  }
+  if ("sectionIntro" in howItWorksValue) {
+    howOverviewRows.push({
+      element: labelForKey("sectionIntro", toHeading("sectionIntro")),
+      value: String(howItWorksValue.sectionIntro ?? ""),
+    });
+  }
+  if ("sectionIntroByOffer" in howItWorksValue) {
+    howOverviewRows.push(
+      ...rowsFromValue(
+        howItWorksValue.sectionIntroByOffer,
+        "sectionIntroByOffer",
+        "Sektionsintro per erbjudande",
+        "",
+        ["howItWorks", "sectionIntroByOffer"],
+      ),
+    );
+  }
+  if (howOverviewRows.length) {
+    blocks.push({
+      kind: "section",
+      title: "Gemensamt - Så här fungerar det - Översikt",
+      rows: howOverviewRows,
+    });
+  }
+
+  const howOffers = howItWorksValue.offers ?? {};
+  Object.entries(howOffers).forEach(([offerKey, offerValue]) => {
+    if (!offerValue || typeof offerValue !== "object") return;
+    const offerLabel = labelForKey(offerKey, toHeading(offerKey));
+    const tabRows = [];
+    if ("tabLabel" in offerValue) {
+      tabRows.push({
+        element: labelForKey("tabLabel", toHeading("tabLabel")),
+        value: String(offerValue.tabLabel ?? ""),
+      });
+    }
+    if (tabRows.length) {
+      blocks.push({
+        kind: "section",
+        title: `Gemensamt - Så här fungerar det - ${offerLabel}`,
+        rows: tabRows,
+      });
+    }
+
+    if (!Array.isArray(offerValue.steps)) return;
+    offerValue.steps.forEach((step, stepIndex) => {
+      if (!step || typeof step !== "object") return;
+      const stepTitle =
+        typeof step.title === "string" && step.title.trim()
+          ? step.title
+          : `Steg ${stepIndex + 1}`;
+      const stepRows = [{
+        element: labelForKey("title", toHeading("title")),
+        value: stepTitle,
+      }];
+      Object.entries(step).forEach(([key, value]) => {
+        if (key === "title") return;
+        stepRows.push(
+          ...rowsFromValue(
+            value,
+            key,
+            labelForKey(key, toHeading(key)),
+            "",
+            ["howItWorks", "offers", offerKey, "steps", String(stepIndex), key],
+          ),
+        );
+      });
+      if (!stepRows.length) return;
+      blocks.push({
+        kind: "section",
+        title: `Gemensamt - Så här fungerar det - ${offerLabel} - ${stepTitle}`,
+        rows: stepRows,
+      });
+    });
+  });
+
+  const howUi = howItWorksValue.ui ?? {};
+  const pushHowVisualSection = (sectionTitle, value, pathSuffix) => {
+    const rows = rowsFromValue(
+      value ?? {},
+      pathSuffix,
+      "UI",
+      "",
+      ["howItWorksVisual", pathSuffix],
+    );
+    if (rows.length) {
+      visualSections.push({ title: sectionTitle, rows });
+    }
+  };
+  pushHowVisualSection("Gemensamt - Så här fungerar det - Plattform / Skapa konto (UI)", howUi.account, "account");
+  pushHowVisualSection("Gemensamt - Så här fungerar det - Plattform / Koppla Fortnox (UI)", howUi.connect, "connect");
+  pushHowVisualSection("Gemensamt - Så här fungerar det - Plattform / Realtidsinsikter & AI (UI)", howUi.insights, "insights");
+  pushHowVisualSection("Gemensamt - Så här fungerar det - FaaS / Onboarding & scope (UI)", howUi.faasOnboarding, "faasOnboarding");
+  pushHowVisualSection("Gemensamt - Så här fungerar det - FaaS / Koppla system & behörigheter (UI)", howUi.faasSystems, "faasSystems");
+  pushHowVisualSection("Gemensamt - Så här fungerar det - FaaS / Vi sköter ekonomin (UI)", howUi.faasRealtime, "faasRealtime");
+  pushHowVisualSection("Gemensamt - Så här fungerar det - Partner / Workspace (UI)", howUi.partnerWorkspace, "partnerWorkspace");
+
+  for (const modeConfig of modeConfigs) {
+    const sections = [
+      ["hero", `${modeConfig.title} - Hero`, modeConfig.content.hero],
+      ["aicopilot", `${modeConfig.title} - Produkt (AI Copilot)`, modeConfig.content.aicopilot],
+      ["solutions", `${modeConfig.title} - Lösningar`, modeConfig.content.solutions],
+      ["customers", `${modeConfig.title} - Kundcase`, modeConfig.content.customers],
+      ["ending", `${modeConfig.title} - Avslut / CTA`, modeConfig.content.ending],
+    ];
+
+    for (const [sectionKey, title, sectionValue] of sections) {
+      if (!sectionValue) continue;
+      const scopedSectionKey = `${modeConfig.key}.${sectionKey}`;
+
     if (sectionKey === "aicopilot" && sectionValue) {
       const pushAicopilotSection = (sectionTitle, rows) => {
         if (!rows.length) return;
@@ -452,50 +627,50 @@ function buildMainDocumentModel(homePageText) {
       const overviewRows = extractRowsForKeys(
         sectionValue,
         ["leftPill", "leftTitle", "leftIntro", "leftBullets"],
-        ["aicopilot"],
+        [modeConfig.key, "aicopilot"],
       );
-      pushAicopilotSection("Produkt (AI-Copilot)", overviewRows);
+      pushAicopilotSection(`${modeConfig.title} - Produkt (AI-Copilot)`, overviewRows);
 
       const dashboardRows = extractRowsForKeys(
         sectionValue.dashboard ?? {},
         ["pill", "title", "intro", "kpiBullets"],
-        ["aicopilot", "dashboard"],
+        [modeConfig.key, "aicopilot", "dashboard"],
       );
-      pushAicopilotSection("Produkt (Dashboard)", dashboardRows);
+      pushAicopilotSection(`${modeConfig.title} - Produkt (Dashboard)`, dashboardRows);
 
       const planningRows = extractRowsForKeys(
         sectionValue.planning ?? {},
         ["pill", "title", "intro", "bullets"],
-        ["aicopilot", "planning"],
+        [modeConfig.key, "aicopilot", "planning"],
       );
-      pushAicopilotSection("Produkt (Planering & Jämförelse)", planningRows);
+      pushAicopilotSection(`${modeConfig.title} - Produkt (Planering & Jämförelse)`, planningRows);
 
       const panelVisualRows = extractRowsForKeys(
         sectionValue,
         ["panelTitle", "statusSending", "statusAnalyzing", "inputPlaceholder"],
-        ["aicopilot"],
+        [modeConfig.key, "aicopilot"],
       );
-      pushAicopilotVisualSection("Produkt (AI-Copilot) - Chattpanel (visual data)", panelVisualRows);
+      pushAicopilotVisualSection(`${modeConfig.title} - Produkt (AI-Copilot) - Chattpanel (visual data)`, panelVisualRows);
 
       const examplesVisualRows = [
-        ...extractRowsForKeys(sectionValue, ["examples"], ["aicopilot"]),
-        ...extractVisualRowsForKeys(sectionValue, ["examples"], ["aicopilot"]),
+        ...extractRowsForKeys(sectionValue, ["examples"], [modeConfig.key, "aicopilot"]),
+        ...extractVisualRowsForKeys(sectionValue, ["examples"], [modeConfig.key, "aicopilot"]),
       ];
-      pushAicopilotVisualSection("Produkt (AI-Copilot) - Exempel (visual data)", examplesVisualRows);
+      pushAicopilotVisualSection(`${modeConfig.title} - Produkt (AI-Copilot) - Exempel (visual data)`, examplesVisualRows);
 
       const dashboardVisualRows = extractRowsForKeys(
         sectionValue.dashboard ?? {},
         ["resultTitle", "currentLabel", "previousLabel", "currencyLabel", "compareLabel"],
-        ["aicopilot", "dashboard"],
+        [modeConfig.key, "aicopilot", "dashboard"],
       );
       dashboardVisualRows.push(
         ...extractVisualRowsForKeys(
           sectionValue.dashboard ?? {},
           ["metricOptions", "trendAxisTicks", "monthLabelsSv"],
-          ["aicopilot", "dashboard"],
+          [modeConfig.key, "aicopilot", "dashboard"],
         ),
       );
-      pushAicopilotVisualSection("Produkt (Dashboard) - Visual data", dashboardVisualRows);
+      pushAicopilotVisualSection(`${modeConfig.title} - Produkt (Dashboard) - Visual data`, dashboardVisualRows);
 
       const planningVisualRows = extractRowsForKeys(
         sectionValue.planning ?? {},
@@ -509,120 +684,23 @@ function buildMainDocumentModel(homePageText) {
           "vsPrevious",
           "annualVariance",
         ],
-        ["aicopilot", "planning"],
+        [modeConfig.key, "aicopilot", "planning"],
       );
       planningVisualRows.push(
         ...extractVisualRowsForKeys(
           sectionValue.planning ?? {},
           ["legend", "monthLabelsEn"],
-          ["aicopilot", "planning"],
+          [modeConfig.key, "aicopilot", "planning"],
         ),
       );
-      pushAicopilotVisualSection("Produkt (Planering & Jämförelse) - Visual data", planningVisualRows);
-      continue;
-    }
-
-    if (sectionKey === "howItWorks" && sectionValue) {
-      const overviewRows = [];
-      if ("sectionTitle" in sectionValue) {
-        overviewRows.push({
-          element: labelForKey("sectionTitle", toHeading("sectionTitle")),
-          value: String(sectionValue.sectionTitle ?? ""),
-        });
-      }
-      if ("sectionIntro" in sectionValue) {
-        overviewRows.push({
-          element: labelForKey("sectionIntro", toHeading("sectionIntro")),
-          value: String(sectionValue.sectionIntro ?? ""),
-        });
-      }
-      if (overviewRows.length) {
-        blocks.push({
-          kind: "section",
-          title: "Så här fungerar det - Översikt",
-          rows: overviewRows,
-        });
-      }
-
-      const offers = sectionValue.offers ?? {};
-      Object.entries(offers).forEach(([offerKey, offerValue]) => {
-        if (!offerValue || typeof offerValue !== "object") return;
-        const offerLabel = labelForKey(offerKey, toHeading(offerKey));
-        const tabRows = [];
-        if ("tabLabel" in offerValue) {
-          tabRows.push({
-            element: labelForKey("tabLabel", toHeading("tabLabel")),
-            value: String(offerValue.tabLabel ?? ""),
-          });
-        }
-        if (tabRows.length) {
-          blocks.push({
-            kind: "section",
-            title: `Så här fungerar det - ${offerLabel}`,
-            rows: tabRows,
-          });
-        }
-
-        if (Array.isArray(offerValue.steps)) {
-          offerValue.steps.forEach((step, stepIndex) => {
-            if (!step || typeof step !== "object") return;
-            const stepTitle =
-              typeof step.title === "string" && step.title.trim()
-                ? step.title
-                : `Steg ${stepIndex + 1}`;
-            const stepRows = [];
-            stepRows.push({
-              element: labelForKey("title", toHeading("title")),
-              value: stepTitle,
-            });
-            Object.entries(step).forEach(([key, value]) => {
-              if (key === "title") return;
-              stepRows.push(
-                ...rowsFromValue(
-                  value,
-                  key,
-                  labelForKey(key, toHeading(key)),
-                  "",
-                  ["howItWorks", "offers", offerKey, "steps", String(stepIndex), key],
-                ),
-              );
-            });
-            if (!stepRows.length) return;
-            blocks.push({
-              kind: "section",
-              title: `Så här fungerar det - ${offerLabel} - ${stepTitle}`,
-              rows: stepRows,
-            });
-          });
-        }
-      });
-
-      const howUi = sectionValue.ui ?? {};
-      const pushHowVisualSection = (sectionTitle, value, pathSuffix) => {
-        const rows = rowsFromValue(
-          value ?? {},
-          pathSuffix,
-          "UI",
-          "",
-          ["howItWorksVisual", pathSuffix],
-        );
-        if (rows.length) {
-          visualSections.push({ title: sectionTitle, rows });
-        }
-      };
-      pushHowVisualSection("Så här fungerar det - Plattform / Skapa konto (UI)", howUi.account, "account");
-      pushHowVisualSection("Så här fungerar det - Plattform / Koppla Fortnox (UI)", howUi.connect, "connect");
-      pushHowVisualSection("Så här fungerar det - Plattform / Realtidsinsikter & AI (UI)", howUi.insights, "insights");
-      pushHowVisualSection("Så här fungerar det - FaaS / Onboarding & scope (UI)", howUi.faasOnboarding, "faasOnboarding");
-      pushHowVisualSection("Så här fungerar det - FaaS / Koppla system & behörigheter (UI)", howUi.faasSystems, "faasSystems");
-      pushHowVisualSection("Så här fungerar det - FaaS / Vi sköter ekonomin (UI)", howUi.faasRealtime, "faasRealtime");
+      pushAicopilotVisualSection(`${modeConfig.title} - Produkt (Planering & Jämförelse) - Visual data`, planningVisualRows);
       continue;
     }
 
     const rows = [];
     Object.entries(sectionValue ?? {}).forEach(([key, value]) => {
       rows.push(
-        ...rowsFromValue(value, key, labelForKey(key, toHeading(key)), "", [sectionKey, key]),
+        ...rowsFromValue(value, key, labelForKey(key, toHeading(key)), "", [modeConfig.key, sectionKey, key]),
       );
     });
     blocks.push({
@@ -630,7 +708,8 @@ function buildMainDocumentModel(homePageText) {
       title,
       rows,
     });
-    collectVisualSection(sectionKey, title, sectionValue);
+      collectVisualSection(scopedSectionKey, title, sectionValue);
+    }
   }
 
   blocks.push({ kind: "pageBreak" });
@@ -1271,8 +1350,8 @@ async function main() {
   for (const config of DOCS_CONFIG) {
     let documentModel = null;
     if (config.key === "main") {
-      const homePageText = JSON.parse(fs.readFileSync(HOME_PAGE_TEXT_JSON_PATH, "utf8"));
-      documentModel = buildMainDocumentModel(homePageText);
+      const homeContent = loadHomeContentBundle();
+      documentModel = buildMainDocumentModel(homeContent);
     } else if (config.key === "solutions") {
       const solutionsText = JSON.parse(fs.readFileSync(SOLUTION_PAGES_TEXT_JSON_PATH, "utf8"));
       documentModel = buildSolutionsDocumentModel(solutionsText);

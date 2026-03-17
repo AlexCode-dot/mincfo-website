@@ -1,9 +1,10 @@
 "use client";
 
-import { ChevronRight, UserRound } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import HomeOfferingSwitch from "@/components/home/HomeOfferingSwitch";
+import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./FloatingNav.module.scss";
 
@@ -17,31 +18,23 @@ const HOMEPAGE_SECTIONS = [
 ] as const;
 const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
 
-const SOLUTION_GROUPS = HOME_PAGE_TEXT.navigation.groups;
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 
 export default function FloatingNav() {
+  const { content, offering } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const pathname = usePathname();
+  const solutionGroups = content.navigation.groups;
+  const showSolutions = offering === "platform";
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<(typeof HOMEPAGE_SECTIONS)[number]>("hero");
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
-  const [showSignupLabel, setShowSignupLabel] = useState(false);
-  const [loginOutVisible, setLoginOutVisible] = useState(true);
-  const [loginInVisible, setLoginInVisible] = useState(false);
-  const [incomingSignupLabel, setIncomingSignupLabel] = useState<boolean | null>(null);
-  const [loginIconPulse, setLoginIconPulse] = useState(false);
   const navRef = useRef<HTMLElement | null>(null);
   const scrollRafRef = useRef<number | null>(null);
-  const activeSignupRef = useRef(showSignupLabel);
-
-  useEffect(() => {
-    activeSignupRef.current = showSignupLabel;
-  }, [showSignupLabel]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -145,94 +138,13 @@ export default function FloatingNav() {
   const sectionHref = (id: (typeof HOMEPAGE_SECTIONS)[number]) =>
     pathname === "/" ? `#${id}` : `/#${id}`;
   const demoHref = pathname === "/" ? "#kontakt" : "/#kontakt";
-  const legacyLoginLabel = (HOME_PAGE_TEXT.navigation as unknown as { kontaktaOss?: string }).kontaktaOss;
+  const legacyLoginLabel = (content.navigation as unknown as { kontaktaOss?: string }).kontaktaOss;
   const loginSignupLabel =
-    HOME_PAGE_TEXT.navigation.loginSignupLabel ??
+    content.navigation.loginSignupLabel ??
     legacyLoginLabel ??
     "Logga in / Sign up";
   const navDemoCta =
-    HOME_PAGE_TEXT.navigation.demoCta ?? HOME_PAGE_TEXT.hero.primaryCta;
-  const loginLabels = loginSignupLabel
-    .split("/")
-    .map((label) => label.trim())
-    .filter(Boolean);
-  const loginPrimaryLabel = loginLabels[0] ?? loginSignupLabel;
-  const loginSecondaryLabel = loginLabels[1] ?? "";
-  const holdMs = 5200;
-  const fadeOutMs = 2000;
-  const fadeInMs = 3800;
-  const fadeInLeadMs = 320;
-  const fadeInStartMs = Math.max(0, fadeOutMs - fadeInLeadMs);
-  const pulseDurationMs = fadeInStartMs + fadeInMs;
-
-  useEffect(() => {
-    if (!loginSecondaryLabel) {
-      setLoginOutVisible(true);
-      setLoginInVisible(false);
-      setIncomingSignupLabel(null);
-      return;
-    }
-
-    let holdTimer: number | null = null;
-    let fadeInStartTimer: number | null = null;
-    let cycleEndTimer: number | null = null;
-    let pulseTimer: number | null = null;
-    let revealRaf1: number | null = null;
-    let revealRaf2: number | null = null;
-    let cancelled = false;
-
-    const schedule = () => {
-      holdTimer = window.setTimeout(() => {
-        const nextIsSignup = !activeSignupRef.current;
-        setLoginIconPulse(true);
-        if (pulseTimer) window.clearTimeout(pulseTimer);
-        pulseTimer = window.setTimeout(() => {
-          if (cancelled) return;
-          setLoginIconPulse(false);
-        }, pulseDurationMs);
-
-        // 1) Fade out current word (2000ms) while shrinking toward center.
-        setLoginOutVisible(false);
-
-        // 2) Start fading in the next word when current is almost fully faded out.
-        fadeInStartTimer = window.setTimeout(() => {
-          if (cancelled) return;
-          setIncomingSignupLabel(nextIsSignup);
-          // Mount incoming word hidden first, then reveal on next paint to trigger CSS transition.
-          setLoginInVisible(false);
-          revealRaf1 = window.requestAnimationFrame(() => {
-            revealRaf2 = window.requestAnimationFrame(() => {
-              if (cancelled) return;
-              setLoginInVisible(true);
-            });
-          });
-        }, fadeInStartMs);
-
-        // 3) Commit new word after fade-in completes, reset transition slots.
-        cycleEndTimer = window.setTimeout(() => {
-          if (cancelled) return;
-          setShowSignupLabel(nextIsSignup);
-          activeSignupRef.current = nextIsSignup;
-          setLoginOutVisible(true);
-          setLoginInVisible(false);
-          setIncomingSignupLabel(null);
-          schedule();
-        }, fadeInStartMs + fadeInMs);
-      }, holdMs);
-    };
-
-    schedule();
-
-    return () => {
-      cancelled = true;
-      if (holdTimer) window.clearTimeout(holdTimer);
-      if (fadeInStartTimer) window.clearTimeout(fadeInStartTimer);
-      if (cycleEndTimer) window.clearTimeout(cycleEndTimer);
-      if (pulseTimer) window.clearTimeout(pulseTimer);
-      if (revealRaf1) window.cancelAnimationFrame(revealRaf1);
-      if (revealRaf2) window.cancelAnimationFrame(revealRaf2);
-    };
-  }, [loginSecondaryLabel, fadeInStartMs, fadeInMs, holdMs, pulseDurationMs]);
+    content.navigation.demoCta ?? content.hero.primaryCta;
 
   const animateScrollTo = (targetY: number) => {
     if (scrollRafRef.current) {
@@ -330,69 +242,71 @@ export default function FloatingNav() {
             className={`${styles.link} ${isActive("produkt") ? styles.linkActive : ""}`}
             onClick={(event) => handleSectionAnchorClick(event, sectionHref("produkt"))}
           >
-            {HOME_PAGE_TEXT.navigation.produkt}
+            {content.navigation.produkt}
           </a>
-          <div className={styles.menuWrap}>
-            <a
-              href={sectionHref("losningar")}
-              className={`${styles.link} ${isActive("losningar") || isSolutionsPage ? styles.linkActive : ""}`}
-              aria-current={isSolutionsPage ? "page" : undefined}
-              onClick={(event) => handleSectionAnchorClick(event, sectionHref("losningar"))}
-            >
-              {HOME_PAGE_TEXT.navigation.losningar}
-            </a>
-            <button
-              type="button"
-              className={`${styles.menuToggle} ${solutionsOpen ? styles.menuToggleOpen : ""}`}
-              aria-expanded={solutionsOpen}
-              aria-haspopup="true"
-              aria-label={HOME_PAGE_TEXT.navigation.openSolutionsAria}
-              onClick={() => setSolutionsOpen((previous) => !previous)}
-            >
-              <span className={`${styles.chevron} ${solutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
-                ▾
-              </span>
-            </button>
-            <div className={`${styles.mega} ${solutionsOpen ? styles.megaOpen : ""}`} role="menu">
-              {SOLUTION_GROUPS.map((group) => (
-                <div key={group.title} className={styles.menuGroup}>
-                  <p>{group.title}</p>
-                  <div className={styles.menuItems}>
-                    {group.items.map((item) => (
-                      <a
-                        key={item.href}
-                        href={item.href}
-                        className={`${styles.menuItem} ${isSolutionItemActive(item.href) ? styles.menuItemActive : ""}`}
-                        aria-current={isSolutionItemActive(item.href) ? "page" : undefined}
-                      >
-                        {item.label}
-                      </a>
-                    ))}
+          {showSolutions ? (
+            <div className={styles.menuWrap}>
+              <a
+                href={sectionHref("losningar")}
+                className={`${styles.link} ${isActive("losningar") || isSolutionsPage ? styles.linkActive : ""}`}
+                aria-current={isSolutionsPage ? "page" : undefined}
+                onClick={(event) => handleSectionAnchorClick(event, sectionHref("losningar"))}
+              >
+                {content.navigation.losningar}
+              </a>
+              <button
+                type="button"
+                className={`${styles.menuToggle} ${solutionsOpen ? styles.menuToggleOpen : ""}`}
+                aria-expanded={solutionsOpen}
+                aria-haspopup="true"
+                aria-label={content.navigation.openSolutionsAria}
+                onClick={() => setSolutionsOpen((previous) => !previous)}
+              >
+                <span className={`${styles.chevron} ${solutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
+                  ▾
+                </span>
+              </button>
+              <div className={`${styles.mega} ${solutionsOpen ? styles.megaOpen : ""}`} role="menu">
+                {solutionGroups.map((group) => (
+                  <div key={group.title} className={styles.menuGroup}>
+                    <p>{group.title}</p>
+                    <div className={styles.menuItems}>
+                      {group.items.map((item) => (
+                        <a
+                          key={item.href}
+                          href={item.href}
+                          className={`${styles.menuItem} ${isSolutionItemActive(item.href) ? styles.menuItemActive : ""}`}
+                          aria-current={isSolutionItemActive(item.href) ? "page" : undefined}
+                        >
+                          {item.label}
+                        </a>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          ) : null}
           <a
             href={sectionHref("customers")}
             className={`${styles.link} ${styles.desktopOnly} ${isActive("customers") ? styles.linkActive : ""}`}
             onClick={(event) => handleSectionAnchorClick(event, sectionHref("customers"))}
           >
-            {HOME_PAGE_TEXT.navigation.kundcase}
+            {content.navigation.kundcase}
           </a>
           <a
             href={sectionHref("how-it-works")}
             className={`${styles.link} ${styles.desktopOnly} ${isActive("how-it-works") ? styles.linkActive : ""}`}
             onClick={(event) => handleSectionAnchorClick(event, sectionHref("how-it-works"))}
           >
-            {HOME_PAGE_TEXT.navigation.hurDetFunkar}
+            {content.navigation.hurDetFunkar}
           </a>
           <a
             href={sectionHref("security")}
             className={`${styles.link} ${styles.desktopOnly} ${isActive("security") ? styles.linkActive : ""}`}
             onClick={(event) => handleSectionAnchorClick(event, sectionHref("security"))}
           >
-            {HOME_PAGE_TEXT.navigation.sakerhet}
+            {content.navigation.sakerhet}
           </a>
           <a
             href={demoHref}
@@ -409,7 +323,7 @@ export default function FloatingNav() {
           className={`${styles.mobileToggle} ${mobileMenuOpen ? styles.mobileToggleOpen : ""}`}
           aria-expanded={mobileMenuOpen}
           aria-controls="mobile-nav-panel"
-          aria-label={HOME_PAGE_TEXT.navigation.openMenuAria}
+          aria-label={content.navigation.openMenuAria}
           onClick={() => setMobileMenuOpen((previous) => !previous)}
         >
           <span />
@@ -421,80 +335,87 @@ export default function FloatingNav() {
           id="mobile-nav-panel"
           className={`${styles.mobilePanel} ${mobileMenuOpen ? styles.mobilePanelOpen : ""}`}
         >
+          <HomeOfferingSwitch compact className={styles.mobileOfferingSwitch} />
           <a
             href={sectionHref("produkt")}
             onClick={(event) => handleSectionAnchorClick(event, sectionHref("produkt"), closeMobileMenu)}
             className={`${styles.mobileLink} ${isActive("produkt") ? styles.mobileLinkActive : ""}`}
           >
-            {HOME_PAGE_TEXT.navigation.produkt}
+            {content.navigation.produkt}
           </a>
-          <a
-            href={sectionHref("losningar")}
-            onClick={(event) => handleSectionAnchorClick(event, sectionHref("losningar"), closeMobileMenu)}
-            className={`${styles.mobileLink} ${isActive("losningar") ? styles.mobileLinkActive : ""}`}
-          >
-            {HOME_PAGE_TEXT.navigation.losningar}
-          </a>
+          {showSolutions ? (
+            <a
+              href={sectionHref("losningar")}
+              onClick={(event) => handleSectionAnchorClick(event, sectionHref("losningar"), closeMobileMenu)}
+              className={`${styles.mobileLink} ${isActive("losningar") ? styles.mobileLinkActive : ""}`}
+            >
+              {content.navigation.losningar}
+            </a>
+          ) : null}
           <a
             href={sectionHref("customers")}
             onClick={(event) => handleSectionAnchorClick(event, sectionHref("customers"), closeMobileMenu)}
             className={`${styles.mobileLink} ${isActive("customers") ? styles.mobileLinkActive : ""}`}
           >
-            {HOME_PAGE_TEXT.navigation.kundcase}
+            {content.navigation.kundcase}
           </a>
           <a
             href={sectionHref("how-it-works")}
             onClick={(event) => handleSectionAnchorClick(event, sectionHref("how-it-works"), closeMobileMenu)}
             className={`${styles.mobileLink} ${isActive("how-it-works") ? styles.mobileLinkActive : ""}`}
           >
-            {HOME_PAGE_TEXT.navigation.hurDetFunkar}
+            {content.navigation.hurDetFunkar}
           </a>
           <a
             href={sectionHref("security")}
             onClick={(event) => handleSectionAnchorClick(event, sectionHref("security"), closeMobileMenu)}
             className={`${styles.mobileLink} ${isActive("security") ? styles.mobileLinkActive : ""}`}
           >
-            {HOME_PAGE_TEXT.navigation.sakerhet}
+            {content.navigation.sakerhet}
           </a>
 
-          <button
-            type="button"
-            className={`${styles.mobileSolutionsToggle} ${mobileSolutionsOpen ? styles.mobileSolutionsToggleOpen : ""} ${
-              isSolutionsPage ? styles.mobileSolutionsToggleActive : ""
-            }`}
-            onClick={() => setMobileSolutionsOpen((previous) => !previous)}
-            aria-expanded={mobileSolutionsOpen}
-            aria-controls="mobile-solutions-list"
-          >
-            {HOME_PAGE_TEXT.navigation.losningar}
-            <span className={`${styles.chevron} ${mobileSolutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
-              ▾
-            </span>
-          </button>
+          {showSolutions ? (
+            <>
+              <button
+                type="button"
+                className={`${styles.mobileSolutionsToggle} ${mobileSolutionsOpen ? styles.mobileSolutionsToggleOpen : ""} ${
+                  isSolutionsPage ? styles.mobileSolutionsToggleActive : ""
+                }`}
+                onClick={() => setMobileSolutionsOpen((previous) => !previous)}
+                aria-expanded={mobileSolutionsOpen}
+                aria-controls="mobile-solutions-list"
+              >
+                {content.navigation.losningar}
+                <span className={`${styles.chevron} ${mobileSolutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
+                  ▾
+                </span>
+              </button>
 
-          <div
-            id="mobile-solutions-list"
-            className={`${styles.mobileSolutions} ${mobileSolutionsOpen ? styles.mobileSolutionsOpen : ""}`}
-          >
-            {SOLUTION_GROUPS.map((group) => (
-              <div key={group.title} className={styles.mobileGroup}>
-                <p>{group.title}</p>
-                <div className={styles.mobileItems}>
-                  {group.items.map((item) => (
-                    <a
-                      key={item.href}
-                      href={item.href}
-                      className={`${styles.mobileItem} ${isSolutionItemActive(item.href) ? styles.mobileItemActive : ""}`}
-                      onClick={closeMobileMenu}
-                      aria-current={isSolutionItemActive(item.href) ? "page" : undefined}
-                    >
-                      {item.label}
-                    </a>
-                  ))}
-                </div>
+              <div
+                id="mobile-solutions-list"
+                className={`${styles.mobileSolutions} ${mobileSolutionsOpen ? styles.mobileSolutionsOpen : ""}`}
+              >
+                {solutionGroups.map((group) => (
+                  <div key={group.title} className={styles.mobileGroup}>
+                    <p>{group.title}</p>
+                    <div className={styles.mobileItems}>
+                      {group.items.map((item) => (
+                        <a
+                          key={item.href}
+                          href={item.href}
+                          className={`${styles.mobileItem} ${isSolutionItemActive(item.href) ? styles.mobileItemActive : ""}`}
+                          onClick={closeMobileMenu}
+                          aria-current={isSolutionItemActive(item.href) ? "page" : undefined}
+                        >
+                          {item.label}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          ) : null}
 
           <a
             href={demoHref}
@@ -514,54 +435,6 @@ export default function FloatingNav() {
         </div>
       </nav>
 
-      <a href={APP_LOGIN_URL} className={styles.loginFloat} aria-label={loginSignupLabel}>
-        <span
-          className={`${styles.loginIconWrap} ${loginIconPulse ? styles.loginIconWrapPulse : ""}`}
-          style={{ "--login-pulse-duration": `${pulseDurationMs}ms` } as CSSProperties}
-          aria-hidden="true"
-        >
-          <UserRound size={17} />
-        </span>
-        <span className={styles.loginLabel}>
-          {!loginSecondaryLabel ? (
-            loginSignupLabel
-          ) : (
-            <span className={styles.loginLabelSwap} aria-hidden="true">
-              <span
-                className={`${styles.loginWord} ${
-                  !showSignupLabel
-                    ? `${styles.loginWordOutgoing} ${
-                        loginOutVisible ? styles.loginWordOutgoingVisible : styles.loginWordOutgoingHidden
-                      }`
-                    : styles.loginWordDormant
-                }`}
-              >
-                {loginPrimaryLabel}
-              </span>
-              <span
-                className={`${styles.loginWord} ${
-                  showSignupLabel
-                    ? `${styles.loginWordOutgoing} ${
-                        loginOutVisible ? styles.loginWordOutgoingVisible : styles.loginWordOutgoingHidden
-                      }`
-                    : styles.loginWordDormant
-                }`}
-              >
-                {loginSecondaryLabel}
-              </span>
-              {incomingSignupLabel !== null && (
-                <span
-                  className={`${styles.loginWord} ${styles.loginWordIncoming} ${
-                    loginInVisible ? styles.loginWordIncomingVisible : styles.loginWordIncomingHidden
-                  }`}
-                >
-                  {incomingSignupLabel ? loginSecondaryLabel : loginPrimaryLabel}
-                </span>
-              )}
-            </span>
-          )}
-        </span>
-      </a>
     </div>
   );
 }

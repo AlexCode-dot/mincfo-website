@@ -8,8 +8,11 @@ import {
   useState,
   type MouseEvent as ReactMouseEvent,
 } from "react";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
+import HeroAuraBackground from "./HeroAuraBackground";
+import HeroOfferingShowcase from "./HeroOfferingShowcase";
+import HeroPartnerLinesBackground from "./HeroPartnerLinesBackground";
 import HeroParticleGlobe from "./HeroParticleGlobe";
 import styles from "./Hero.module.scss";
 
@@ -34,6 +37,7 @@ const smoothstep = (edge0: number, edge1: number, value: number) => {
 };
 
 export default function Hero() {
+  const { content, offering } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const introRef = useRef<HTMLDivElement | null>(null);
@@ -547,27 +551,33 @@ export default function Hero() {
   return (
     <section ref={sectionRef} id="hero" className={styles.hero}>
       <div className={styles.topBackground} aria-hidden="true">
-        <HeroParticleGlobe />
+        {offering === "full-service" ? (
+          <HeroAuraBackground />
+        ) : offering === "partner" ? (
+          <HeroPartnerLinesBackground />
+        ) : (
+          <HeroParticleGlobe />
+        )}
       </div>
 
       <div className={styles.container}>
         <div className={styles.intro} ref={introRef}>
           <div className={styles.tag}>
             <span className={styles.ping} />
-            {HOME_PAGE_TEXT.hero.tagline}
+            {content.hero.tagline}
           </div>
 
           <h1 className={styles.title}>
-            {HOME_PAGE_TEXT.hero.titleLine1} <br />– {HOME_PAGE_TEXT.hero.titleLine2}
+            {content.hero.titleLine1} <br />– {content.hero.titleLine2}
           </h1>
 
           <p className={styles.subtitle}>
-            {HOME_PAGE_TEXT.hero.body}
+            {content.hero.body}
           </p>
 
           <div className={styles.ctaRow}>
             <a className={styles.primaryCta} href="#">
-              {HOME_PAGE_TEXT.hero.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+              {content.hero.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
             </a>
           </div>
         </div>
@@ -580,7 +590,7 @@ export default function Hero() {
               <span className={styles.dot} />
               <div className={styles.address}>
                 <Lock aria-hidden="true" size={12} />
-                {HOME_PAGE_TEXT.hero.address}
+                {content.hero.address}
               </div>
             </div>
 
@@ -637,7 +647,7 @@ export default function Hero() {
                           <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
                         </g>
                       </svg>
-                      <span className={styles.videoEndBrandWord}>{HOME_PAGE_TEXT.footer.brandWord}</span>
+                      <span className={styles.videoEndBrandWord}>{content.footer.brandWord}</span>
                     </div>
                   </div>
                 </div>
@@ -690,7 +700,7 @@ export default function Hero() {
                           <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
                         </g>
                       </svg>
-                      <span className={styles.videoEndBrandWord}>{HOME_PAGE_TEXT.footer.brandWord}</span>
+                      <span className={styles.videoEndBrandWord}>{content.footer.brandWord}</span>
                     </div>
                   </div>
                 </div>
@@ -700,7 +710,7 @@ export default function Hero() {
                   className={styles.playButton}
                   type="button"
                   onClick={handlePlayDemo}
-                  aria-label={HOME_PAGE_TEXT.hero.playAriaLabel}
+                  aria-label={content.hero.playAriaLabel}
                 >
                   <span className={styles.playPulse} />
                   <Play aria-hidden="true" size={30} />
@@ -726,7 +736,7 @@ export default function Hero() {
                 playsInline
                 preload={useFullVideo ? "metadata" : "none"}
                 poster={HERO_DEMO_PREVIEW_POSTER}
-                aria-label={HOME_PAGE_TEXT.hero.videoAriaLabel}
+                aria-label={content.hero.videoAriaLabel}
                 onCanPlay={handleVideoCanPlay}
                 onTimeUpdate={handleVideoTimeUpdate}
                 onDoubleClick={handleVideoDoubleClick}
@@ -743,11 +753,13 @@ export default function Hero() {
                     <source src={HERO_DEMO_PREVIEW_LEGACY} type="video/mp4" />
                   </>
                 )}
-                {HOME_PAGE_TEXT.hero.videoFallback}
+                {content.hero.videoFallback}
               </video>
             </div>
           </div>
         </div>
+
+        <HeroOfferingShowcase />
       </div>
     </section>
   );

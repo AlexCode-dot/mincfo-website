@@ -5,6 +5,12 @@ import crypto from "node:crypto";
 const ROOT = process.cwd();
 const HOME_PAGE_TEXT_JSON_PATH = path.join(ROOT, "src", "content", "homePageText.json");
 const SOLUTION_PAGES_TEXT_JSON_PATH = path.join(ROOT, "src", "content", "solutionPagesText.json");
+const HOME_CONTENT_DIR = path.join(ROOT, "src", "content", "home");
+const HOME_SHARED_JSON_PATH = path.join(HOME_CONTENT_DIR, "shared.json");
+const HOME_PLATFORM_JSON_PATH = path.join(HOME_CONTENT_DIR, "platform.json");
+const HOME_FULL_SERVICE_JSON_PATH = path.join(HOME_CONTENT_DIR, "full-service.json");
+const HOME_PARTNER_JSON_PATH = path.join(HOME_CONTENT_DIR, "partner.json");
+const HOME_SHARED_KEYS = new Set(["navigation", "offering", "howItWorks", "security", "footer"]);
 
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_DOCS_SCOPE = "https://www.googleapis.com/auth/documents";
@@ -42,7 +48,6 @@ const NON_TEXT_KEYS = new Set([
 ]);
 
 const VISUAL_KEYS = new Set([
-  "ui",
   "monthLabelsSv",
   "monthLabelsEn",
   "metricOptions",
@@ -542,17 +547,14 @@ function buildHomeSectionBindings(home) {
   const sectionBindings = new Map();
   const add = (title, rows) => sectionBindings.set(title, rows);
 
-  const simpleSections = [
-    ["navigation", "Navigering"],
-    ["hero", "Hero"],
-    ["solutions", "Lösningar"],
-    ["customers", "Kundcase"],
-    ["ending", "Avslut / CTA"],
-    ["security", "Säkerhet"],
-    ["footer", "Footer"],
+  const sharedSections = [
+    ["navigation", "Gemensamt - Navigering"],
+    ["offering", "Gemensamt - Erbjudande"],
+    ["security", "Gemensamt - Säkerhet"],
+    ["footer", "Gemensamt - Footer"],
   ];
 
-  for (const [key, title] of simpleSections) {
+  for (const [key, title] of sharedSections) {
     const rows = [];
     for (const [childKey, value] of Object.entries(home[key] ?? {})) {
       rows.push(...buildBindingsFromValue(value, childKey, labelForKey(childKey, toHeading(childKey)), [key, childKey]));
@@ -560,52 +562,22 @@ function buildHomeSectionBindings(home) {
     add(title, rows);
   }
 
-  const aic = home.aicopilot ?? {};
-  add(
-    "Produkt (AI-Copilot)",
-    ["leftPill", "leftTitle", "leftIntro", "leftBullets"].flatMap((k) =>
-      k in aic
-        ? buildBindingsFromValue(aic[k], k, labelForKey(k, toHeading(k)), ["aicopilot", k])
-        : [],
-    ),
-  );
-  add(
-    "Produkt (Dashboard)",
-    ["pill", "title", "intro", "kpiBullets"].flatMap((k) =>
-      k in (aic.dashboard ?? {})
-        ? buildBindingsFromValue(
-            aic.dashboard[k],
-            k,
-            labelForKey(k, toHeading(k)),
-            ["aicopilot", "dashboard", k],
-          )
-        : [],
-    ),
-  );
-  add(
-    "Produkt (Planering & Jämförelse)",
-    ["pill", "title", "intro", "bullets"].flatMap((k) =>
-      k in (aic.planning ?? {})
-        ? buildBindingsFromValue(
-            aic.planning[k],
-            k,
-            labelForKey(k, toHeading(k)),
-            ["aicopilot", "planning", k],
-          )
-        : [],
-    ),
-  );
-
   const hiw = home.howItWorks ?? {};
-  add("Så här fungerar det - Översikt", [
+  add("Gemensamt - Så här fungerar det - Översikt", [
     { element: labelForKey("sectionTitle", toHeading("sectionTitle")), path: ["howItWorks", "sectionTitle"] },
     { element: labelForKey("sectionIntro", toHeading("sectionIntro")), path: ["howItWorks", "sectionIntro"] },
+    ...buildBindingsFromValue(
+      hiw.sectionIntroByOffer ?? {},
+      "sectionIntroByOffer",
+      "Sektionsintro per erbjudande",
+      ["howItWorks", "sectionIntroByOffer"],
+    ),
   ]);
 
   const offers = hiw.offers ?? {};
   for (const [offerKey, offerValue] of Object.entries(offers)) {
     const offerLabel = labelForKey(offerKey, toHeading(offerKey));
-    add(`Så här fungerar det - ${offerLabel}`, [
+    add(`Gemensamt - Så här fungerar det - ${offerLabel}`, [
       { element: labelForKey("tabLabel", toHeading("tabLabel")), path: ["howItWorks", "offers", offerKey, "tabLabel"] },
     ]);
 
@@ -619,31 +591,108 @@ function buildHomeSectionBindings(home) {
           ...buildBindingsFromValue(v, k, labelForKey(k, toHeading(k)), ["howItWorks", "offers", offerKey, "steps", idx, k]),
         );
       });
-      add(`Så här fungerar det - ${offerLabel} - ${stepTitle}`, rows);
+      add(`Gemensamt - Så här fungerar det - ${offerLabel} - ${stepTitle}`, rows);
     });
+  }
+
+  const modeConfigs = [
+    { key: "platform", title: "Plattform" },
+    { key: "full-service", title: "Helhetslösning" },
+    { key: "partner", title: "För byråer" },
+  ];
+
+  for (const modeConfig of modeConfigs) {
+    const mode = home[modeConfig.key] ?? {};
+    const simpleModeSections = [
+      ["hero", `${modeConfig.title} - Hero`],
+      ["solutions", `${modeConfig.title} - Lösningar`],
+      ["customers", `${modeConfig.title} - Kundcase`],
+      ["ending", `${modeConfig.title} - Avslut / CTA`],
+    ];
+
+    for (const [key, title] of simpleModeSections) {
+      const rows = [];
+      for (const [childKey, value] of Object.entries(mode[key] ?? {})) {
+        rows.push(
+          ...buildBindingsFromValue(value, childKey, labelForKey(childKey, toHeading(childKey)), [modeConfig.key, key, childKey]),
+        );
+      }
+      add(title, rows);
+    }
+
+    const aic = mode.aicopilot ?? {};
+    add(
+      `${modeConfig.title} - Produkt (AI-Copilot)`,
+      ["leftPill", "leftTitle", "leftIntro", "leftBullets"].flatMap((k) =>
+        k in aic
+          ? buildBindingsFromValue(aic[k], k, labelForKey(k, toHeading(k)), [modeConfig.key, "aicopilot", k])
+          : [],
+      ),
+    );
+    add(
+      `${modeConfig.title} - Produkt (Dashboard)`,
+      ["pill", "title", "intro", "kpiBullets"].flatMap((k) =>
+        k in (aic.dashboard ?? {})
+          ? buildBindingsFromValue(
+              aic.dashboard[k],
+              k,
+              labelForKey(k, toHeading(k)),
+              [modeConfig.key, "aicopilot", "dashboard", k],
+            )
+          : [],
+      ),
+    );
+    add(
+      `${modeConfig.title} - Produkt (Planering & Jämförelse)`,
+      ["pill", "title", "intro", "bullets"].flatMap((k) =>
+        k in (aic.planning ?? {})
+          ? buildBindingsFromValue(
+              aic.planning[k],
+              k,
+              labelForKey(k, toHeading(k)),
+              [modeConfig.key, "aicopilot", "planning", k],
+            )
+          : [],
+      ),
+    );
   }
 
   const visualSections = [
     [
-      "Produkt (AI-Copilot) - Chattpanel (visual data)",
-      ["aicopilot", ["panelTitle", "statusSending", "statusAnalyzing", "inputPlaceholder"]],
-    ],
-    ["Produkt (AI-Copilot) - Exempel (visual data)", ["aicopilot", ["examples"]]],
-    [
-      "Produkt (Dashboard) - Visual data",
-      ["aicopilot.dashboard", ["resultTitle", "currentLabel", "previousLabel", "currencyLabel", "compareLabel", "metricOptions", "trendAxisTicks", "monthLabelsSv"]],
+      "Gemensamt - Så här fungerar det - Plattform / Skapa konto (UI)",
+      ["howItWorks.ui.account", null],
     ],
     [
-      "Produkt (Planering & Jämförelse) - Visual data",
-      ["aicopilot.planning", ["forecastTitle", "liveLabel", "reconciliationTitle", "reconciliationSubtext", "actualPrefix", "forecastPrefix", "vsPrevious", "annualVariance", "legend", "monthLabelsEn"]],
+      "Gemensamt - Så här fungerar det - Plattform / Koppla Fortnox (UI)",
+      ["howItWorks.ui.connect", null],
     ],
-    ["Så här fungerar det - Plattform / Skapa konto (UI)", ["howItWorks.ui.account", null]],
-    ["Så här fungerar det - Plattform / Koppla Fortnox (UI)", ["howItWorks.ui.connect", null]],
-    ["Så här fungerar det - Plattform / Realtidsinsikter & AI (UI)", ["howItWorks.ui.insights", null]],
-    ["Så här fungerar det - FaaS / Onboarding & scope (UI)", ["howItWorks.ui.faasOnboarding", null]],
-    ["Så här fungerar det - FaaS / Koppla system & behörigheter (UI)", ["howItWorks.ui.faasSystems", null]],
-    ["Så här fungerar det - FaaS / Vi sköter ekonomin (UI)", ["howItWorks.ui.faasRealtime", null]],
+    [
+      "Gemensamt - Så här fungerar det - Plattform / Realtidsinsikter & AI (UI)",
+      ["howItWorks.ui.insights", null],
+    ],
+    ["Gemensamt - Så här fungerar det - FaaS / Onboarding & scope (UI)", ["howItWorks.ui.faasOnboarding", null]],
+    ["Gemensamt - Så här fungerar det - FaaS / Koppla system & behörigheter (UI)", ["howItWorks.ui.faasSystems", null]],
+    ["Gemensamt - Så här fungerar det - FaaS / Vi sköter ekonomin (UI)", ["howItWorks.ui.faasRealtime", null]],
+    ["Gemensamt - Så här fungerar det - Partner / Workspace (UI)", ["howItWorks.ui.partnerWorkspace", null]],
   ];
+
+  for (const modeConfig of modeConfigs) {
+    visualSections.push(
+      [
+        `${modeConfig.title} - Produkt (AI-Copilot) - Chattpanel (visual data)`,
+        [`${modeConfig.key}.aicopilot`, ["panelTitle", "statusSending", "statusAnalyzing", "inputPlaceholder"]],
+      ],
+      [`${modeConfig.title} - Produkt (AI-Copilot) - Exempel (visual data)`, [`${modeConfig.key}.aicopilot`, ["examples"]]],
+      [
+        `${modeConfig.title} - Produkt (Dashboard) - Visual data`,
+        [`${modeConfig.key}.aicopilot.dashboard`, ["resultTitle", "currentLabel", "previousLabel", "currencyLabel", "compareLabel", "metricOptions", "trendAxisTicks", "monthLabelsSv"]],
+      ],
+      [
+        `${modeConfig.title} - Produkt (Planering & Jämförelse) - Visual data`,
+        [`${modeConfig.key}.aicopilot.planning`, ["forecastTitle", "liveLabel", "reconciliationTitle", "reconciliationSubtext", "actualPrefix", "forecastPrefix", "vsPrevious", "annualVariance", "legend", "monthLabelsEn"]],
+      ],
+    );
+  }
 
   const resolvePath = (obj, dotted) => dotted.split(".").reduce((acc, part) => acc?.[part], obj);
   for (const [title, [basePath, keys]] of visualSections) {
@@ -695,6 +744,37 @@ function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
+function loadHomePageTextTemplate() {
+  if (fs.existsSync(HOME_SHARED_JSON_PATH) && fs.existsSync(HOME_PLATFORM_JSON_PATH)) {
+    const shared = JSON.parse(fs.readFileSync(HOME_SHARED_JSON_PATH, "utf8"));
+    const platform = JSON.parse(fs.readFileSync(HOME_PLATFORM_JSON_PATH, "utf8"));
+    const fullService = fs.existsSync(HOME_FULL_SERVICE_JSON_PATH)
+      ? JSON.parse(fs.readFileSync(HOME_FULL_SERVICE_JSON_PATH, "utf8"))
+      : {};
+    const partner = fs.existsSync(HOME_PARTNER_JSON_PATH)
+      ? JSON.parse(fs.readFileSync(HOME_PARTNER_JSON_PATH, "utf8"))
+      : {};
+    return { ...shared, platform, "full-service": fullService, partner };
+  }
+
+  return JSON.parse(fs.readFileSync(HOME_PAGE_TEXT_JSON_PATH, "utf8"));
+}
+
+function writeHomePageText(homePageText) {
+  const shared = Object.fromEntries(
+    Object.entries(homePageText).filter(([key]) => HOME_SHARED_KEYS.has(key)),
+  );
+  const platform = homePageText.platform ?? {};
+  const fullService = homePageText["full-service"] ?? {};
+  const partner = homePageText.partner ?? {};
+  writeJson(HOME_PAGE_TEXT_JSON_PATH, { ...shared, ...platform });
+  fs.mkdirSync(HOME_CONTENT_DIR, { recursive: true });
+  writeJson(HOME_SHARED_JSON_PATH, shared);
+  writeJson(HOME_PLATFORM_JSON_PATH, platform);
+  writeJson(HOME_FULL_SERVICE_JSON_PATH, fullService);
+  writeJson(HOME_PARTNER_JSON_PATH, partner);
+}
+
 async function main() {
   loadEnvFiles();
   const mainDocId = process.env.GOOGLE_DOC_ID_MAIN?.trim();
@@ -706,7 +786,7 @@ async function main() {
   const serviceAccount = loadServiceAccount();
   const accessToken = await getAccessToken(serviceAccount);
 
-  const homeTemplate = JSON.parse(fs.readFileSync(HOME_PAGE_TEXT_JSON_PATH, "utf8"));
+  const homeTemplate = loadHomePageTextTemplate();
   const solutionsTemplate = JSON.parse(fs.readFileSync(SOLUTION_PAGES_TEXT_JSON_PATH, "utf8"));
 
   const [homeDoc, solutionsDoc] = await Promise.all([
@@ -757,11 +837,15 @@ async function main() {
     });
   }
 
-  writeJson(HOME_PAGE_TEXT_JSON_PATH, homeTemplate);
+  writeHomePageText(homeTemplate);
   writeJson(SOLUTION_PAGES_TEXT_JSON_PATH, solutionsTemplate);
 
   console.log("Google Docs import klar:");
   console.log(`- ${path.relative(ROOT, HOME_PAGE_TEXT_JSON_PATH)}`);
+  console.log(`- ${path.relative(ROOT, HOME_SHARED_JSON_PATH)}`);
+  console.log(`- ${path.relative(ROOT, HOME_PLATFORM_JSON_PATH)}`);
+  console.log(`- ${path.relative(ROOT, HOME_FULL_SERVICE_JSON_PATH)}`);
+  console.log(`- ${path.relative(ROOT, HOME_PARTNER_JSON_PATH)}`);
   console.log(`- ${path.relative(ROOT, SOLUTION_PAGES_TEXT_JSON_PATH)}`);
 }
 

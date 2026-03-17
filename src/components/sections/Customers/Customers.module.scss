@@ -340,20 +340,29 @@
 
 .visible .leftCard {
   opacity: 0.42;
+  pointer-events: auto;
   z-index: 3;
   transform: translate3d(-42%, 16px, -80px) rotate(-5deg) scale(0.92);
+  cursor: pointer;
 }
 
 .visible .rightCard {
   opacity: 0.42;
+  pointer-events: auto;
   z-index: 3;
   transform: translate3d(42%, 16px, -80px) rotate(5deg) scale(0.92);
+  cursor: pointer;
 }
 
 .visible .hiddenCard {
   opacity: 0;
   z-index: 1;
   transform: translate3d(0, 30px, -140px) scale(0.9);
+}
+
+.card:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--btn-primary-bg) 72%, white 8%);
+  outline-offset: 3px;
 }
 
 .company {

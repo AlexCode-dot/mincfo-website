@@ -1,0 +1,331 @@
+{
+  "hero": {
+    "tagline": "Financial Intelligence",
+    "titleLine1": "Ekonomiplattformen för team",
+    "titleLine2": "som vill styra snabbare med AI, dashboards och forecast",
+    "body": "MinCFO är för bolag som redan hanterar ekonomi internt eller via partner, men vill få bättre analys, tydligare dashboards och snabbare beslut i samma plattform.",
+    "primaryCta": "Boka demo av plattformen",
+    "address": "app.mincfo.com/dashboard",
+    "playAriaLabel": "Play demo video",
+    "videoAriaLabel": "Demo video of MinCFO dashboard",
+    "videoFallback": "Din webbläsare kan inte spela upp videon."
+  },
+  "aicopilot": {
+    "leftPill": "Vad ni får i plattformen",
+    "leftTitle": "AI-copilot för snabbare finansiella beslut",
+    "leftIntro": "Fråga om resultat, kostnader, runway och avvikelser direkt i plattformen. Få svar, visualiseringar och förslag på nästa steg utan att bygga rapporter manuellt.",
+    "leftBullets": [
+      "Chatta med er data och få svar direkt",
+      "Identifiera avvikelser innan de blir problem",
+      "Arbeta mer proaktivt utan fler manuella loopar"
+    ],
+    "panelTitle": "AI Copilot",
+    "loadingAria": "AI analyserar data",
+    "statusSending": "Skickar fråga...",
+    "statusAnalyzing": "AI analyserar data...",
+    "inputPlaceholder": "Fråga AI om ekonomi, forecast eller nästa åtgärd",
+    "sendAria": "Skicka fråga",
+    "examples": [
+      {
+        "question": "Hur ser vår runway ut baserat på Q3?",
+        "answer": "Med nuvarande burn-rate har ni cirka 11.4 månader runway. Största påverkan är SaaS-kostnader och rekrytering i november.",
+        "chartTitle": "Runway forecast",
+        "chartUnit": "Månader",
+        "yTicks": [
+          "12",
+          "10",
+          "8",
+          "6"
+        ],
+        "bars": [
+          {
+            "label": "Nu",
+            "value": "11.4",
+            "height": "92%"
+          },
+          {
+            "label": "Okt",
+            "value": "10.2",
+            "height": "82%"
+          },
+          {
+            "label": "Nov",
+            "value": "8.9",
+            "height": "71%"
+          },
+          {
+            "label": "Dec",
+            "value": "7.4",
+            "height": "59%"
+          },
+          {
+            "label": "Jan",
+            "value": "6.0",
+            "height": "48%"
+          }
+        ]
+      },
+      {
+        "question": "Hur stor del av kostnaderna är fasta vs rörliga?",
+        "answer": "Kostnadsbasen är ungefär 62% fasta kostnader och 38% rörliga. De rörliga kostnaderna drivs främst av marknadsföring och transaktionsavgifter.",
+        "chartTitle": "Kostnadsfördelning",
+        "chartUnit": "Andel %",
+        "yTicks": [
+          "80",
+          "60",
+          "40",
+          "20"
+        ],
+        "bars": [
+          {
+            "label": "Fasta",
+            "value": "62%",
+            "height": "78%"
+          },
+          {
+            "label": "Rörliga",
+            "value": "38%",
+            "height": "48%"
+          }
+        ]
+      }
+    ],
+    "dashboard": {
+      "previewAria": "Dashboard Preview",
+      "metricMenuAria": "Välj metrisk",
+      "pill": "Dashboard",
+      "title": "Dashboards som gör ekonomin användbar i vardagen",
+      "intro": "Samla KPI:er, resultat och likviditet i samma beslutsyta. Alla som behöver förstå läget får samma uppdaterade bild, utan att vänta på nästa manuella rapport.",
+      "kpiBullets": [
+        "Realtidsvy över nyckeltal och utfall",
+        "Tydligare uppföljning av kassaflöde och marginal",
+        "Beslutsunderlag som är lätta att dela i teamet"
+      ],
+      "resultTitle": "Income Statement · 2025",
+      "currentLabel": "Current",
+      "previousLabel": "Previous",
+      "currencyLabel": "SEK",
+      "metricOptions": [
+        "Net Income",
+        "EBIT",
+        "EBITDA",
+        "Gross Profit"
+      ],
+      "compareLabel": "Compared to previous period",
+      "trendAxisTicks": [
+        "500K",
+        "375K",
+        "250K",
+        "125K",
+        "0"
+      ],
+      "monthLabelsSv": [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "Maj",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Okt",
+        "Nov",
+        "Dec"
+      ]
+    },
+    "planning": {
+      "panelAria": "Planering och benchmarking",
+      "pill": "Planering & Jämförelse",
+      "title": "Forecasting, scenarier och bättre framförhållning",
+      "intro": "Planera framåt med samma struktur som ni följer upp i vardagen. Testa scenarier, förstå risker tidigare och prioritera utifrån faktisk ekonomisk påverkan.",
+      "bullets": [
+        "Forecasting i samma flöde som uppföljningen",
+        "Scenarioarbete för tillväxt, kostnader och hiring",
+        "Egna dimensioner för bättre analys",
+        "Tidigare signaler på risk och avvikelse",
+        "Jämför segment, kunder och perioder",
+        "Bygg bättre beslutsunderlag inför nästa steg"
+      ],
+      "forecastTitle": "Forecast",
+      "liveLabel": "Live forecast",
+      "reconciliationTitle": "Reconciliation",
+      "reconciliationSubtext": "2025 · Actuals through Jun",
+      "actualPrefix": "Actual month",
+      "forecastPrefix": "Forecast month",
+      "vsPrevious": "Vs previous month",
+      "annualVariance": "Annual variance vs baseline",
+      "legend": "Actuals: Jan-Jun · Forecast: Jul-Dec",
+      "monthLabelsEn": [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
+      "monthAriaPrefix": "Visa budget för"
+    }
+  },
+  "solutions": {
+    "pill": "Lösningar",
+    "title": "Hitta rätt användning av plattformen",
+    "intro": "Olika team använder MinCFO på olika sätt. Välj den roll eller bransch som bäst speglar hur ni vill använda plattformen i vardagen.",
+    "cardCta": "Se lösning",
+    "cards": [
+      {
+        "href": "/losningar/ceo-founders",
+        "title": "CEO & Founders",
+        "text": "Finansiell klarhet för snabbare vägval med AI Copilot, realtidsdata och scenarioplanering.",
+        "icon": "rocket"
+      },
+      {
+        "href": "/losningar/cfo-finance",
+        "title": "CFO & Finance Team",
+        "text": "Mindre manuella loopar och bättre forecast med dashboards, automation och spårbar analys.",
+        "icon": "briefcase"
+      },
+      {
+        "href": "/losningar/fractional-cfo",
+        "title": "Fractional CFO",
+        "text": "Leverera board-ready underlag snabbare med ett skalbart arbetssätt och hög leveransprecision.",
+        "icon": "handshake"
+      },
+      {
+        "href": "/losningar/saas-tech",
+        "title": "SaaS / Tech",
+        "text": "Koppla produkt, GTM och ekonomi i samma beslutsyta för hållbar tillväxt med kontroll.",
+        "icon": "cpu"
+      },
+      {
+        "href": "/losningar/konsult-tjanster",
+        "title": "Konsult & Tjänster",
+        "text": "Styr beläggning, projektmarginal och cash i realtid med tydliga signaler per kund och uppdrag.",
+        "icon": "building"
+      },
+      {
+        "href": "/losningar/ehandel",
+        "title": "E-handel",
+        "text": "Få kontroll på marginal, lager och likviditet när kampanjer och inköp påverkar utfallet dag för dag.",
+        "icon": "cart"
+      }
+    ]
+  },
+  "customers": {
+    "pill": "Kunder",
+    "title": "Team som använder MinCFO som plattform",
+    "intro": "Här är exempel på hur bolag använder MinCFO för att få bättre överblick, snabbare analys och starkare beslutsunderlag utan att bygga allt manuellt.",
+    "tickerLabel": "Betrodd av team som använder MinCFO som sin finansiella beslutsyta",
+    "controlsAria": "Bläddra kundomdömen",
+    "prevAria": "Föregående omdöme",
+    "nextAria": "Nästa omdöme",
+    "trustedAria": "Kunder som litar på oss",
+    "testimonials": [
+      {
+        "company": "Qsid",
+        "person": "Rikard Jonsson",
+        "role": "VD, Sid Marketing",
+        "quote": "MinCFO gav oss en mycket tydligare beslutsyta. Vi kan gå från fråga till analys betydligt snabbare och slipper bygga samma underlag om och om igen.",
+        "avatarFile": "logo-rikard.avif",
+        "accent": false
+      },
+      {
+        "company": "Showcase",
+        "person": "Aviv Fahri",
+        "role": "VD, Showcase",
+        "quote": "Vi fick dashboards och uppföljning som faktiskt används i vardagen. Det har gjort det lättare att prioritera rätt och agera tidigare på avvikelser.",
+        "avatarFile": "logo-aviv.avif",
+        "accent": true
+      },
+      {
+        "company": "SweBal",
+        "person": "Joakim Sjöholm",
+        "role": "VD, Swebal AB",
+        "quote": "Tidigare satt mycket kunskap fast i manuella filer. Med MinCFO får vi en gemensam plattform för uppföljning, analys och mer framåtlutade beslut.",
+        "avatarFile": "logo-joakim.avif",
+        "accent": false
+      },
+      {
+        "company": "Hälsa Hemma",
+        "person": "Oskar Nordmark",
+        "role": "Financial Controller, Hälsa Hemma",
+        "quote": "Vi får snabbare svar på ekonomiska frågor och bättre struktur i uppföljningen. Det har gjort finance mycket mer användbart för resten av verksamheten.",
+        "avatarFile": "logo-oskar.avif",
+        "accent": true
+      }
+    ],
+    "trustedLogos": [
+      {
+        "name": "Swedish Algae Factory",
+        "file": "logo-algae.avif"
+      },
+      {
+        "name": "BAM",
+        "file": "logo-bam.avif"
+      },
+      {
+        "name": "Eloize",
+        "file": "logo-eloize.avif"
+      },
+      {
+        "name": "Fler",
+        "file": "logo-fler.avif"
+      },
+      {
+        "name": "Hälsa Hemma",
+        "file": "logo-hälsa.avif"
+      },
+      {
+        "name": "Lawster",
+        "file": "logo-lawster.avif"
+      },
+      {
+        "name": "Qsid",
+        "file": "logo-qsid.avif"
+      },
+      {
+        "name": "Realforce",
+        "file": "logo-realforce.avif"
+      },
+      {
+        "name": "Rossoneri",
+        "file": "logo-rossoneri.avif"
+      },
+      {
+        "name": "Runway",
+        "file": "logo-runway.webp"
+      },
+      {
+        "name": "Showcase",
+        "file": "logo-showcase.avif"
+      },
+      {
+        "name": "SweBal",
+        "file": "logo-swebal.avif"
+      },
+      {
+        "name": "Growbit",
+        "file": "logo-growbit.svg"
+      },
+      {
+        "name": "Safetly",
+        "file": "logo-safetly.svg"
+      },
+      {
+        "name": "Azeea",
+        "file": "logo-azeea.svg"
+      }
+    ]
+  },
+  "ending": {
+    "title": "Se hur MinCFO fungerar som plattform för ert team",
+    "body": "Boka en demo och se hur AI, dashboards och forecasting kan ge er bättre analys, tydligare uppföljning och snabbare beslut i samma flöde.",
+    "primaryCta": "Boka demo av plattformen"
+  }
+}

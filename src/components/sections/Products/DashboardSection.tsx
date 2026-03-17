@@ -1,6 +1,6 @@
 import { Check, ChevronDown } from "lucide-react";
 import type { CSSProperties, RefObject } from "react";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import styles from "./DashboardSection.module.scss";
 
 type AnalysisMetric = "netIncome" | "ebit" | "ebitda" | "grossProfit";
@@ -40,6 +40,8 @@ type DashboardSectionProps = {
 };
 
 function MiniMincfoBrand() {
+  const { content } = useHomeOffering();
+
   return (
     <span className={styles.visualBrand} aria-hidden="true">
       <svg className={styles.visualMark} viewBox="0 0 50 50" role="img">
@@ -50,7 +52,7 @@ function MiniMincfoBrand() {
           <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
         </g>
       </svg>
-      <span className={styles.visualWordmark}>{HOME_PAGE_TEXT.footer.brandWord}</span>
+      <span className={styles.visualWordmark}>{content.footer.brandWord}</span>
     </span>
   );
 }
@@ -86,6 +88,8 @@ export function DashboardSection({
   monthLabels,
   trendAxisTicks,
 }: DashboardSectionProps) {
+  const { content } = useHomeOffering();
+
   return (
     <div className={styles.dashboardSection} ref={dashboardSectionRef}>
       <svg
@@ -112,17 +116,17 @@ export function DashboardSection({
         className={`${styles.container} ${styles.dashboardContainer} ${dashboardVisible ? styles.dashboardVisible : ""}`}
       >
         <div className={`${styles.right} ${styles.dashboardRight} ${dashboardVisible ? styles.shownDelayed : ""}`}>
-          <article className={styles.dashboardPanel} aria-label={HOME_PAGE_TEXT.aicopilot.dashboard.previewAria}>
+          <article className={styles.dashboardPanel} aria-label={content.aicopilot.dashboard.previewAria}>
             <MiniMincfoBrand />
 
             <div className={styles.statGrid}>
               <div className={styles.statCard}>
                 <div className={styles.statLabelRow}>
-                  <span>{activeMetric.label} ({HOME_PAGE_TEXT.aicopilot.dashboard.currentLabel})</span>
+                  <span>{activeMetric.label} ({content.aicopilot.dashboard.currentLabel})</span>
                 </div>
                 <div className={styles.statAmount}>
                   <strong>{formatSek(selectedMetricAmount)}</strong>
-                  <span>{HOME_PAGE_TEXT.aicopilot.dashboard.currencyLabel}</span>
+                  <span>{content.aicopilot.dashboard.currencyLabel}</span>
                 </div>
                 <div className={`${styles.statDelta} ${selectedMetricDelta < 0 ? styles.down : ""}`}>
                   {formatPercent(selectedMetricDelta)}
@@ -132,11 +136,11 @@ export function DashboardSection({
 
               <div className={styles.statCard}>
                 <div className={styles.statLabelRow}>
-                  <span>{activeMetric.label} ({HOME_PAGE_TEXT.aicopilot.dashboard.previousLabel})</span>
+                  <span>{activeMetric.label} ({content.aicopilot.dashboard.previousLabel})</span>
                 </div>
                 <div className={styles.statAmount}>
                   <strong>{formatSek(selectedMetricPreviousAmount)}</strong>
-                  <span>{HOME_PAGE_TEXT.aicopilot.dashboard.currencyLabel}</span>
+                  <span>{content.aicopilot.dashboard.currencyLabel}</span>
                 </div>
                 <div className={`${styles.statDelta} ${selectedMetricPreviousDelta < 0 ? styles.down : ""}`}>
                   {formatPercent(selectedMetricPreviousDelta)}
@@ -147,7 +151,7 @@ export function DashboardSection({
 
             <div className={`${styles.trendPanel} ${analysisUpdating ? styles.panelUpdating : ""}`}>
               <header className={styles.trendHeader}>
-                <p>{HOME_PAGE_TEXT.aicopilot.dashboard.resultTitle}</p>
+                <p>{content.aicopilot.dashboard.resultTitle}</p>
                 <div className={styles.trendHeaderRight} ref={trendMetricMenuRef}>
                   <button
                     type="button"
@@ -164,7 +168,7 @@ export function DashboardSection({
                     />
                   </button>
                   {analysisMetricOpen && (
-                    <div className={styles.metricMenu} role="menu" aria-label={HOME_PAGE_TEXT.aicopilot.dashboard.metricMenuAria}>
+                    <div className={styles.metricMenu} role="menu" aria-label={content.aicopilot.dashboard.metricMenuAria}>
                       {analysisMetrics.map((metric) => (
                         <button
                           key={metric.id}
@@ -238,12 +242,12 @@ export function DashboardSection({
         </div>
 
         <div className={`${styles.left} ${styles.dashboardLeft} ${dashboardVisible ? styles.shown : ""}`}>
-          <span className={styles.pill}>{HOME_PAGE_TEXT.aicopilot.dashboard.pill}</span>
-          <h2 className={styles.title}>{HOME_PAGE_TEXT.aicopilot.dashboard.title}</h2>
-          <p className={styles.text}>{HOME_PAGE_TEXT.aicopilot.dashboard.intro}</p>
+          <span className={styles.pill}>{content.aicopilot.dashboard.pill}</span>
+          <h2 className={styles.title}>{content.aicopilot.dashboard.title}</h2>
+          <p className={styles.text}>{content.aicopilot.dashboard.intro}</p>
 
           <ul className={styles.list}>
-            {HOME_PAGE_TEXT.aicopilot.dashboard.kpiBullets.map((item) => (
+            {content.aicopilot.dashboard.kpiBullets.map((item) => (
               <li key={item}>
                 <Check aria-hidden="true" size={14} />
                 {item}

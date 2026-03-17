@@ -2,7 +2,7 @@
 
 import { Briefcase, Building2, ChevronRight, Cpu, Handshake, Rocket, ShoppingCart } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import styles from "./Solutions.module.scss";
 
 const ICON_BY_KEY = {
@@ -37,11 +37,14 @@ const cubic = (
   t ** 3 * p3;
 
 export default function Solutions() {
+  const { content, offering } = useHomeOffering();
   const sectionRef = useRef<HTMLElement | null>(null);
   const [curveProgress, setCurveProgress] = useState(0);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (offering !== "platform") return;
+
     const section = sectionRef.current;
     if (!section) return;
 
@@ -56,9 +59,11 @@ export default function Solutions() {
 
     observer.observe(section);
     return () => observer.disconnect();
-  }, []);
+  }, [offering]);
 
   useEffect(() => {
+    if (offering !== "platform") return;
+
     const updateCurve = () => {
       const section = sectionRef.current;
       if (!section) return;
@@ -82,7 +87,11 @@ export default function Solutions() {
       window.removeEventListener("scroll", updateCurve);
       window.removeEventListener("resize", updateCurve);
     };
-  }, []);
+  }, [offering]);
+
+  if (offering !== "platform") {
+    return null;
+  }
 
   const sideY = lerp(1, 90, curveProgress);
   const centerY = lerp(1, 20, curveProgress);
@@ -131,14 +140,14 @@ export default function Solutions() {
       <div className={styles.container}>
         <div className={styles.layout}>
           <header className={styles.header}>
-            <span className={styles.pill}>{HOME_PAGE_TEXT.solutions.pill}</span>
-            <h2>{HOME_PAGE_TEXT.solutions.title}</h2>
-            <p>{HOME_PAGE_TEXT.solutions.intro}</p>
+            <span className={styles.pill}>{content.solutions.pill}</span>
+            <h2>{content.solutions.title}</h2>
+            <p>{content.solutions.intro}</p>
           </header>
 
           <div className={styles.cardsColumn}>
             <div className={styles.grid}>
-              {HOME_PAGE_TEXT.solutions.cards.map((item) => {
+              {content.solutions.cards.map((item) => {
                 const Icon = ICON_BY_KEY[item.icon as SolutionIconKey];
                 return (
                   <article key={item.href} className={styles.card}>
@@ -212,8 +221,8 @@ export default function Solutions() {
                       <p>{item.text}</p>
                     </div>
 
-                    <a href={item.href} className={styles.cta} aria-label={`${HOME_PAGE_TEXT.solutions.cardCta} ${item.title}`}>
-                      <span>{HOME_PAGE_TEXT.solutions.cardCta}</span>
+                    <a href={item.href} className={styles.cta} aria-label={`${content.solutions.cardCta} ${item.title}`}>
+                      <span>{content.solutions.cardCta}</span>
                       <ChevronRight size={18} aria-hidden="true" />
                     </a>
                   </article>

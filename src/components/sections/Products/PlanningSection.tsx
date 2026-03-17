@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
 import type { CSSProperties, RefObject } from "react";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import styles from "./PlanningSection.module.scss";
 
 type PlanningSectionProps = {
@@ -26,6 +26,8 @@ type PlanningSectionProps = {
 };
 
 function MiniMincfoBrand() {
+  const { content } = useHomeOffering();
+
   return (
     <span className={styles.visualBrand} aria-hidden="true">
       <svg className={styles.visualMark} viewBox="0 0 50 50" role="img">
@@ -36,7 +38,7 @@ function MiniMincfoBrand() {
           <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
         </g>
       </svg>
-      <span className={styles.visualWordmark}>{HOME_PAGE_TEXT.footer.brandWord}</span>
+      <span className={styles.visualWordmark}>{content.footer.brandWord}</span>
     </span>
   );
 }
@@ -62,6 +64,8 @@ export function PlanningSection({
   onSelectPlanMonth,
   monthLabelsEn,
 }: PlanningSectionProps) {
+  const { content } = useHomeOffering();
+
   return (
     <div className={styles.planSection} ref={planSectionRef}>
       <svg
@@ -88,12 +92,12 @@ export function PlanningSection({
         className={`${styles.container} ${styles.planContainer} ${planVisible ? styles.planVisible : ""}`}
       >
         <div className={`${styles.left} ${styles.planLeft} ${planVisible ? styles.shown : ""}`}>
-          <span className={styles.pill}>{HOME_PAGE_TEXT.aicopilot.planning.pill}</span>
-          <h2 className={styles.title}>{HOME_PAGE_TEXT.aicopilot.planning.title}</h2>
-          <p className={styles.text}>{HOME_PAGE_TEXT.aicopilot.planning.intro}</p>
+          <span className={styles.pill}>{content.aicopilot.planning.pill}</span>
+          <h2 className={styles.title}>{content.aicopilot.planning.title}</h2>
+          <p className={styles.text}>{content.aicopilot.planning.intro}</p>
 
           <ul className={styles.list}>
-            {HOME_PAGE_TEXT.aicopilot.planning.bullets.map((item) => (
+            {content.aicopilot.planning.bullets.map((item) => (
               <li key={item}>
                 <Check aria-hidden="true" size={14} />
                 {item}
@@ -103,23 +107,23 @@ export function PlanningSection({
         </div>
 
         <div className={`${styles.right} ${styles.planRight} ${planVisible ? styles.shownDelayed : ""}`}>
-          <article className={styles.planPanel} aria-label={HOME_PAGE_TEXT.aicopilot.planning.panelAria}>
+          <article className={styles.planPanel} aria-label={content.aicopilot.planning.panelAria}>
             <div className={styles.planPanelBody}>
               <div className={styles.planVisualStack}>
                 <div className={styles.planForecastShell}>
                   <MiniMincfoBrand />
 
                   <header className={styles.planPanelHeader}>
-                    <p>{HOME_PAGE_TEXT.aicopilot.planning.forecastTitle}</p>
+                    <p>{content.aicopilot.planning.forecastTitle}</p>
                     <span className={styles.liveScenario}>
                       <span className={styles.liveDot} aria-hidden="true" />
-                      {HOME_PAGE_TEXT.aicopilot.planning.liveLabel}
+                      {content.aicopilot.planning.liveLabel}
                     </span>
                   </header>
                   <div className={styles.planRecon}>
                     <div className={styles.planReconHead}>
-                      <p>{HOME_PAGE_TEXT.aicopilot.planning.reconciliationTitle}</p>
-                      <span>{HOME_PAGE_TEXT.aicopilot.planning.reconciliationSubtext}</span>
+                      <p>{content.aicopilot.planning.reconciliationTitle}</p>
+                      <span>{content.aicopilot.planning.reconciliationSubtext}</span>
                     </div>
                     <div className={styles.planForecastStats}>
                       <div className={styles.planForecastStat}>
@@ -127,13 +131,13 @@ export function PlanningSection({
                         <strong>{formatSek(animatedPlanValue * 1000)} kr</strong>
                       </div>
                       <div className={styles.planForecastStat}>
-                        <p>{HOME_PAGE_TEXT.aicopilot.planning.vsPrevious}</p>
+                        <p>{content.aicopilot.planning.vsPrevious}</p>
                         <strong className={animatedSelectedPlanDelta < 0 ? styles.planStatDown : styles.planStatUp}>
                           {formatPercent(animatedSelectedPlanDelta)}
                         </strong>
                       </div>
                       <div className={styles.planForecastStat}>
-                        <p>{HOME_PAGE_TEXT.aicopilot.planning.annualVariance}</p>
+                        <p>{content.aicopilot.planning.annualVariance}</p>
                         <strong className={animatedPlanTotalDelta < 0 ? styles.planStatDown : styles.planStatUp}>
                           {formatPercent(animatedPlanTotalDelta)}
                         </strong>
@@ -147,7 +151,7 @@ export function PlanningSection({
                           className={`${styles.planMonth} ${planMonthIndex === index ? styles.planMonthSelected : ""}`}
                           onClick={() => onSelectPlanMonth(index)}
                           aria-pressed={planMonthIndex === index}
-                          aria-label={`${HOME_PAGE_TEXT.aicopilot.planning.monthAriaPrefix} ${month}`}
+                          aria-label={`${content.aicopilot.planning.monthAriaPrefix} ${month}`}
                         >
                           {month}
                         </button>
@@ -172,7 +176,7 @@ export function PlanningSection({
                         />
                       </div>
                       <p className={styles.planForecastLegend} aria-hidden="true">
-                        {HOME_PAGE_TEXT.aicopilot.planning.legend}
+                        {content.aicopilot.planning.legend}
                       </p>
                       <div className={styles.planMonthAxis} aria-hidden="true">
                         {monthLabelsEn.map((month) => (

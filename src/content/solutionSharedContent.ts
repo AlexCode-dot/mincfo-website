@@ -9,6 +9,11 @@ export type SolutionSharedContent = {
   closingOverline: string;
   closingAccent: string;
   closingCta: string;
+  indexPage: {
+    backLabel: string;
+    title: string;
+    description: string;
+  };
 };
 
 type RawShared = {
@@ -20,6 +25,11 @@ type RawShared = {
   closingOverline: string;
   closingAccent: string;
   closingCta: string;
+  indexPage: {
+    backLabel: string;
+    title: string;
+    description: string;
+  };
 };
 
 type RawSolutionPagesText = {
@@ -37,4 +47,5 @@ export const SOLUTION_SHARED_CONTENT: SolutionSharedContent = {
   closingOverline: raw.shared.closingOverline,
   closingAccent: raw.shared.closingAccent,
   closingCta: raw.shared.closingCta,
+  indexPage: raw.shared.indexPage,
 };

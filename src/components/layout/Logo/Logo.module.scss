@@ -1,8 +1,14 @@
-.logo {
+.cluster {
   position: fixed;
   top: 24px;
   left: 28px;
   z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.logo {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -30,10 +36,18 @@
   font-family: var(--font-geist-sans), "Geist", "Segoe UI", sans-serif;
 }
 
+.offeringSwitch {
+  transform: translateY(1px);
+}
+
 @media (max-width: 600px) {
-  .logo {
+  .cluster {
     top: 18px;
     left: 18px;
+    gap: 12px;
+  }
+
+  .logo {
     gap: 7px;
   }
 

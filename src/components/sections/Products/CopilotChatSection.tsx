@@ -1,6 +1,6 @@
 import { Check, SendHorizontal } from "lucide-react";
 import type { CSSProperties } from "react";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import styles from "./CopilotChatSection.module.scss";
 
 type CopilotStage = "idle" | "typing" | "sending" | "loading" | "answer" | "chart";
@@ -27,6 +27,8 @@ type CopilotChatSectionProps = {
 };
 
 function MiniMincfoBrand() {
+  const { content } = useHomeOffering();
+
   return (
     <span className={styles.visualBrand} aria-hidden="true">
       <svg className={styles.visualMark} viewBox="0 0 50 50" role="img">
@@ -37,7 +39,7 @@ function MiniMincfoBrand() {
           <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
         </g>
       </svg>
-      <span className={styles.visualWordmark}>{HOME_PAGE_TEXT.footer.brandWord}</span>
+      <span className={styles.visualWordmark}>{content.footer.brandWord}</span>
     </span>
   );
 }
@@ -54,15 +56,17 @@ export function CopilotChatSection({
   typedQuestion,
   stage,
 }: CopilotChatSectionProps) {
+  const { content } = useHomeOffering();
+
   return (
     <div className={styles.container}>
       <div className={`${styles.left} ${styles.aiLeft} ${visible ? styles.shown : ""}`}>
-        <span className={styles.pill}>{HOME_PAGE_TEXT.aicopilot.leftPill}</span>
-        <h2 className={styles.title}>{HOME_PAGE_TEXT.aicopilot.leftTitle}</h2>
-        <p className={styles.text}>{HOME_PAGE_TEXT.aicopilot.leftIntro}</p>
+        <span className={styles.pill}>{content.aicopilot.leftPill}</span>
+        <h2 className={styles.title}>{content.aicopilot.leftTitle}</h2>
+        <p className={styles.text}>{content.aicopilot.leftIntro}</p>
 
         <ul className={styles.list}>
-          {HOME_PAGE_TEXT.aicopilot.leftBullets.map((item) => (
+          {content.aicopilot.leftBullets.map((item) => (
             <li key={item}>
               <Check aria-hidden="true" size={14} />
               {item}
@@ -74,12 +78,12 @@ export function CopilotChatSection({
       <div className={`${styles.right} ${styles.aiRight} ${visible ? styles.shownDelayed : ""}`}>
         <div className={styles.glow} />
 
-        <article className={styles.panel} aria-label={HOME_PAGE_TEXT.aicopilot.panelTitle}>
+        <article className={styles.panel} aria-label={content.aicopilot.panelTitle}>
           <MiniMincfoBrand />
 
           <header className={styles.header}>
             <span className={styles.dot} />
-            <p>{HOME_PAGE_TEXT.aicopilot.panelTitle}</p>
+            <p>{content.aicopilot.panelTitle}</p>
           </header>
 
           <div className={styles.body}>
@@ -94,7 +98,7 @@ export function CopilotChatSection({
                 <div
                   className={styles.loadingAnswer}
                   role="status"
-                  aria-label={HOME_PAGE_TEXT.aicopilot.loadingAria}
+                  aria-label={content.aicopilot.loadingAria}
                 >
                   <span />
                   <span />
@@ -150,14 +154,14 @@ export function CopilotChatSection({
                   <span className={styles.caret} aria-hidden="true" />
                 </>
               )}
-              {isSending && HOME_PAGE_TEXT.aicopilot.statusSending}
-              {isLoading && HOME_PAGE_TEXT.aicopilot.statusAnalyzing}
+              {isSending && content.aicopilot.statusSending}
+              {isLoading && content.aicopilot.statusAnalyzing}
               {(stage === "idle" || stage === "answer" || stage === "chart") &&
-                HOME_PAGE_TEXT.aicopilot.inputPlaceholder}
+                content.aicopilot.inputPlaceholder}
             </span>
             <button
               type="button"
-              aria-label={HOME_PAGE_TEXT.aicopilot.sendAria}
+              aria-label={content.aicopilot.sendAria}
               className={`${isSending ? styles.sending : ""} ${isLoading ? styles.loading : ""}`}
             >
               <SendHorizontal aria-hidden="true" size={14} />

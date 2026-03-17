@@ -1,6 +1,7 @@
 import FloatingNav from "@/components/layout/FloatingNav/FloatingNav";
 import Logo from "@/components/layout/Logo/Logo";
 import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
+import { HomeOfferingProvider } from "@/components/home/HomeOfferingProvider";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import { SOLUTION_SHARED_CONTENT } from "@/content/solutionSharedContent";
 import {
@@ -41,7 +42,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
   const scenarioDescription = content.scenario.description ?? `Fråga: ${content.scenario.question}`;
 
   return (
-    <>
+    <HomeOfferingProvider allowedOfferings={["platform"]} syncWithUrl={false}>
       <Logo />
       <FloatingNav />
 
@@ -422,6 +423,6 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
       </main>
 
       <SiteFooter />
-    </>
+    </HomeOfferingProvider>
   );
 }

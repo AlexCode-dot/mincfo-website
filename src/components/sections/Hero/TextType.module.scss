@@ -1,0 +1,31 @@
+.textType {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+.content {
+  white-space: inherit;
+}
+
+.cursor {
+  display: inline-block;
+  margin-left: 0.22rem;
+  opacity: 1;
+  animation: textTypeCursorBlink 0.75s steps(1) infinite;
+}
+
+.cursorDone {
+  opacity: 0.42;
+}
+
+@keyframes textTypeCursorBlink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}

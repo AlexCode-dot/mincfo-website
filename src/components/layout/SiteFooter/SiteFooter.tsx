@@ -2,13 +2,18 @@
 
 import { ChevronRight, Linkedin } from "lucide-react";
 import Link from "next/link";
+import { useOptionalHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import { useMotion } from "@/components/system/MotionProvider";
 import type { MotionPreference } from "@/lib/motion";
 import styles from "./SiteFooter.module.scss";
 
 export default function SiteFooter() {
+  const homeOffering = useOptionalHomeOffering();
   const { preference, setPreference } = useMotion();
+  const showSolutions = homeOffering?.offering !== undefined
+    ? homeOffering.offering === "platform"
+    : true;
   const motionModes: Array<{ key: MotionPreference; label: string }> = [
     { key: "full", label: HOME_PAGE_TEXT.footer.motionFull },
     { key: "reduced", label: HOME_PAGE_TEXT.footer.motionReduced },
@@ -38,13 +43,15 @@ export default function SiteFooter() {
             </Link>
           </div>
 
-          <div className={styles.linkCol}>
-            <h3>{HOME_PAGE_TEXT.footer.solutionsTitle}</h3>
-            <Link href="/losningar/ceo-founders">{HOME_PAGE_TEXT.footer.solutions[0]}</Link>
-            <Link href="/losningar/cfo-finance">{HOME_PAGE_TEXT.footer.solutions[1]}</Link>
-            <Link href="/losningar/saas-tech">{HOME_PAGE_TEXT.footer.solutions[2]}</Link>
-            <Link href="#how-it-works">{HOME_PAGE_TEXT.footer.solutions[3]}</Link>
-          </div>
+          {showSolutions ? (
+            <div className={styles.linkCol}>
+              <h3>{HOME_PAGE_TEXT.footer.solutionsTitle}</h3>
+              <Link href="/losningar/ceo-founders">{HOME_PAGE_TEXT.footer.solutions[0]}</Link>
+              <Link href="/losningar/cfo-finance">{HOME_PAGE_TEXT.footer.solutions[1]}</Link>
+              <Link href="/losningar/saas-tech">{HOME_PAGE_TEXT.footer.solutions[2]}</Link>
+              <Link href="#how-it-works">{HOME_PAGE_TEXT.footer.solutions[3]}</Link>
+            </div>
+          ) : null}
 
           <div className={styles.linkCol}>
             <h3>{HOME_PAGE_TEXT.footer.companyTitle}</h3>

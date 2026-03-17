@@ -35,6 +35,10 @@
   min-height: 48px;
 }
 
+.offeringSwitch {
+  margin-right: 2px;
+}
+
 .link {
   font-size: 0.85rem;
   color: oklch(0.8 0.016 258 / 0.7);
@@ -188,7 +192,7 @@
 }
 
 .loginFloat {
-  display: inline-grid;
+  display: none;
   justify-items: center;
   gap: 4px;
   transform: translateY(2px);
@@ -346,6 +350,11 @@
 
 .mobilePanel {
   display: none;
+}
+
+.mobileOfferingSwitch {
+  margin-bottom: 8px;
+  align-self: flex-start;
 }
 
 @media (max-width: 980px) {

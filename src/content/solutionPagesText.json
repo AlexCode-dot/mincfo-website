@@ -7,7 +7,12 @@
     "impactTag": "Affärsvärde",
     "closingOverline": "Trust & CTA",
     "closingAccent": "Bygg med MinCFO.",
-    "closingCta": "Boka demo"
+    "closingCta": "Boka demo",
+    "indexPage": {
+      "backLabel": "Tillbaka till startsidan",
+      "title": "Lösningar",
+      "description": "Välj den inriktning som bäst matchar ert team eller er bransch."
+    }
   },
   "pages": [
     {

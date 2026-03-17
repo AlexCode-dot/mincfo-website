@@ -1,25 +1,20 @@
 import Link from "next/link";
+import { HOME_PAGE_SHARED_TEXT } from "@/content/homePageText";
+import { SOLUTION_SHARED_CONTENT } from "@/content/solutionSharedContent";
 import styles from "./solutions.module.scss";
 
-const LINKS = [
-  { href: "/losningar/ceo-founders", label: "Founders & CEO" },
-  { href: "/losningar/cfo-finance", label: "CFO & Finance Team" },
-  { href: "/losningar/fractional-cfo", label: "Fractional CFO" },
-  { href: "/losningar/saas-tech", label: "SaaS / Tech" },
-  { href: "/losningar/konsult-tjanster", label: "Konsult & Tjänster" },
-  { href: "/losningar/ehandel", label: "E-handel" },
-];
+const LINKS = HOME_PAGE_SHARED_TEXT.navigation.groups.flatMap((group) => group.items);
 
 export default function LosningarIndexPage() {
   return (
     <main className={styles.page}>
       <section className={styles.shell}>
         <Link className={styles.back} href="/">
-          Tillbaka till startsidan
+          {SOLUTION_SHARED_CONTENT.indexPage.backLabel}
         </Link>
-        <h1 className={styles.title}>Lösningar</h1>
+        <h1 className={styles.title}>{SOLUTION_SHARED_CONTENT.indexPage.title}</h1>
         <p className={styles.description}>
-          Placeholder-sida för kommande lösningssidor. Välj en inriktning nedan.
+          {SOLUTION_SHARED_CONTENT.indexPage.description}
         </p>
         <div className={styles.list}>
           {LINKS.map((item) => (

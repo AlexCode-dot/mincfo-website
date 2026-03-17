@@ -23,14 +23,14 @@ import {
   useSyncExternalStore,
   type CSSProperties,
   type FormEvent,
-  type KeyboardEvent,
 } from "react";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
 import BeamBackgroundMain from "@/components/visual/BeamBackgroundMain/BeamBackgroundMain";
 import styles from "./HowItWorks.module.scss";
 
-type OfferKey = "platform" | "faas";
+type OfferKey = "platform" | "faas" | "partner";
+type PartnerWorkspaceView = "home" | "users" | "settings";
 
 type OfferModel = {
   isPrimary: boolean;
@@ -44,9 +44,12 @@ type OfferModel = {
   }>;
 };
 
-const OFFER_ORDER: OfferKey[] = ["platform", "faas"];
 const CUT_HEIGHT = 190;
 const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
+const PARTNER_WORKSPACE_VIEWS: PartnerWorkspaceView[] = ["home", "users", "settings"];
+const PARTNER_WORKSPACE_AUTOPLAY_MS = 2600;
+const PARTNER_WORKSPACE_USER_PAUSE_MS = 9000;
+const HOW_IT_WORKS_STEP_SCROLL_FACTOR = 0.9;
 const subscribeHydration = () => () => {};
 const getHydratedSnapshot = () => true;
 const getHydratedServerSnapshot = () => false;
@@ -88,6 +91,11 @@ function MicrosoftIcon() {
 const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));
 
+const smoothstep = (edge0: number, edge1: number, value: number) => {
+  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
+};
+
 const cubic = (p0: number, p1: number, p2: number, p3: number, t: number) => {
   const oneMinus = 1 - t;
   return (
@@ -103,44 +111,125 @@ const lerp = (start: number, end: number, t: number) =>
 
 const PLATFORM_ICONS: LucideIcon[] = [UserRound, Plug, BrainCircuit, Sparkles];
 const FAAS_ICONS: LucideIcon[] = [FolderPlus, Plug, Workflow, Sparkles];
-const OFFERS: Record<OfferKey, OfferModel> = {
-  platform: {
-    key: "platform",
-    isPrimary: true,
-    tabLabel: HOME_PAGE_TEXT.howItWorks.offers.platform.tabLabel,
-    steps: HOME_PAGE_TEXT.howItWorks.offers.platform.steps.map((step, index) => ({
-      ...step,
-      icon: PLATFORM_ICONS[index] ?? Sparkles,
-    })),
-  },
-  faas: {
-    key: "faas",
-    isPrimary: false,
-    tabLabel: HOME_PAGE_TEXT.howItWorks.offers.faas.tabLabel,
-    steps: HOME_PAGE_TEXT.howItWorks.offers.faas.steps.map((step, index) => ({
-      ...step,
-      icon: FAAS_ICONS[index] ?? Sparkles,
-    })),
-  },
-};
+const PARTNER_ICONS: LucideIcon[] = [UsersRound, Building2, BrainCircuit];
 
 export default function HowItWorks() {
+  const { content, offering } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
-  const stepRefs = useRef<Array<HTMLElement | null>>([]);
+  const lastCurveProgressRef = useRef(-1);
+  const lastDominantStepRef = useRef(-1);
+  const scrollIdleTimeoutRef = useRef<number | null>(null);
+  const isScrollActiveRef = useRef(false);
   const [visible, setVisible] = useState(false);
   const [curveProgress, setCurveProgress] = useState(0);
-  const [activeOffer, setActiveOffer] = useState<OfferKey>("platform");
-  const [switching, setSwitching] = useState(false);
-  const [revealedSteps, setRevealedSteps] = useState(0);
+  const [dominantStepIndex, setDominantStepIndex] = useState(0);
+  const [isScrollActive, setIsScrollActive] = useState(false);
+  const headerInnerRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const stepRowRefs = useRef<Array<HTMLElement | null>>([]);
+  const stepTextRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const stepVisualRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [signupEmail, setSignupEmail] = useState("");
+  const [partnerWorkspaceView, setPartnerWorkspaceView] = useState<PartnerWorkspaceView>("home");
+  const [partnerWorkspacePausedUntil, setPartnerWorkspacePausedUntil] = useState(0);
+  const [partnerWorkspaceHovered, setPartnerWorkspaceHovered] = useState(false);
   const isClientReady = useSyncExternalStore(
     subscribeHydration,
     getHydratedSnapshot,
     getHydratedServerSnapshot,
   );
 
-  const currentOffer = OFFERS[activeOffer];
+  const offers: Record<OfferKey, OfferModel> = {
+    platform: {
+      key: "platform",
+      isPrimary: true,
+      tabLabel: content.howItWorks.offers.platform.tabLabel,
+      steps: content.howItWorks.offers.platform.steps.map((step, index) => ({
+        ...step,
+        icon: PLATFORM_ICONS[index] ?? Sparkles,
+      })),
+    },
+    faas: {
+      key: "faas",
+      isPrimary: false,
+      tabLabel: content.howItWorks.offers.faas.tabLabel,
+      steps: content.howItWorks.offers.faas.steps.map((step, index) => ({
+        ...step,
+        icon: FAAS_ICONS[index] ?? Sparkles,
+      })),
+    },
+    partner: {
+      key: "partner",
+      isPrimary: false,
+      tabLabel: content.howItWorks.offers.partner.tabLabel,
+      steps: content.howItWorks.offers.partner.steps.map((step, index) => ({
+        ...step,
+        icon: PARTNER_ICONS[index] ?? Sparkles,
+      })),
+    },
+  };
+
+  const activeOffer: OfferKey =
+    offering === "full-service" ? "faas" : offering === "partner" ? "partner" : "platform";
+  const currentOffer = offers[activeOffer];
+  const sectionIntroByOffer = content.howItWorks.sectionIntroByOffer as Record<OfferKey, string>;
+  const partnerWorkspaceScreens: Record<
+    PartnerWorkspaceView,
+    {
+      actionLabel: string;
+      columns: [string, string, string];
+      rows: Array<{
+        detail: string;
+        label: string;
+        meta: string;
+        status: string;
+        tag: string;
+      }>;
+      subtitle: string;
+      title: string;
+    }
+  > = content.howItWorks.ui.partnerWorkspace;
+  const partnerWorkspaceScreen = partnerWorkspaceScreens[partnerWorkspaceView];
+
+  useEffect(() => {
+    if (
+      activeOffer !== "partner" ||
+      !visible ||
+      isReducedMotion ||
+      isScrollActive ||
+      dominantStepIndex !== 1
+    ) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      if (partnerWorkspaceHovered || Date.now() < partnerWorkspacePausedUntil) {
+        return;
+      }
+
+      setPartnerWorkspaceView((current) => {
+        const currentIndex = PARTNER_WORKSPACE_VIEWS.indexOf(current);
+        const nextIndex = (currentIndex + 1) % PARTNER_WORKSPACE_VIEWS.length;
+        return PARTNER_WORKSPACE_VIEWS[nextIndex];
+      });
+    }, PARTNER_WORKSPACE_AUTOPLAY_MS);
+
+    return () => window.clearInterval(intervalId);
+  }, [
+    activeOffer,
+    dominantStepIndex,
+    isReducedMotion,
+    isScrollActive,
+    partnerWorkspaceHovered,
+    partnerWorkspacePausedUntil,
+    visible,
+  ]);
+
+  const handlePartnerWorkspaceNavClick = (nextView: PartnerWorkspaceView) => {
+    setPartnerWorkspaceView(nextView);
+    setPartnerWorkspacePausedUntil(Date.now() + PARTNER_WORKSPACE_USER_PAUSE_MS);
+  };
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -164,12 +253,18 @@ export default function HowItWorks() {
       const rect = section.getBoundingClientRect();
       const viewport = window.innerHeight;
       if (rect.top >= viewport) {
-        setCurveProgress(0);
+        if (lastCurveProgressRef.current !== 0) {
+          lastCurveProgressRef.current = 0;
+          setCurveProgress(0);
+        }
       } else {
         const start = viewport * 0.9;
         const end = viewport * 0.42;
-        const progress = clamp((start - rect.top) / (start - end), 0, 1);
-        setCurveProgress(progress);
+        const progress = Math.round(clamp((start - rect.top) / (start - end), 0, 1) * 120) / 120;
+        if (progress !== lastCurveProgressRef.current) {
+          lastCurveProgressRef.current = progress;
+          setCurveProgress(progress);
+        }
       }
     };
 
@@ -183,93 +278,103 @@ export default function HowItWorks() {
   }, []);
 
   useEffect(() => {
-    if (!visible) {
-      const resetId = window.setTimeout(() => setRevealedSteps(0), 0);
-      return () => window.clearTimeout(resetId);
-    }
+    let frame = 0;
+    const totalSteps = currentOffer.steps.length;
 
-    if (isReducedMotion) {
-      const fullId = window.setTimeout(() => setRevealedSteps(currentOffer.steps.length), 0);
-      return () => window.clearTimeout(fullId);
-    }
+    const updateProgress = () => {
+      frame = 0;
+      const section = sectionRef.current;
+      const headerInner = headerInnerRef.current;
+      const panel = panelRef.current;
+      if (!section || !headerInner || !panel) return;
 
-    // Prevent "blank section" on anchor jumps where no step crosses the observer
-    // threshold until the user nudges scroll.
-    const resetId = window.setTimeout(() => setRevealedSteps(1), 0);
-    const seen = new Set<number>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let maxSeen = -1;
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const stepIndex = Number((entry.target as HTMLElement).dataset.stepIndex);
-          if (Number.isNaN(stepIndex)) return;
-          seen.add(stepIndex);
-        });
-        seen.forEach((index) => {
-          if (index > maxSeen) maxSeen = index;
-        });
-        if (maxSeen >= 0) {
-          setRevealedSteps((prev) => Math.max(prev, maxSeen + 1));
-        }
-      },
-      { threshold: 0.24, rootMargin: "0px 0px -12% 0px" },
-    );
+      const rect = section.getBoundingClientRect();
+      const viewport = window.innerHeight;
+      if (rect.bottom < -viewport * 0.2 || rect.top > viewport * 1.2) {
+        return;
+      }
+      const scrollable = Math.max(rect.height - window.innerHeight, 1);
+      const progress = isReducedMotion ? 1 : clamp(-rect.top / scrollable, 0, 1);
+      const dominantStep = Math.min(
+        totalSteps - 1,
+        Math.max(0, Math.round(progress * Math.max(totalSteps - 1, 1))),
+      );
+      if (dominantStep !== lastDominantStepRef.current) {
+        lastDominantStepRef.current = dominantStep;
+        setDominantStepIndex(dominantStep);
+      }
+      const headerReveal = isReducedMotion ? 1 : smoothstep(0.02, 0.16, progress);
+      const panelReveal = isReducedMotion ? 1 : smoothstep(0.08, 0.24, progress);
 
-    stepRefs.current.slice(0, currentOffer.steps.length).forEach((node) => {
-      if (!node) return;
-      observer.observe(node);
-    });
+      headerInner.style.opacity = `${headerReveal}`;
+      headerInner.style.transform = `translate3d(0, ${(1 - headerReveal) * 22}px, 0)`;
+      panel.style.opacity = `${panelReveal}`;
+      panel.style.transform = `translate3d(0, ${(1 - panelReveal) * 28}px, 0)`;
+
+      stepRowRefs.current.forEach((row, index) => {
+        const text = stepTextRefs.current[index];
+        const visual = stepVisualRefs.current[index];
+        if (!row || !text || !visual) return;
+
+        const isReversed = index % 2 === 1;
+        const isActive = isReducedMotion ? index === 0 : index === dominantStep;
+        const isBeforeActive = index < dominantStep;
+        const stepReveal = isActive ? 1 : 0;
+        const spineProgress = isActive ? 1 : 0;
+        const rowTranslateY = isActive ? 0 : isBeforeActive ? -28 : 28;
+        const rowScale = isActive ? 1 : 0.985;
+        const textReveal = isActive ? 1 : 0;
+        const visualReveal = isActive ? 1 : 0;
+        const textTranslateX = isActive ? 0 : isReversed ? 18 : -18;
+        const visualTranslateX = isActive ? 0 : isReversed ? -22 : 22;
+        const textTranslateY = isActive ? 0 : isBeforeActive ? -10 : 10;
+        const visualTranslateY = isActive ? 0 : isBeforeActive ? -14 : 14;
+        const visualScale = isActive ? 1 : 0.985;
+
+        row.style.opacity = `${stepReveal}`;
+        row.style.transform = `translate3d(0, ${rowTranslateY}px, 0) scale(${rowScale})`;
+        row.style.setProperty("--step-spine-progress", `${spineProgress}`);
+        row.classList.toggle(styles.stepRowVisible, isActive);
+
+        text.style.opacity = `${textReveal}`;
+        text.style.transform = `translate3d(${textTranslateX}px, ${textTranslateY}px, 0)`;
+        visual.style.opacity = `${visualReveal}`;
+        visual.style.transform = `translate3d(${visualTranslateX}px, ${visualTranslateY}px, 0) scale(${visualScale})`;
+      });
+    };
+
+    const scheduleUpdate = () => {
+      if (!isScrollActiveRef.current) {
+        isScrollActiveRef.current = true;
+        setIsScrollActive(true);
+      }
+      if (scrollIdleTimeoutRef.current) {
+        window.clearTimeout(scrollIdleTimeoutRef.current);
+      }
+      scrollIdleTimeoutRef.current = window.setTimeout(() => {
+        isScrollActiveRef.current = false;
+        setIsScrollActive(false);
+        scrollIdleTimeoutRef.current = null;
+      }, 120);
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateProgress);
+    };
+
+    scheduleUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
 
     return () => {
-      window.clearTimeout(resetId);
-      observer.disconnect();
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+      if (scrollIdleTimeoutRef.current) {
+        window.clearTimeout(scrollIdleTimeoutRef.current);
+      }
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
     };
-  }, [visible, activeOffer, currentOffer.steps.length, isReducedMotion]);
-
-  const handleSelectOffer = (nextOffer: OfferKey) => {
-    if (nextOffer === activeOffer) return;
-
-    if (isReducedMotion) {
-      setActiveOffer(nextOffer);
-      return;
-    }
-
-    setSwitching(true);
-    window.setTimeout(() => {
-      setActiveOffer(nextOffer);
-      setSwitching(false);
-    }, 180);
-  };
-
-  const handleTabsKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    const currentIndex = OFFER_ORDER.indexOf(activeOffer);
-
-    if (event.key === "ArrowRight") {
-      event.preventDefault();
-      const next = OFFER_ORDER[(currentIndex + 1) % OFFER_ORDER.length];
-      handleSelectOffer(next);
-      return;
-    }
-
-    if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      const next = OFFER_ORDER[(currentIndex - 1 + OFFER_ORDER.length) % OFFER_ORDER.length];
-      handleSelectOffer(next);
-      return;
-    }
-
-    if (event.key === "Home") {
-      event.preventDefault();
-      handleSelectOffer(OFFER_ORDER[0]);
-      return;
-    }
-
-    if (event.key === "End") {
-      event.preventDefault();
-      handleSelectOffer(OFFER_ORDER[OFFER_ORDER.length - 1]);
-    }
-  };
+  }, [currentOffer.steps.length, isReducedMotion, activeOffer]);
 
   const handleAccountHandoff = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -293,6 +398,8 @@ export default function HowItWorks() {
     curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
   }
   const cutClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
+  const totalSteps = currentOffer.steps.length;
+  const desktopTrackHeight = `${Math.max(totalSteps * HOW_IT_WORKS_STEP_SCROLL_FACTOR * 100, 100)}vh`;
 
   return (
     <section
@@ -300,6 +407,8 @@ export default function HowItWorks() {
       id="how-it-works"
       className={`${styles.section} ${visible ? styles.visible : ""}`}
       data-offer={activeOffer}
+      data-scroll-active={isScrollActive ? "true" : "false"}
+      style={{ "--how-it-works-height": desktopTrackHeight } as CSSProperties}
     >
       <svg
         className={styles.curveCut}
@@ -327,63 +436,41 @@ export default function HowItWorks() {
       />
 
       <div className={styles.container}>
-        <header className={styles.header}>
-          <h2>{HOME_PAGE_TEXT.howItWorks.sectionTitle}</h2>
-          <p>{HOME_PAGE_TEXT.howItWorks.sectionIntro}</p>
-        </header>
+        <div className={styles.stickyFrame}>
+          <header className={styles.header}>
+            <div ref={headerInnerRef}>
+              <h2>{content.howItWorks.sectionTitle}</h2>
+              <p>{sectionIntroByOffer[currentOffer.key]}</p>
+            </div>
+          </header>
 
-        <div
-          className={styles.tabList}
-          role="tablist"
-          aria-label={HOME_PAGE_TEXT.howItWorks.ui.tabListAria}
-          onKeyDown={handleTabsKeyDown}
-        >
-          {OFFER_ORDER.map((offerKey) => {
-            const offer = OFFERS[offerKey];
-            const isSelected = activeOffer === offerKey;
-
-            return (
-              <button
-                key={offerKey}
-                id={`how-tab-${offerKey}`}
-                className={`${styles.tab} ${isSelected ? styles.tabActive : ""}`}
-                role="tab"
-                aria-selected={isSelected}
-                aria-controls={`how-panel-${offerKey}`}
-                tabIndex={isSelected ? 0 : -1}
-                type="button"
-                onClick={() => handleSelectOffer(offerKey)}
-              >
-                {offer.tabLabel}
-              </button>
-            );
-          })}
-        </div>
-
-        <div
-          id={`how-panel-${currentOffer.key}`}
-          className={`${styles.panel} ${switching ? styles.panelSwitching : ""} ${
-            currentOffer.isPrimary ? styles.panelPrimary : styles.panelSecondary
-          }`}
-          role="tabpanel"
-          aria-labelledby={`how-tab-${currentOffer.key}`}
-        >
-          <div className={styles.stepsFlow}>
+          <div
+            ref={panelRef}
+            id={`how-panel-${currentOffer.key}`}
+            className={`${styles.panel} ${
+              currentOffer.isPrimary ? styles.panelPrimary : styles.panelSecondary
+            }`}
+          >
+            <div className={styles.stepsTrack}>
+              <div className={styles.stepsSticky}>
+                <div className={styles.stepsFlow}>
             {currentOffer.steps.map((step, index) => {
               const Icon = step.icon;
               const stepNum = `0${index + 1}`;
-              const isRevealed = index < revealedSteps;
               const isReversed = index % 2 === 1;
               const visualVariant = (index % 3) + 1;
               const isCreateAccountStep = currentOffer.key === "platform" && index === 0;
               const isConnectFortnoxStep = currentOffer.key === "platform" && index === 1;
               const isInsightsStep =
                 (currentOffer.key === "platform" && index === 2) ||
-                (currentOffer.key === "faas" && index === 3);
+                (currentOffer.key === "faas" && index === 3) ||
+                (currentOffer.key === "partner" && index === 2);
               const isFaasOnboardingStep = currentOffer.key === "faas" && index === 0;
               const isFaasSystemsStep = currentOffer.key === "faas" && index === 1;
               const isFaasRealtimeStep = currentOffer.key === "faas" && index === 2;
-              const faasRealtimeMonths = HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.months;
+              const isPartnerSystemsStep = currentOffer.key === "partner" && index === 0;
+              const isPartnerPortfolioStep = currentOffer.key === "partner" && index === 1;
+              const faasRealtimeMonths = content.howItWorks.ui.faasRealtime.months;
               const faasRealtimeCashflowK = [180, 205, 232, 261, 296, 320];
               const faasRealtimeRunwayMonths = [12.9, 13.2, 13.4, 13.7, 13.9, 14.2];
               const faasRealtimeVariancePct = [5.2, 4.7, 4.1, 3.6, 3.3, 3.1];
@@ -403,30 +490,41 @@ export default function HowItWorks() {
                 })
                 .join(" ");
               const isCenteredPlatformStep =
-                isCreateAccountStep || isInsightsStep || isFaasOnboardingStep || isFaasRealtimeStep;
+                isCreateAccountStep ||
+                isInsightsStep ||
+                isFaasOnboardingStep ||
+                isFaasRealtimeStep ||
+                isPartnerPortfolioStep;
               const hasHighlights = Array.isArray(step.highlights) && step.highlights.length > 0;
+              const shouldRenderRichVisual = dominantStepIndex === index;
 
               return (
                 <article
                   ref={(node) => {
-                    stepRefs.current[index] = node;
+                    stepRowRefs.current[index] = node;
                   }}
-                  data-step-index={index}
                   key={`${currentOffer.key}-${step.title}`}
                   className={`${styles.stepRow} ${isReversed ? styles.stepRowReverse : ""} ${
-                    isRevealed ? styles.stepRowVisible : ""
-                  } ${isCreateAccountStep ? styles.stepRowCreate : ""} ${
+                    isCreateAccountStep ? styles.stepRowCreate : ""
+                  } ${
                     isInsightsStep ? styles.stepRowInsights : ""
                   } ${isFaasOnboardingStep ? styles.stepRowOnboarding : ""
                   } ${isFaasSystemsStep ? styles.stepRowFaasSystems : ""
                   } ${isFaasRealtimeStep ? styles.stepRowFaasRealtime : ""
+                  } ${isPartnerSystemsStep ? styles.stepRowFaasSystems : ""
+                  } ${isPartnerPortfolioStep ? styles.stepRowFaasRealtime : ""
                   }`}
                 >
                   <span className={styles.stepSpineMarker} aria-hidden="true">
                     {stepNum}
                   </span>
 
-                  <div className={styles.stepText}>
+                  <div
+                    ref={(node) => {
+                      stepTextRefs.current[index] = node;
+                    }}
+                    className={styles.stepText}
+                  >
                     {isCenteredPlatformStep ? (
                       <div className={`${styles.stepCopy} ${styles.stepCopyCreate}`}>
                         <div className={styles.stepCreateLead}>
@@ -476,12 +574,6 @@ export default function HowItWorks() {
                             <span className={styles.stepOrb}>{stepNum}</span>
 
                             <div className={styles.stepCopy}>
-                              {!isFaasSystemsStep && (
-                                <span className={styles.stepMetaIcon} aria-hidden="true">
-                                  <Icon size={16} />
-                                </span>
-                              )}
-
                               <h4>{step.title}</h4>
                               <p>{step.body}</p>
                               {hasHighlights && (
@@ -504,6 +596,9 @@ export default function HowItWorks() {
                   </div>
 
                   <div
+                    ref={(node) => {
+                      stepVisualRefs.current[index] = node;
+                    }}
                     className={`${styles.stepVisual} ${styles[`visualVariant${visualVariant}`]} ${
                       isCreateAccountStep ? styles.stepVisualCreate : ""
                     } ${isConnectFortnoxStep ? styles.stepVisualConnect : ""} ${
@@ -511,11 +606,13 @@ export default function HowItWorks() {
                     } ${isFaasOnboardingStep ? styles.stepVisualOnboarding : ""
                     } ${isFaasSystemsStep ? styles.stepVisualFaasSystems : ""
                     } ${isFaasRealtimeStep ? styles.stepVisualFaasRealtime : ""
+                    } ${isPartnerSystemsStep ? styles.stepVisualFaasSystems : ""
+                    } ${isPartnerPortfolioStep ? styles.stepVisualFaasRealtime : ""
                     }`}
                     aria-hidden={!isCreateAccountStep}
                   >
                     <div className={styles.visualSurface}>
-                      {isCreateAccountStep ? (
+                      {shouldRenderRichVisual && isCreateAccountStep ? (
                         <div className={styles.accountMiniScene}>
                           <div className={styles.accountMiniBackdrop} aria-hidden="true">
                             <BeamBackgroundMain
@@ -532,13 +629,13 @@ export default function HowItWorks() {
                                 <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
                               </g>
                             </svg>
-                            <span>{HOME_PAGE_TEXT.footer.brandWord}</span>
+                                <span>{content.footer.brandWord}</span>
                           </div>
 
                           <form className={styles.accountMock} onSubmit={handleAccountHandoff}>
                             <div className={styles.accountWelcomeWrap}>
-                              <h5 className={styles.accountWelcomeTitle}>Welcome back</h5>
-                              <p className={styles.accountWelcomeSub}>Sign in to continue</p>
+                              <h5 className={styles.accountWelcomeTitle}>{content.howItWorks.ui.account.welcomeTitle}</h5>
+                              <p className={styles.accountWelcomeSub}>{content.howItWorks.ui.account.welcomeSubtitle}</p>
                             </div>
 
                             <div className={styles.accountSsoStack}>
@@ -547,19 +644,19 @@ export default function HowItWorks() {
                                 className={`${styles.accountTab} ${styles.accountTabLink}`}
                               >
                                 <GoogleIcon />
-                                <span>Continue with Google</span>
+                                <span>{content.howItWorks.ui.account.continueWithGoogle}</span>
                               </a>
                               <a
                                 href={APP_LOGIN_URL}
                                 className={`${styles.accountTab} ${styles.accountTabLink}`}
                               >
                                 <MicrosoftIcon />
-                                <span>Continue with Microsoft</span>
+                                <span>{content.howItWorks.ui.account.continueWithMicrosoft}</span>
                               </a>
                             </div>
 
                             <div className={styles.accountDivider} aria-hidden="true">
-                              <span>OR</span>
+                              <span>{content.howItWorks.ui.account.dividerLabel}</span>
                             </div>
 
                             <div className={styles.accountInputGroup}>
@@ -570,8 +667,8 @@ export default function HowItWorks() {
                                   inputMode="email"
                                   autoComplete="email"
                                   suppressHydrationWarning
-                                  aria-label="Enter email address"
-                                  placeholder="Enter email address"
+                                  aria-label={content.howItWorks.ui.account.emailInputAriaLabel}
+                                  placeholder={content.howItWorks.ui.account.emailInputPlaceholder}
                                   required
                                   value={signupEmail}
                                   onChange={(event) => setSignupEmail(event.target.value)}
@@ -583,24 +680,24 @@ export default function HowItWorks() {
                             </div>
 
                             <button type="submit" className={styles.accountButton} suppressHydrationWarning>
-                              Continue
+                              {content.howItWorks.ui.account.continueLabel}
                             </button>
                           </form>
                         </div>
-                      ) : isConnectFortnoxStep ? (
+                      ) : shouldRenderRichVisual && isConnectFortnoxStep ? (
                         <div className={styles.connectMock}>
                           <div className={`${styles.connectNode} ${styles.connectNodeFortnox}`}>
                             <div className={styles.connectBrand}>
                               <Image
                                 className={styles.connectFortnoxLogo}
                                 src="/icons/fortnox-icon.png"
-                                alt={HOME_PAGE_TEXT.howItWorks.ui.faasSystems.fortnoxAlt}
+                                alt={content.howItWorks.ui.faasSystems.fortnoxAlt}
                                 width={88}
                                 height={88}
                               />
-                              <span className={styles.connectBrandWord}>{HOME_PAGE_TEXT.howItWorks.ui.connect.fortnoxWord}</span>
+                              <span className={styles.connectBrandWord}>{content.howItWorks.ui.connect.fortnoxWord}</span>
                             </div>
-                            <span className={styles.connectNodeMeta}>{HOME_PAGE_TEXT.howItWorks.ui.connect.accountConnected}</span>
+                            <span className={styles.connectNodeMeta}>{content.howItWorks.ui.connect.accountConnected}</span>
                           </div>
                           <div className={styles.connectBridge}>
                             <span className={styles.connectFlow} />
@@ -621,24 +718,24 @@ export default function HowItWorks() {
                                   <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
                                 </g>
                               </svg>
-                              <span className={styles.connectBrandWord}>{HOME_PAGE_TEXT.howItWorks.ui.connect.mincfoWord}</span>
+                              <span className={styles.connectBrandWord}>{content.howItWorks.ui.connect.mincfoWord}</span>
                             </div>
-                            <span className={styles.connectNodeMeta}>{HOME_PAGE_TEXT.howItWorks.ui.connect.receivingData}</span>
+                            <span className={styles.connectNodeMeta}>{content.howItWorks.ui.connect.receivingData}</span>
                           </div>
                           <div className={styles.connectStatusWrap}>
-                            <div className={styles.connectStatus}>{HOME_PAGE_TEXT.howItWorks.ui.connect.integrationActive}</div>
-                            <span className={styles.connectSyncTime}>{HOME_PAGE_TEXT.howItWorks.ui.connect.lastSyncLabel}</span>
+                            <div className={styles.connectStatus}>{content.howItWorks.ui.connect.integrationActive}</div>
+                            <span className={styles.connectSyncTime}>{content.howItWorks.ui.connect.lastSyncLabel}</span>
                           </div>
                         </div>
-                      ) : isInsightsStep ? (
+                      ) : shouldRenderRichVisual && isInsightsStep ? (
                         <div className={styles.insightsMock}>
                           <div className={styles.insightsHeader}>
                             <span className={styles.insightsDot} />
-                            <span className={styles.insightsTitle}>{HOME_PAGE_TEXT.howItWorks.ui.insights.title}</span>
+                            <span className={styles.insightsTitle}>{content.howItWorks.ui.insights.title}</span>
                           </div>
 
                           <div className={styles.insightsQuestion}>
-                            {HOME_PAGE_TEXT.howItWorks.ui.insights.question}
+                            {content.howItWorks.ui.insights.question}
                           </div>
 
                           <div className={styles.insightsAnswer}>
@@ -646,52 +743,259 @@ export default function HowItWorks() {
                               <span />
                               <span />
                               <span />
-                              <em>{HOME_PAGE_TEXT.howItWorks.ui.insights.thinkingLabel}</em>
+                              <em>{content.howItWorks.ui.insights.thinkingLabel}</em>
                             </div>
 
                             <div className={styles.insightsResult}>
                               <div className={styles.insightsAnswerHead}>
-                                <span>{HOME_PAGE_TEXT.howItWorks.ui.insights.generatedForecastLabel}</span>
-                                <span>{HOME_PAGE_TEXT.howItWorks.ui.insights.runwayMonthsLabel}</span>
+                                <span>{content.howItWorks.ui.insights.generatedForecastLabel}</span>
+                                <span>{content.howItWorks.ui.insights.runwayMonthsLabel}</span>
                               </div>
 
                               <div className={styles.insightsBars}>
                                 <div className={`${styles.insightsBar} ${styles.insightsBarCurrent}`}>
                                   <span className={styles.insightsBarFill} />
-                                  <em>{HOME_PAGE_TEXT.howItWorks.ui.insights.barCurrent}</em>
+                                  <em>{content.howItWorks.ui.insights.barCurrent}</em>
                                 </div>
                                 <div className={`${styles.insightsBar} ${styles.insightsBarPlan}`}>
                                   <span className={styles.insightsBarFill} />
-                                  <em>{HOME_PAGE_TEXT.howItWorks.ui.insights.barPlan}</em>
+                                  <em>{content.howItWorks.ui.insights.barPlan}</em>
                                 </div>
                                 <div className={`${styles.insightsBar} ${styles.insightsBarScenario}`}>
                                   <span className={styles.insightsBarFill} />
-                                  <em>{HOME_PAGE_TEXT.howItWorks.ui.insights.barScenario}</em>
+                                  <em>{content.howItWorks.ui.insights.barScenario}</em>
                                 </div>
                               </div>
 
-                              <div className={styles.insightsSummary}>{HOME_PAGE_TEXT.howItWorks.ui.insights.summary}</div>
+                              <div className={styles.insightsSummary}>{content.howItWorks.ui.insights.summary}</div>
                             </div>
                           </div>
 
                           <div className={styles.insightsInput}>
                             <span className={styles.insightsInputText}>
-                              <span className={styles.insightsInputHint}>{HOME_PAGE_TEXT.howItWorks.ui.insights.inputHint}</span>
+                              <span className={styles.insightsInputHint}>{content.howItWorks.ui.insights.inputHint}</span>
                               <span className={styles.insightsInputTyped}>
-                                {HOME_PAGE_TEXT.howItWorks.ui.insights.inputTyped}
+                                {content.howItWorks.ui.insights.inputTyped}
                               </span>
                               <span className={styles.insightsInputCaret} aria-hidden="true" />
                             </span>
                             <button
                               type="button"
                               className={styles.insightsInputSend}
-                              aria-label={HOME_PAGE_TEXT.howItWorks.ui.insights.sendAriaLabel}
+                              aria-label={content.howItWorks.ui.insights.sendAriaLabel}
                             >
                               <ArrowRight aria-hidden="true" size={12} />
                             </button>
                           </div>
                         </div>
-                      ) : isFaasRealtimeStep ? (
+                      ) : shouldRenderRichVisual && isPartnerPortfolioStep ? (
+                        <div
+                          className={styles.partnerPortfolioMock}
+                          onPointerEnter={() => setPartnerWorkspaceHovered(true)}
+                          onPointerLeave={() => setPartnerWorkspaceHovered(false)}
+                        >
+                          <div className={styles.partnerWorkspaceShell}>
+                            <aside className={styles.partnerWorkspaceSidebar}>
+                              <div className={styles.partnerWorkspaceBrand}>
+                                <svg className={styles.partnerWorkspaceBrandMark} viewBox="0 0 50 50" aria-hidden="true">
+                                  <g fill="currentColor">
+                                    <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
+                                    <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
+                                    <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
+                                    <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
+                                  </g>
+                                </svg>
+                                <span>{content.footer.brandWord}</span>
+                              </div>
+
+                              <div className={styles.partnerWorkspaceNav}>
+                                <button
+                                  type="button"
+                                  className={`${styles.partnerWorkspaceNavItem} ${
+                                    partnerWorkspaceView === "home" ? styles.partnerWorkspaceNavItemActive : ""
+                                  }`}
+                                  onClick={() => handlePartnerWorkspaceNavClick("home")}
+                                >
+                                  {content.howItWorks.ui.partnerWorkspace.nav.home}
+                                </button>
+                                <button
+                                  type="button"
+                                  className={`${styles.partnerWorkspaceNavItem} ${
+                                    partnerWorkspaceView === "users" ? styles.partnerWorkspaceNavItemActive : ""
+                                  }`}
+                                  onClick={() => handlePartnerWorkspaceNavClick("users")}
+                                >
+                                  {content.howItWorks.ui.partnerWorkspace.nav.users}
+                                </button>
+                                <button
+                                  type="button"
+                                  className={`${styles.partnerWorkspaceNavItem} ${
+                                    partnerWorkspaceView === "settings" ? styles.partnerWorkspaceNavItemActive : ""
+                                  }`}
+                                  onClick={() => handlePartnerWorkspaceNavClick("settings")}
+                                >
+                                  {content.howItWorks.ui.partnerWorkspace.nav.settings}
+                                </button>
+                              </div>
+
+                            </aside>
+
+                            <div className={styles.partnerWorkspaceMain}>
+                              <div className={styles.partnerWorkspaceIntro}>
+                                <strong>{partnerWorkspaceScreen.title}</strong>
+                                <span>{partnerWorkspaceScreen.subtitle}</span>
+                              </div>
+
+                              {partnerWorkspaceView === "settings" ? (
+                                <div key="settings" className={`${styles.partnerSettingsPanel} ${styles.partnerWorkspaceViewPanel}`}>
+                                  <div className={styles.partnerSettingsTabs}>
+                                    <span className={styles.partnerSettingsTab}>{content.howItWorks.ui.partnerWorkspace.settings.tabs.profile}</span>
+                                    <span className={`${styles.partnerSettingsTab} ${styles.partnerSettingsTabActive}`}>
+                                      {content.howItWorks.ui.partnerWorkspace.settings.tabs.appearance}
+                                    </span>
+                                  </div>
+
+                                  <div className={styles.partnerSettingsSection}>
+                                    <div className={styles.partnerSettingsSectionCopy}>
+                                      <strong>{content.howItWorks.ui.partnerWorkspace.settings.appearanceTitle}</strong>
+                                      <span>{content.howItWorks.ui.partnerWorkspace.settings.appearanceBody}</span>
+                                    </div>
+
+                                    <div className={styles.partnerSettingsModes}>
+                                      <article className={styles.partnerSettingsMode}>
+                                        <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewSystem}`}>
+                                          <span className={styles.partnerSettingsPreviewSidebar} />
+                                          <span className={styles.partnerSettingsPreviewCanvas} />
+                                        </div>
+                                        <strong>{content.howItWorks.ui.partnerWorkspace.settings.modes.system}</strong>
+                                      </article>
+                                      <article className={styles.partnerSettingsMode}>
+                                        <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewLight}`}>
+                                          <span className={styles.partnerSettingsPreviewSidebar} />
+                                          <span className={styles.partnerSettingsPreviewCanvas} />
+                                        </div>
+                                        <strong>{content.howItWorks.ui.partnerWorkspace.settings.modes.light}</strong>
+                                      </article>
+                                      <article className={`${styles.partnerSettingsMode} ${styles.partnerSettingsModeActive}`}>
+                                        <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewDark}`}>
+                                          <span className={styles.partnerSettingsPreviewSidebar} />
+                                          <span className={styles.partnerSettingsPreviewCanvas} />
+                                        </div>
+                                        <strong>{content.howItWorks.ui.partnerWorkspace.settings.modes.dark}</strong>
+                                      </article>
+                                    </div>
+                                  </div>
+
+                                  <div className={styles.partnerSettingsSection}>
+                                    <div className={styles.partnerSettingsSectionCopy}>
+                                      <strong>{content.howItWorks.ui.partnerWorkspace.settings.languageTitle}</strong>
+                                      <span>{content.howItWorks.ui.partnerWorkspace.settings.languageBody}</span>
+                                    </div>
+
+                                    <div className={styles.partnerSettingsLanguage}>
+                                      <span>{content.howItWorks.ui.partnerWorkspace.settings.languageValue}</span>
+                                      <span>▾</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : partnerWorkspaceView === "users" ? (
+                                <div key="users" className={`${styles.partnerUsersPanel} ${styles.partnerWorkspaceViewPanel}`}>
+                                  <div className={styles.partnerUsersTopbar}>
+                                    <div className={styles.partnerUsersSearch}>{content.howItWorks.ui.partnerWorkspace.users.searchPlaceholder}</div>
+                                    <button type="button" className={styles.partnerUsersInvite}>
+                                      {content.howItWorks.ui.partnerWorkspace.users.inviteLabel}
+                                    </button>
+                                  </div>
+
+                                  <div className={styles.partnerUsersTable}>
+                                    <div className={styles.partnerUsersTableHead}>
+                                      <span>{content.howItWorks.ui.partnerWorkspace.users.tableLabel}</span>
+                                      <span />
+                                    </div>
+
+                                    {partnerWorkspaceScreen.rows.map((row) => (
+                                      <article key={`${partnerWorkspaceView}-${row.label}`} className={styles.partnerUsersRow}>
+                                        <div className={styles.partnerWorkspaceCompany}>
+                                          <span className={styles.partnerWorkspaceAvatar}>{row.meta}</span>
+                                          <div className={styles.partnerWorkspaceCompanyMeta}>
+                                            <strong>{row.label}</strong>
+                                            <span>{row.detail}</span>
+                                          </div>
+                                        </div>
+
+                                        <div className={styles.partnerUsersRoleWrap}>
+                                          <span className={styles.partnerWorkspaceSource}>{row.tag}</span>
+                                          <button type="button" className={styles.partnerUsersRowAction}>
+                                            ⋯
+                                          </button>
+                                        </div>
+                                      </article>
+                                    ))}
+
+                                    <div className={styles.partnerWorkspacePagination}>
+                                      <span className={styles.partnerWorkspacePageGhost}>{content.howItWorks.ui.partnerWorkspace.pagination.previous}</span>
+                                      <span className={styles.partnerWorkspacePageCurrent}>1</span>
+                                      <span className={styles.partnerWorkspacePageGhost}>{content.howItWorks.ui.partnerWorkspace.pagination.next}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div key="home" className={`${styles.partnerWorkspaceTable} ${styles.partnerWorkspaceViewPanel}`}>
+                                  <div className={styles.partnerWorkspaceTableHead}>
+                                    <span>{partnerWorkspaceScreen.columns[0]}</span>
+                                    <span>{partnerWorkspaceScreen.columns[1]}</span>
+                                    <span>{partnerWorkspaceScreen.columns[2]}</span>
+                                    <span />
+                                  </div>
+
+                                  {partnerWorkspaceScreen.rows.map((row) => (
+                                    <article key={`${partnerWorkspaceView}-${row.label}`} className={styles.partnerWorkspaceRow}>
+                                      <div className={styles.partnerWorkspaceCompany}>
+                                        <span className={styles.partnerWorkspaceAvatar}>{row.meta}</span>
+                                        <div className={styles.partnerWorkspaceCompanyMeta}>
+                                          <strong>{row.label}</strong>
+                                          <span>{row.detail}</span>
+                                        </div>
+                                      </div>
+
+                                      <div className={styles.partnerWorkspaceCell}>
+                                        <span className={styles.partnerWorkspaceSource}>{row.tag}</span>
+                                      </div>
+
+                                      <div className={styles.partnerWorkspaceCell}>
+                                        <span className={styles.partnerWorkspaceSuccess}>{row.status}</span>
+                                      </div>
+
+                                      <div className={styles.partnerWorkspaceActionWrap}>
+                                        <button type="button" className={styles.partnerWorkspaceAction}>
+                                          {partnerWorkspaceScreen.actionLabel}
+                                        </button>
+                                      </div>
+                                    </article>
+                                  ))}
+
+                                  <div className={styles.partnerWorkspacePagination}>
+                                    <span className={styles.partnerWorkspacePageGhost}>{content.howItWorks.ui.partnerWorkspace.pagination.previous}</span>
+                                    <span className={styles.partnerWorkspacePageCurrent}>1</span>
+                                    <span className={styles.partnerWorkspacePageGhost}>{content.howItWorks.ui.partnerWorkspace.pagination.next}</span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className={styles.partnerPortfolioFooter}>
+                            <div className={styles.partnerPortfolioSummary}>
+                              <span className={styles.partnerPortfolioSummaryLabel}>{content.howItWorks.ui.partnerWorkspace.summary.label}</span>
+                              <strong>{content.howItWorks.ui.partnerWorkspace.summary.title}</strong>
+                            </div>
+                            <div className={styles.partnerPortfolioMiniStats}>
+                              <span>{content.howItWorks.ui.partnerWorkspace.summary.statPrimary}</span>
+                              <span>{content.howItWorks.ui.partnerWorkspace.summary.statSecondary}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ) : shouldRenderRichVisual && isFaasRealtimeStep ? (
                         <div className={styles.faasRealtimeMock}>
                           <div className={styles.faasRealtimeHeader}>
                             <span className={styles.faasRealtimeBadge}>
@@ -704,25 +1008,25 @@ export default function HowItWorks() {
                                     <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
                                   </g>
                                 </svg>
-                                <span className={styles.faasRealtimeLogoWord}>{HOME_PAGE_TEXT.footer.brandWord}</span>
+                                <span className={styles.faasRealtimeLogoWord}>{content.footer.brandWord}</span>
                               </span>
                             </span>
-                            <span className={styles.faasRealtimeStatus}>{HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.statusUpdated}</span>
+                            <span className={styles.faasRealtimeStatus}>{content.howItWorks.ui.faasRealtime.statusUpdated}</span>
                           </div>
 
                           <div className={styles.faasRealtimeStats}>
                             <div className={styles.faasRealtimeStat}>
-                              <span className={styles.faasRealtimeStatLabel}>{HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.cashflowLabel}</span>
+                              <span className={styles.faasRealtimeStatLabel}>{content.howItWorks.ui.faasRealtime.cashflowLabel}</span>
                               <strong>+{faasRealtimeCashflowK[faasRealtimeLatestIndex]} tkr</strong>
                             </div>
                             <div className={styles.faasRealtimeStat}>
-                              <span className={styles.faasRealtimeStatLabel}>{HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.runwayLabel}</span>
+                              <span className={styles.faasRealtimeStatLabel}>{content.howItWorks.ui.faasRealtime.runwayLabel}</span>
                               <strong>
-                                {faasRealtimeRunwayMonths[faasRealtimeLatestIndex].toFixed(1)} {HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.monthSuffix}
+                                {faasRealtimeRunwayMonths[faasRealtimeLatestIndex].toFixed(1)} {content.howItWorks.ui.faasRealtime.monthSuffix}
                               </strong>
                             </div>
                             <div className={styles.faasRealtimeStat}>
-                              <span className={styles.faasRealtimeStatLabel}>{HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.deviationLabel}</span>
+                              <span className={styles.faasRealtimeStatLabel}>{content.howItWorks.ui.faasRealtime.deviationLabel}</span>
                               <strong>+{faasRealtimeVariancePct[faasRealtimeLatestIndex].toFixed(1)}%</strong>
                             </div>
                           </div>
@@ -757,7 +1061,7 @@ export default function HowItWorks() {
                             <div className={styles.faasRealtimeAlert}>
                               <span className={styles.faasRealtimeAlertDot} />
                               <span>
-                                {HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.personnelAlertTemplate.replace(
+                                {content.howItWorks.ui.faasRealtime.personnelAlertTemplate.replace(
                                   "{value}",
                                   faasRealtimeVariancePct[faasRealtimeLatestIndex].toFixed(1),
                                 )}
@@ -765,11 +1069,11 @@ export default function HowItWorks() {
                             </div>
                             <div className={styles.faasRealtimeAlert}>
                               <span className={styles.faasRealtimeAlertDot} />
-                              <span>{HOME_PAGE_TEXT.howItWorks.ui.faasRealtime.latePaymentsAlert}</span>
+                              <span>{content.howItWorks.ui.faasRealtime.latePaymentsAlert}</span>
                             </div>
                           </div>
                         </div>
-                      ) : isFaasOnboardingStep ? (
+                      ) : shouldRenderRichVisual && isFaasOnboardingStep ? (
                         <div className={styles.faasOnboardingConnect}>
                           <div className={styles.faasNodeClient}>
                             <span className={styles.faasNodeIcon} aria-hidden="true">
@@ -809,10 +1113,10 @@ export default function HowItWorks() {
 
                           <div className={styles.faasOnboardingBadge}>
                             <span className={styles.faasBadgeDot} />
-                            <span>{HOME_PAGE_TEXT.howItWorks.ui.faasOnboarding.badgeLabel}</span>
+                            <span>{content.howItWorks.ui.faasOnboarding.badgeLabel}</span>
                           </div>
                         </div>
-                      ) : isFaasSystemsStep ? (
+                      ) : shouldRenderRichVisual && (isFaasSystemsStep || isPartnerSystemsStep) ? (
                         <div className={styles.faasSystemsConnect}>
                           <svg
                             className={styles.faasSystemsMap}
@@ -852,25 +1156,25 @@ export default function HowItWorks() {
                                 </g>
                               </svg>
                             </span>
-                            <span>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.hubLabel}</span>
+                            <span>{content.howItWorks.ui.faasSystems.hubLabel}</span>
                           </div>
 
                           <div className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeTopLeft}`}>
                             <span className={styles.faasSystemsNodeInner}>
                               <Building2 size={20} />
                             </span>
-                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.bankLabel}</em>
+                            <em>{isPartnerSystemsStep ? content.howItWorks.ui.faasSystems.partnerLabels.topLeft : content.howItWorks.ui.faasSystems.bankLabel}</em>
                           </div>
                           <div className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeTopCenter}`}>
                             <span className={styles.faasSystemsNodeInner}>
                               <Image
                                 src="/icons/skatteverket-logo.svg"
-                                alt={HOME_PAGE_TEXT.howItWorks.ui.faasSystems.skatteverketAlt}
+                                alt={content.howItWorks.ui.faasSystems.skatteverketAlt}
                                 width={26}
                                 height={26}
                               />
                             </span>
-                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.skatteverketLabel}</em>
+                            <em>{isPartnerSystemsStep ? content.howItWorks.ui.faasSystems.partnerLabels.topCenter : content.howItWorks.ui.faasSystems.skatteverketLabel}</em>
                           </div>
                           <div
                             className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeTopRight} ${styles.faasSystemsNodeFortnox}`}
@@ -878,30 +1182,30 @@ export default function HowItWorks() {
                             <span className={styles.faasSystemsNodeInner}>
                               <Image
                                 src="/icons/fortnox-icon.png"
-                                alt={HOME_PAGE_TEXT.howItWorks.ui.faasSystems.fortnoxAlt}
+                                alt={content.howItWorks.ui.faasSystems.fortnoxAlt}
                                 width={26}
                                 height={26}
                               />
                             </span>
-                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.fortnoxLabel}</em>
+                            <em>{isPartnerSystemsStep ? content.howItWorks.ui.faasSystems.partnerLabels.topRight : content.howItWorks.ui.faasSystems.fortnoxLabel}</em>
                           </div>
                           <div className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeMidLeft}`}>
                             <span className={styles.faasSystemsNodeInner}>
                               <ReceiptText size={20} />
                             </span>
-                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.payrollLabel}</em>
+                            <em>{isPartnerSystemsStep ? content.howItWorks.ui.faasSystems.partnerLabels.midLeft : content.howItWorks.ui.faasSystems.payrollLabel}</em>
                           </div>
                           <div className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeMidRight}`}>
                             <span className={styles.faasSystemsNodeInner}>
                               <CreditCard size={20} />
                             </span>
-                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.paymentsLabel}</em>
+                            <em>{isPartnerSystemsStep ? content.howItWorks.ui.faasSystems.partnerLabels.midRight : content.howItWorks.ui.faasSystems.paymentsLabel}</em>
                           </div>
                           <div className={`${styles.faasSystemsNode} ${styles.faasSystemsNodeBottomCenter}`}>
                             <span className={styles.faasSystemsNodeInner} aria-hidden="true">
                               <UsersRound size={20} />
                             </span>
-                            <em>{HOME_PAGE_TEXT.howItWorks.ui.faasSystems.customerTeamLabel}</em>
+                            <em>{isPartnerSystemsStep ? content.howItWorks.ui.faasSystems.partnerLabels.bottomCenter : content.howItWorks.ui.faasSystems.customerTeamLabel}</em>
                           </div>
                         </div>
                       ) : (
@@ -914,9 +1218,11 @@ export default function HowItWorks() {
                   </div>
                 </article>
               );
-            })}
+                })}
+                </div>
+              </div>
+            </div>
           </div>
-
         </div>
       </div>
     </section>

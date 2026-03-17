@@ -2,7 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import styles from "./Ending.module.scss";
 
 const cubic = (
@@ -23,6 +23,7 @@ const clamp = (value: number, min: number, max: number) =>
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 
 export default function Ending() {
+  const { content } = useHomeOffering();
   const sectionRef = useRef<HTMLElement | null>(null);
   const [curveProgress, setCurveProgress] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -102,10 +103,10 @@ export default function Ending() {
 
       <div className={styles.container}>
         <div className={styles.ctaPanel}>
-          <h2>{HOME_PAGE_TEXT.ending.title}</h2>
-          <p>{HOME_PAGE_TEXT.ending.body}</p>
+          <h2>{content.ending.title}</h2>
+          <p>{content.ending.body}</p>
           <a href="#hero" className={styles.primaryCta}>
-            {HOME_PAGE_TEXT.ending.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+            {content.ending.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
           </a>
         </div>
       </div>
