@@ -8,7 +8,7 @@ import styles from "./Customers.module.scss";
 
 type Testimonial = {
   accent?: boolean;
-  avatarFile: string;
+  avatarFile?: string;
   company: string;
   quote: string;
   role: string;
@@ -37,6 +37,14 @@ const TICKER_LOGO_CLASS_BY_NAME: Record<string, string> = {
   Azeea: styles.logoAzeea,
 };
 
+const getInitials = (value: string) =>
+  value
+    .split(/\s+/)
+    .filter((part) => /^[A-Za-zÀ-ÖØ-öø-ÿ]/.test(part))
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+
 export default function Customers() {
   const { content } = useHomeOffering();
   const { isReducedMotion } = useMotion();
@@ -44,9 +52,10 @@ export default function Customers() {
   const lastCurveProgressRef = useRef(-1);
   const [visible, setVisible] = useState(false);
   const [curveProgress, setCurveProgress] = useState(0);
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
   const testimonials: Testimonial[] = content.customers.testimonials.map((item) => ({ ...item }));
   const trustedLogos = content.customers.trustedLogos.map((logo) => ({ ...logo }));
+  const cardAriaTemplate = content.customers.cardAriaLabelTemplate;
   const trustedLogoByName = new Map<string, string>(
     trustedLogos.map((logo) => [logo.name, logo.file]),
   );
@@ -183,7 +192,9 @@ export default function Customers() {
                 className={`${styles.card} ${item.accent ? styles.cardAccent : ""} ${positionClass}`}
                 role="button"
                 tabIndex={index === activeIndex || index === prevIndex || index === nextIndex ? 0 : -1}
-                aria-label={`Visa omdöme från ${item.person} på ${item.company}`}
+                aria-label={cardAriaTemplate
+                  .replace("{person}", item.person)
+                  .replace("{company}", item.company)}
                 aria-pressed={index === activeIndex}
                 onClick={() => focusCard(index)}
                 onKeyDown={(event) => handleCardKeyDown(event, index)}
@@ -205,13 +216,19 @@ export default function Customers() {
                 <p className={styles.quote}>&quot;{item.quote}&quot;</p>
                 <footer className={styles.person}>
                   <span className={styles.avatar}>
-                    <Image
-                      src={`/customers/testimonials/${item.avatarFile}`}
-                      alt={`${item.person} portratt`}
-                      width={40}
-                      height={40}
-                      loading="lazy"
-                    />
+                    {item.avatarFile ? (
+                      <Image
+                        src={`/customers/testimonials/${item.avatarFile}`}
+                        alt={`${item.person} portratt`}
+                        width={40}
+                        height={40}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className={styles.avatarFallback} aria-hidden="true">
+                        {getInitials(item.person)}
+                      </span>
+                    )}
                   </span>
                   <span>
                     <strong>{item.person}</strong>

@@ -45,6 +45,25 @@ type ScenarioOverrides = {
   secondaryMetricValue?: string;
   secondaryMetricHint?: string;
   chartSubtitle?: string;
+  ui?: {
+    typingStatus: string;
+    analyzingStatus: string;
+    readyStatus: string;
+    copilotLabel: string;
+    copilotResponseLabel: string;
+    metaLoadingLabel: string;
+    metaReadyLabel: string;
+    boardAriaLabel: string;
+    boardTitle: string;
+    boardBadge: string;
+    chartComparisonLabel: string;
+    legendBase: string;
+    legendScenario: string;
+    startLabel: string;
+    waitingLabel: string;
+    rerunAriaLabel: string;
+    disclaimer: string;
+  };
 };
 
 export default function ScenarioVisualization({
@@ -63,6 +82,25 @@ export default function ScenarioVisualization({
   secondaryMetricValue = scenarioRunway,
   secondaryMetricHint = delta,
   chartSubtitle = "Runway forecast",
+  ui = {
+    typingStatus: "Användare skriver fråga...",
+    analyzingStatus: "AI analyserar data...",
+    readyStatus: "Scenario klart. Fråga AI om budget, headcount eller nästa åtgärd",
+    copilotLabel: "AI Copilot",
+    copilotResponseLabel: "MinCFO Copilot",
+    metaLoadingLabel: "Analyserar...",
+    metaReadyLabel: "Generated in 1.2s",
+    boardAriaLabel: "Scenario dashboard visual",
+    boardTitle: "Forecast Impact",
+    boardBadge: "Live Scenario",
+    chartComparisonLabel: "Base vs Proposed",
+    legendBase: "Base",
+    legendScenario: "Proposed",
+    startLabel: "Start",
+    waitingLabel: "Väntar på scenario...",
+    rerunAriaLabel: "Kör scenariot igen",
+    disclaimer: "MinCFO can make mistakes. Verify important financial data.",
+  },
 }: ScenarioOverrides) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [runId, setRunId] = useState(0);
@@ -134,10 +172,10 @@ export default function ScenarioVisualization({
   const showResult = stage === "result";
   const showLoading = stage === "loading" || stage === "sending";
   const promptLabel = useMemo(() => {
-    if (stage === "typing") return "Användare skriver fråga...";
-    if (stage === "sending" || stage === "loading") return "AI analyserar data...";
-    return "Scenario klart. Fråga AI om budget, headcount eller nästa åtgärd";
-  }, [stage]);
+    if (stage === "typing") return ui.typingStatus;
+    if (stage === "sending" || stage === "loading") return ui.analyzingStatus;
+    return ui.readyStatus;
+  }, [stage, ui.analyzingStatus, ui.readyStatus, ui.typingStatus]);
   const showCopilotMeta = stage === "loading" || showResult;
   const showResponseText = showResult;
   const showInsights = stage !== "typing";
@@ -177,7 +215,7 @@ export default function ScenarioVisualization({
             </div>
             <div className={styles.scenarioShellCopilot}>
               <span className={styles.scenarioShellDot} aria-hidden="true" />
-              <p>AI Copilot</p>
+              <p>{ui.copilotLabel}</p>
             </div>
           </div>
 
@@ -209,8 +247,10 @@ export default function ScenarioVisualization({
                 }`}
               >
                 <span className={styles.pulseDot} aria-hidden="true" />
-                <p>MinCFO Copilot</p>
-                <span className={styles.scenarioMetaTag}>{showResult ? "Generated in 1.2s" : "Analyserar..."}</span>
+                <p>{ui.copilotResponseLabel}</p>
+                <span className={styles.scenarioMetaTag}>
+                  {showResult ? ui.metaReadyLabel : ui.metaLoadingLabel}
+                </span>
               </div>
 
               <div className={styles.scenarioAnswer}>
@@ -229,10 +269,10 @@ export default function ScenarioVisualization({
               </div>
             </div>
 
-            <article className={styles.scenarioBoard} aria-label="Scenario dashboard visual">
+            <article className={styles.scenarioBoard} aria-label={ui.boardAriaLabel}>
               <div className={styles.scenarioBoardHeader}>
-                <p>Forecast Impact</p>
-                <span>Live Scenario</span>
+                <p>{ui.boardTitle}</p>
+                <span>{ui.boardBadge}</span>
               </div>
 
               <div className={styles.scenarioKpis}>
@@ -244,20 +284,22 @@ export default function ScenarioVisualization({
                 <div className={styles.scenarioKpiCard}>
                   <p>{secondaryMetricLabel}</p>
                   <strong>{showResult ? secondaryMetricValue : "--"}</strong>
-                  <span className={styles.kpiNegative}>{showResult ? secondaryMetricHint : "Väntar på scenario..."}</span>
+                  <span className={styles.kpiNegative}>
+                    {showResult ? secondaryMetricHint : ui.waitingLabel}
+                  </span>
                 </div>
               </div>
 
               <div className={styles.scenarioChartCard}>
                 <div className={styles.scenarioTop}>
-                  <p>Base vs Proposed</p>
+                  <p>{ui.chartComparisonLabel}</p>
                   <span>{chartSubtitle}</span>
                 </div>
 
                 <div className={styles.scenarioLegend}>
-                  <span className={styles.legendBase}>Base</span>
-                  <span className={styles.legendProposed}>Proposed</span>
-                  <span className={styles.scenarioChip}>Start: {activeMonth}</span>
+                  <span className={styles.legendBase}>{ui.legendBase}</span>
+                  <span className={styles.legendProposed}>{ui.legendScenario}</span>
+                  <span className={styles.scenarioChip}>{ui.startLabel}: {activeMonth}</span>
                 </div>
 
                 <div className={`${styles.linesCard} ${showResult ? styles.linesCardReady : styles.linesCardLoading}`}>
@@ -294,11 +336,11 @@ export default function ScenarioVisualization({
             <div className={styles.scenarioFooter}>
               <div className={styles.scenarioPrompt}>
                 <span>{inputText}</span>
-                <button type="button" aria-label="Kör scenariot igen" onClick={() => setRunId((prev) => prev + 1)}>
+                <button type="button" aria-label={ui.rerunAriaLabel} onClick={() => setRunId((prev) => prev + 1)}>
                   <ChevronRight size={16} />
                 </button>
               </div>
-              <p className={styles.scenarioDisclaimer}>MinCFO can make mistakes. Verify important financial data.</p>
+              <p className={styles.scenarioDisclaimer}>{ui.disclaimer}</p>
             </div>
           </div>
         </div>

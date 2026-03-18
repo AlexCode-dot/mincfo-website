@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { MotionProvider } from "@/components/system/MotionProvider";
+import { HOME_PAGE_SHARED_TEXT } from "@/content/homePageText";
 import "@/styles/globals.scss";
 
 const geistSans = Geist({
@@ -14,9 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MinCFO",
-  description:
-    "MinCFO kombinerar automation, dashboards i realtid och en AI-copilot för moderna team.",
+  title: HOME_PAGE_SHARED_TEXT.siteMeta.title,
+  description: HOME_PAGE_SHARED_TEXT.siteMeta.description,
 };
 
 export default function RootLayout({

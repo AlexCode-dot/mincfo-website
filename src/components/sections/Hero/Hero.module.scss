@@ -1,7 +1,7 @@
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: 164vh;
+  min-height: 150vh;
   padding: 0;
   overflow: visible;
   background: #020305;
@@ -675,7 +675,7 @@
 
 @media (max-width: 900px) {
   .hero {
-    min-height: 152vh;
+    min-height: 144vh;
   }
 
   .container {
@@ -693,7 +693,7 @@
 
 @media (max-width: 600px) {
   .hero {
-    min-height: 142vh;
+    min-height: 136vh;
   }
 
   .container {

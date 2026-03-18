@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import {
+  memo,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -31,6 +33,21 @@ import styles from "./HowItWorks.module.scss";
 
 type OfferKey = "platform" | "faas" | "partner";
 type PartnerWorkspaceView = "home" | "users" | "settings";
+type PartnerWorkspaceRow = {
+  detail: string;
+  label: string;
+  meta: string;
+  status: string;
+  tag: string;
+};
+type PartnerWorkspaceScreen = {
+  actionLabel: string;
+  columns: string[];
+  rows: PartnerWorkspaceRow[];
+  subtitle: string;
+  title: string;
+};
+type PartnerWorkspaceContent = ReturnType<typeof useHomeOffering>["content"]["howItWorks"]["ui"]["partnerWorkspace"];
 
 type OfferModel = {
   isPrimary: boolean;
@@ -44,12 +61,11 @@ type OfferModel = {
   }>;
 };
 
-const CUT_HEIGHT = 190;
 const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
-const PARTNER_WORKSPACE_VIEWS: PartnerWorkspaceView[] = ["home", "users", "settings"];
-const PARTNER_WORKSPACE_AUTOPLAY_MS = 2600;
-const PARTNER_WORKSPACE_USER_PAUSE_MS = 9000;
-const HOW_IT_WORKS_STEP_SCROLL_FACTOR = 0.9;
+const HOW_IT_WORKS_STEP_SCROLL_FACTOR = 0.72;
+const HOW_IT_WORKS_PROGRESS_ACCELERATION = 1.12;
+const getPartnerWorkspaceToggleState = (rows: PartnerWorkspaceRow[]) =>
+  Object.fromEntries(rows.map((row) => [row.label, row.status === "Aktiv"]));
 const subscribeHydration = () => () => {};
 const getHydratedSnapshot = () => true;
 const getHydratedServerSnapshot = () => false;
@@ -96,35 +112,273 @@ const smoothstep = (edge0: number, edge1: number, value: number) => {
   return t * t * (3 - 2 * t);
 };
 
-const cubic = (p0: number, p1: number, p2: number, p3: number, t: number) => {
-  const oneMinus = 1 - t;
-  return (
-    oneMinus ** 3 * p0 +
-    3 * oneMinus ** 2 * t * p1 +
-    3 * oneMinus * t ** 2 * p2 +
-    t ** 3 * p3
-  );
-};
+const STEP_SWITCH_HYSTERESIS = 0.62;
 
-const lerp = (start: number, end: number, t: number) =>
-  start + (end - start) * t;
+const getStableDominantStep = (
+  rawStep: number,
+  previousStep: number,
+  maxStep: number,
+) => {
+  if (maxStep <= 0) return 0;
+  if (previousStep < 0) return Math.round(clamp(rawStep, 0, maxStep));
+
+  let nextStep = previousStep;
+
+  while (nextStep < maxStep && rawStep >= nextStep + STEP_SWITCH_HYSTERESIS) {
+    nextStep += 1;
+  }
+
+  while (nextStep > 0 && rawStep <= nextStep - STEP_SWITCH_HYSTERESIS) {
+    nextStep -= 1;
+  }
+
+  return clamp(nextStep, 0, maxStep);
+};
 
 const PLATFORM_ICONS: LucideIcon[] = [UserRound, Plug, BrainCircuit, Sparkles];
 const FAAS_ICONS: LucideIcon[] = [FolderPlus, Plug, Workflow, Sparkles];
 const PARTNER_ICONS: LucideIcon[] = [UsersRound, Building2, BrainCircuit];
 
+const PartnerWorkspaceMock = memo(function PartnerWorkspaceMock({
+  brandWord,
+  content,
+  screen,
+  userToggles,
+  view,
+  onNavClick,
+  onToggleUser,
+}: {
+  brandWord: string;
+  content: PartnerWorkspaceContent;
+  screen: PartnerWorkspaceScreen;
+  userToggles: Record<string, boolean>;
+  view: PartnerWorkspaceView;
+  onNavClick: (nextView: PartnerWorkspaceView) => void;
+  onToggleUser: (label: string) => void;
+}) {
+  return (
+    <div className={styles.partnerPortfolioMock}>
+      <div className={styles.partnerWorkspaceShell}>
+        <aside className={styles.partnerWorkspaceSidebar}>
+          <div className={styles.partnerWorkspaceBrand}>
+            <svg className={styles.partnerWorkspaceBrandMark} viewBox="0 0 50 50" aria-hidden="true">
+              <g fill="currentColor">
+                <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
+                <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
+                <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
+                <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
+              </g>
+            </svg>
+            <span>{brandWord}</span>
+          </div>
+
+          <div className={styles.partnerWorkspaceNav}>
+            <button
+              type="button"
+              className={`${styles.partnerWorkspaceNavItem} ${
+                view === "home" ? styles.partnerWorkspaceNavItemActive : ""
+              }`}
+              onClick={() => onNavClick("home")}
+            >
+              {content.nav.home}
+            </button>
+            <button
+              type="button"
+              className={`${styles.partnerWorkspaceNavItem} ${
+                view === "users" ? styles.partnerWorkspaceNavItemActive : ""
+              }`}
+              onClick={() => onNavClick("users")}
+            >
+              {content.nav.users}
+            </button>
+            <button
+              type="button"
+              className={`${styles.partnerWorkspaceNavItem} ${
+                view === "settings" ? styles.partnerWorkspaceNavItemActive : ""
+              }`}
+              onClick={() => onNavClick("settings")}
+            >
+              {content.nav.settings}
+            </button>
+          </div>
+        </aside>
+
+        <div className={styles.partnerWorkspaceMain}>
+          <div className={styles.partnerWorkspaceIntro}>
+            <strong>{screen.title}</strong>
+            <span>{screen.subtitle}</span>
+          </div>
+
+          {view === "settings" ? (
+            <div key="settings" className={`${styles.partnerSettingsPanel} ${styles.partnerWorkspaceViewPanel}`}>
+              <div className={styles.partnerSettingsTabs}>
+                <span className={styles.partnerSettingsTab}>{content.settings.tabs.profile}</span>
+                <span className={`${styles.partnerSettingsTab} ${styles.partnerSettingsTabActive}`}>
+                  {content.settings.tabs.appearance}
+                </span>
+              </div>
+
+              <div className={styles.partnerSettingsSection}>
+                <div className={styles.partnerSettingsSectionCopy}>
+                  <strong>{content.settings.appearanceTitle}</strong>
+                  <span>{content.settings.appearanceBody}</span>
+                </div>
+
+                <div className={styles.partnerSettingsModes}>
+                  <article className={styles.partnerSettingsMode}>
+                    <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewSystem}`}>
+                      <span className={styles.partnerSettingsPreviewSidebar} />
+                      <span className={styles.partnerSettingsPreviewCanvas} />
+                    </div>
+                    <strong>{content.settings.modes.system}</strong>
+                  </article>
+                  <article className={styles.partnerSettingsMode}>
+                    <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewLight}`}>
+                      <span className={styles.partnerSettingsPreviewSidebar} />
+                      <span className={styles.partnerSettingsPreviewCanvas} />
+                    </div>
+                    <strong>{content.settings.modes.light}</strong>
+                  </article>
+                  <article className={`${styles.partnerSettingsMode} ${styles.partnerSettingsModeActive}`}>
+                    <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewDark}`}>
+                      <span className={styles.partnerSettingsPreviewSidebar} />
+                      <span className={styles.partnerSettingsPreviewCanvas} />
+                    </div>
+                    <strong>{content.settings.modes.dark}</strong>
+                  </article>
+                </div>
+              </div>
+
+              <div className={styles.partnerSettingsSection}>
+                <div className={styles.partnerSettingsSectionCopy}>
+                  <strong>{content.settings.languageTitle}</strong>
+                  <span>{content.settings.languageBody}</span>
+                </div>
+
+                <div className={styles.partnerSettingsLanguage}>
+                  <span>{content.settings.languageValue}</span>
+                  <span>▾</span>
+                </div>
+              </div>
+            </div>
+          ) : view === "users" ? (
+            <div key="users" className={`${styles.partnerUsersPanel} ${styles.partnerWorkspaceViewPanel}`}>
+              <div className={styles.partnerUsersTopbar}>
+                <div className={styles.partnerUsersSearch}>{content.users.searchPlaceholder}</div>
+                <button type="button" className={styles.partnerUsersInvite}>
+                  {content.users.inviteLabel}
+                </button>
+              </div>
+
+              <div className={styles.partnerUsersTable}>
+                <div className={styles.partnerUsersTableHead}>
+                  <span>{content.users.tableLabel}</span>
+                  <span />
+                </div>
+
+                {screen.rows.map((row) => (
+                  <article key={`${view}-${row.label}`} className={styles.partnerUsersRow}>
+                    <div className={styles.partnerWorkspaceCompany}>
+                      <span className={styles.partnerWorkspaceAvatar}>{row.meta}</span>
+                      <div className={styles.partnerWorkspaceCompanyMeta}>
+                        <strong>{row.label}</strong>
+                        <span>{row.detail}</span>
+                      </div>
+                    </div>
+
+                    <div className={styles.partnerUsersRoleWrap}>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={userToggles[row.label] ?? false}
+                        aria-label={`${row.label}: ${row.tag}`}
+                        className={`${styles.partnerUsersToggle} ${
+                          userToggles[row.label] ? styles.partnerUsersToggleActive : ""
+                        }`}
+                        onClick={() => onToggleUser(row.label)}
+                      >
+                        <span className={styles.partnerUsersToggleTrack}>
+                          <span className={styles.partnerUsersToggleThumb} />
+                        </span>
+                      </button>
+                      <button type="button" className={styles.partnerUsersRowAction}>
+                        ⋯
+                      </button>
+                    </div>
+                  </article>
+                ))}
+
+                <div className={styles.partnerWorkspacePagination}>
+                  <span className={styles.partnerWorkspacePageGhost}>{content.pagination.previous}</span>
+                  <span className={styles.partnerWorkspacePageCurrent}>1</span>
+                  <span className={styles.partnerWorkspacePageGhost}>{content.pagination.next}</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div key="home" className={`${styles.partnerWorkspaceTable} ${styles.partnerWorkspaceViewPanel}`}>
+              <div className={styles.partnerWorkspaceTableHead}>
+                <span>{screen.columns[0]}</span>
+                <span>{screen.columns[1]}</span>
+                <span>{screen.columns[2]}</span>
+                <span />
+              </div>
+
+              {screen.rows.map((row) => (
+                <article key={`${view}-${row.label}`} className={styles.partnerWorkspaceRow}>
+                  <div className={styles.partnerWorkspaceCompany}>
+                    <span className={styles.partnerWorkspaceAvatar}>{row.meta}</span>
+                    <div className={styles.partnerWorkspaceCompanyMeta}>
+                      <strong>{row.label}</strong>
+                      <span>{row.detail}</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.partnerWorkspaceCell}>
+                    <span className={styles.partnerWorkspaceSource}>{row.tag}</span>
+                  </div>
+
+                  <div className={styles.partnerWorkspaceCell}>
+                    <span className={styles.partnerWorkspaceSuccess}>{row.status}</span>
+                  </div>
+
+                  <div className={styles.partnerWorkspaceActionWrap}>
+                    <button type="button" className={styles.partnerWorkspaceAction}>
+                      {screen.actionLabel}
+                    </button>
+                  </div>
+                </article>
+              ))}
+
+              <div className={styles.partnerWorkspacePagination}>
+                <span className={styles.partnerWorkspacePageGhost}>{content.pagination.previous}</span>
+                <span className={styles.partnerWorkspacePageCurrent}>1</span>
+                <span className={styles.partnerWorkspacePageGhost}>{content.pagination.next}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className={styles.partnerPortfolioFooter}>
+        <div className={styles.partnerPortfolioSummary}>
+          <span className={styles.partnerPortfolioSummaryLabel}>{content.summary.label}</span>
+          <strong>{content.summary.title}</strong>
+        </div>
+      </div>
+    </div>
+  );
+});
+
 export default function HowItWorks() {
   const { content, offering } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
-  const lastCurveProgressRef = useRef(-1);
   const lastDominantStepRef = useRef(-1);
-  const scrollIdleTimeoutRef = useRef<number | null>(null);
-  const isScrollActiveRef = useRef(false);
-  const [visible, setVisible] = useState(false);
-  const [curveProgress, setCurveProgress] = useState(0);
+  const lastHeaderRevealRef = useRef(-1);
+  const lastPanelRevealRef = useRef(-1);
+  const lastAppliedStepRef = useRef(-1);
   const [dominantStepIndex, setDominantStepIndex] = useState(0);
-  const [isScrollActive, setIsScrollActive] = useState(false);
   const headerInnerRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const stepRowRefs = useRef<Array<HTMLElement | null>>([]);
@@ -132,8 +386,6 @@ export default function HowItWorks() {
   const stepVisualRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [signupEmail, setSignupEmail] = useState("");
   const [partnerWorkspaceView, setPartnerWorkspaceView] = useState<PartnerWorkspaceView>("home");
-  const [partnerWorkspacePausedUntil, setPartnerWorkspacePausedUntil] = useState(0);
-  const [partnerWorkspaceHovered, setPartnerWorkspaceHovered] = useState(false);
   const isClientReady = useSyncExternalStore(
     subscribeHydration,
     getHydratedSnapshot,
@@ -174,62 +426,24 @@ export default function HowItWorks() {
     offering === "full-service" ? "faas" : offering === "partner" ? "partner" : "platform";
   const currentOffer = offers[activeOffer];
   const sectionIntroByOffer = content.howItWorks.sectionIntroByOffer as Record<OfferKey, string>;
-  const partnerWorkspaceScreens: Record<
-    PartnerWorkspaceView,
-    {
-      actionLabel: string;
-      columns: string[];
-      rows: Array<{
-        detail: string;
-        label: string;
-        meta: string;
-        status: string;
-        tag: string;
-      }>;
-      subtitle: string;
-      title: string;
-    }
-  > = content.howItWorks.ui.partnerWorkspace;
+  const partnerWorkspaceContent = content.howItWorks.ui.partnerWorkspace;
+  const partnerWorkspaceScreens: Record<PartnerWorkspaceView, PartnerWorkspaceScreen> =
+    partnerWorkspaceContent;
   const partnerWorkspaceScreen = partnerWorkspaceScreens[partnerWorkspaceView];
+  const [partnerWorkspaceUserToggles, setPartnerWorkspaceUserToggles] = useState<Record<string, boolean>>(
+    () => getPartnerWorkspaceToggleState(partnerWorkspaceScreens.users.rows),
+  );
 
-  useEffect(() => {
-    if (
-      activeOffer !== "partner" ||
-      !visible ||
-      isReducedMotion ||
-      isScrollActive ||
-      dominantStepIndex !== 1
-    ) {
-      return;
-    }
-
-    const intervalId = window.setInterval(() => {
-      if (partnerWorkspaceHovered || Date.now() < partnerWorkspacePausedUntil) {
-        return;
-      }
-
-      setPartnerWorkspaceView((current) => {
-        const currentIndex = PARTNER_WORKSPACE_VIEWS.indexOf(current);
-        const nextIndex = (currentIndex + 1) % PARTNER_WORKSPACE_VIEWS.length;
-        return PARTNER_WORKSPACE_VIEWS[nextIndex];
-      });
-    }, PARTNER_WORKSPACE_AUTOPLAY_MS);
-
-    return () => window.clearInterval(intervalId);
-  }, [
-    activeOffer,
-    dominantStepIndex,
-    isReducedMotion,
-    isScrollActive,
-    partnerWorkspaceHovered,
-    partnerWorkspacePausedUntil,
-    visible,
-  ]);
-
-  const handlePartnerWorkspaceNavClick = (nextView: PartnerWorkspaceView) => {
+  const handlePartnerWorkspaceNavClick = useCallback((nextView: PartnerWorkspaceView) => {
     setPartnerWorkspaceView(nextView);
-    setPartnerWorkspacePausedUntil(Date.now() + PARTNER_WORKSPACE_USER_PAUSE_MS);
-  };
+  }, []);
+
+  const handlePartnerWorkspaceToggle = useCallback((label: string) => {
+    setPartnerWorkspaceUserToggles((current) => ({
+      ...current,
+      [label]: !(current[label] ?? false),
+    }));
+  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -237,7 +451,7 @@ export default function HowItWorks() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setVisible(entry.isIntersecting);
+        section.classList.toggle(styles.visible, entry.isIntersecting);
       },
       { threshold: 0.22, rootMargin: "0px 0px -10% 0px" },
     );
@@ -247,70 +461,13 @@ export default function HowItWorks() {
   }, []);
 
   useEffect(() => {
-    const updateCurve = () => {
-      const section = sectionRef.current;
-      if (!section) return;
-      const rect = section.getBoundingClientRect();
-      const viewport = window.innerHeight;
-      if (rect.top >= viewport) {
-        if (lastCurveProgressRef.current !== 0) {
-          lastCurveProgressRef.current = 0;
-          setCurveProgress(0);
-        }
-      } else {
-        const start = viewport * 0.9;
-        const end = viewport * 0.42;
-        const progress = Math.round(clamp((start - rect.top) / (start - end), 0, 1) * 120) / 120;
-        if (progress !== lastCurveProgressRef.current) {
-          lastCurveProgressRef.current = progress;
-          setCurveProgress(progress);
-        }
-      }
-    };
-
-    updateCurve();
-    window.addEventListener("scroll", updateCurve, { passive: true });
-    window.addEventListener("resize", updateCurve);
-    return () => {
-      window.removeEventListener("scroll", updateCurve);
-      window.removeEventListener("resize", updateCurve);
-    };
-  }, []);
-
-  useEffect(() => {
     let frame = 0;
     const totalSteps = currentOffer.steps.length;
+    lastAppliedStepRef.current = -1;
+    lastHeaderRevealRef.current = -1;
+    lastPanelRevealRef.current = -1;
 
-    const updateProgress = () => {
-      frame = 0;
-      const section = sectionRef.current;
-      const headerInner = headerInnerRef.current;
-      const panel = panelRef.current;
-      if (!section || !headerInner || !panel) return;
-
-      const rect = section.getBoundingClientRect();
-      const viewport = window.innerHeight;
-      if (rect.bottom < -viewport * 0.2 || rect.top > viewport * 1.2) {
-        return;
-      }
-      const scrollable = Math.max(rect.height - window.innerHeight, 1);
-      const progress = isReducedMotion ? 1 : clamp(-rect.top / scrollable, 0, 1);
-      const dominantStep = Math.min(
-        totalSteps - 1,
-        Math.max(0, Math.round(progress * Math.max(totalSteps - 1, 1))),
-      );
-      if (dominantStep !== lastDominantStepRef.current) {
-        lastDominantStepRef.current = dominantStep;
-        setDominantStepIndex(dominantStep);
-      }
-      const headerReveal = isReducedMotion ? 1 : smoothstep(0.02, 0.16, progress);
-      const panelReveal = isReducedMotion ? 1 : smoothstep(0.08, 0.24, progress);
-
-      headerInner.style.opacity = `${headerReveal}`;
-      headerInner.style.transform = `translate3d(0, ${(1 - headerReveal) * 22}px, 0)`;
-      panel.style.opacity = `${panelReveal}`;
-      panel.style.transform = `translate3d(0, ${(1 - panelReveal) * 28}px, 0)`;
-
+    const applyStepState = (dominantStep: number) => {
       stepRowRefs.current.forEach((row, index) => {
         const text = stepTextRefs.current[index];
         const visual = stepVisualRefs.current[index];
@@ -331,6 +488,8 @@ export default function HowItWorks() {
         const visualTranslateY = isActive ? 0 : isBeforeActive ? -14 : 14;
         const visualScale = isActive ? 1 : 0.985;
 
+        row.hidden = !isActive;
+        row.setAttribute("aria-hidden", isActive ? "false" : "true");
         row.style.opacity = `${stepReveal}`;
         row.style.transform = `translate3d(0, ${rowTranslateY}px, 0) scale(${rowScale})`;
         row.style.setProperty("--step-spine-progress", `${spineProgress}`);
@@ -343,19 +502,52 @@ export default function HowItWorks() {
       });
     };
 
+    const updateProgress = () => {
+      frame = 0;
+      const section = sectionRef.current;
+      const headerInner = headerInnerRef.current;
+      const panel = panelRef.current;
+      if (!section || !headerInner || !panel) return;
+
+      const rect = section.getBoundingClientRect();
+      const viewport = window.innerHeight;
+      if (rect.bottom < -viewport * 0.2 || rect.top > viewport * 1.2) {
+        return;
+      }
+      const scrollable = Math.max(rect.height - window.innerHeight, 1);
+      const progress = isReducedMotion ? 1 : clamp(-rect.top / scrollable, 0, 1);
+      const acceleratedProgress = isReducedMotion
+        ? 1
+        : clamp(progress * HOW_IT_WORKS_PROGRESS_ACCELERATION, 0, 1);
+      const dominantStep = getStableDominantStep(
+        acceleratedProgress * Math.max(totalSteps - 1, 1),
+        lastDominantStepRef.current,
+        totalSteps - 1,
+      );
+      if (dominantStep !== lastDominantStepRef.current) {
+        lastDominantStepRef.current = dominantStep;
+        setDominantStepIndex(dominantStep);
+      }
+      const headerReveal = Math.round((isReducedMotion ? 1 : smoothstep(0.02, 0.16, progress)) * 100) / 100;
+      const panelReveal = Math.round((isReducedMotion ? 1 : smoothstep(0.08, 0.24, progress)) * 100) / 100;
+
+      if (headerReveal !== lastHeaderRevealRef.current) {
+        lastHeaderRevealRef.current = headerReveal;
+        headerInner.style.opacity = `${headerReveal}`;
+        headerInner.style.transform = `translate3d(0, ${(1 - headerReveal) * 22}px, 0)`;
+      }
+      if (panelReveal !== lastPanelRevealRef.current) {
+        lastPanelRevealRef.current = panelReveal;
+        panel.style.opacity = `${panelReveal}`;
+        panel.style.transform = `translate3d(0, ${(1 - panelReveal) * 28}px, 0)`;
+      }
+      if (dominantStep !== lastAppliedStepRef.current) {
+        lastAppliedStepRef.current = dominantStep;
+        applyStepState(dominantStep);
+      }
+    };
+
     const scheduleUpdate = () => {
-      if (!isScrollActiveRef.current) {
-        isScrollActiveRef.current = true;
-        setIsScrollActive(true);
-      }
-      if (scrollIdleTimeoutRef.current) {
-        window.clearTimeout(scrollIdleTimeoutRef.current);
-      }
-      scrollIdleTimeoutRef.current = window.setTimeout(() => {
-        isScrollActiveRef.current = false;
-        setIsScrollActive(false);
-        scrollIdleTimeoutRef.current = null;
-      }, 120);
       if (frame) return;
       frame = window.requestAnimationFrame(updateProgress);
     };
@@ -368,9 +560,6 @@ export default function HowItWorks() {
       if (frame) {
         window.cancelAnimationFrame(frame);
       }
-      if (scrollIdleTimeoutRef.current) {
-        window.clearTimeout(scrollIdleTimeoutRef.current);
-      }
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
@@ -381,23 +570,6 @@ export default function HowItWorks() {
     window.location.href = APP_LOGIN_URL;
   };
 
-  const sideY = lerp(6, 72, curveProgress);
-  const centerY = lerp(6, 2, curveProgress);
-  const cutPath = `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`;
-  const curvePoints: string[] = [];
-  for (let i = 0; i <= 18; i += 1) {
-    const t = i / 18;
-    const x = cubic(0, 280, 480, 720, t);
-    const y = cubic(sideY, sideY, centerY, centerY, t);
-    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
-  }
-  for (let i = 1; i <= 18; i += 1) {
-    const t = i / 18;
-    const x = cubic(720, 960, 1160, 1440, t);
-    const y = cubic(centerY, centerY, sideY, sideY, t);
-    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
-  }
-  const cutClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
   const totalSteps = currentOffer.steps.length;
   const desktopTrackHeight = `${Math.max(totalSteps * HOW_IT_WORKS_STEP_SCROLL_FACTOR * 100, 100)}vh`;
 
@@ -405,35 +577,11 @@ export default function HowItWorks() {
     <section
       ref={sectionRef}
       id="how-it-works"
-      className={`${styles.section} ${visible ? styles.visible : ""}`}
+      className={styles.section}
       data-offer={activeOffer}
-      data-scroll-active={isScrollActive ? "true" : "false"}
       style={{ "--how-it-works-height": desktopTrackHeight } as CSSProperties}
     >
-      <svg
-        className={styles.curveCut}
-        viewBox={`0 0 1440 ${CUT_HEIGHT}`}
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path d={cutPath} />
-      </svg>
-
-      <div
-        className={styles.background}
-        aria-hidden="true"
-        style={{ clipPath: cutClip, WebkitClipPath: cutClip } as CSSProperties}
-      />
-      <div
-        className={styles.backgroundGrid}
-        aria-hidden="true"
-        style={{ clipPath: cutClip, WebkitClipPath: cutClip } as CSSProperties}
-      />
-      <div
-        className={styles.backgroundGlow}
-        aria-hidden="true"
-        style={{ clipPath: cutClip, WebkitClipPath: cutClip } as CSSProperties}
-      />
+      <div className={styles.background} aria-hidden="true" />
 
       <div className={styles.container}>
         <div className={styles.stickyFrame}>
@@ -789,212 +937,15 @@ export default function HowItWorks() {
                           </div>
                         </div>
                       ) : shouldRenderRichVisual && isPartnerPortfolioStep ? (
-                        <div
-                          className={styles.partnerPortfolioMock}
-                          onPointerEnter={() => setPartnerWorkspaceHovered(true)}
-                          onPointerLeave={() => setPartnerWorkspaceHovered(false)}
-                        >
-                          <div className={styles.partnerWorkspaceShell}>
-                            <aside className={styles.partnerWorkspaceSidebar}>
-                              <div className={styles.partnerWorkspaceBrand}>
-                                <svg className={styles.partnerWorkspaceBrandMark} viewBox="0 0 50 50" aria-hidden="true">
-                                  <g fill="currentColor">
-                                    <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
-                                    <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
-                                    <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
-                                    <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
-                                  </g>
-                                </svg>
-                                <span>{content.footer.brandWord}</span>
-                              </div>
-
-                              <div className={styles.partnerWorkspaceNav}>
-                                <button
-                                  type="button"
-                                  className={`${styles.partnerWorkspaceNavItem} ${
-                                    partnerWorkspaceView === "home" ? styles.partnerWorkspaceNavItemActive : ""
-                                  }`}
-                                  onClick={() => handlePartnerWorkspaceNavClick("home")}
-                                >
-                                  {content.howItWorks.ui.partnerWorkspace.nav.home}
-                                </button>
-                                <button
-                                  type="button"
-                                  className={`${styles.partnerWorkspaceNavItem} ${
-                                    partnerWorkspaceView === "users" ? styles.partnerWorkspaceNavItemActive : ""
-                                  }`}
-                                  onClick={() => handlePartnerWorkspaceNavClick("users")}
-                                >
-                                  {content.howItWorks.ui.partnerWorkspace.nav.users}
-                                </button>
-                                <button
-                                  type="button"
-                                  className={`${styles.partnerWorkspaceNavItem} ${
-                                    partnerWorkspaceView === "settings" ? styles.partnerWorkspaceNavItemActive : ""
-                                  }`}
-                                  onClick={() => handlePartnerWorkspaceNavClick("settings")}
-                                >
-                                  {content.howItWorks.ui.partnerWorkspace.nav.settings}
-                                </button>
-                              </div>
-
-                            </aside>
-
-                            <div className={styles.partnerWorkspaceMain}>
-                              <div className={styles.partnerWorkspaceIntro}>
-                                <strong>{partnerWorkspaceScreen.title}</strong>
-                                <span>{partnerWorkspaceScreen.subtitle}</span>
-                              </div>
-
-                              {partnerWorkspaceView === "settings" ? (
-                                <div key="settings" className={`${styles.partnerSettingsPanel} ${styles.partnerWorkspaceViewPanel}`}>
-                                  <div className={styles.partnerSettingsTabs}>
-                                    <span className={styles.partnerSettingsTab}>{content.howItWorks.ui.partnerWorkspace.settings.tabs.profile}</span>
-                                    <span className={`${styles.partnerSettingsTab} ${styles.partnerSettingsTabActive}`}>
-                                      {content.howItWorks.ui.partnerWorkspace.settings.tabs.appearance}
-                                    </span>
-                                  </div>
-
-                                  <div className={styles.partnerSettingsSection}>
-                                    <div className={styles.partnerSettingsSectionCopy}>
-                                      <strong>{content.howItWorks.ui.partnerWorkspace.settings.appearanceTitle}</strong>
-                                      <span>{content.howItWorks.ui.partnerWorkspace.settings.appearanceBody}</span>
-                                    </div>
-
-                                    <div className={styles.partnerSettingsModes}>
-                                      <article className={styles.partnerSettingsMode}>
-                                        <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewSystem}`}>
-                                          <span className={styles.partnerSettingsPreviewSidebar} />
-                                          <span className={styles.partnerSettingsPreviewCanvas} />
-                                        </div>
-                                        <strong>{content.howItWorks.ui.partnerWorkspace.settings.modes.system}</strong>
-                                      </article>
-                                      <article className={styles.partnerSettingsMode}>
-                                        <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewLight}`}>
-                                          <span className={styles.partnerSettingsPreviewSidebar} />
-                                          <span className={styles.partnerSettingsPreviewCanvas} />
-                                        </div>
-                                        <strong>{content.howItWorks.ui.partnerWorkspace.settings.modes.light}</strong>
-                                      </article>
-                                      <article className={`${styles.partnerSettingsMode} ${styles.partnerSettingsModeActive}`}>
-                                        <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewDark}`}>
-                                          <span className={styles.partnerSettingsPreviewSidebar} />
-                                          <span className={styles.partnerSettingsPreviewCanvas} />
-                                        </div>
-                                        <strong>{content.howItWorks.ui.partnerWorkspace.settings.modes.dark}</strong>
-                                      </article>
-                                    </div>
-                                  </div>
-
-                                  <div className={styles.partnerSettingsSection}>
-                                    <div className={styles.partnerSettingsSectionCopy}>
-                                      <strong>{content.howItWorks.ui.partnerWorkspace.settings.languageTitle}</strong>
-                                      <span>{content.howItWorks.ui.partnerWorkspace.settings.languageBody}</span>
-                                    </div>
-
-                                    <div className={styles.partnerSettingsLanguage}>
-                                      <span>{content.howItWorks.ui.partnerWorkspace.settings.languageValue}</span>
-                                      <span>▾</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              ) : partnerWorkspaceView === "users" ? (
-                                <div key="users" className={`${styles.partnerUsersPanel} ${styles.partnerWorkspaceViewPanel}`}>
-                                  <div className={styles.partnerUsersTopbar}>
-                                    <div className={styles.partnerUsersSearch}>{content.howItWorks.ui.partnerWorkspace.users.searchPlaceholder}</div>
-                                    <button type="button" className={styles.partnerUsersInvite}>
-                                      {content.howItWorks.ui.partnerWorkspace.users.inviteLabel}
-                                    </button>
-                                  </div>
-
-                                  <div className={styles.partnerUsersTable}>
-                                    <div className={styles.partnerUsersTableHead}>
-                                      <span>{content.howItWorks.ui.partnerWorkspace.users.tableLabel}</span>
-                                      <span />
-                                    </div>
-
-                                    {partnerWorkspaceScreen.rows.map((row) => (
-                                      <article key={`${partnerWorkspaceView}-${row.label}`} className={styles.partnerUsersRow}>
-                                        <div className={styles.partnerWorkspaceCompany}>
-                                          <span className={styles.partnerWorkspaceAvatar}>{row.meta}</span>
-                                          <div className={styles.partnerWorkspaceCompanyMeta}>
-                                            <strong>{row.label}</strong>
-                                            <span>{row.detail}</span>
-                                          </div>
-                                        </div>
-
-                                        <div className={styles.partnerUsersRoleWrap}>
-                                          <span className={styles.partnerWorkspaceSource}>{row.tag}</span>
-                                          <button type="button" className={styles.partnerUsersRowAction}>
-                                            ⋯
-                                          </button>
-                                        </div>
-                                      </article>
-                                    ))}
-
-                                    <div className={styles.partnerWorkspacePagination}>
-                                      <span className={styles.partnerWorkspacePageGhost}>{content.howItWorks.ui.partnerWorkspace.pagination.previous}</span>
-                                      <span className={styles.partnerWorkspacePageCurrent}>1</span>
-                                      <span className={styles.partnerWorkspacePageGhost}>{content.howItWorks.ui.partnerWorkspace.pagination.next}</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div key="home" className={`${styles.partnerWorkspaceTable} ${styles.partnerWorkspaceViewPanel}`}>
-                                  <div className={styles.partnerWorkspaceTableHead}>
-                                    <span>{partnerWorkspaceScreen.columns[0]}</span>
-                                    <span>{partnerWorkspaceScreen.columns[1]}</span>
-                                    <span>{partnerWorkspaceScreen.columns[2]}</span>
-                                    <span />
-                                  </div>
-
-                                  {partnerWorkspaceScreen.rows.map((row) => (
-                                    <article key={`${partnerWorkspaceView}-${row.label}`} className={styles.partnerWorkspaceRow}>
-                                      <div className={styles.partnerWorkspaceCompany}>
-                                        <span className={styles.partnerWorkspaceAvatar}>{row.meta}</span>
-                                        <div className={styles.partnerWorkspaceCompanyMeta}>
-                                          <strong>{row.label}</strong>
-                                          <span>{row.detail}</span>
-                                        </div>
-                                      </div>
-
-                                      <div className={styles.partnerWorkspaceCell}>
-                                        <span className={styles.partnerWorkspaceSource}>{row.tag}</span>
-                                      </div>
-
-                                      <div className={styles.partnerWorkspaceCell}>
-                                        <span className={styles.partnerWorkspaceSuccess}>{row.status}</span>
-                                      </div>
-
-                                      <div className={styles.partnerWorkspaceActionWrap}>
-                                        <button type="button" className={styles.partnerWorkspaceAction}>
-                                          {partnerWorkspaceScreen.actionLabel}
-                                        </button>
-                                      </div>
-                                    </article>
-                                  ))}
-
-                                  <div className={styles.partnerWorkspacePagination}>
-                                    <span className={styles.partnerWorkspacePageGhost}>{content.howItWorks.ui.partnerWorkspace.pagination.previous}</span>
-                                    <span className={styles.partnerWorkspacePageCurrent}>1</span>
-                                    <span className={styles.partnerWorkspacePageGhost}>{content.howItWorks.ui.partnerWorkspace.pagination.next}</span>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className={styles.partnerPortfolioFooter}>
-                            <div className={styles.partnerPortfolioSummary}>
-                              <span className={styles.partnerPortfolioSummaryLabel}>{content.howItWorks.ui.partnerWorkspace.summary.label}</span>
-                              <strong>{content.howItWorks.ui.partnerWorkspace.summary.title}</strong>
-                            </div>
-                            <div className={styles.partnerPortfolioMiniStats}>
-                              <span>{content.howItWorks.ui.partnerWorkspace.summary.statPrimary}</span>
-                              <span>{content.howItWorks.ui.partnerWorkspace.summary.statSecondary}</span>
-                            </div>
-                          </div>
-                        </div>
+                        <PartnerWorkspaceMock
+                          brandWord={content.footer.brandWord}
+                          content={partnerWorkspaceContent}
+                          screen={partnerWorkspaceScreen}
+                          userToggles={partnerWorkspaceUserToggles}
+                          view={partnerWorkspaceView}
+                          onNavClick={handlePartnerWorkspaceNavClick}
+                          onToggleUser={handlePartnerWorkspaceToggle}
+                        />
                       ) : shouldRenderRichVisual && isFaasRealtimeStep ? (
                         <div className={styles.faasRealtimeMock}>
                           <div className={styles.faasRealtimeHeader}>

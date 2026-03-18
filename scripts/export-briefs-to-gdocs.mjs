@@ -11,18 +11,30 @@ const HOME_PLATFORM_JSON_PATH = path.join(HOME_CONTENT_DIR, "platform.json");
 const HOME_FULL_SERVICE_JSON_PATH = path.join(HOME_CONTENT_DIR, "full-service.json");
 const HOME_PARTNER_JSON_PATH = path.join(HOME_CONTENT_DIR, "partner.json");
 
-const DOCS_CONFIG = [
+const HOME_DOCS_CONFIG = [
   {
-    key: "main",
-    name: "Textbrief Startsida (SV)",
-    docIdEnv: "GOOGLE_DOC_ID_MAIN",
+    key: "platform",
+    type: "home-mode",
+    title: "Plattform",
+    name: "Textbrief Startsida Plattform (SV)",
+    docIdEnv: "GOOGLE_DOC_ID_HOME_PLATFORM",
   },
   {
-    key: "solutions",
-    name: "Textbrief Lösningssidor (SV)",
-    docIdEnv: "GOOGLE_DOC_ID_SOLUTIONS",
+    key: "full-service",
+    type: "home-mode",
+    title: "Helhetslösning",
+    name: "Textbrief Startsida Helhetslosning (SV)",
+    docIdEnv: "GOOGLE_DOC_ID_HOME_FULL_SERVICE",
+  },
+  {
+    key: "partner",
+    type: "home-mode",
+    title: "För byråer",
+    name: "Textbrief Startsida For Byraer (SV)",
+    docIdEnv: "GOOGLE_DOC_ID_HOME_PARTNER",
   },
 ];
+const SOLUTIONS_DOC_ID_ENV = "GOOGLE_DOC_ID_SOLUTIONS";
 
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_DOCS_SCOPE = "https://www.googleapis.com/auth/documents";
@@ -45,6 +57,18 @@ function toHeading(value) {
     .replace(/\s+/g, " ")
     .trim()
     .replace(/^./, (char) => char.toUpperCase());
+}
+
+function buildDocsConfig() {
+  return [
+    ...HOME_DOCS_CONFIG,
+    {
+      key: "solutions",
+      type: "solutions",
+      name: "Textbrief Lösningssidor (SV)",
+      docIdEnv: SOLUTIONS_DOC_ID_ENV,
+    },
+  ];
 }
 
 const NON_TEXT_KEYS = new Set([
@@ -105,6 +129,7 @@ const LABEL_OVERRIDES = {
   ending: "Avslut / CTA",
   security: "Säkerhet",
   footer: "Footer",
+  siteMeta: "Metadata",
   sectionTitle: "Sektionsrubrik",
   sectionIntro: "Sektionsintro",
   title: "Rubrik",
@@ -392,6 +417,7 @@ function loadHomeContentBundle() {
     shared: {
       navigation: legacy.navigation ?? {},
       offering: legacy.offering ?? {},
+      siteMeta: legacy.siteMeta ?? {},
       howItWorks: legacy.howItWorks ?? {},
       security: legacy.security ?? {},
       footer: legacy.footer ?? {},
@@ -424,6 +450,7 @@ function buildMainDocumentModel(homeContent) {
   const sharedSections = [
     ["navigation", "Gemensamt - Navigering", homeContent.shared.navigation],
     ["offering", "Gemensamt - Erbjudande", homeContent.shared.offering],
+    ["siteMeta", "Gemensamt - Metadata", homeContent.shared.siteMeta],
     ["security", "Gemensamt - Säkerhet", homeContent.shared.security],
     ["footer", "Gemensamt - Footer", homeContent.shared.footer],
   ];
@@ -725,6 +752,26 @@ function buildMainDocumentModel(homeContent) {
   }
 
   return blocks;
+}
+
+function shouldIncludeHomeSectionTitle(sectionTitle, modeTitle) {
+  return sectionTitle.startsWith("Gemensamt -") || sectionTitle.startsWith(`${modeTitle} -`);
+}
+
+function buildHomeOfferingDocumentModel(homeContent, modeTitle) {
+  const blocks = buildMainDocumentModel(homeContent);
+  return blocks
+    .filter((block) => {
+      if (block.kind !== "section") return true;
+      return shouldIncludeHomeSectionTitle(block.title ?? "", modeTitle);
+    })
+    .map((block, index) => {
+      if (index !== 0 || block.kind !== "heading") return block;
+      return {
+        ...block,
+        text: `MinCFO Textbrief (SV) - ${modeTitle}`,
+      };
+    });
 }
 
 function buildSolutionsDocumentModel(solutionsText) {
@@ -1347,16 +1394,18 @@ async function main() {
     throw new Error(`Saknar fil: ${path.relative(ROOT, SOLUTION_PAGES_TEXT_JSON_PATH)}`);
   }
 
-  for (const config of DOCS_CONFIG) {
+  const homeContent = loadHomeContentBundle();
+  const solutionsText = JSON.parse(fs.readFileSync(SOLUTION_PAGES_TEXT_JSON_PATH, "utf8"));
+  const docsConfig = buildDocsConfig();
+
+  for (const config of docsConfig) {
     let documentModel = null;
-    if (config.key === "main") {
-      const homeContent = loadHomeContentBundle();
-      documentModel = buildMainDocumentModel(homeContent);
-    } else if (config.key === "solutions") {
-      const solutionsText = JSON.parse(fs.readFileSync(SOLUTION_PAGES_TEXT_JSON_PATH, "utf8"));
+    if (config.type === "home-mode") {
+      documentModel = buildHomeOfferingDocumentModel(homeContent, config.title);
+    } else if (config.type === "solutions") {
       documentModel = buildSolutionsDocumentModel(solutionsText);
     } else {
-      throw new Error(`Okänd docs-konfiguration: ${config.key}`);
+      throw new Error(`Okänd docs-konfiguration: ${config.type}`);
     }
     const target = await resolveTargetDocument(accessToken, config);
 

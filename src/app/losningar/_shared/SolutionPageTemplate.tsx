@@ -39,7 +39,9 @@ const CARD_TRACER_PATH =
 
 export default function SolutionPageTemplate({ content }: { content: SolutionPageContent }) {
   const impactVisuals = content.impactVisuals ?? ["realtime", "flow", "accuracy", "analysis"];
-  const scenarioDescription = content.scenario.description ?? `Fråga: ${content.scenario.question}`;
+  const scenarioDescription =
+    content.scenario.description ??
+    `${SOLUTION_SHARED_CONTENT.scenarioPromptPrefix}: ${content.scenario.question}`;
 
   return (
     <HomeOfferingProvider allowedOfferings={["platform"]} syncWithUrl={false}>
@@ -71,7 +73,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
 
             <div className={styles.heroTrust}>
               <p className={styles.heroTrustLabel}>{content.logoStripMicrocopy}</p>
-              <div className={styles.heroTickerViewport} aria-label="Betrodda kundlogotyper">
+              <div className={styles.heroTickerViewport} aria-label={SOLUTION_SHARED_CONTENT.logoTickerAriaLabel}>
                 <div className={styles.heroTickerTrack}>
                   {HERO_TICKER_LOGOS.map((logo, index) => (
                     <span key={`a-${logo.src}-${index}`} className={styles.heroTickerItem}>
@@ -103,7 +105,11 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             <span className={styles.heroScrollCueLabel}>
               <span className={styles.keepCase}>{SOLUTION_SHARED_CONTENT.scrollLabel}</span>
             </span>
-            <a href="#utmaning" className={styles.heroScrollCue} aria-label="Scrolla till nästa sektion">
+            <a
+              href="#utmaning"
+              className={styles.heroScrollCue}
+              aria-label={SOLUTION_SHARED_CONTENT.scrollCueAriaLabel}
+            >
               <span className={styles.heroScrollCueInner}>
                 <ChevronDown size={18} />
               </span>
@@ -227,6 +233,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           secondaryMetricHint={content.scenario.metricHints[1]}
           activeMonth={content.scenario.activeMonth}
           chartSubtitle={content.scenario.metrics[2]}
+          ui={SOLUTION_SHARED_CONTENT.scenarioUi}
         />
 
         <RevealSection className={`${styles.section} ${styles.impactSection}`}>

@@ -299,8 +299,8 @@
     ],
     "trustedLogos": [
       {
-        "name": "Swedish Algae Factory",
-        "file": "logo-algae.avif"
+        "name": "Growbit",
+        "file": "logo-growbit.svg"
       },
       {
         "name": "BAM",
@@ -345,10 +345,6 @@
       {
         "name": "SweBal",
         "file": "logo-swebal.avif"
-      },
-      {
-        "name": "Growbit",
-        "file": "logo-growbit.svg"
       },
       {
         "name": "Safetly",

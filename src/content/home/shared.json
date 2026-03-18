@@ -42,6 +42,10 @@
       }
     ]
   },
+  "siteMeta": {
+    "title": "MinCFO",
+    "description": "MinCFO kombinerar automation, dashboards i realtid och en AI-copilot för moderna team."
+  },
   "offering": {
     "eyebrow": "Välj upplägg",
     "title": "Tre sätt att arbeta med MinCFO",
@@ -68,16 +72,16 @@
         "chartLabel": "Användning senaste 30 dagarna",
         "stats": [
           {
-            "label": "Dashboards",
+            "label": "Rapporter",
             "value": "Live"
           },
           {
-            "label": "Forecast",
-            "value": "12 mån"
+            "label": "Prognos",
+            "value": "12 månader"
           },
           {
-            "label": "Svarstid",
-            "value": "< 1 min"
+            "label": "Fortnox",
+            "value": "Synkad"
           }
         ]
       },
@@ -88,22 +92,22 @@
         "ctaLabel": "Gå till helhetslösningen",
         "ctaHref": "/?offering=full-service#produkt",
         "serviceVisual": {
-          "chipOwnership": "Fullt ägarskap",
-          "chipDelivery": "Löpande leverans",
-          "chipLeadership": "Ledningsklart",
+          "chipOwnership": "Fakturor och bokföring",
+          "chipDelivery": "Löpande uppföljning",
+          "chipLeadership": "Rapport klar",
           "eyebrow": "Helhetslösning",
-          "title": "MinCFO driver finance-loopen",
-          "badge": "Leverans aktiv",
+          "title": "Vi sköter hela ekonomifunktionen",
+          "badge": "Med MinCFO",
           "steps": [
             "Redovisning",
-            "Avstämning",
             "Rapportering",
-            "Ledning"
+            "Uppföljning",
+            "Rådgivning"
           ],
-          "summaryReportLabel": "Månadsrapport",
-          "summaryReportValue": "Redo för ledning",
-          "summaryAlertsLabel": "Avvikelser",
-          "summaryAlertsValue": "Flaggas direkt"
+          "summaryReportLabel": "Rapportering",
+          "summaryReportValue": "Tydligt underlag",
+          "summaryAlertsLabel": "Planering",
+          "summaryAlertsValue": "Bättre beslut framåt"
         }
       },
       "partner": {
@@ -361,13 +365,14 @@
         }
       },
       "partnerWorkspace": {
+        "navAriaLabel": "Workspace navigation",
         "nav": {
           "home": "Hem",
           "users": "Användare",
           "settings": "Inställningar"
         },
         "home": {
-          "title": "Alexander's arbetsyta",
+          "title": "Din arbetsyta",
           "subtitle": "Hantera bolag, integrationer och uppföljning i samma vy.",
           "columns": [
             "Bolag",
@@ -396,12 +401,19 @@
               "meta": "R",
               "tag": "Fortnox",
               "status": "Apr 05"
+            },
+            {
+              "label": "Ardent Ops AB",
+              "detail": "559881-2041",
+              "meta": "A",
+              "tag": "Fortnox",
+              "status": "Apr 11"
             }
           ]
         },
         "users": {
           "title": "Användare",
-          "subtitle": "Hantera användare, roller och åtkomst.",
+          "subtitle": "Hantera användare och åtkomst.",
           "columns": [
             "Användare",
             "Roll",
@@ -427,6 +439,13 @@
               "label": "Sara Ek",
               "detail": "sara@byran.se",
               "meta": "S",
+              "tag": "Viewer",
+              "status": "Inbjuden"
+            },
+            {
+              "label": "Mikael Roos",
+              "detail": "mikael@byran.se",
+              "meta": "M",
               "tag": "Viewer",
               "status": "Inbjuden"
             }

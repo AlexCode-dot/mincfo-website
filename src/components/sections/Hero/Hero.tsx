@@ -106,12 +106,12 @@ export default function Hero() {
 
       const baseRotateX = 16 - state.progress * 9;
       const baseScale = 1 - state.progress * 0.03;
-      const mouseRotateX = state.hovering ? -state.mouseY * 4 : 0;
-      const mouseRotateY = state.hovering ? state.mouseX * 6 : 0;
-      const travelY = state.reduceMotion ? 0 : cardProgress * 480;
+      const mouseRotateX = state.hovering ? -state.mouseY * 1.25 : 0;
+      const mouseRotateY = state.hovering ? state.mouseX * 0.65 : 0;
+      const travelY = state.reduceMotion ? 0 : cardProgress * 400;
 
       if (intro) {
-        const introLift = state.reduceMotion ? 0 : introProgress * 320;
+        const introLift = state.reduceMotion ? 0 : introProgress * 280;
         intro.style.transform = `translate3d(0, -${introLift}px, 0)`;
         intro.style.opacity = `${Math.pow(1 - introProgress, 1.8)}`;
       }
@@ -134,7 +134,7 @@ export default function Hero() {
       if (!section) return;
       const rect = section.getBoundingClientRect();
       const maxScroll = Math.max(rect.height - window.innerHeight, 1);
-      const progress = clamp(-rect.top / (maxScroll * 1.35), 0, 1);
+      const progress = clamp(-rect.top / (maxScroll * 1.15), 0, 1);
       state.progress = progress;
       scheduleUpdate();
     };
@@ -721,7 +721,11 @@ export default function Hero() {
                   type="button"
                   className={styles.fullscreenButton}
                   onClick={handleToggleFullscreen}
-                  aria-label={isCardFullscreen ? "Exit fullscreen demo" : "Enter fullscreen demo"}
+                  aria-label={
+                    isCardFullscreen
+                      ? content.hero.exitFullscreenAriaLabel
+                      : content.hero.enterFullscreenAriaLabel
+                  }
                 >
                   {isCardFullscreen ? <Minimize2 aria-hidden="true" size={18} /> : <Maximize2 aria-hidden="true" size={18} />}
                 </button>

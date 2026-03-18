@@ -7,6 +7,8 @@
     "primaryCta": "Boka demo av plattformen",
     "address": "app.mincfo.com/dashboard",
     "playAriaLabel": "Play demo video",
+    "enterFullscreenAriaLabel": "Enter fullscreen demo",
+    "exitFullscreenAriaLabel": "Exit fullscreen demo",
     "videoAriaLabel": "Demo video of MinCFO dashboard",
     "videoFallback": "Din webbläsare kan inte spela upp videon."
   },
@@ -220,7 +222,15 @@
     "prevAria": "Föregående omdöme",
     "nextAria": "Nästa omdöme",
     "trustedAria": "Kunder som litar på oss",
+    "cardAriaLabelTemplate": "Visa omdöme från {person} på {company}",
     "testimonials": [
+      {
+        "company": "Growbit",
+        "person": "Max Norén & Conrad Brown-Bolin",
+        "role": "Co-founders, Growbit",
+        "quote": "Med MinCFO får vi en tydlig bild av intäkter per kund och tjänst, kan djupdyka i månatliga kostnader per leverantör och prognostisera med hjälp av AI som löpande uppdaterar siffrorna baserat på faktiska utfall.",
+        "accent": true
+      },
       {
         "company": "Qsid",
         "person": "Rikard Jonsson",
@@ -256,8 +266,8 @@
     ],
     "trustedLogos": [
       {
-        "name": "Swedish Algae Factory",
-        "file": "logo-algae.avif"
+        "name": "Growbit",
+        "file": "logo-growbit.svg"
       },
       {
         "name": "BAM",
@@ -302,10 +312,6 @@
       {
         "name": "SweBal",
         "file": "logo-swebal.avif"
-      },
-      {
-        "name": "Growbit",
-        "file": "logo-growbit.svg"
       },
       {
         "name": "Safetly",

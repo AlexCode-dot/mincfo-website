@@ -10,7 +10,14 @@ const HOME_SHARED_JSON_PATH = path.join(HOME_CONTENT_DIR, "shared.json");
 const HOME_PLATFORM_JSON_PATH = path.join(HOME_CONTENT_DIR, "platform.json");
 const HOME_FULL_SERVICE_JSON_PATH = path.join(HOME_CONTENT_DIR, "full-service.json");
 const HOME_PARTNER_JSON_PATH = path.join(HOME_CONTENT_DIR, "partner.json");
-const HOME_SHARED_KEYS = new Set(["navigation", "offering", "howItWorks", "security", "footer"]);
+const HOME_SHARED_KEYS = new Set(["navigation", "offering", "siteMeta", "howItWorks", "security", "footer"]);
+const HOME_DOC_ID_ENV = "GOOGLE_DOC_ID_MAIN";
+const HOME_DOCS_CONFIG = [
+  { key: "platform", title: "Plattform", docIdEnv: "GOOGLE_DOC_ID_HOME_PLATFORM", includeShared: true },
+  { key: "full-service", title: "Helhetslösning", docIdEnv: "GOOGLE_DOC_ID_HOME_FULL_SERVICE", includeShared: false },
+  { key: "partner", title: "För byråer", docIdEnv: "GOOGLE_DOC_ID_HOME_PARTNER", includeShared: false },
+];
+const SOLUTIONS_DOC_ID_ENV = "GOOGLE_DOC_ID_SOLUTIONS";
 
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_DOCS_SCOPE = "https://www.googleapis.com/auth/documents";
@@ -74,6 +81,7 @@ const LABEL_OVERRIDES = {
   ending: "Avslut / CTA",
   security: "Säkerhet",
   footer: "Footer",
+  siteMeta: "Metadata",
   sectionTitle: "Sektionsrubrik",
   sectionIntro: "Sektionsintro",
   title: "Rubrik",
@@ -148,6 +156,11 @@ const ELEMENT_LABEL_ALIASES = {
 
 function normalize(text) {
   return text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+}
+
+function shouldIncludeHomeSectionTitle(sectionTitle, modeTitle, includeShared) {
+  if (includeShared && sectionTitle.startsWith("Gemensamt -")) return true;
+  return sectionTitle.startsWith(`${modeTitle} -`);
 }
 
 function toHeading(value) {
@@ -550,6 +563,7 @@ function buildHomeSectionBindings(home) {
   const sharedSections = [
     ["navigation", "Gemensamt - Navigering"],
     ["offering", "Gemensamt - Erbjudande"],
+    ["siteMeta", "Gemensamt - Metadata"],
     ["security", "Gemensamt - Säkerhet"],
     ["footer", "Gemensamt - Footer"],
   ];
@@ -777,34 +791,64 @@ function writeHomePageText(homePageText) {
 
 async function main() {
   loadEnvFiles();
-  const mainDocId = process.env.GOOGLE_DOC_ID_MAIN?.trim();
-  const solutionsDocId = process.env.GOOGLE_DOC_ID_SOLUTIONS?.trim();
-  if (!mainDocId || !solutionsDocId) {
-    throw new Error("Sätt GOOGLE_DOC_ID_MAIN och GOOGLE_DOC_ID_SOLUTIONS i .env.local");
-  }
-
   const serviceAccount = loadServiceAccount();
   const accessToken = await getAccessToken(serviceAccount);
 
   const homeTemplate = loadHomePageTextTemplate();
   const solutionsTemplate = JSON.parse(fs.readFileSync(SOLUTION_PAGES_TEXT_JSON_PATH, "utf8"));
-
-  const [homeDoc, solutionsDoc] = await Promise.all([
-    getDocument(accessToken, mainDocId),
-    getDocument(accessToken, solutionsDocId),
-  ]);
-
-  const homeSections = extractSectionsFromDocument(homeDoc);
-  const solutionsSections = extractSectionsFromDocument(solutionsDoc);
-
   const homeBindings = buildHomeSectionBindings(homeTemplate);
-  for (const [sectionTitle, bindings] of homeBindings.entries()) {
-    const rows = homeSections.get(sectionTitle);
-    if (!rows?.length) continue;
-    applyRowsToBindings(homeTemplate, bindings, rows);
+
+  const homeDocConfigs = HOME_DOCS_CONFIG.map((config) => ({
+    ...config,
+    docId: process.env[config.docIdEnv]?.trim() ?? "",
+  }));
+  const hasPerModeHomeDocs = homeDocConfigs.some((config) => config.docId);
+
+  if (hasPerModeHomeDocs) {
+    const missing = homeDocConfigs
+      .filter((config) => !config.docId)
+      .map((config) => config.docIdEnv);
+    if (missing.length) {
+      throw new Error(
+        `Sätt alla startside-doc IDs i .env.local för per-version-import: ${missing.join(", ")}`,
+      );
+    }
+
+    for (const config of homeDocConfigs) {
+      const homeDoc = await getDocument(accessToken, config.docId);
+      const homeSections = extractSectionsFromDocument(homeDoc);
+      for (const [sectionTitle, bindings] of homeBindings.entries()) {
+        if (!shouldIncludeHomeSectionTitle(sectionTitle, config.title, config.includeShared)) continue;
+        const rows = homeSections.get(sectionTitle);
+        if (!rows?.length) continue;
+        applyRowsToBindings(homeTemplate, bindings, rows);
+      }
+    }
+  } else {
+    const mainDocId = process.env[HOME_DOC_ID_ENV]?.trim();
+    if (!mainDocId) {
+      throw new Error(
+        `Sätt antingen ${HOME_DOC_ID_ENV} eller de nya startside IDs: ${HOME_DOCS_CONFIG.map((config) => config.docIdEnv).join(", ")}`,
+      );
+    }
+
+    const homeDoc = await getDocument(accessToken, mainDocId);
+    const homeSections = extractSectionsFromDocument(homeDoc);
+    for (const [sectionTitle, bindings] of homeBindings.entries()) {
+      const rows = homeSections.get(sectionTitle);
+      if (!rows?.length) continue;
+      applyRowsToBindings(homeTemplate, bindings, rows);
+    }
   }
 
   const solutionsBindings = buildSolutionsSectionBindings(solutionsTemplate);
+  const solutionsDocId = process.env[SOLUTIONS_DOC_ID_ENV]?.trim();
+  if (!solutionsDocId) {
+    throw new Error(`Sätt ${SOLUTIONS_DOC_ID_ENV} i .env.local`);
+  }
+
+  const solutionsDoc = await getDocument(accessToken, solutionsDocId);
+  const solutionsSections = extractSectionsFromDocument(solutionsDoc);
   const usedSolutionHeadings = new Set();
 
   const sharedBindings = solutionsBindings.get("Gemensamma texter");
