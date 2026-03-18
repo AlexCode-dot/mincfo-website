@@ -117,9 +117,10 @@ export function ShowcaseGradientBarChart() {
   const chartMenuOpenRef = useRef(false);
   const autoplayMenuAnimatingRef = useRef(false);
   const activeChart = chartOptions[selectedChart];
+  const activeLiquidityChart = selectedChart === "liquidity" ? chartOptions.liquidity : null;
   const forecastStart =
-    selectedChart === "liquidity"
-      ? activeChart.data.find((item) => item.forecast !== null && item.actual !== null)
+    activeLiquidityChart
+      ? activeLiquidityChart.data.find((item) => item.forecast !== null && item.actual !== null)
       : null;
   const runwaySlice = runwayCashflowHistory.slice(-activeRunwayWindow);
   const runwayAverageCashflow = average(runwaySlice);
@@ -300,8 +301,8 @@ export function ShowcaseGradientBarChart() {
               </div>
             )}
           </div>
-          {selectedChart === "liquidity" && (
-            <span className={styles.evilSubtle}>{activeChart.subtitle}</span>
+          {activeLiquidityChart && (
+            <span className={styles.evilSubtle}>{activeLiquidityChart.subtitle}</span>
           )}
         </div>
 
@@ -339,11 +340,11 @@ export function ShowcaseGradientBarChart() {
         </div>
       </div>
 
-      {selectedChart === "liquidity" ? (
+      {activeLiquidityChart ? (
         <div className={styles.evilChartWrap}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
-              data={activeChart.data}
+              data={activeLiquidityChart.data}
               margin={{ top: 14, right: 4, left: 4, bottom: 0 }}
             >
               <CartesianGrid
@@ -361,7 +362,7 @@ export function ShowcaseGradientBarChart() {
                 padding={{ left: 6, right: 6 }}
                 tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
               />
-              <Tooltip cursor={false} content={<LiquidityTooltip unit={activeChart.unit} />} />
+              <Tooltip cursor={false} content={<LiquidityTooltip unit={activeLiquidityChart.unit} />} />
               <defs>
                 <linearGradient id="liquidity-actual-fill" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#0E5BFF" stopOpacity={0.22} />
