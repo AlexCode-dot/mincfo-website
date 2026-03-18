@@ -439,6 +439,38 @@
   border-color: oklch(0.72 0.03 264 / 0.28);
 }
 
+.avatarGroup {
+  display: inline-flex;
+  align-items: center;
+  padding-right: 10px;
+}
+
+.avatarGroupItem {
+  width: 40px;
+  height: 40px;
+  margin-left: -10px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  background: oklch(0.23 0.023 262 / 0.9);
+  box-shadow: 0 8px 18px oklch(0.08 0.012 262 / 0.22);
+}
+
+.avatarGroupItem:first-child {
+  margin-left: 0;
+}
+
+.avatarGroupItem img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardAccent .avatarGroupItem {
+  border-color: oklch(0.72 0.03 264 / 0.28);
+}
+
 .person strong {
   display: block;
   font-size: 1rem;

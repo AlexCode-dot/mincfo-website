@@ -9,6 +9,7 @@ import styles from "./Customers.module.scss";
 type Testimonial = {
   accent?: boolean;
   avatarFile?: string;
+  avatarFiles?: string[];
   company: string;
   quote: string;
   role: string;
@@ -215,21 +216,37 @@ export default function Customers() {
                 </div>
                 <p className={styles.quote}>&quot;{item.quote}&quot;</p>
                 <footer className={styles.person}>
-                  <span className={styles.avatar}>
-                    {item.avatarFile ? (
-                      <Image
-                        src={`/customers/testimonials/${item.avatarFile}`}
-                        alt={`${item.person} portratt`}
-                        width={40}
-                        height={40}
-                        loading="lazy"
-                      />
-                    ) : (
-                      <span className={styles.avatarFallback} aria-hidden="true">
-                        {getInitials(item.person)}
-                      </span>
-                    )}
-                  </span>
+                  {item.avatarFiles?.length ? (
+                    <span className={styles.avatarGroup} aria-hidden="true">
+                      {item.avatarFiles.slice(0, 2).map((avatarFile) => (
+                        <span key={`${item.person}-${avatarFile}`} className={styles.avatarGroupItem}>
+                          <Image
+                            src={`/customers/testimonials/${avatarFile}`}
+                            alt=""
+                            width={40}
+                            height={40}
+                            loading="lazy"
+                          />
+                        </span>
+                      ))}
+                    </span>
+                  ) : (
+                    <span className={styles.avatar}>
+                      {item.avatarFile ? (
+                        <Image
+                          src={`/customers/testimonials/${item.avatarFile}`}
+                          alt={`${item.person} portratt`}
+                          width={40}
+                          height={40}
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span className={styles.avatarFallback} aria-hidden="true">
+                          {getInitials(item.person)}
+                        </span>
+                      )}
+                    </span>
+                  )}
                   <span>
                     <strong>{item.person}</strong>
                     <small>{item.role}</small>
