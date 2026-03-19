@@ -26,7 +26,6 @@ import {
   useSyncExternalStore,
   type CSSProperties,
   type FormEvent,
-  type SVGProps,
 } from "react";
 import { Bar, BarChart, Cell, ResponsiveContainer, XAxis } from "recharts";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
@@ -64,13 +63,18 @@ type OfferModel = {
   }>;
 };
 
-function GradientBarShape(
-  props: SVGProps<SVGRectElement> & {
-    animateOnMount?: boolean;
-    animationIndex?: number;
-    dataKey?: string;
-  },
-) {
+type GradientBarShapeProps = {
+  animateOnMount?: boolean;
+  animationIndex?: number;
+  dataKey?: string;
+  fill?: string;
+  height?: number | string;
+  width?: number | string;
+  x?: number | string;
+  y?: number | string;
+};
+
+function GradientBarShape(props: GradientBarShapeProps) {
   const {
     animateOnMount = false,
     animationIndex = 0,
