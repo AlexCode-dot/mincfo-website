@@ -1,10 +1,10 @@
 {
   "hero": {
-    "tagline": "Financial Intelligence",
-    "titleLine1": "Skala er klientleverans",
-    "titleLine2": "med bättre dashboards, analys och rådgivningsunderlag",
-    "body": "MinCFO är för byråer och Fractional CFOs som vill använda samma plattform för flera klienter, standardisera leveransen och skapa mer värde i varje kunddialog.",
-    "primaryCta": "Boka demo för byrå",
+    "tagline": "Finance-as-a-Service",
+    "titleLine1": "Skala er byrå med automatisk proaktiv rådgivning och effektivare processer i MinCFO Byråportal",
+    "titleLine2": "",
+    "body": "Maximera er byrå med MinCFO Byråportal – navet för er klientleverans. Automatiskt genererade proaktiva råd baserade på specifika triggerpoints och AI som besvarar enklare frågor direkt, så att ni kan fokusera på strategisk rådgivning. Genom att samla all kundkommunikation i MinCFO skapar ni ett enhetligt och professionellt flöde för hela portföljen",
+    "primaryCta": "Boka demo",
     "address": "app.mincfo.com/dashboard",
     "playAriaLabel": "Play demo video",
     "enterFullscreenAriaLabel": "Enter fullscreen demo",
@@ -151,13 +151,13 @@
       ],
       "forecastTitle": "Forecast",
       "liveLabel": "Live forecast",
-      "reconciliationTitle": "Reconciliation",
-      "reconciliationSubtext": "2025 · Actuals through Jun",
+      "reconciliationTitle": "",
+      "reconciliationSubtext": "",
       "actualPrefix": "Actual month",
       "forecastPrefix": "Forecast month",
       "vsPrevious": "Vs previous month",
       "annualVariance": "Annual variance vs baseline",
-      "legend": "Actuals: Jan-Jun · Forecast: Jul-Dec",
+      "legend": "",
       "monthLabelsEn": [
         "Jan",
         "Feb",
@@ -202,7 +202,7 @@
       {
         "href": "/losningar/konsult-tjanster",
         "title": "Konsult & Tjänster",
-        "text": "För rådgivare med tjänstebolag som klienter där beläggning, marginal och cash behöver följas upp tydligt och återkommande.",
+        "text": "För rådgivare med tjänstebolag som klienter där beläggning, marginal och cashflow behöver följas upp tydligt och återkommande.",
         "icon": "building"
       },
       {
@@ -236,34 +236,34 @@
         "accent": true
       },
       {
-        "company": "Qsid",
+        "company": "Hey Sid",
         "person": "Rikard Jonsson",
-        "role": "Fractional CFO",
-        "quote": "MinCFO gjorde det mycket lättare att ta fram analys och styrelseredskap snabbt över flera klienter. Jag kan lägga mer tid på rådgivning och mindre tid på att bygga underlagen manuellt.",
+        "role": "VD, Hey Sid",
+        "quote": "Vi outsourcade hela ekonomifunktionen till MinCFO och fick mer tid över till kärnverksamheten. Trots att vi inte längre gör jobbet själva, är vår förståelse för ekonomin bättre än någonsin",
         "avatarFile": "logo-rikard.avif",
         "accent": false
       },
       {
         "company": "Showcase",
         "person": "Aviv Fahri",
-        "role": "Byråpartner",
-        "quote": "Det starkaste för oss är att vi kan leverera ett mycket mer konsekvent upplägg mellan klienter, utan att varje leverans behöver byggas från noll.",
+        "role": "VD, Showcase",
+        "quote": "MinCFO tar ansvar för uppföljning och leverans, inte bara visualisering. De är proaktiva, hittar förbättringsåtgärder och kommer med konkreta råd innan vi ens hunnit ställa frågan. Vi har fått full kontroll utan att behöva lägga tiden internt.",
         "avatarFile": "logo-aviv.avif",
         "accent": true
       },
       {
-        "company": "SweBal",
+        "company": "Sweden ballistics",
         "person": "Joakim Sjöholm",
-        "role": "Rådgivare",
-        "quote": "Vi får fram bättre underlag snabbare och kan vara mer proaktiva i kunddialogen. Det höjer både kvaliteten och effektiviteten när teamet arbetar över flera uppdrag samtidigt.",
+        "role": "VD, Swebal AB",
+        "quote": "Med MinCFO slipper vi lägga värdefull tid på rapportering, finansiella analyser och administration. Istället kan vi fokusera fullt ut på vår kärnverksamhet och projekteringen av ny fabrik.",
         "avatarFile": "logo-joakim.avif",
         "accent": false
       },
       {
         "company": "Hälsa Hemma",
         "person": "Oskar Nordmark",
-        "role": "Redovisningsbyrå",
-        "quote": "MinCFO hjälper oss att paketera analys och uppföljning på ett sätt som gör tjänsten tydligare för klienten och mer skalbar för oss internt när antalet klienter växer.",
+        "role": "Financial Controller, Hälsa Hemma",
+        "quote": "MinCFO är ett viktigt stöd i vår tillväxt. Med över 100 löner i en snabbrörlig verksamhet behöver vi struktur och pålitlighet – vilket vi får varje månad. De avlastar det administrativa och levererar snabba, korrekta svar, så att vi kan fokusera på verksamheten..",
         "avatarFile": "logo-oskar.avif",
         "accent": true
       }

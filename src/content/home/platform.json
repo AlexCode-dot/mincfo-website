@@ -1,10 +1,10 @@
 {
   "hero": {
-    "tagline": "Financial Intelligence",
-    "titleLine1": "Ekonomiplattformen för team",
-    "titleLine2": "som vill styra snabbare med AI, dashboards och forecast",
-    "body": "MinCFO är för bolag som redan hanterar ekonomi internt eller via partner, men vill få bättre analys, tydligare dashboards och snabbare beslut i samma plattform.",
-    "primaryCta": "Boka demo av plattformen",
+    "tagline": "Finance-as-a-Service",
+    "titleLine1": "Ge din finansiella data en röst",
+    "titleLine2": "",
+    "body": "Maximera bolagets insikter och med AI-driven analys, modulära realtidsdashboards och smarta kassaflödesprognoser. Koppla på MinCFO på dina befintliga finansiella flöden och system.",
+    "primaryCta": "Boka demo",
     "address": "app.mincfo.com/dashboard",
     "playAriaLabel": "Play demo video",
     "enterFullscreenAriaLabel": "Enter fullscreen demo",
@@ -14,11 +14,11 @@
   },
   "aicopilot": {
     "leftPill": "Vad ni får i plattformen",
-    "leftTitle": "AI-copilot för snabbare finansiella beslut",
-    "leftIntro": "Fråga om resultat, kostnader, runway och avvikelser direkt i plattformen. Få svar, visualiseringar och förslag på nästa steg utan att bygga rapporter manuellt.",
+    "leftTitle": "Din proaktiva AI-copilot",
+    "leftIntro": "Sluta leta i rapporter och börja chatta med din data. Ställ frågor om resultat, runway och avvikelser för att få omedelbara svar, visualiseringar och strategiska råd – helt utan manuellt arbete.",
     "leftBullets": [
       "Chatta med er data och få svar direkt",
-      "Identifiera avvikelser innan de blir problem",
+      "Ai identifiera avvikelser innan problemet uppstår",
       "Arbeta mer proaktivt utan fler manuella loopar"
     ],
     "panelTitle": "AI Copilot",
@@ -99,9 +99,9 @@
       "title": "Dashboards som gör ekonomin användbar i vardagen",
       "intro": "Samla KPI:er, resultat och likviditet i samma beslutsyta. Alla som behöver förstå läget får samma uppdaterade bild, utan att vänta på nästa manuella rapport.",
       "kpiBullets": [
-        "Realtidsvy över nyckeltal och utfall",
-        "Tydligare uppföljning av kassaflöde och marginal",
-        "Beslutsunderlag som är lätta att dela i teamet"
+        "Era viktigaste KPI:er, alltid synkade och klara",
+        "Tydlig visualisering av nyckeltal och lönsamhet",
+        "Dela uppdaterade vyer med team och styrelse med ett klick"
       ],
       "resultTitle": "Income Statement · 2025",
       "currentLabel": "Current",
@@ -140,24 +140,23 @@
       "panelAria": "Planering och benchmarking",
       "pill": "Planering & Jämförelse",
       "title": "Forecasting, scenarier och bättre framförhållning",
-      "intro": "Planera framåt med samma struktur som ni följer upp i vardagen. Testa scenarier, förstå risker tidigare och prioritera utifrån faktisk ekonomisk påverkan.",
+      "intro": "Sluta gissa och börja simulera. Testa scenarier, förstå risker tidigare och prioritera utifrån faktisk ekonomisk påverkan.",
       "bullets": [
         "Forecasting i samma flöde som uppföljningen",
         "Scenarioarbete för tillväxt, kostnader och hiring",
-        "Egna dimensioner för bättre analys",
+        "Bygg bättre beslutsunderlag inför nästa steg",
         "Tidigare signaler på risk och avvikelse",
-        "Jämför segment, kunder och perioder",
-        "Bygg bättre beslutsunderlag inför nästa steg"
+        "Jämför segment, kunder och perioder"
       ],
       "forecastTitle": "Forecast",
       "liveLabel": "Live forecast",
-      "reconciliationTitle": "Reconciliation",
-      "reconciliationSubtext": "2025 · Actuals through Jun",
+      "reconciliationTitle": "",
+      "reconciliationSubtext": "",
       "actualPrefix": "Actual month",
       "forecastPrefix": "Forecast month",
       "vsPrevious": "Vs previous month",
       "annualVariance": "Annual variance vs baseline",
-      "legend": "Actuals: Jan-Jun · Forecast: Jul-Dec",
+      "legend": "",
       "monthLabelsEn": [
         "Jan",
         "Feb",
@@ -196,13 +195,13 @@
       {
         "href": "/losningar/saas-tech",
         "title": "SaaS / Tech",
-        "text": "Koppla produkt, GTM och ekonomi i samma beslutsyta för hållbar tillväxt med kontroll.",
+        "text": "Koppla produkt och GTM och finance i samma beslutsyta för skalbaroch kontrollerad  tillväxt.",
         "icon": "cpu"
       },
       {
         "href": "/losningar/konsult-tjanster",
-        "title": "Konsult & Tjänster",
-        "text": "Styr beläggning, projektmarginal och cash i realtid med tydliga signaler per kund och uppdrag.",
+        "title": "Konsulter & Tjänsteföretag",
+        "text": "Styr beläggning, projektmarginal, uppföljning och fakturering i realtid med tydliga signaler per kund och uppdrag.",
         "icon": "building"
       },
       {
@@ -216,7 +215,7 @@
   "customers": {
     "pill": "Kunder",
     "title": "Team som använder MinCFO som plattform",
-    "intro": "Här är exempel på hur bolag använder MinCFO för att få bättre överblick, snabbare analys och starkare beslutsunderlag utan att bygga allt manuellt.",
+    "intro": "Exempel på hur bolag använder MinCFO för bättre överblick, snabbare analys och starkare beslutsunderlag utan krävande manuella processer.",
     "tickerLabel": "Betrodd av team som använder MinCFO som sin finansiella beslutsyta",
     "controlsAria": "Bläddra kundomdömen",
     "prevAria": "Föregående omdöme",
@@ -236,9 +235,9 @@
         "accent": true
       },
       {
-        "company": "Qsid",
+        "company": "Hey Sid",
         "person": "Rikard Jonsson",
-        "role": "VD, Sid Marketing",
+        "role": "VD, Hey Sid",
         "quote": "MinCFO gav oss en mycket tydligare beslutsyta. Vi kan gå från fråga till analys betydligt snabbare och slipper bygga samma underlag om och om igen.",
         "avatarFile": "logo-rikard.avif",
         "accent": false
@@ -255,7 +254,7 @@
         "company": "SweBal",
         "person": "Joakim Sjöholm",
         "role": "VD, Swebal AB",
-        "quote": "Tidigare satt mycket kunskap fast i manuella filer. Med MinCFO får vi en gemensam plattform för uppföljning, analys och mer framåtlutade beslut.",
+        "quote": "Med MinCFO slipper vi lägga värdefull tid på rapportering, finansiella analyser och administration. Istället kan vi fokusera fullt ut på vår kärnverksamhet och projekteringen av ny fabrik.",
         "avatarFile": "logo-joakim.avif",
         "accent": false
       },
@@ -263,7 +262,7 @@
         "company": "Hälsa Hemma",
         "person": "Oskar Nordmark",
         "role": "Financial Controller, Hälsa Hemma",
-        "quote": "Vi får snabbare svar på ekonomiska frågor och bättre struktur i uppföljningen. Det har gjort finance mycket mer användbart för resten av verksamheten.",
+        "quote": "MinCFO är ett viktigt stöd i vår tillväxt. Med över 100 löner i en snabbrörlig verksamhet behöver vi struktur och pålitlighet – vilket vi får varje månad. De avlastar det administrativa och levererar snabba, korrekta svar, så att vi kan fokusera på verksamheten..",
         "avatarFile": "logo-oskar.avif",
         "accent": true
       }

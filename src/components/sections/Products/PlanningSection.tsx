@@ -97,8 +97,8 @@ export function PlanningSection({
           <p className={styles.text}>{content.aicopilot.planning.intro}</p>
 
           <ul className={styles.list}>
-            {content.aicopilot.planning.bullets.map((item) => (
-              <li key={item}>
+            {content.aicopilot.planning.bullets.map((item, index) => (
+              <li key={`${content.aicopilot.planning.title}-${index}-${item}`}>
                 <Check aria-hidden="true" size={14} />
                 {item}
               </li>
@@ -121,10 +121,17 @@ export function PlanningSection({
                     </span>
                   </header>
                   <div className={styles.planRecon}>
-                    <div className={styles.planReconHead}>
-                      <p>{content.aicopilot.planning.reconciliationTitle}</p>
-                      <span>{content.aicopilot.planning.reconciliationSubtext}</span>
-                    </div>
+                    {(content.aicopilot.planning.reconciliationTitle
+                      || content.aicopilot.planning.reconciliationSubtext) && (
+                      <div className={styles.planReconHead}>
+                        {content.aicopilot.planning.reconciliationTitle && (
+                          <p>{content.aicopilot.planning.reconciliationTitle}</p>
+                        )}
+                        {content.aicopilot.planning.reconciliationSubtext && (
+                          <span>{content.aicopilot.planning.reconciliationSubtext}</span>
+                        )}
+                      </div>
+                    )}
                     <div className={styles.planForecastStats}>
                       <div className={styles.planForecastStat}>
                         <p>{selectedPlanMode} ({monthLabelsEn[planMonthIndex]})</p>
@@ -175,9 +182,11 @@ export function PlanningSection({
                           }
                         />
                       </div>
-                      <p className={styles.planForecastLegend} aria-hidden="true">
-                        {content.aicopilot.planning.legend}
-                      </p>
+                      {content.aicopilot.planning.legend && (
+                        <p className={styles.planForecastLegend} aria-hidden="true">
+                          {content.aicopilot.planning.legend}
+                        </p>
+                      )}
                       <div className={styles.planMonthAxis} aria-hidden="true">
                         {monthLabelsEn.map((month) => (
                           <span key={month}>{month}</span>

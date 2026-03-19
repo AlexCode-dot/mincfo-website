@@ -5,7 +5,7 @@
     "kundcase": "Kundcase",
     "sakerhet": "Säkerhet",
     "hurDetFunkar": "Hur det funkar",
-    "demoCta": "Boka en demo",
+    "demoCta": "Boka demo",
     "loginSignupLabel": "Logga in / Sign up",
     "openSolutionsAria": "Öppna lösningsmeny",
     "openMenuAria": "Öppna meny",
@@ -61,11 +61,11 @@
       "tabListAriaLabel": "Förhandsvisa lösning",
       "pagerAriaLabel": "Showcase navigation",
       "currentPageLabel": "Nuvarande sida",
-      "currentPageCtaLabel": "Läs mer om upplägget här nere",
+      "currentPageCtaLabel": "Läs mer om upplägget",
       "platform": {
         "eyebrow": "Plattform",
         "title": "MinCFO som plattform",
-        "body": "Följ KPI:er, runway och avvikelser i samma vy. För team som redan driver ekonomi internt men vill fatta snabbare beslut.",
+        "body": "För bolag med ordning på det löpande som vill få ut mer av sin data. Med MinCFO förvandlar ni siffror till strategiska insikter i realtid.",
         "ctaLabel": "Gå till plattformssidan",
         "ctaHref": "/?offering=platform#produkt",
         "signal": "AI Copilot aktiv",
@@ -81,14 +81,14 @@
           },
           {
             "label": "Fortnox",
-            "value": "Synkad"
+            "value": "Live"
           }
         ]
       },
       "full-service": {
         "eyebrow": "Helhetslösning",
         "title": "Ekonomifunktionen som tjänst",
-        "body": "MinCFO tar fullt ansvar för rapportering, uppföljning och ekonomisk struktur. Ni får en fungerande ekonomifunktion utan att behöva bygga den internt.",
+        "body": "MinCFO tar fullt ansvar för rapportering, uppföljning och finansiell struktur.Ta nästa steg mot en state-of-the-art-ekonomifunktion!",
         "ctaLabel": "Gå till helhetslösningen",
         "ctaHref": "/?offering=full-service#produkt",
         "serviceVisual": {
@@ -111,24 +111,24 @@
         }
       },
       "partner": {
-        "eyebrow": "För byråer",
-        "title": "Skalbar leverans för flera klienter",
+        "eyebrow": "För redovisningsbyråer och ekonomikonsulter",
+        "title": "Skalbar leverans för fler klienter",
         "body": "Standardisera analys, dashboards och rådgivning över flera bolag utan att varje uppdrag blir ett eget specialcase.",
         "ctaLabel": "Gå till byråsidan",
         "ctaHref": "/?offering=partner#produkt",
         "signal": "Klientportfölj synkad",
         "stats": [
           {
-            "label": "Klientvyer",
-            "value": "Multi"
+            "label": "Rapporter",
+            "value": "Live"
           },
           {
-            "label": "Benchmark",
-            "value": "Redo"
+            "label": "Prognos",
+            "value": "12 månader"
           },
           {
-            "label": "Board packs",
-            "value": "Snabbare"
+            "label": "Fortnox",
+            "value": "Synkad"
           }
         ]
       }
@@ -142,7 +142,7 @@
         "bullets": [
           "AI-copilot och dashboards i realtid",
           "Forecasting, scenarier och beslutsstöd",
-          "Passar team med egen finance-funktion"
+          "Passar team med fungerande ekonomihantering som är redo att växla upp"
         ],
         "cta": "Visa plattform"
       },
@@ -153,7 +153,7 @@
         "body": "För bolag som vill att MinCFO sköter ekonomi, rapportering och uppföljning åt dem, medan teamet följer läget i realtid i plattformen.",
         "bullets": [
           "Vi driver ekonomiflödet end-to-end",
-          "Ni får tydlig uppföljning på KPI:er, cash och avvikelser",
+          "Ni får tydlig uppföljning på KPI:er, cashflow och avvikelser",
           "Passar team som vill lägga fokus på verksamheten"
         ],
         "cta": "Visa helhetslösning"
@@ -188,18 +188,18 @@
             "title": "Skapa konto",
             "body": "Kom igång direkt i plattformen.",
             "highlights": [
-              "Skapa konto på några minuter",
+              "Skapa konto på några klick",
               "Säker onboarding med verifiering",
               "Direkt tillgång till plattformen"
             ]
           },
           {
-            "title": "Koppla Fortnox",
-            "body": "Ni kopplar Fortnox på några klick. MinCFO sätter upp dashboards och rapportstruktur.",
+            "title": "Koppla Redovisningssystem",
+            "body": "Koppla till befintligt redovisningssystem på några klick. MinCFO sätter automatiskt upp dashboards och rapportstruktur.",
             "highlights": [
-              "Koppla Fortnox på några klick",
-              "Dashboards och rapportstruktur sätts upp",
-              "Data synkas löpande till MinCFO efter aktivering"
+              "Koppla upp ert redovisningssystem på några klick",
+              "Anpassningsbar dashboards och rapportstruktur sätts upp",
+              "Data synkas löpande till MinCFO efter aktiverad koppling"
             ]
           },
           {
@@ -253,8 +253,8 @@
         "tabLabel": "För byråer",
         "steps": [
           {
-            "title": "Bygg ert klientupplägg",
-            "body": "Sätt en gemensam modell för dashboards, KPI:er, rapportstruktur och uppföljning så att nya klienter kan onboardas i samma arbetssätt i stället för att varje uppdrag blir ett specialcase.",
+            "title": "Optimera er klienthantering",
+            "body": "Sluta bygga varje kundresa från grunden. Genom att sätta en gemensam modell för dashboards, KPIer och rapportstrukturer skapar ni en enhetlig leverans där varje ny klient onboardas i ett beprövat arbetssätt istället för ett tidskrävande specialcase.",
             "highlights": [
               "Återanvändbara mallar för dashboards och rapportpaket",
               "Snabbare onboarding av nya klienter",
@@ -262,21 +262,21 @@
             ]
           },
           {
-            "title": "Följ upp klientportföljen",
-            "body": "Arbeta i samma vy för flera klienter och se snabbare vilka bolag som avviker mot budget, behöver uppföljning eller är redo för nästa rådgivningsmöte.",
+            "title": "Monitorera hela klientportföljen",
+            "body": "Få en samlad vy över alla klienter och identifiera direkt vilka bolag som avviker mot budget, har ansträngd likviditet eller är redo för nästa rådgivningsmöte.",
             "highlights": [
               "Enklare uppföljning över flera klienter samtidigt",
-              "Tydligare signaler på risk, cash och avvikelser",
-              "Mer jämförbara analyser mellan klienter och segment"
+              "Automatiska varningssignaler för risker i kassaflöde och avvikelser",
+              "Jämför nyckeltal mellan klienter och branschsegment"
             ]
           },
           {
-            "title": "Leverera rådgivning snabbare",
-            "body": "Använd AI, färdiga beslutsunderlag och samma arbetsyta för att gå från rådata till tydliga rekommendationer snabbare i varje kunddialog.",
+            "title": "Skala er rådgivning med precision",
+            "body": "Använd MinCFO som din digitala analytiker. Med AI-stöd och automatiserade rapportpaket kortar ni vägen mellan bokföring och affärsnytta, vilket gör att ni kan agera som en proaktiv partner snarare än en reaktiv leverantör.",
             "highlights": [
-              "Snabbare väg från rådata till kundklar analys",
-              "Mer tid till rådgivning och mindre tid i manuella filer",
-              "Skalbar leverans utan att kvaliteten tappar"
+              "Färdiga analyser och förslag på åtgärder direkt i plattformen",
+              "Presentera proffsiga dashboards direkt i kundens arbetsyta",
+              "Öka antalet klienter samtidigt som precision ökar"
             ]
           }
         ]
@@ -372,8 +372,8 @@
           "settings": "Inställningar"
         },
         "home": {
-          "title": "Din arbetsyta",
-          "subtitle": "Hantera bolag, integrationer och uppföljning i samma vy.",
+          "title": "Byråns kontrollpanel",
+          "subtitle": "Hantera er arbetsyta, klientstandarder och gemensamma flöden.",
           "columns": [
             "Bolag",
             "Datakälla",
@@ -473,7 +473,7 @@
             },
             {
               "label": "KPI-mall",
-              "detail": "Runway, marginal och cash som standard",
+              "detail": "Runway, marginal och cashflow som standard",
               "meta": "K",
               "tag": "Aktiv",
               "status": "Redo"

@@ -1,10 +1,10 @@
 {
   "hero": {
-    "tagline": "Financial Intelligence",
-    "titleLine1": "Vi sköter ekonomin åt er",
+    "tagline": "Finance-as-a-Service",
+    "titleLine1": "Er kompletta ekonomifunktion",
     "titleLine2": "ni följer läget i realtid i MinCFO",
-    "body": "Helhetslösningen är för bolag som vill lägga ekonomi, rapportering och uppföljning hos MinCFO. Ni får en outsourcad ekonomifunktion med plattform, operativ leverans och proaktiv rådgivning i samma upplägg.",
-    "primaryCta": "Prata med oss om helhetslösning",
+    "body": "Låt MinCFO ta fullt ansvar för redovisning, rapportering och uppföljning. Ni får en helt outsourcad ekonomiavdelning där vi kombinerar operativ leverans med proaktiv rådgivning i en och samma plattform.",
+    "primaryCta": "Levla upp till en komplett ekonomifunktion",
     "address": "app.mincfo.com/dashboard",
     "playAriaLabel": "Play demo video",
     "enterFullscreenAriaLabel": "Enter fullscreen demo",
@@ -15,10 +15,10 @@
   "aicopilot": {
     "leftPill": "Vad ni får i helhetslösningen",
     "leftTitle": "En finance as a service-lösning, inte bara ett verktyg",
-    "leftIntro": "MinCFO tar ansvar för det löpande ekonomiarbetet tillsammans med er. Ni får rapportering, struktur, uppföljning och proaktiv rådgivning, medan plattformen blir er gemensamma vy för att följa läget i realtid.",
+    "leftIntro": "MinCFO tar ansvar för det löpande ekonomiarbetet tillsammans med er. Ni får rapportering, struktur, uppföljning och proaktiv rådgivning och plattformen blir er gemensamma single source of trooth där ni  följer upp i realtid.",
     "leftBullets": [
       "Vi sköter ekonomiflödet end-to-end",
-      "Ni får realtidsinsyn i KPI:er, cash och avvikelser",
+      "Ni får realtidsinsyn i KPI:er, cashflow och avvikelser",
       "Personlig controller/CFO on demand ovanpå plattformen"
     ],
     "panelTitle": "AI Copilot",
@@ -100,8 +100,8 @@
       "intro": "MinCFO hanterar rapportering och uppföljning i bakgrunden. Ni får en tydlig dashboard för att följa resultat, likviditet och nyckeltal utan att själva behöva jaga underlag eller bygga rapporter.",
       "kpiBullets": [
         "Rapporter och KPI:er uppdateras löpande av MinCFO",
-        "Likviditet och utfall följs i samma dashboard",
-        "Ledningen får en tydlig styrbild utan extra admin"
+        "Likviditet och utfall följs i samma vy",
+        "Strategiskt beslutsstöd utan operativ belastning"
       ],
       "resultTitle": "Income Statement · 2025",
       "currentLabel": "Current",
@@ -140,24 +140,22 @@
       "panelAria": "Planering och benchmarking",
       "pill": "Planering & Jämförelse",
       "title": "Forecast och scenarier som del av leveransen",
-      "intro": "Ni slipper bygga upp budget- och forecastprocessen internt. MinCFO hjälper er att sätta struktur, följa upp avvikelser och ge rekommendationer kring nästa steg i ekonomin.",
+      "intro": "Ni slipper bygga upp budget- och forecastprocessen internt. MinCFO hjälper er att sätta struktur, följa upp avvikelser och ge rekommendationer kring nästa steg.",
       "bullets": [
-        "Budget, forecast och uppföljning i ett gemensamt upplägg",
-        "Scenarioanalys för hiring, kostnader och tillväxt",
-        "Tidigare signaler på risker i likviditet och burn",
-        "Mindre intern belastning i rapportering och finance-admin",
-        "Bättre beslutsunderlag inför styrelse och ledning",
-        "Mer tid för verksamheten att fokusera på kärnan"
+        "Forecast och uppföljning i en gemensam vy",
+        "Scenarioanalys för hiring, kostnader och intäkter",
+        "Tidiga signaler på risker i likviditeten",
+        "Mindre intern belastning i rapportering och admin"
       ],
       "forecastTitle": "Forecast",
       "liveLabel": "Live forecast",
-      "reconciliationTitle": "Reconciliation",
-      "reconciliationSubtext": "2025 · Actuals through Jun",
+      "reconciliationTitle": "",
+      "reconciliationSubtext": "",
       "actualPrefix": "Actual month",
       "forecastPrefix": "Forecast month",
       "vsPrevious": "Vs previous month",
       "annualVariance": "Annual variance vs baseline",
-      "legend": "Actuals: Jan-Jun · Forecast: Jul-Dec",
+      "legend": "",
       "monthLabelsEn": [
         "Jan",
         "Feb",
@@ -178,7 +176,7 @@
   "solutions": {
     "pill": "Lösningar",
     "title": "För bolag som vill att MinCFO tar hand om ekonomin",
-    "intro": "Helhetslösningen passar bolag som vill ha en outsourcad ekonomifunktion med tydligt ansvar, löpande leverans och realtidsinsyn i samma plattform.",
+    "intro": "Ett komplett upplägg för team som vill lämna över det operativa arbetet och istället fokusera på tillväxt. Vi driver hela ekonomiflödet proaktivt medan ni följer läget, KPI:er och avvikelser i realtid",
     "cardCta": "Se lösning",
     "cards": [
       {
@@ -190,25 +188,25 @@
       {
         "href": "/losningar/cfo-finance",
         "title": "CFO & Finance Team",
-        "text": "För bolag som behöver mer kapacitet i redovisning, uppföljning och rapportering än det interna teamet hinner bära själva.",
+        "text": "Lämna över det operativa ansvaret till experter som ser runt hörnet. Med vår helhetslösning får ni full kontroll och ett proaktivt beslutsstöd.",
         "icon": "briefcase"
       },
       {
         "href": "/losningar/saas-tech",
         "title": "SaaS / Tech",
-        "text": "För tillväxtbolag som vill att någon annan driver uppföljning, rapportering och ekonomistruktur medan teamet fokuserar på verksamheten.",
+        "text": "För tillväxtbolag som vill ha en partner som driver ekonomistyrningen framåt. Vi sköter uppföljning och struktur, så att ert team kan lägga all energi på att bygga verksamheten.",
         "icon": "cpu"
       },
       {
         "href": "/losningar/konsult-tjanster",
         "title": "Konsult & Tjänster",
-        "text": "För tjänstebolag som vill få ordning på rapportering, cash och uppföljning utan att bygga ett större internt finance-upplägg.",
+        "text": "För tjänstebolag som vill ha kontroll på kassaflöde och rapportering utan att belasta den egna organisationen. Vi bygger och driver er ekonomistruktur, så att ni får ett finance-upplägg i världsklass.",
         "icon": "building"
       },
       {
         "href": "/losningar/ehandel",
         "title": "E-handel",
-        "text": "För e-handelsbolag som vill outsourca ekonomi och samtidigt följa marginal, lager och likviditet i realtid.",
+        "text": "För e-handelsbolag som vill outsourca ekonomin utan att tappa greppet om marginalerna. Vi driver den löpande hanteringen medan ni följer lager, likviditet och lönsamhet i realtid",
         "icon": "cart"
       }
     ]
@@ -216,7 +214,7 @@
   "customers": {
     "pill": "Kunder",
     "title": "Bolag som använder MinCFO som sin ekonomifunktion",
-    "intro": "Här är exempel på team som använder MinCFO som helhetslösning för att slippa driva finance internt, men ändå ha full insyn i resultat, cash och avvikelser.",
+    "intro": "Här är exempel på team som använder MinCFO som helhetslösning för att slippa driva finance internt, men ändå ha full insyn i resultat, cashflow och avvikelser.",
     "tickerLabel": "Betrodd av bolag som vill lägga ekonomi och uppföljning hos en extern partner",
     "controlsAria": "Bläddra kundomdömen",
     "prevAria": "Föregående omdöme",
@@ -236,10 +234,10 @@
         "accent": true
       },
       {
-        "company": "Qsid",
+        "company": "Hey Sid",
         "person": "Rikard Jonsson",
-        "role": "VD, Sid Marketing",
-        "quote": "För oss blev skillnaden att vi kunde sluta driva stora delar av ekonomiarbetet själva. MinCFO tog över leveransen, medan vi fick mycket bättre insyn än tidigare.",
+        "role": "VD, Hey Sid",
+        "quote": "Vi outsourcade hela ekonomifunktionen till MinCFO och fick mer tid över till kärnverksamheten. Trots att vi inte längre gör jobbet själva, är vår förståelse för ekonomin bättre än någonsin",
         "avatarFile": "logo-rikard.avif",
         "accent": false
       },
@@ -247,15 +245,15 @@
         "company": "Showcase",
         "person": "Aviv Fahri",
         "role": "VD, Showcase",
-        "quote": "Det som fungerat bäst är att MinCFO faktiskt tar ansvar för uppföljning och leverans, inte bara visar data. Vi får kontroll utan att lägga samma tid internt.",
+        "quote": "MinCFO tar ansvar för uppföljning och leverans, inte bara visualisering. De är proaktiva, hittar förbättringsåtgärder och kommer med konkreta råd innan vi ens hunnit ställa frågan. Vi har fått full kontroll utan att behöva lägga tiden internt.",
         "avatarFile": "logo-aviv.avif",
         "accent": true
       },
       {
-        "company": "SweBal",
+        "company": "Sweden ballistics",
         "person": "Joakim Sjöholm",
         "role": "VD, Swebal AB",
-        "quote": "Tidigare blev finance lätt något vi fick jaga ikapp. Med MinCFO får vi ett upplägg där ekonomin drivs löpande och vi kan fokusera mer på verksamheten.",
+        "quote": "Med MinCFO slipper vi lägga värdefull tid på rapportering, finansiella analyser och administration. Istället kan vi fokusera fullt ut på vår kärnverksamhet och projekteringen av ny fabrik.",
         "avatarFile": "logo-joakim.avif",
         "accent": false
       },
@@ -263,7 +261,7 @@
         "company": "Hälsa Hemma",
         "person": "Oskar Nordmark",
         "role": "Financial Controller, Hälsa Hemma",
-        "quote": "Vi får både avlastning och bättre styrning samtidigt. Det känns som att vi har en ekonomifunktion på plats, utan att behöva bygga hela teamet själva.",
+        "quote": "MinCFO är ett viktigt stöd i vår tillväxt. Med över 100 löner i en snabbrörlig verksamhet behöver vi struktur och pålitlighet – vilket vi får varje månad. De avlastar det administrativa och levererar snabba, korrekta svar, så att vi kan fokusera på verksamheten..",
         "avatarFile": "logo-oskar.avif",
         "accent": true
       }
@@ -330,6 +328,6 @@
   "ending": {
     "title": "Se hur MinCFO fungerar som helhetslösning för ert bolag",
     "body": "Boka ett samtal och se hur MinCFO kan ta ansvar för ekonomi, rapportering och uppföljning åt er, medan ni följer allt i realtid i plattformen.",
-    "primaryCta": "Prata med oss om helhetslösning"
+    "primaryCta": "Boka en tid för samtal"
   }
 }

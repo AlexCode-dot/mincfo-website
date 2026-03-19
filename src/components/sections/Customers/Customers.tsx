@@ -184,7 +184,7 @@ export default function Customers() {
             if (index === activeIndex) positionClass = styles.centerCard;
             else if (index === prevIndex) positionClass = styles.leftCard;
             else if (index === nextIndex) positionClass = styles.rightCard;
-            const companyLogoFile = trustedLogoByName.get(item.company);
+            const companyLogoFile = trustedLogoByName.get(item.company) ?? (item.company === "Hey Sid" ? "logo-sid.png" : undefined);
 
             return (
               <article
@@ -201,7 +201,18 @@ export default function Customers() {
                 onKeyDown={(event) => handleCardKeyDown(event, index)}
               >
                 <div className={styles.companyBrand}>
-                  {companyLogoFile ? (
+                  {companyLogoFile ? item.company === "Hey Sid" ? (
+                    <span className={styles.companyLogoFrameHeySid}>
+                      <Image
+                        className={`${styles.companyLogo} ${styles.companyLogoHeySid}`}
+                        src={`/customers/logos/${companyLogoFile}`}
+                        alt={`${item.company} logo`}
+                        width={220}
+                        height={44}
+                        loading="lazy"
+                      />
+                    </span>
+                  ) : (
                     <Image
                       className={`${styles.companyLogo} ${item.company === "Showcase" ? styles.logoSoft : ""}`}
                       src={`/customers/logos/${companyLogoFile}`}

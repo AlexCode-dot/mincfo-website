@@ -10,6 +10,7 @@ import {
   RefreshCw,
   ReceiptText,
   Sparkles,
+  TrendingUp,
   UserRound,
   UsersRound,
   Workflow,
@@ -25,7 +26,9 @@ import {
   useSyncExternalStore,
   type CSSProperties,
   type FormEvent,
+  type SVGProps,
 } from "react";
+import { Bar, BarChart, Cell, ResponsiveContainer, XAxis } from "recharts";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
 import BeamBackgroundMain from "@/components/visual/BeamBackgroundMain/BeamBackgroundMain";
@@ -61,9 +64,68 @@ type OfferModel = {
   }>;
 };
 
+function GradientBarShape(
+  props: SVGProps<SVGRectElement> & {
+    animateOnMount?: boolean;
+    animationIndex?: number;
+    dataKey?: string;
+  },
+) {
+  const {
+    animateOnMount = false,
+    animationIndex = 0,
+    fill,
+    x = 0,
+    y = 0,
+    width = 0,
+    height = 0,
+    dataKey = "value",
+  } = props;
+
+  if (!width || !height) {
+    return null;
+  }
+
+  const numericX = typeof x === "number" ? x : Number(x ?? 0);
+  const numericY = typeof y === "number" ? y : Number(y ?? 0);
+  const gradientId = `faas-gradient-bar-${dataKey}-${Math.round(numericX)}-${Math.round(numericY)}`;
+
+  return (
+    <>
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={String(fill)} stopOpacity="0.9" />
+          <stop offset="100%" stopColor={String(fill)} stopOpacity="0.04" />
+        </linearGradient>
+      </defs>
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        rx={8}
+        ry={8}
+        fill={`url(#${gradientId})`}
+        className={animateOnMount ? styles.faasRealtimeBarShape : undefined}
+        style={
+          animateOnMount
+            ? ({ "--faas-bar-delay": `${animationIndex * 55}ms` } as CSSProperties)
+            : undefined
+        }
+      />
+    </>
+  );
+}
+
 const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
 const HOW_IT_WORKS_STEP_SCROLL_FACTOR = 0.72;
 const HOW_IT_WORKS_PROGRESS_ACCELERATION = 1.12;
+const HOW_IT_WORKS_PROGRESS_ACCELERATION_BY_OFFER: Record<OfferKey, number> = {
+  platform: HOW_IT_WORKS_PROGRESS_ACCELERATION,
+  faas: 0.88,
+  partner: HOW_IT_WORKS_PROGRESS_ACCELERATION,
+};
+const FAAS_ALERT_ROTATION_INTERVAL_MS = 3200;
 const getPartnerWorkspaceToggleState = (rows: PartnerWorkspaceRow[]) =>
   Object.fromEntries(rows.map((row) => [row.label, row.status === "Aktiv"]));
 const subscribeHydration = () => () => {};
@@ -425,6 +487,7 @@ export default function HowItWorks() {
   const activeOffer: OfferKey =
     offering === "full-service" ? "faas" : offering === "partner" ? "partner" : "platform";
   const currentOffer = offers[activeOffer];
+  const progressAcceleration = HOW_IT_WORKS_PROGRESS_ACCELERATION_BY_OFFER[activeOffer];
   const sectionIntroByOffer = content.howItWorks.sectionIntroByOffer as Record<OfferKey, string>;
   const partnerWorkspaceContent = content.howItWorks.ui.partnerWorkspace;
   const partnerWorkspaceScreens: Record<PartnerWorkspaceView, PartnerWorkspaceScreen> =
@@ -433,6 +496,21 @@ export default function HowItWorks() {
   const [partnerWorkspaceUserToggles, setPartnerWorkspaceUserToggles] = useState<Record<string, boolean>>(
     () => getPartnerWorkspaceToggleState(partnerWorkspaceScreens.users.rows),
   );
+  const [faasAlertCycle, setFaasAlertCycle] = useState(0);
+  const [faasBarsAnimatedOnce, setFaasBarsAnimatedOnce] = useState(false);
+  const faasAlertPool = [
+    "Personalkostnad ligger 1.7% over budget",
+    "Kundinbetalningar ligger 4 dagar efter plan",
+    "Bruttomarginalen ar 0.9 procentenheter under manadsplan",
+    "Likviditetsprognosen ar uppdaterad efter senaste leverantorsutbetalning",
+  ];
+  const faasVisibleAlerts = Array.from({ length: 2 }, (_, index) => {
+    const alertIndex = (faasAlertCycle * 2 + index) % faasAlertPool.length;
+    return {
+      id: `${faasAlertCycle}-${alertIndex}`,
+      text: faasAlertPool[alertIndex],
+    };
+  });
 
   const handlePartnerWorkspaceNavClick = useCallback((nextView: PartnerWorkspaceView) => {
     setPartnerWorkspaceView(nextView);
@@ -518,7 +596,7 @@ export default function HowItWorks() {
       const progress = isReducedMotion ? 1 : clamp(-rect.top / scrollable, 0, 1);
       const acceleratedProgress = isReducedMotion
         ? 1
-        : clamp(progress * HOW_IT_WORKS_PROGRESS_ACCELERATION, 0, 1);
+        : clamp(progress * progressAcceleration, 0, 1);
       const dominantStep = getStableDominantStep(
         acceleratedProgress * Math.max(totalSteps - 1, 1),
         lastDominantStepRef.current,
@@ -563,7 +641,27 @@ export default function HowItWorks() {
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, [currentOffer.steps.length, isReducedMotion, activeOffer]);
+  }, [currentOffer.steps.length, isReducedMotion, activeOffer, progressAcceleration]);
+
+  useEffect(() => {
+    if (isReducedMotion) return undefined;
+
+    const interval = window.setInterval(() => {
+      setFaasAlertCycle((current) => current + 1);
+    }, FAAS_ALERT_ROTATION_INTERVAL_MS);
+
+    return () => window.clearInterval(interval);
+  }, [isReducedMotion]);
+
+  useEffect(() => {
+    if (isReducedMotion) return undefined;
+
+    const timeout = window.setTimeout(() => {
+      setFaasBarsAnimatedOnce(true);
+    }, 1100);
+
+    return () => window.clearTimeout(timeout);
+  }, [isReducedMotion]);
 
   const handleAccountHandoff = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -618,25 +716,16 @@ export default function HowItWorks() {
               const isFaasRealtimeStep = currentOffer.key === "faas" && index === 2;
               const isPartnerSystemsStep = currentOffer.key === "partner" && index === 0;
               const isPartnerPortfolioStep = currentOffer.key === "partner" && index === 1;
-              const faasRealtimeMonths = content.howItWorks.ui.faasRealtime.months;
-              const faasRealtimeCashflowK = [180, 205, 232, 261, 296, 320];
-              const faasRealtimeRunwayMonths = [12.9, 13.2, 13.4, 13.7, 13.9, 14.2];
-              const faasRealtimeVariancePct = [5.2, 4.7, 4.1, 3.6, 3.3, 3.1];
-              const faasRealtimeChartWidth = 320;
-              const faasRealtimeChartHeight = 120;
-              const faasRealtimeLatestIndex = faasRealtimeCashflowK.length - 1;
-              const faasRealtimeMinFlow = Math.min(...faasRealtimeCashflowK);
-              const faasRealtimeMaxFlow = Math.max(...faasRealtimeCashflowK);
-              const faasRealtimeRange = Math.max(faasRealtimeMaxFlow - faasRealtimeMinFlow, 1);
-              const faasRealtimeTrendPoints = faasRealtimeCashflowK
-                .map((value, dataIndex) => {
-                  const x =
-                    (dataIndex / Math.max(faasRealtimeLatestIndex, 1)) * faasRealtimeChartWidth;
-                  const normalized = (value - faasRealtimeMinFlow) / faasRealtimeRange;
-                  const y = faasRealtimeChartHeight - 20 - normalized * 78;
-                  return `${x},${y}`;
-                })
-                .join(" ");
+              const faasRealtimeMonths = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+              const faasRealtimeCashflowK = [198, 244, 221, 257, 254, 271, 266, 284, 301, 312, 326, 338];
+              const faasRealtimeRunwayMonths = [13.8, 14.1, 14.2, 14.5, 14.7, 14.9, 15.1, 15.3, 15.4, 15.6, 15.8, 16.0];
+              const faasRealtimeVariancePct = [3.4, 3.1, 2.8, 2.5, 2.3, 2.1, 1.9, 1.7, 1.8, 1.6, 1.4, 1.3];
+              const faasRealtimeLatestActualIndex = 7;
+              const faasRealtimeChartData = faasRealtimeMonths.map((month, dataIndex) => ({
+                cashflow: faasRealtimeCashflowK[dataIndex],
+                isForecast: dataIndex > faasRealtimeLatestActualIndex,
+                month,
+              }));
               const isCenteredPlatformStep =
                 isCreateAccountStep ||
                 isInsightsStep ||
@@ -962,66 +1051,93 @@ export default function HowItWorks() {
                                 <span className={styles.faasRealtimeLogoWord}>{content.footer.brandWord}</span>
                               </span>
                             </span>
-                            <span className={styles.faasRealtimeStatus}>{content.howItWorks.ui.faasRealtime.statusUpdated}</span>
+                            <span className={styles.faasRealtimeStatus}>
+                              <span className={styles.faasRealtimeStatusDot} aria-hidden="true" />
+                              <span>Live</span>
+                            </span>
                           </div>
 
                           <div className={styles.faasRealtimeStats}>
                             <div className={styles.faasRealtimeStat}>
                               <span className={styles.faasRealtimeStatLabel}>{content.howItWorks.ui.faasRealtime.cashflowLabel}</span>
-                              <strong>+{faasRealtimeCashflowK[faasRealtimeLatestIndex]} tkr</strong>
+                              <strong>+{faasRealtimeCashflowK[faasRealtimeLatestActualIndex]} tkr</strong>
                             </div>
                             <div className={styles.faasRealtimeStat}>
                               <span className={styles.faasRealtimeStatLabel}>{content.howItWorks.ui.faasRealtime.runwayLabel}</span>
                               <strong>
-                                {faasRealtimeRunwayMonths[faasRealtimeLatestIndex].toFixed(1)} {content.howItWorks.ui.faasRealtime.monthSuffix}
+                                {faasRealtimeRunwayMonths[faasRealtimeLatestActualIndex].toFixed(1)} {content.howItWorks.ui.faasRealtime.monthSuffix}
                               </strong>
                             </div>
                             <div className={styles.faasRealtimeStat}>
                               <span className={styles.faasRealtimeStatLabel}>{content.howItWorks.ui.faasRealtime.deviationLabel}</span>
-                              <strong>+{faasRealtimeVariancePct[faasRealtimeLatestIndex].toFixed(1)}%</strong>
+                              <strong>+{faasRealtimeVariancePct[faasRealtimeLatestActualIndex].toFixed(1)}%</strong>
                             </div>
                           </div>
 
                           <div className={styles.faasRealtimeChart}>
-                            <svg
-                              className={styles.faasRealtimeLine}
-                              viewBox={`0 0 ${faasRealtimeChartWidth} ${faasRealtimeChartHeight}`}
-                              preserveAspectRatio="none"
-                              aria-hidden="true"
-                            >
-                              <polyline points={faasRealtimeTrendPoints} />
-                            </svg>
-                            <div className={styles.faasRealtimeBars}>
-                              {faasRealtimeCashflowK.map((value, dataIndex) => {
-                                const normalized = (value - faasRealtimeMinFlow) / faasRealtimeRange;
-                                const height = 42 + normalized * 48;
-                                return (
-                                  <span key={faasRealtimeMonths[dataIndex]} className={styles.faasRealtimeBarItem}>
-                                    <span
-                                      className={styles.faasRealtimeBar}
-                                      style={{ height: `${height}%` } as CSSProperties}
-                                    />
-                                    <em>{faasRealtimeMonths[dataIndex]}</em>
+                            <div className={styles.faasRealtimeChartHeader}>
+                              <div className={styles.faasRealtimeChartHeading}>
+                                <div className={styles.faasRealtimeChartTitleRow}>
+                                  <span className={styles.faasRealtimeChartTitle}>Netto kassaflöde</span>
+                                  <span className={styles.faasRealtimeTrendBadge}>
+                                    <TrendingUp aria-hidden="true" size={12} />
+                                    <span>+6.8%</span>
                                   </span>
-                                );
-                              })}
+                                </div>
+                                <p className={styles.faasRealtimeChartDescription}>Jan-Aug utfall • Sep-Dec prognos</p>
+                              </div>
+                            </div>
+
+                            <div className={styles.faasRealtimePlot} aria-hidden="true">
+                              <ResponsiveContainer width="100%" height="100%">
+                                <BarChart
+                                  data={faasRealtimeChartData}
+                                  margin={{ top: 10, right: 8, left: 8, bottom: 8 }}
+                                  barCategoryGap="22%"
+                                >
+                                  <XAxis
+                                    dataKey="month"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tickMargin={10}
+                                    interval={0}
+                                    tick={{ fill: "rgba(163, 186, 223, 0.88)", fontSize: 10 }}
+                                    tickFormatter={(value: string) => value.slice(0, 3)}
+                                  />
+                                  <Bar
+                                    dataKey="cashflow"
+                                    fill="rgba(58, 103, 255, 0.92)"
+                                    shape={(shapeProps) => (
+                                      <GradientBarShape
+                                        {...shapeProps}
+                                        animateOnMount={!isReducedMotion && !faasBarsAnimatedOnce}
+                                        animationIndex={shapeProps.index ?? 0}
+                                      />
+                                    )}
+                                  >
+                                    {faasRealtimeChartData.map((entry) => (
+                                      <Cell
+                                        key={entry.month}
+                                        fill={entry.isForecast ? "rgba(58, 103, 255, 0.52)" : "rgba(58, 103, 255, 0.92)"}
+                                      />
+                                    ))}
+                                  </Bar>
+                                </BarChart>
+                              </ResponsiveContainer>
                             </div>
                           </div>
 
                           <div className={styles.faasRealtimeAlerts}>
-                            <div className={styles.faasRealtimeAlert}>
-                              <span className={styles.faasRealtimeAlertDot} />
-                              <span>
-                                {content.howItWorks.ui.faasRealtime.personnelAlertTemplate.replace(
-                                  "{value}",
-                                  faasRealtimeVariancePct[faasRealtimeLatestIndex].toFixed(1),
-                                )}
-                              </span>
-                            </div>
-                            <div className={styles.faasRealtimeAlert}>
-                              <span className={styles.faasRealtimeAlertDot} />
-                              <span>{content.howItWorks.ui.faasRealtime.latePaymentsAlert}</span>
-                            </div>
+                            {faasVisibleAlerts.map((alert, alertIndex) => (
+                              <div
+                                key={alert.id}
+                                className={styles.faasRealtimeAlert}
+                                style={{ "--faas-alert-delay": `${alertIndex * 320}ms` } as CSSProperties}
+                              >
+                                <span className={styles.faasRealtimeAlertDot} />
+                                <span>{alert.text}</span>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       ) : shouldRenderRichVisual && isFaasOnboardingStep ? (
@@ -1091,7 +1207,7 @@ export default function HowItWorks() {
                               <path d="M368 214 L450 214 L482 204" />
                             </g>
                             <g className={`${styles.faasSystemsBranch} ${styles.faasSystemsBranchBottomCenter}`}>
-                              <path d="M310 258 L310 308" />
+                              <path d="M310 260 L310 324" />
                             </g>
 
                           </svg>

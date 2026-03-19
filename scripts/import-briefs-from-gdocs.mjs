@@ -163,6 +163,88 @@ function shouldIncludeHomeSectionTitle(sectionTitle, modeTitle, includeShared) {
   return sectionTitle.startsWith(`${modeTitle} -`);
 }
 
+const HOME_MODE_SECTION_CONFIG = {
+  platform: {
+    sharedOfferKey: "platform",
+    howItWorksOfferKey: "platform",
+    howItWorksOfferLabel: "Plattform",
+    extraSharedSectionTitles: [
+      "Gemensamt - Så här fungerar det - Plattform / Skapa konto (UI)",
+      "Gemensamt - Så här fungerar det - Plattform / Koppla Fortnox (UI)",
+      "Gemensamt - Så här fungerar det - Plattform / Realtidsinsikter & AI (UI)",
+    ],
+  },
+  "full-service": {
+    sharedOfferKey: "full-service",
+    howItWorksOfferKey: "faas",
+    howItWorksOfferLabel: "FaaS",
+    extraSharedSectionTitles: [
+      "Gemensamt - Så här fungerar det - FaaS / Onboarding & scope (UI)",
+      "Gemensamt - Så här fungerar det - FaaS / Koppla system & behörigheter (UI)",
+      "Gemensamt - Så här fungerar det - FaaS / Vi sköter ekonomin (UI)",
+    ],
+  },
+  partner: {
+    sharedOfferKey: "partner",
+    howItWorksOfferKey: "partner",
+    howItWorksOfferLabel: "För byråer",
+    extraSharedSectionTitles: [
+      "Gemensamt - Så här fungerar det - Partner / Workspace (UI)",
+    ],
+  },
+};
+
+function pathStartsWith(path, prefix) {
+  if (path.length < prefix.length) return false;
+  return prefix.every((part, index) => path[index] === part);
+}
+
+function buildModeSpecificSharedBindings(home, allBindings, modeKey) {
+  const config = HOME_MODE_SECTION_CONFIG[modeKey];
+  if (!config || modeKey === "platform") return new Map();
+
+  const bindings = new Map();
+  const optionIndex = home.offering?.options?.findIndex((option) => option?.id === config.sharedOfferKey) ?? -1;
+
+  const offeringBindings = allBindings.get("Gemensamt - Erbjudande") ?? [];
+  const scopedOfferingBindings = offeringBindings.filter(({ path }) => {
+    if (pathStartsWith(path, ["offering", "showcase", config.sharedOfferKey])) return true;
+    if (optionIndex >= 0 && pathStartsWith(path, ["offering", "options", optionIndex])) return true;
+    return false;
+  });
+  if (scopedOfferingBindings.length) {
+    bindings.set("Gemensamt - Erbjudande", scopedOfferingBindings);
+  }
+
+  const overviewBindings = allBindings.get("Gemensamt - Så här fungerar det - Översikt") ?? [];
+  const scopedOverviewBindings = overviewBindings.filter(({ path }) =>
+    pathStartsWith(path, ["howItWorks", "sectionIntroByOffer", config.howItWorksOfferKey]),
+  );
+  if (scopedOverviewBindings.length) {
+    bindings.set("Gemensamt - Så här fungerar det - Översikt", scopedOverviewBindings);
+  }
+
+  const offerSectionTitle = `Gemensamt - Så här fungerar det - ${config.howItWorksOfferLabel}`;
+  const offerBindings = allBindings.get(offerSectionTitle);
+  if (offerBindings?.length) {
+    bindings.set(offerSectionTitle, offerBindings);
+  }
+
+  const stepTitlePrefix = `${offerSectionTitle} - `;
+  for (const [title, titleBindings] of allBindings.entries()) {
+    if (!title.startsWith(stepTitlePrefix) || !titleBindings.length) continue;
+    bindings.set(title, titleBindings);
+  }
+
+  for (const title of config.extraSharedSectionTitles) {
+    const titleBindings = allBindings.get(title);
+    if (!titleBindings?.length) continue;
+    bindings.set(title, titleBindings);
+  }
+
+  return bindings;
+}
+
 function toHeading(value) {
   return value
     .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -819,6 +901,17 @@ async function main() {
       const homeSections = extractSectionsFromDocument(homeDoc);
       for (const [sectionTitle, bindings] of homeBindings.entries()) {
         if (!shouldIncludeHomeSectionTitle(sectionTitle, config.title, config.includeShared)) continue;
+        const rows = homeSections.get(sectionTitle);
+        if (!rows?.length) continue;
+        applyRowsToBindings(homeTemplate, bindings, rows);
+      }
+
+      const modeSpecificSharedBindings = buildModeSpecificSharedBindings(
+        homeTemplate,
+        homeBindings,
+        config.key,
+      );
+      for (const [sectionTitle, bindings] of modeSpecificSharedBindings.entries()) {
         const rows = homeSections.get(sectionTitle);
         if (!rows?.length) continue;
         applyRowsToBindings(homeTemplate, bindings, rows);

@@ -568,7 +568,13 @@ export default function Hero() {
           </div>
 
           <h1 className={styles.title}>
-            {content.hero.titleLine1} <br />– {content.hero.titleLine2}
+            {content.hero.titleLine1}
+            {content.hero.titleLine2 ? (
+              <>
+                {" "}
+                <br />– {content.hero.titleLine2}
+              </>
+            ) : null}
           </h1>
 
           <p className={styles.subtitle}>

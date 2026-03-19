@@ -143,7 +143,7 @@
 .title {
   margin-top: 20px;
   max-width: 760px;
-  font-size: clamp(2.6rem, 4.3vw, 4.7rem);
+  font-size: clamp(2.3rem, 3.8vw, 4.15rem);
   line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--color-text);
@@ -602,7 +602,7 @@
 }
 
 .planContainer {
-  align-items: start;
+  align-items: center;
   gap: clamp(48px, 5.4vw, 86px);
   padding-top: clamp(88px, 10vh, 142px);
 }

@@ -509,10 +509,13 @@
     min-height: 240px;
     padding-inline: clamp(22px, 2.8vw, 48px);
     padding-top: 0;
+    justify-items: center;
+    text-align: center;
   }
 
   .stepCopy {
     justify-items: center;
+    text-align: center;
   }
 
   .stepCopyCreate,
@@ -526,6 +529,11 @@
   }
 
   .stepText p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .stepHighlights {
     margin-left: auto;
     margin-right: auto;
   }
@@ -582,6 +590,13 @@
 
 .stepCopyCentered p {
   max-width: 42ch;
+}
+
+.stepCopyCentered h4 {
+  max-width: 12ch;
+  font-size: clamp(1.7rem, 3.2vw, 3.1rem);
+  line-height: 1.08;
+  text-wrap: balance;
 }
 
 .stepText p {
@@ -1517,9 +1532,23 @@
 }
 
 .faasRealtimeStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   color: rgba(176, 225, 210, 0.96);
   font-size: 0.7rem;
   font-weight: 600;
+}
+
+.faasRealtimeStatusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #4ade80;
+  box-shadow:
+    0 0 0 3px rgba(74, 222, 128, 0.12),
+    0 0 10px rgba(74, 222, 128, 0.42);
+  animation: faasRealtimeLivePulse 1.8s ease-in-out infinite;
 }
 
 .faasRealtimeStats {
@@ -1564,84 +1593,78 @@
   border: 1px solid rgba(68, 97, 149, 0.26);
 }
 
-.faasRealtimeGrid {
-  display: none;
+.faasRealtimeChartHeader {
+  display: block;
+  margin-bottom: 10px;
 }
 
-.faasRealtimeLine {
-  position: absolute;
-  inset: 14px 10px 72px;
-  z-index: 2;
-}
-
-.faasRealtimeLine polyline {
-  fill: none;
-  stroke: color-mix(in oklab, var(--btn-primary-bg) 54%, white 24%);
-  stroke-width: 1.95;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 7 8;
-  stroke-dashoffset: 0;
-  filter: drop-shadow(0 0 2px rgba(90, 131, 220, 0.2));
-  animation: faasRealtimeLineTrace 5.8s linear infinite;
-}
-
-.faasRealtimeBars {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 7px;
-  height: 66px;
+.faasRealtimeChartHeading {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 7px;
-  align-items: end;
-  z-index: 2;
-}
-
-.faasRealtimeBarItem {
-  height: 100%;
-  display: grid;
-  grid-template-rows: 1fr auto;
   gap: 4px;
-  align-items: end;
 }
 
-.faasRealtimeBar {
-  border-radius: 7px 7px 5px 5px;
+.faasRealtimeChartTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.faasRealtimeChartTitle {
+  color: rgba(241, 245, 255, 0.96);
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.faasRealtimeTrendBadge {
+  min-height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: rgba(74, 222, 128, 0.96);
+  background: rgba(34, 197, 94, 0.12);
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: 1px solid rgba(34, 197, 94, 0.12);
+}
+
+.faasRealtimeChartDescription {
+  margin: 0;
+  color: rgba(158, 168, 190, 0.92);
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.faasRealtimeLegendSwatch {
+  display: inline-block;
+  flex: 0 0 auto;
+}
+
+.faasRealtimeLegendBar {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
   background: linear-gradient(
     180deg,
     color-mix(in oklab, var(--btn-primary-bg) 82%, white 10%),
     color-mix(in oklab, var(--btn-primary-bg) 90%, black 10%)
   );
-  box-shadow: 0 0 8px color-mix(in oklab, var(--btn-primary-bg) 30%, transparent);
-  transform-origin: bottom;
-  transform: scaleY(0.08);
-  animation: faasRealtimeBarPulse 4.8s cubic-bezier(0.24, 0.8, 0.26, 1) infinite;
+  box-shadow: 0 0 8px color-mix(in oklab, var(--btn-primary-bg) 24%, transparent);
 }
 
-.faasRealtimeBarItem:nth-child(2) .faasRealtimeBar {
-  animation-delay: 90ms;
+.faasRealtimePlot {
+  width: 100%;
+  height: 150px;
+  display: block;
 }
 
-.faasRealtimeBarItem:nth-child(3) .faasRealtimeBar {
-  animation-delay: 160ms;
-}
-
-.faasRealtimeBarItem:nth-child(4) .faasRealtimeBar {
-  animation-delay: 230ms;
-}
-
-.faasRealtimeBarItem:nth-child(5) .faasRealtimeBar {
-  animation-delay: 300ms;
-}
-
-.faasRealtimeBarItem em {
-  font-style: normal;
-  text-align: center;
-  color: rgba(163, 186, 223, 0.88);
-  font-size: 0.56rem;
-  line-height: 1;
+.faasRealtimeBarShape {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: faasRealtimeBarGrow 680ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  animation-delay: var(--faas-bar-delay, 0ms);
 }
 
 .faasRealtimeAlerts {
@@ -1661,6 +1684,10 @@
   line-height: 1.25;
   background: rgba(11, 24, 48, 0.84);
   border: 1px solid rgba(92, 129, 194, 0.3);
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  animation: faasRealtimeAlertEnter 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--faas-alert-delay, 0ms);
 }
 
 .faasRealtimeAlertDot {
@@ -2669,7 +2696,7 @@
   --faas-systems-offset-y: -20px;
   position: relative;
   width: min(100%, 640px);
-  min-height: clamp(380px, 48vh, 470px);
+  min-height: clamp(408px, 50vh, 500px);
   display: grid;
   place-items: center;
   contain: layout paint;
@@ -2693,6 +2720,7 @@
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
+  opacity: 0.78;
   filter: none;
   stroke-dasharray: 1;
   animation: none;
@@ -2702,6 +2730,7 @@
   fill: color-mix(in oklab, var(--accent-primary) 78%, white);
   stroke: color-mix(in oklab, var(--accent-primary) 64%, transparent);
   stroke-width: 1;
+  opacity: 0.92;
   animation: none;
 }
 
@@ -2867,7 +2896,7 @@
   --node-shift-x: 0px;
   --node-shift-y: 5px;
   left: 50%;
-  top: 81.9%;
+  top: 75.6%;
 }
 
 .stepRowVisible .faasSystemsHub {
@@ -2894,6 +2923,15 @@
 
 .stepRowVisible .faasSystemsBranch {
   animation: none;
+}
+
+.stepRowVisible .faasSystemsMap path {
+  stroke-dasharray: 2.8 7.2;
+  animation: faasSystemsFlowPulse 4.4s linear infinite;
+}
+
+.stepRowVisible .faasSystemsMap circle {
+  animation: faasSystemsDotGlow 3.8s ease-in-out infinite;
 }
 
 .stepRowVisible .faasSystemsMap path:nth-of-type(1),
@@ -3326,6 +3364,43 @@
   }
 }
 
+@keyframes faasRealtimeLivePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 0.82;
+  }
+}
+
+@keyframes faasRealtimeAlertEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes faasRealtimeBarGrow {
+  from {
+    opacity: 0.28;
+    transform: scaleY(0.08);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
 @keyframes stepOrbBorderSweep {
   0% {
     transform: rotate(0deg);
@@ -3455,6 +3530,25 @@
   50% {
     stroke: rgba(174, 207, 255, 0.94);
     filter: drop-shadow(0 0 11px rgba(124, 178, 255, 0.36));
+  }
+}
+
+@keyframes faasSystemsFlowPulse {
+  0% {
+    stroke: rgba(112, 156, 240, 0.58);
+    stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 4px rgba(86, 141, 246, 0.14));
+  }
+
+  50% {
+    stroke: rgba(154, 194, 255, 0.88);
+    filter: drop-shadow(0 0 7px rgba(124, 178, 255, 0.2));
+  }
+
+  100% {
+    stroke: rgba(112, 156, 240, 0.58);
+    stroke-dashoffset: -28;
+    filter: drop-shadow(0 0 4px rgba(86, 141, 246, 0.14));
   }
 }
 
@@ -3890,7 +3984,7 @@
 
   .faasSystemsConnect {
     width: min(100%, 350px);
-    min-height: 304px;
+    min-height: 332px;
   }
 
   .faasSystemsMap path {
@@ -3952,7 +4046,7 @@
 
   .faasSystemsNodeBottomCenter {
     left: 50%;
-    top: 81.6%;
+    top: 75%;
   }
 
   .faasSystemsNodeFortnox .faasSystemsNodeInner img {

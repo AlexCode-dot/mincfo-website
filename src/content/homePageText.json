@@ -5,7 +5,7 @@
     "kundcase": "Kundcase",
     "sakerhet": "Säkerhet",
     "hurDetFunkar": "Hur det funkar",
-    "demoCta": "Boka en demo",
+    "demoCta": "Boka demo",
     "loginSignupLabel": "Logga in / Sign up",
     "openSolutionsAria": "Öppna lösningsmeny",
     "openMenuAria": "Öppna meny",
@@ -42,25 +42,549 @@
       }
     ]
   },
+  "siteMeta": {
+    "title": "MinCFO",
+    "description": "MinCFO kombinerar automation, dashboards i realtid och en AI-copilot för moderna team."
+  },
+  "offering": {
+    "eyebrow": "Välj upplägg",
+    "title": "Tre sätt att arbeta med MinCFO",
+    "intro": "Börja med det upplägg som passar ert bolag idag. Byt läge för att se hur erbjudandet, kundexemplen och CTA:n förändras.",
+    "ariaLabel": "Välj erbjudande",
+    "showcase": {
+      "sectionAriaLabel": "Erbjudandeöversikt",
+      "introLines": [
+        "Vilket MinCFO-upplägg",
+        "passar er?"
+      ],
+      "previewLabel": "Läs kort om våra erbjudanden och klicka vidare till det som passar er bäst.",
+      "tabListAriaLabel": "Förhandsvisa lösning",
+      "pagerAriaLabel": "Showcase navigation",
+      "currentPageLabel": "Nuvarande sida",
+      "currentPageCtaLabel": "Läs mer om upplägget",
+      "platform": {
+        "eyebrow": "Plattform",
+        "title": "MinCFO som plattform",
+        "body": "För bolag med ordning på det löpande som vill få ut mer av sin data. Med MinCFO förvandlar ni siffror till strategiska insikter i realtid.",
+        "ctaLabel": "Gå till plattformssidan",
+        "ctaHref": "/?offering=platform#produkt",
+        "signal": "AI Copilot aktiv",
+        "chartLabel": "Användning senaste 30 dagarna",
+        "stats": [
+          {
+            "label": "Rapporter",
+            "value": "Live"
+          },
+          {
+            "label": "Prognos",
+            "value": "12 månader"
+          },
+          {
+            "label": "Fortnox",
+            "value": "Live"
+          }
+        ]
+      },
+      "full-service": {
+        "eyebrow": "Helhetslösning",
+        "title": "Ekonomifunktionen som tjänst",
+        "body": "MinCFO tar fullt ansvar för rapportering, uppföljning och finansiell struktur.Ta nästa steg mot en state-of-the-art-ekonomifunktion!",
+        "ctaLabel": "Gå till helhetslösningen",
+        "ctaHref": "/?offering=full-service#produkt",
+        "serviceVisual": {
+          "chipOwnership": "Fakturor och bokföring",
+          "chipDelivery": "Löpande uppföljning",
+          "chipLeadership": "Rapport klar",
+          "eyebrow": "Helhetslösning",
+          "title": "Vi sköter hela ekonomifunktionen",
+          "badge": "Med MinCFO",
+          "steps": [
+            "Redovisning",
+            "Rapportering",
+            "Uppföljning",
+            "Rådgivning"
+          ],
+          "summaryReportLabel": "Rapportering",
+          "summaryReportValue": "Tydligt underlag",
+          "summaryAlertsLabel": "Planering",
+          "summaryAlertsValue": "Bättre beslut framåt"
+        }
+      },
+      "partner": {
+        "eyebrow": "För redovisningsbyråer och ekonomikonsulter",
+        "title": "Skalbar leverans för fler klienter",
+        "body": "Standardisera analys, dashboards och rådgivning över flera bolag utan att varje uppdrag blir ett eget specialcase.",
+        "ctaLabel": "Gå till byråsidan",
+        "ctaHref": "/?offering=partner#produkt",
+        "signal": "Klientportfölj synkad",
+        "stats": [
+          {
+            "label": "Rapporter",
+            "value": "Live"
+          },
+          {
+            "label": "Prognos",
+            "value": "12 månader"
+          },
+          {
+            "label": "Fortnox",
+            "value": "Synkad"
+          }
+        ]
+      }
+    },
+    "options": [
+      {
+        "id": "platform",
+        "label": "Plattform",
+        "title": "MinCFO som plattform",
+        "body": "För bolag som redan hanterar ekonomi internt eller via partner och vill ha AI, dashboards och forecasting i ett modernt system.",
+        "bullets": [
+          "AI-copilot och dashboards i realtid",
+          "Forecasting, scenarier och beslutsstöd",
+          "Passar team med fungerande ekonomihantering som är redo att växla upp"
+        ],
+        "cta": "Visa plattform"
+      },
+      {
+        "id": "full-service",
+        "label": "Helhetslösning",
+        "title": "MinCFO som outsourcad ekonomifunktion",
+        "body": "För bolag som vill att MinCFO sköter ekonomi, rapportering och uppföljning åt dem, medan teamet följer läget i realtid i plattformen.",
+        "bullets": [
+          "Vi driver ekonomiflödet end-to-end",
+          "Ni får tydlig uppföljning på KPI:er, cashflow och avvikelser",
+          "Passar team som vill lägga fokus på verksamheten"
+        ],
+        "cta": "Visa helhetslösning"
+      },
+      {
+        "id": "partner",
+        "label": "För byråer",
+        "title": "MinCFO för multi-client leverans",
+        "body": "För byråer och Fractional CFOs som vill standardisera uppföljning, leverera bättre rådgivning och arbeta mer skalbart över flera klienter.",
+        "bullets": [
+          "Ett återanvändbart arbetssätt över flera klienter",
+          "Tydligare dashboards, forecast och beslutsunderlag",
+          "Passar byråer, advisors och fractional CFOs"
+        ],
+        "cta": "Visa byråupplägg"
+      }
+    ]
+  },
+  "howItWorks": {
+    "sectionTitle": "Så funkar det",
+    "sectionIntro": "Så arbetar ni med MinCFO i praktiken.",
+    "sectionIntroByOffer": {
+      "platform": "Så arbetar ni med MinCFO i praktiken.",
+      "faas": "Så arbetar ni med MinCFO som helhetslösning.",
+      "partner": "Så arbetar byråer med MinCFO i praktiken."
+    },
+    "offers": {
+      "platform": {
+        "tabLabel": "MinCFO Plattform",
+        "steps": [
+          {
+            "title": "Skapa konto",
+            "body": "Kom igång direkt i plattformen.",
+            "highlights": [
+              "Skapa konto på några minuter",
+              "Säker onboarding med verifiering",
+              "Direkt tillgång till plattformen"
+            ]
+          },
+          {
+            "title": "Koppla Fortnox",
+            "body": "Ni kopplar Fortnox på några klick. MinCFO sätter upp dashboards och rapportstruktur.",
+            "highlights": [
+              "Koppla Fortnox på några klick",
+              "Dashboards och rapportstruktur sätts upp",
+              "Data synkas löpande till MinCFO efter aktivering"
+            ]
+          },
+          {
+            "title": "Realtidsinsikter & AI",
+            "body": "AI som besvarar frågor om bolagets siffror, realtidsrapportering enligt anpassad struktur och automatiskt uppdaterad kassaflödesprognos.",
+            "highlights": [
+              "Realtidsrapportering av nyckeltal",
+              "Kassaflödesoptimering i realtid",
+              "Identifiera möjligheter för optimerad ekonomistyrning"
+            ]
+          }
+        ]
+      },
+      "faas": {
+        "tabLabel": "Finance as a Service",
+        "steps": [
+          {
+            "title": "Onboarding & scope",
+            "body": "Vi sätter mål, struktur och omfattning: redovisning, lön, moms, bokslut, CFO-stöd m.m.",
+            "highlights": [
+              "Gemensam målbild och prioriteringar",
+              "Tydlig scope för ansvar och leverans",
+              "Plan för redovisning, lön, moms och bokslut"
+            ]
+          },
+          {
+            "title": "Koppla system & behörigheter",
+            "body": "Ni ger oss åtkomst till bank, Skatteverket och Fortnox/övriga system. MinCFO kopplas in som er gemensamma dashboard.",
+            "highlights": [
+              "Säker åtkomst till bank och Skatteverket",
+              "Fortnox och övriga system kopplas in",
+              "Behörigheter och roller sätts upp korrekt"
+            ]
+          },
+          {
+            "title": "Vi sköter ekonomin – ni följer i realtid",
+            "body": "Vi hanterar hela ekonomiflödet end-to-end. Ni ser rapporter, kassaflöde, nyckeltal och avvikelser i MinCFO.",
+            "highlights": [
+              "Rapporter och KPI:er uppdateras löpande i samma dashboard",
+              "Kassaflöde, likviditet och utfall följs i realtid",
+              "Avvikelser flaggas direkt med tydliga nästa steg"
+            ]
+          },
+          {
+            "title": "AI + proaktiv rådgivning",
+            "body": "AI:n svarar på frågor om er data, flaggar risker och föreslår åtgärder. Ni har dessutom personlig controller/CFO on demand."
+          }
+        ]
+      },
+      "partner": {
+        "tabLabel": "För byråer",
+        "steps": [
+          {
+            "title": "Bygg ert klientupplägg",
+            "body": "Sätt en gemensam modell för dashboards, KPI:er, rapportstruktur och uppföljning så att nya klienter kan onboardas i samma arbetssätt i stället för att varje uppdrag blir ett specialcase.",
+            "highlights": [
+              "Återanvändbara mallar för dashboards och rapportpaket",
+              "Snabbare onboarding av nya klienter",
+              "Mindre manuellt uppsättningsarbete per uppdrag"
+            ]
+          },
+          {
+            "title": "Följ upp klientportföljen",
+            "body": "Arbeta i samma vy för flera klienter och se snabbare vilka bolag som avviker mot budget, behöver uppföljning eller är redo för nästa rådgivningsmöte.",
+            "highlights": [
+              "Enklare uppföljning över flera klienter samtidigt",
+              "Tydligare signaler på risk, cashflow och avvikelser",
+              "Mer jämförbara analyser mellan klienter och segment"
+            ]
+          },
+          {
+            "title": "Leverera rådgivning snabbare",
+            "body": "Använd AI, färdiga beslutsunderlag och samma arbetsyta för att gå från rådata till tydliga rekommendationer snabbare i varje kunddialog.",
+            "highlights": [
+              "Snabbare väg från rådata till kundklar analys",
+              "Mer tid till rådgivning och mindre tid i manuella filer",
+              "Skalbar leverans utan att kvaliteten tappar"
+            ]
+          }
+        ]
+      }
+    },
+    "ui": {
+      "tabListAria": "Välj erbjudande",
+      "account": {
+        "secureLabel": "Säkert konto",
+        "tabCreate": "Skapa konto",
+        "tabLogin": "Logga in",
+        "emailLabel": "Arbetsmail",
+        "passwordLabel": "Lösenord",
+        "termsLabel": "Jag godkänner villkoren",
+        "buttonLabel": "Skapa konto",
+        "existingAccountLabel": "Redan konto?",
+        "loginLinkLabel": "Logga in",
+        "welcomeTitle": "Welcome back",
+        "welcomeSubtitle": "Sign in to continue",
+        "continueWithGoogle": "Continue with Google",
+        "continueWithMicrosoft": "Continue with Microsoft",
+        "dividerLabel": "OR",
+        "emailInputAriaLabel": "Enter email address",
+        "emailInputPlaceholder": "Enter email address",
+        "continueLabel": "Continue"
+      },
+      "connect": {
+        "fortnoxWord": "Fortnox",
+        "accountConnected": "Konto kopplat",
+        "mincfoWord": "MinCFO",
+        "receivingData": "Tar emot data",
+        "integrationActive": "Integration aktiv",
+        "lastSyncLabel": "Senast synk: just nu"
+      },
+      "insights": {
+        "title": "AI Copilot",
+        "question": "Hur påverkas runway om vi ökar hiring i Q3?",
+        "thinkingLabel": "AI analyserar data...",
+        "generatedForecastLabel": "Genererad prognos",
+        "runwayMonthsLabel": "Runway (mån)",
+        "barCurrent": "Nu",
+        "barPlan": "Plan",
+        "barScenario": "Scenario",
+        "summary": "AI svar: runway blir cirka 12.8 månader.",
+        "inputHint": "Fråga AI om forecast eller avvikelser",
+        "inputTyped": "Hur påverkas runway om vi ökar hiring i Q3?",
+        "sendAriaLabel": "Skicka fråga"
+      },
+      "faasRealtime": {
+        "statusUpdated": "Uppdaterad nu",
+        "cashflowLabel": "Kassaflöde",
+        "runwayLabel": "Runway",
+        "monthSuffix": "mån",
+        "deviationLabel": "Avvikelse",
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "Maj",
+          "Jun"
+        ],
+        "personnelAlertTemplate": "Personalkostnad ligger {value}% över budget",
+        "latePaymentsAlert": "Kundinbetalningar ligger 4 dagar efter plan"
+      },
+      "faasOnboarding": {
+        "badgeLabel": "Onboarding"
+      },
+      "faasSystems": {
+        "hubLabel": "MinCFO",
+        "bankLabel": "Bank",
+        "skatteverketLabel": "Skatteverket",
+        "fortnoxLabel": "Fortnox",
+        "payrollLabel": "Lönesystem",
+        "paymentsLabel": "Betalningar",
+        "customerTeamLabel": "Kundteam",
+        "skatteverketAlt": "Skatteverket",
+        "fortnoxAlt": "Fortnox",
+        "partnerLabels": {
+          "topLeft": "Klientmallar",
+          "topCenter": "KPI-ramverk",
+          "topRight": "Fortnox / ERP",
+          "midLeft": "Rapportpaket",
+          "midRight": "Advisory-flöden",
+          "bottomCenter": "Byråteam"
+        }
+      },
+      "partnerWorkspace": {
+        "navAriaLabel": "Workspace navigation",
+        "nav": {
+          "home": "Hem",
+          "users": "Användare",
+          "settings": "Inställningar"
+        },
+        "home": {
+          "title": "Din arbetsyta",
+          "subtitle": "Hantera bolag, integrationer och uppföljning i samma vy.",
+          "columns": [
+            "Bolag",
+            "Datakälla",
+            "Avstämd"
+          ],
+          "actionLabel": "Öppna",
+          "rows": [
+            {
+              "label": "Nordvale Growth AB",
+              "detail": "556812-1042",
+              "meta": "N",
+              "tag": "Fortnox",
+              "status": "Mar 26"
+            },
+            {
+              "label": "Studio Ledger AB",
+              "detail": "559104-2281",
+              "meta": "S",
+              "tag": "Fortnox",
+              "status": "Apr 02"
+            },
+            {
+              "label": "Retail Peak Sverige AB",
+              "detail": "559221-7814",
+              "meta": "R",
+              "tag": "Fortnox",
+              "status": "Apr 05"
+            },
+            {
+              "label": "Ardent Ops AB",
+              "detail": "559881-2041",
+              "meta": "A",
+              "tag": "Fortnox",
+              "status": "Apr 11"
+            }
+          ]
+        },
+        "users": {
+          "title": "Användare",
+          "subtitle": "Hantera användare och åtkomst.",
+          "columns": [
+            "Användare",
+            "Roll",
+            "Status"
+          ],
+          "actionLabel": "Hantera",
+          "rows": [
+            {
+              "label": "Anna Berg",
+              "detail": "anna@byran.se",
+              "meta": "A",
+              "tag": "Admin",
+              "status": "Aktiv"
+            },
+            {
+              "label": "Johan Lind",
+              "detail": "johan@byran.se",
+              "meta": "J",
+              "tag": "Advisor",
+              "status": "Aktiv"
+            },
+            {
+              "label": "Sara Ek",
+              "detail": "sara@byran.se",
+              "meta": "S",
+              "tag": "Viewer",
+              "status": "Inbjuden"
+            },
+            {
+              "label": "Mikael Roos",
+              "detail": "mikael@byran.se",
+              "meta": "M",
+              "tag": "Viewer",
+              "status": "Inbjuden"
+            }
+          ],
+          "searchPlaceholder": "Sök användare...",
+          "inviteLabel": "Bjud in",
+          "tableLabel": "Användare"
+        },
+        "settings": {
+          "title": "Inställningar",
+          "subtitle": "Hantera konto och inställningar för arbetsytan.",
+          "columns": [
+            "Inställning",
+            "Värde",
+            "Status"
+          ],
+          "actionLabel": "Ändra",
+          "rows": [
+            {
+              "label": "Rapportstruktur",
+              "detail": "Standardmall för klientrapportering",
+              "meta": "R",
+              "tag": "Aktiv",
+              "status": "Redo"
+            },
+            {
+              "label": "KPI-mall",
+              "detail": "Runway, marginal och cashflow som standard",
+              "meta": "K",
+              "tag": "Aktiv",
+              "status": "Redo"
+            },
+            {
+              "label": "Behörigheter",
+              "detail": "Rollbaserad åtkomst per klientbolag",
+              "meta": "B",
+              "tag": "Policy",
+              "status": "Uppdaterad"
+            }
+          ],
+          "tabs": {
+            "profile": "Mina uppgifter",
+            "appearance": "Utseende"
+          },
+          "appearanceTitle": "Visningsläge",
+          "appearanceBody": "Växla mellan system, ljust eller mörkt läge.",
+          "modes": {
+            "system": "System",
+            "light": "Ljust",
+            "dark": "Mörkt"
+          },
+          "languageTitle": "Språk",
+          "languageBody": "Välj standardspråk för arbetsytan.",
+          "languageValue": "Svenska"
+        },
+        "pagination": {
+          "previous": "Föregående",
+          "next": "Nästa"
+        },
+        "summary": {
+          "label": "För byråer",
+          "title": "En workspace där ni går från bolagsöversikt till dashboards, uppföljning och analys per klient",
+          "statPrimary": "Flera bolag",
+          "statSecondary": "Per konto"
+        }
+      }
+    }
+  },
+  "security": {
+    "pill": "Säkerhet & Compliance",
+    "title": "Enterprise-grade säkerhet",
+    "intro": "Vi hanterar känslig finansiell data med högsta krav på säkerhet, integritet och efterlevnad.",
+    "cards": [
+      {
+        "title": "Dataskydd & integritet",
+        "body": "MinCFO hanterar all kunddata konfidentiellt och i enlighet med gällande dataskyddslagstiftning. Åtkomst är strikt begränsad och loggas kontinuerligt."
+      },
+      {
+        "title": "Säker infrastruktur",
+        "body": "Systemen är byggda med moderna säkerhetsprinciper och skyddas genom kryptering, övervakning och regelbundna säkerhetskontroller."
+      },
+      {
+        "title": "EU & GDPR-efterlevnad",
+        "body": "All behandling av person- och företagsdata sker i enlighet med GDPR. Data hanteras inom EU och enligt tydliga personuppgiftsbiträdesavtal."
+      }
+    ]
+  },
+  "footer": {
+    "brandAria": "MinCFO",
+    "brandWord": "MinCFO",
+    "intro": "Din moderna ekonomifunktion för tillväxtbolag som vill arbeta mer datadrivet med ekonomi, rapportering och beslut.",
+    "careersCta": "Se våra lediga tjänster",
+    "solutionsTitle": "Lösningar",
+    "solutions": [
+      "CEO & Founders",
+      "CFO & Finance",
+      "SaaS / Tech",
+      "Hur det fungerar"
+    ],
+    "companyTitle": "Bolag",
+    "company": [
+      "Kundcase",
+      "Säkerhet",
+      "Karriär"
+    ],
+    "email": "kontakt@example.com",
+    "officesTitle": "Kontor",
+    "office1": "Västra Hamngatan 11 / 411 17 Gothenburg Sweden",
+    "office2": "Stora Nygatan 33 / 111 27 Stockholm Sweden",
+    "copyright": "Copyright 2026. All rights reserved by MinCFO Sverige AB.",
+    "linkedin": "LinkedIn",
+    "linkedinAria": "MinCFO på LinkedIn",
+    "motionAria": "Motion mode",
+    "motionLabel": "Motion",
+    "motionNowPrefix": "Now:",
+    "motionFull": "Full",
+    "motionReduced": "Reduced"
+  },
   "hero": {
-    "tagline": "Financial Intelligence",
-    "titleLine1": "Den moderna ekonomitjänsten",
-    "titleLine2": "som med hjälp av ai analyserar, förutser och agerar",
-    "body": "MinCFO kombinerar automation, anpassade dashboards i realtid och en  ai som låter dig chatta med din data. Få insikter, prognoser och proaktiva rekommendationer — utan att lägga tid på manuellt arbete.",
-    "primaryCta": "Boka en demo",
+    "tagline": "Finance-as-a-Service",
+    "titleLine1": "Ge din finansiella data en röst",
+    "titleLine2": "",
+    "body": "Maximera bolagets insikter och med AI-driven analys, modulära realtidsdashboards och smarta kassaflödesprognoser. Koppla på MinCFO på dina befintliga finansiella flöden och system.",
+    "primaryCta": "Boka demo",
     "address": "app.mincfo.com/dashboard",
     "playAriaLabel": "Play demo video",
+    "enterFullscreenAriaLabel": "Enter fullscreen demo",
+    "exitFullscreenAriaLabel": "Exit fullscreen demo",
     "videoAriaLabel": "Demo video of MinCFO dashboard",
     "videoFallback": "Din webbläsare kan inte spela upp videon."
   },
   "aicopilot": {
-    "leftPill": "Vad plattformen gör",
-    "leftTitle": "AI-copilot som analyserar och agerar",
-    "leftIntro": "Ställ frågor om resultat, kostnader och runway. Få svar, grafer och rapporter direkt. AI kan även förbereda åtgärder i era ekonomiflöden med full spårbarhet.",
+    "leftPill": "Vad ni får i plattformen",
+    "leftTitle": "Din proaktiva AI-copilot",
+    "leftIntro": "Sluta leta i rapporter och börja chatta med din data. Ställ frågor om resultat, runway och avvikelser för att få omedelbara svar, visualiseringar och strategiska råd – helt utan manuellt arbete.",
     "leftBullets": [
-      "Chatta med din data - direkta svar",
-      "Proaktiva insights och avvikelser",
-      "AI-stödda åtgärder med audit log"
+      "Chatta med er data och få svar direkt",
+      "Ai identifiera avvikelser innan problemet uppstår",
+      "Arbeta mer proaktivt utan fler manuella loopar"
     ],
     "panelTitle": "AI Copilot",
     "loadingAria": "AI analyserar data",
@@ -137,12 +661,12 @@
       "previewAria": "Dashboard Preview",
       "metricMenuAria": "Välj metrisk",
       "pill": "Dashboard",
-      "title": "Analys & översikt",
-      "intro": "Tillgång till dashboard med de senaste finansiella nyckeltalen för att ta informerade beslut. Få tydliga insikter för att identifiera flaskhalsar och säkerställa bättre likviditet.",
+      "title": "Dashboards som gör ekonomin användbar i vardagen",
+      "intro": "Samla KPI:er, resultat och likviditet i samma beslutsyta. Alla som behöver förstå läget får samma uppdaterade bild, utan att vänta på nästa manuella rapport.",
       "kpiBullets": [
-        "Realtidsrapportering av nyckeltal",
-        "Kassaflödesoptimering i realtid",
-        "Identifiera möjligheter för optimerad ekonomistyrning"
+        "Era viktigaste KPI:er, alltid synkade och klara",
+        "Tydlig visualisering av nyckeltal och lönsamhet",
+        "Dela uppdaterade vyer med team och styrelse med ett klick"
       ],
       "resultTitle": "Income Statement · 2025",
       "currentLabel": "Current",
@@ -180,15 +704,15 @@
     "planning": {
       "panelAria": "Planering och benchmarking",
       "pill": "Planering & Jämförelse",
-      "title": "Budgetering, prognoser och benchmarking",
-      "intro": "Datadrivna prognoser och strukturerade dimensioner hjälper dig att planera framåt, minska ekonomiska risker och prioritera rätt initiativ både på kort och lång sikt.",
+      "title": "Forecasting, scenarier och bättre framförhållning",
+      "intro": "Sluta gissa och börja simulera. Testa scenarier, förstå risker tidigare och prioritera utifrån faktisk ekonomisk påverkan.",
       "bullets": [
-        "Automatiserade budgetprocesser",
-        "Strukturera intäkter och kostnader med egna dimensioner",
-        "Scenariohantering för framtiden",
-        "Datadriven riskminimering",
-        "Jämför mellan dimensioner och perioder",
-        "Identifiera avvikelser mellan segment"
+        "Forecasting i samma flöde som uppföljningen",
+        "Scenarioarbete för tillväxt, kostnader och hiring",
+        "Bygg bättre beslutsunderlag inför nästa steg",
+        "Tidigare signaler på risk och avvikelse",
+        "Jämför segment, kunder och perioder",
+        "Bygg bättre beslutsunderlag inför nästa steg"
       ],
       "forecastTitle": "Forecast",
       "liveLabel": "Live forecast",
@@ -218,8 +742,8 @@
   },
   "solutions": {
     "pill": "Lösningar",
-    "title": "Hitta rätt ekonomiupplägg för ert bolag",
-    "intro": "Olika bolag har olika behov. Välj den inriktning som passar er situation och läs hur vi kan stötta.",
+    "title": "Hitta rätt användning av plattformen",
+    "intro": "Olika team använder MinCFO på olika sätt. Välj den roll eller bransch som bäst speglar hur ni vill använda plattformen i vardagen.",
     "cardCta": "Se lösning",
     "cards": [
       {
@@ -237,13 +761,13 @@
       {
         "href": "/losningar/saas-tech",
         "title": "SaaS / Tech",
-        "text": "Koppla produkt, GTM och ekonomi i samma beslutsyta för hållbar tillväxt med kontroll.",
+        "text": "Koppla produkt och GTM och finance i samma beslutsyta för skalbaroch kontrollerad  tillväxt.",
         "icon": "cpu"
       },
       {
         "href": "/losningar/konsult-tjanster",
-        "title": "Konsult & Tjänster",
-        "text": "Styr beläggning, projektmarginal och cash i realtid med tydliga signaler per kund och uppdrag.",
+        "title": "Konsulter & Tjänsteföretag",
+        "text": "Styr beläggning, projektmarginal, uppföljning och fakturering i realtid med tydliga signaler per kund och uppdrag.",
         "icon": "building"
       },
       {
@@ -256,19 +780,31 @@
   },
   "customers": {
     "pill": "Kunder",
-    "title": "Kundresultat från team som växer med MinCFO",
-    "intro": "Kundcase, omdömen och logotyper visar vad vi faktiskt levererar i praktiken. Här är ett urval kundröster.",
-    "tickerLabel": "Betrodd av team som använder MinCFO varje månad",
+    "title": "Team som använder MinCFO som plattform",
+    "intro": "Exempel på hur bolag använder MinCFO för bättre överblick, snabbare analys och starkare beslutsunderlag utan krävande manuella processer.",
+    "tickerLabel": "Betrodd av team som använder MinCFO som sin finansiella beslutsyta",
     "controlsAria": "Bläddra kundomdömen",
     "prevAria": "Föregående omdöme",
     "nextAria": "Nästa omdöme",
     "trustedAria": "Kunder som litar på oss",
+    "cardAriaLabelTemplate": "Visa omdöme från {person} på {company}",
     "testimonials": [
       {
-        "company": "Qsid",
+        "company": "Growbit",
+        "person": "Max Norén & Conrad Brown-Bolin",
+        "role": "Co-founders, Growbit",
+        "quote": "Med MinCFO får vi en tydlig bild av intäkter per kund och tjänst, kan djupdyka i månatliga kostnader per leverantör och prognostisera med hjälp av AI som löpande uppdaterar siffrorna baserat på faktiska utfall.",
+        "avatarFiles": [
+          "Screenshot 2026-03-18 at 15.21.41.png",
+          "Screenshot 2026-03-18 at 15.21.51.png"
+        ],
+        "accent": true
+      },
+      {
+        "company": "Hey Sid",
         "person": "Rikard Jonsson",
-        "role": "VD, Sid Marketing",
-        "quote": "MinCFO har gett oss en ny nivå av ekonomisk insikt. Med automatiserad bokföring och realtidsdata kan vi nu fatta snabbare beslut och lägga mer tid på att utveckla vår verksamhet.",
+        "role": "VD, Hey Sid",
+        "quote": "MinCFO gav oss en mycket tydligare beslutsyta. Vi kan gå från fråga till analys betydligt snabbare och slipper bygga samma underlag om och om igen.",
         "avatarFile": "logo-rikard.avif",
         "accent": false
       },
@@ -276,7 +812,7 @@
         "company": "Showcase",
         "person": "Aviv Fahri",
         "role": "VD, Showcase",
-        "quote": "Att anlita MinCFO är ett av våra bästa beslut. Vi har fått proaktiv rådgivning som gjort att vi kunnat minska kostnader och frigöra kapital. En komplett lösning för vår ekonomi.",
+        "quote": "Vi fick dashboards och uppföljning som faktiskt används i vardagen. Det har gjort det lättare att prioritera rätt och agera tidigare på avvikelser.",
         "avatarFile": "logo-aviv.avif",
         "accent": true
       },
@@ -292,7 +828,7 @@
         "company": "Hälsa Hemma",
         "person": "Oskar Nordmark",
         "role": "Financial Controller, Hälsa Hemma",
-        "quote": "MinCFO är ett viktigt stöd i vår tillväxt. De avlastar det administrativa och levererar snabba, korrekta svar, så att vi kan fokusera på verksamheten.",
+        "quote": "MinCFO är ett viktigt stöd i vår tillväxt. Med över 100 löner i en snabbrörlig verksamhet behöver vi struktur och pålitlighet – vilket vi får varje månad. De avlastar det administrativa och levererar snabba, korrekta svar, så att vi kan fokusera på verksamheten..",
         "avatarFile": "logo-oskar.avif",
         "accent": true
       }
@@ -356,200 +892,9 @@
       }
     ]
   },
-  "howItWorks": {
-    "sectionTitle": "Så funkar det",
-    "sectionIntro": "Två sätt att arbeta med MinCFO. Samma plattform – olika ansvar.",
-    "offers": {
-      "platform": {
-        "tabLabel": "MinCFO Plattform",
-        "steps": [
-          {
-            "title": "Skapa konto",
-            "body": "Kom igång direkt i plattformen.",
-            "highlights": [
-              "Skapa konto på några minuter",
-              "Säker onboarding med verifiering",
-              "Direkt tillgång till plattformen"
-            ]
-          },
-          {
-            "title": "Koppla Fortnox",
-            "body": "Ni kopplar Fortnox på några klick. MinCFO sätter upp dashboards och rapportstruktur.",
-            "highlights": [
-              "Koppla Fortnox på några klick",
-              "Dashboards och rapportstruktur sätts upp",
-              "Data synkas löpande till MinCFO efter aktivering"
-            ]
-          },
-          {
-            "title": "Realtidsinsikter & AI",
-            "body": "AI som besvarar frågor om bolagets siffror, realtidsrapportering enligt anpassad struktur och automatiskt uppdaterad kassaflödesprognos.",
-            "highlights": [
-              "Realtidsrapportering av nyckeltal",
-              "Kassaflödesoptimering i realtid",
-              "Identifiera möjligheter för optimerad ekonomistyrning"
-            ]
-          }
-        ]
-      },
-      "faas": {
-        "tabLabel": "Finance as a Service",
-        "steps": [
-          {
-            "title": "Onboarding & scope",
-            "body": "Vi sätter mål, struktur och omfattning: redovisning, lön, moms, bokslut, CFO-stöd m.m.",
-            "highlights": [
-              "Gemensam målbild och prioriteringar",
-              "Tydlig scope för ansvar och leverans",
-              "Plan för redovisning, lön, moms och bokslut"
-            ]
-          },
-          {
-            "title": "Koppla system & behörigheter",
-            "body": "Ni ger oss åtkomst till bank, Skatteverket och Fortnox/övriga system. MinCFO kopplas in som er gemensamma dashboard.",
-            "highlights": [
-              "Säker åtkomst till bank och Skatteverket",
-              "Fortnox och övriga system kopplas in",
-              "Behörigheter och roller sätts upp korrekt"
-            ]
-          },
-          {
-            "title": "Vi sköter ekonomin – ni följer i realtid",
-            "body": "Vi hanterar hela ekonomiflödet end-to-end. Ni ser rapporter, kassaflöde, nyckeltal och avvikelser i MinCFO.",
-            "highlights": [
-              "Rapporter och KPI:er uppdateras löpande i samma dashboard",
-              "Kassaflöde, likviditet och utfall följs i realtid",
-              "Avvikelser flaggas direkt med tydliga nästa steg"
-            ]
-          },
-          {
-            "title": "AI + proaktiv rådgivning",
-            "body": "AI:n svarar på frågor om er data, flaggar risker och föreslår åtgärder. Ni har dessutom personlig controller/CFO on demand."
-          }
-        ]
-      }
-    },
-    "ui": {
-      "tabListAria": "Välj erbjudande",
-      "account": {
-        "secureLabel": "Säkert konto",
-        "tabCreate": "Skapa konto",
-        "tabLogin": "Logga in",
-        "emailLabel": "Arbetsmail",
-        "passwordLabel": "Lösenord",
-        "termsLabel": "Jag godkänner villkoren",
-        "buttonLabel": "Skapa konto",
-        "existingAccountLabel": "Redan konto?",
-        "loginLinkLabel": "Logga in"
-      },
-      "connect": {
-        "fortnoxWord": "Fortnox",
-        "accountConnected": "Konto kopplat",
-        "mincfoWord": "MinCFO",
-        "receivingData": "Tar emot data",
-        "integrationActive": "Integration aktiv",
-        "lastSyncLabel": "Senast synk: just nu"
-      },
-      "insights": {
-        "title": "AI Copilot",
-        "question": "Hur påverkas runway om vi ökar hiring i Q3?",
-        "thinkingLabel": "AI analyserar data...",
-        "generatedForecastLabel": "Genererad prognos",
-        "runwayMonthsLabel": "Runway (mån)",
-        "barCurrent": "Nu",
-        "barPlan": "Plan",
-        "barScenario": "Scenario",
-        "summary": "AI svar: runway blir cirka 12.8 månader.",
-        "inputHint": "Fråga AI om forecast eller avvikelser",
-        "inputTyped": "Hur påverkas runway om vi ökar hiring i Q3?",
-        "sendAriaLabel": "Skicka fråga"
-      },
-      "faasRealtime": {
-        "statusUpdated": "Uppdaterad nu",
-        "cashflowLabel": "Kassaflöde",
-        "runwayLabel": "Runway",
-        "monthSuffix": "mån",
-        "deviationLabel": "Avvikelse",
-        "months": [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "Maj",
-          "Jun"
-        ],
-        "personnelAlertTemplate": "Personalkostnad ligger {value}% över budget",
-        "latePaymentsAlert": "Kundinbetalningar ligger 4 dagar efter plan"
-      },
-      "faasOnboarding": {
-        "badgeLabel": "Onboarding"
-      },
-      "faasSystems": {
-        "hubLabel": "MinCFO",
-        "bankLabel": "Bank",
-        "skatteverketLabel": "Skatteverket",
-        "fortnoxLabel": "Fortnox",
-        "payrollLabel": "Lönesystem",
-        "paymentsLabel": "Betalningar",
-        "customerTeamLabel": "Kundteam",
-        "skatteverketAlt": "Skatteverket",
-        "fortnoxAlt": "Fortnox"
-      }
-    }
-  },
   "ending": {
-    "title": "Ta nästa steg mot en smartare ekonomifunktion",
-    "body": "Ta kontroll över ditt bolags ekonomiska framtid med MinCFO. Boka demo och se hur vårt team kan skapa mer fart, struktur och trygghet i er tillväxt.",
-    "primaryCta": "Boka demo"
-  },
-  "security": {
-    "pill": "Säkerhet & Compliance",
-    "title": "Enterprise-grade säkerhet",
-    "intro": "Vi hanterar känslig finansiell data med högsta krav på säkerhet, integritet och efterlevnad.",
-    "cards": [
-      {
-        "title": "Dataskydd & integritet",
-        "body": "MinCFO hanterar all kunddata konfidentiellt och i enlighet med gällande dataskyddslagstiftning. Åtkomst är strikt begränsad och loggas kontinuerligt."
-      },
-      {
-        "title": "Säker infrastruktur",
-        "body": "Systemen är byggda med moderna säkerhetsprinciper och skyddas genom kryptering, övervakning och regelbundna säkerhetskontroller."
-      },
-      {
-        "title": "EU & GDPR-efterlevnad",
-        "body": "All behandling av person- och företagsdata sker i enlighet med GDPR. Data hanteras inom EU och enligt tydliga personuppgiftsbiträdesavtal."
-      }
-    ]
-  },
-  "footer": {
-    "brandAria": "MinCFO",
-    "brandWord": "MinCFO",
-    "intro": "Din moderna ekonomifunktion för tillväxtbolag som vill arbeta mer datadrivet med ekonomi, rapportering och beslut.",
-    "careersCta": "Se våra lediga tjänster",
-    "solutionsTitle": "Lösningar",
-    "solutions": [
-      "CEO & Founders",
-      "CFO & Finance",
-      "SaaS / Tech",
-      "Hur det fungerar"
-    ],
-    "companyTitle": "Bolag",
-    "company": [
-      "Kundcase",
-      "Säkerhet",
-      "Karriär"
-    ],
-    "email": "kontakt@example.com",
-    "officesTitle": "Kontor",
-    "office1": "Västra Hamngatan 11 / 411 17 Gothenburg Sweden",
-    "office2": "Stora Nygatan 33 / 111 27 Stockholm Sweden",
-    "copyright": "Copyright 2026. All rights reserved by MinCFO Sverige AB.",
-    "linkedin": "LinkedIn",
-    "linkedinAria": "MinCFO på LinkedIn",
-    "motionAria": "Motion mode",
-    "motionLabel": "Motion",
-    "motionNowPrefix": "Now:",
-    "motionFull": "Full",
-    "motionReduced": "Reduced"
+    "title": "Se hur MinCFO fungerar som plattform för ert team",
+    "body": "Boka en demo och se hur AI, dashboards och forecasting kan ge er bättre analys, tydligare uppföljning och snabbare beslut i samma flöde.",
+    "primaryCta": "Boka demo av plattformen"
   }
 }
