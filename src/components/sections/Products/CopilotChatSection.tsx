@@ -61,10 +61,10 @@ export function CopilotChatSection({
   const { content } = useHomeOffering();
 
   return (
-    <section
+    <div
       id={anchorId}
-      data-home-snap-section="true"
       className={styles.container}
+      style={{ scrollMarginTop: "clamp(88px, 12vh, 140px)" } as CSSProperties}
     >
       <div className={`${styles.left} ${styles.aiLeft} ${visible ? styles.shown : ""}`}>
         <span className={styles.pill}>{content.aicopilot.leftPill}</span>
@@ -175,6 +175,6 @@ export function CopilotChatSection({
           </footer>
         </article>
       </div>
-    </section>
+    </div>
   );
 }

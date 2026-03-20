@@ -1,8 +1,8 @@
 .section {
   position: relative;
-  min-height: auto;
+  min-height: 100vh;
   margin-top: 0;
-  padding: 0;
+  padding: clamp(156px, 18vh, 226px) 0 clamp(206px, 24vh, 292px);
   overflow: hidden;
   overflow-anchor: none;
   isolation: isolate;
@@ -46,16 +46,14 @@
 .container {
   position: relative;
   z-index: 3;
-  min-height: 100svh;
   max-width: 1360px;
   margin: 0 auto;
   padding: 0 var(--container-pad);
-  padding-top: clamp(88px, 10vh, 116px);
-  padding-bottom: clamp(36px, 6vh, 64px);
+  padding-top: clamp(48px, 5.6vh, 82px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(48px, 5.8vw, 96px);
-  align-items: start;
+  align-items: center;
 }
 
 .container > * {
@@ -497,10 +495,8 @@
 
 .dashboardContainer {
   margin-top: 0;
-  min-height: 100svh;
-  align-items: start;
-  padding-top: clamp(88px, 10vh, 116px);
-  padding-bottom: clamp(36px, 6vh, 64px);
+  align-items: center;
+  padding-top: clamp(60px, 7vh, 108px);
 }
 
 .dashboardLeft {
@@ -515,8 +511,13 @@
   position: relative;
   min-height: 100svh;
   margin-top: 0;
-  padding: 0;
+  padding: clamp(118px, 14vh, 188px) 0 clamp(126px, 15.4vh, 210px);
   overflow: visible;
+}
+
+.dashboardSectionShifted {
+  margin-top: clamp(-180px, -14vh, -116px);
+  padding-top: clamp(184px, 17vh, 236px);
 }
 
 .dashboardCut {
@@ -567,9 +568,8 @@
 
 .planSection {
   position: relative;
-  min-height: 100svh;
-  margin-top: 0;
-  padding: 0;
+  margin-top: -1px;
+  padding: clamp(120px, 14.4vh, 196px) 0 clamp(188px, 22vh, 276px);
 }
 
 .planCut {
@@ -608,11 +608,9 @@
 }
 
 .planContainer {
-  min-height: 100svh;
-  align-items: start;
+  align-items: center;
   gap: clamp(48px, 5.4vw, 86px);
-  padding-top: clamp(88px, 10vh, 116px);
-  padding-bottom: clamp(36px, 6vh, 64px);
+  padding-top: clamp(88px, 10vh, 142px);
 }
 
 .planLeft .text {

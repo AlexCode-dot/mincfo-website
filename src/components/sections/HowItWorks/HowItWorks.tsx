@@ -535,7 +535,9 @@ export default function HowItWorks() {
       ([entry]) => {
         section.classList.toggle(styles.visible, entry.isIntersecting);
       },
-      { threshold: 0.22, rootMargin: "0px 0px -10% 0px" },
+      // Snap jumps can land close to the section start. Reveal immediately so the
+      // section does not appear blank until the user nudges the scroll again.
+      { threshold: 0.08, rootMargin: "0px 0px -8% 0px" },
     );
 
     observer.observe(section);
@@ -597,7 +599,11 @@ export default function HowItWorks() {
         return;
       }
       const scrollable = Math.max(rect.height - window.innerHeight, 1);
-      const progress = isReducedMotion ? 1 : clamp(-rect.top / scrollable, 0, 1);
+      let progress = isReducedMotion ? 1 : clamp(-rect.top / scrollable, 0, 1);
+      const snappedNearTop = rect.top <= viewport * 0.03 && rect.top >= -viewport * 0.14;
+      if (!isReducedMotion && snappedNearTop) {
+        progress = Math.max(progress, 0.18);
+      }
       const acceleratedProgress = isReducedMotion
         ? 1
         : clamp(progress * progressAcceleration, 0, 1);
@@ -610,8 +616,8 @@ export default function HowItWorks() {
         lastDominantStepRef.current = dominantStep;
         setDominantStepIndex(dominantStep);
       }
-      const headerReveal = Math.round((isReducedMotion ? 1 : smoothstep(0.02, 0.16, progress)) * 100) / 100;
-      const panelReveal = Math.round((isReducedMotion ? 1 : smoothstep(0.08, 0.24, progress)) * 100) / 100;
+      const headerReveal = Math.round((isReducedMotion ? 1 : smoothstep(-0.04, 0.08, progress)) * 100) / 100;
+      const panelReveal = Math.round((isReducedMotion ? 1 : smoothstep(-0.02, 0.12, progress)) * 100) / 100;
 
       if (headerReveal !== lastHeaderRevealRef.current) {
         lastHeaderRevealRef.current = headerReveal;

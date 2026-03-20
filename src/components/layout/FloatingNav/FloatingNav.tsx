@@ -18,9 +18,6 @@ const HOMEPAGE_SECTIONS = [
 ] as const;
 const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
 
-const clamp = (value: number, min: number, max: number) =>
-  Math.min(Math.max(value, min), max);
-const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 const getPageTop = (element: HTMLElement) =>
   element.getBoundingClientRect().top + window.scrollY;
 
@@ -148,42 +145,6 @@ export default function FloatingNav() {
   const navDemoCta =
     content.navigation.demoCta ?? content.hero.primaryCta;
 
-  const animateScrollTo = (targetY: number) => {
-    if (scrollRafRef.current) {
-      window.cancelAnimationFrame(scrollRafRef.current);
-      scrollRafRef.current = null;
-    }
-
-    const startY = window.scrollY;
-    const distance = targetY - startY;
-    const distanceAbs = Math.abs(distance);
-
-    if (distanceAbs < 2 || isReducedMotion) {
-      window.scrollTo({ top: targetY, left: 0, behavior: "auto" });
-      return;
-    }
-
-    const duration = distanceAbs < 160
-      ? 420
-      : clamp(distanceAbs * 0.78, 620, 1350);
-    const startTime = performance.now();
-
-    const tick = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = clamp(elapsed / duration, 0, 1);
-      const eased = easeOutCubic(progress);
-      window.scrollTo({ top: startY + distance * eased, left: 0, behavior: "auto" });
-
-      if (progress < 1) {
-        scrollRafRef.current = window.requestAnimationFrame(tick);
-      } else {
-        scrollRafRef.current = null;
-      }
-    };
-
-    scrollRafRef.current = window.requestAnimationFrame(tick);
-  };
-
   const handleSectionAnchorClick = (
     event: MouseEvent<HTMLAnchorElement>,
     href: string,
@@ -231,7 +192,15 @@ export default function FloatingNav() {
       window.getComputedStyle(document.documentElement).scrollPaddingTop,
     ) || 0;
     const targetY = target.getBoundingClientRect().top + window.scrollY - scrollPaddingTop;
-    animateScrollTo(Math.max(0, targetY));
+    if (scrollRafRef.current) {
+      window.cancelAnimationFrame(scrollRafRef.current);
+      scrollRafRef.current = null;
+    }
+    window.scrollTo({
+      top: Math.max(0, targetY),
+      left: 0,
+      behavior: isReducedMotion ? "auto" : "smooth",
+    });
     setSolutionsOpen(false);
     onDone?.();
   };

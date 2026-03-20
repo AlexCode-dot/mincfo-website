@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import {
+  useCallback,
   useLayoutEffect,
   useRef,
   useState,
@@ -29,7 +30,6 @@ const OFFERING_ICONS = {
   "full-service": Sparkles,
   partner: Building2,
 } as const;
-const SCROLL_PROGRESS_STEP = 0.01;
 const PARTNER_WORKSPACE_INITIAL_AUTOPLAY_DELAY_MS = 1600;
 const PARTNER_WORKSPACE_AUTOPLAY_DELAY_HOME_MS = 3600;
 const PARTNER_WORKSPACE_AUTOPLAY_DELAY_OTHER_MS = 2400;
@@ -37,7 +37,6 @@ const PARTNER_WORKSPACE_AUTOPLAY_CLICK_DELAY_MS = 680;
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
-
 const formatTranslate3d = (x: number, y: number, scale?: number) => {
   const snappedX = Math.round(x);
   const snappedY = Math.round(y);
@@ -578,10 +577,10 @@ export default function HeroOfferingShowcase() {
   const positionedRef = useRef(false);
   const previewLabelReadyRef = useRef(false);
   const lastProgressRef = useRef(-1);
-  const [isPositioned, setIsPositioned] = useState(false);
-  const [previewLabelReady, setPreviewLabelReady] = useState(false);
   const showcase = shared.offering.showcase;
   const introLines = showcase.introLines;
+  const [isPositioned, setIsPositioned] = useState(false);
+  const [previewLabelReady, setPreviewLabelReady] = useState(false);
 
   useLayoutEffect(() => {
     let frame = 0;
@@ -598,32 +597,32 @@ export default function HeroOfferingShowcase() {
 
       const rect = section.getBoundingClientRect();
       const scrollable = Math.max(rect.height - window.innerHeight, 1);
-      const next = Math.round(clamp(-rect.top / scrollable, 0, 1) / SCROLL_PROGRESS_STEP) * SCROLL_PROGRESS_STEP;
+      const next = Math.round(clamp(-rect.top / scrollable, 0, 1) / 0.01) * 0.01;
       if (next === lastProgressRef.current) return;
       lastProgressRef.current = next;
 
       const introOpacity = isReducedMotion
         ? 1
-        : next <= 0.08
+        : next <= 0.12
           ? 0
-          : next <= 0.22
-            ? smoothstep(0.08, 0.22, next)
-            : next <= 0.48
+          : next <= 0.28
+            ? smoothstep(0.12, 0.28, next)
+            : next <= 0.58
               ? 1
-              : 1 - smoothstep(0.48, 0.68, next);
+              : 1 - smoothstep(0.58, 0.78, next);
       const introShift = isReducedMotion
         ? 0
-        : next <= 0.22
-          ? 22 - smoothstep(0.08, 0.22, next) * 22
-          : next <= 0.48
+        : next <= 0.28
+          ? 22 - smoothstep(0.12, 0.28, next) * 22
+          : next <= 0.58
             ? 0
-            : smoothstep(0.48, 0.68, next) * -18;
-      const showcaseOpacity = isReducedMotion ? 1 : smoothstep(0.42, 0.68, next);
+            : smoothstep(0.58, 0.78, next) * -18;
+      const showcaseOpacity = isReducedMotion ? 1 : smoothstep(0.62, 0.82, next);
       const showcaseTranslate = isReducedMotion ? 0 : 34 - showcaseOpacity * 34;
-      const controlsReveal = isReducedMotion ? 1 : smoothstep(0.46, 0.66, next);
-      const copyReveal = isReducedMotion ? 1 : smoothstep(0.5, 0.7, next);
-      const visualReveal = isReducedMotion ? 1 : smoothstep(0.54, 0.74, next);
-      const scrollHintReveal = isReducedMotion ? 0 : smoothstep(0.16, 0.24, next) * (1 - smoothstep(0.48, 0.58, next));
+      const controlsReveal = isReducedMotion ? 1 : smoothstep(0.64, 0.82, next);
+      const copyReveal = isReducedMotion ? 1 : smoothstep(0.68, 0.86, next);
+      const visualReveal = isReducedMotion ? 1 : smoothstep(0.72, 0.9, next);
+      const scrollHintReveal = isReducedMotion ? 0 : smoothstep(0.18, 0.28, next) * (1 - smoothstep(0.56, 0.68, next));
 
       introStage.style.opacity = `${introOpacity}`;
       introStage.style.transform = `translate3d(0, ${introShift}px, 0)`;
@@ -670,16 +669,16 @@ export default function HeroOfferingShowcase() {
         const lineOffset = lineIndex * 0.03;
         const charIn = getStaggeredProgress(
           next,
-          0.08 + lineOffset,
-          0.2 + lineOffset,
+          0.12 + lineOffset,
+          0.26 + lineOffset,
           charIndex,
           total,
           0.1,
         );
         const charOut = getStaggeredProgress(
           next,
-          0.48,
-          0.64,
+          0.58,
+          0.74,
           charIndex,
           total,
           0.08,
@@ -708,13 +707,12 @@ export default function HeroOfferingShowcase() {
       window.removeEventListener("resize", scheduleUpdate);
     };
   }, [isReducedMotion, options.length]);
-
   const visual = showcase[offering];
   const metricStats =
     offering === "full-service" || offering === "partner" ? null : showcase[offering].stats;
   const ActiveEyebrowIcon = OFFERING_ICONS[offering];
 
-  const animateScrollTo = (targetY: number) => {
+  const animateScrollTo = useCallback((targetY: number) => {
     if (scrollRafRef.current) {
       window.cancelAnimationFrame(scrollRafRef.current);
       scrollRafRef.current = null;
@@ -748,7 +746,13 @@ export default function HeroOfferingShowcase() {
     };
 
     scrollRafRef.current = window.requestAnimationFrame(tick);
-  };
+  }, [isReducedMotion]);
+
+  useLayoutEffect(() => () => {
+    if (scrollRafRef.current) {
+      window.cancelAnimationFrame(scrollRafRef.current);
+    }
+  }, []);
 
   const handleCurrentPageCtaClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (

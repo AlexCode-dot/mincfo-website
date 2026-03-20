@@ -1,5 +1,6 @@
 .section {
   position: relative;
+  z-index: 1;
   margin-top: -96px;
   padding: clamp(124px, 14.8vh, 184px) 0 clamp(164px, 17.6vh, 226px);
   overflow: hidden;
