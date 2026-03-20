@@ -67,7 +67,12 @@ export function PlanningSection({
   const { content } = useHomeOffering();
 
   return (
-    <div className={styles.planSection} ref={planSectionRef}>
+    <section
+      id="produkt-planning"
+      className={styles.planSection}
+      ref={planSectionRef}
+      data-home-snap-section="true"
+    >
       <svg
         className={styles.planCut}
         viewBox={`0 0 1440 ${waveHeight}`}
@@ -200,6 +205,6 @@ export function PlanningSection({
           </article>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

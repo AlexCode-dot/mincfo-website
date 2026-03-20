@@ -778,7 +778,13 @@ export default function HeroOfferingShowcase() {
   };
 
   return (
-    <section ref={sectionRef} className={styles.section} aria-label={showcase.sectionAriaLabel}>
+    <section
+      ref={sectionRef}
+      id="hero-showcase"
+      className={styles.section}
+      aria-label={showcase.sectionAriaLabel}
+      data-home-snap-section="true"
+    >
       <div className={styles.stickyFrame}>
         <div
           ref={introStageRef}

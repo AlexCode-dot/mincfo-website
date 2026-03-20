@@ -29,6 +29,7 @@ export default function Security() {
       ref={sectionRef}
       id="security"
       className={`${styles.section} ${visible ? styles.visible : ""}`}
+      data-home-snap-section="true"
     >
       <div className={styles.background} aria-hidden="true" />
 
@@ -93,7 +94,43 @@ export default function Security() {
             <div className={`${styles.visual} ${styles.visualCore}`}>
               <span className={styles.visualHalo} aria-hidden="true" />
               <span className={styles.coreRing} aria-hidden="true" />
-              <Database className={styles.visualIcon} size={24} aria-hidden="true" />
+              <svg
+                className={`${styles.visualIcon} ${styles.complianceIcon}`}
+                viewBox="0 0 64 64"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  className={styles.complianceDocument}
+                  d="M20 14h20l8 8v28H20z"
+                />
+                <path
+                  className={styles.complianceFold}
+                  d="M40 14v10h8"
+                />
+                <path
+                  className={styles.complianceLine}
+                  d="M26 28h16"
+                />
+                <path
+                  className={styles.complianceLine}
+                  d="M26 35h16"
+                />
+                <path
+                  className={styles.complianceLine}
+                  d="M26 42h11"
+                />
+                <circle
+                  className={styles.complianceBadge}
+                  cx="44"
+                  cy="40"
+                  r="10"
+                />
+                <path
+                  className={styles.complianceCheck}
+                  d="m39.5 40 3.2 3.2 6-7"
+                />
+              </svg>
             </div>
             <h3>{HOME_PAGE_TEXT.security.cards[2].title}</h3>
             <p>{HOME_PAGE_TEXT.security.cards[2].body}</p>

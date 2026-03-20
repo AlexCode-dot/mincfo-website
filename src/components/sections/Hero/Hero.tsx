@@ -549,7 +549,10 @@ export default function Hero() {
   };
 
   return (
-    <section ref={sectionRef} id="hero" className={styles.hero}>
+    <div
+      ref={sectionRef}
+      className={styles.hero}
+    >
       <div className={styles.topBackground} aria-hidden="true">
         {offering === "full-service" ? (
           <HeroAuraBackground />
@@ -561,7 +564,12 @@ export default function Hero() {
       </div>
 
       <div className={styles.container}>
-        <div className={styles.intro} ref={introRef}>
+        <section
+          id="hero"
+          className={styles.introSection}
+          data-home-snap-section="true"
+        >
+          <div className={styles.intro} ref={introRef}>
           <div className={styles.tag}>
             <span className={styles.ping} />
             {content.hero.tagline}
@@ -586,10 +594,18 @@ export default function Hero() {
               {content.hero.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
             </a>
           </div>
-        </div>
+          </div>
+        </section>
 
-        <div className={styles.cardWrap} ref={cardWrapRef}>
-          <div className={`${styles.card} ${styles.glass}`} ref={cardRef}>
+        <section
+          id="hero-demo"
+          data-home-snap-section="true"
+        >
+          <div
+            className={styles.demoSection}
+          >
+            <div className={styles.cardWrap} ref={cardWrapRef}>
+              <div className={`${styles.card} ${styles.glass}`} ref={cardRef}>
             <div className={styles.cardHeader}>
               <span className={styles.dot} />
               <span className={styles.dot} />
@@ -767,10 +783,12 @@ export default function Hero() {
               </video>
             </div>
           </div>
-        </div>
+            </div>
+          </div>
+        </section>
 
         <HeroOfferingShowcase />
       </div>
-    </section>
+    </div>
   );
 }

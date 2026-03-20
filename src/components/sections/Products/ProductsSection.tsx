@@ -960,8 +960,9 @@ export default function AICopilot() {
   };
 
   return (
-    <section
+    <div
       ref={sectionRef}
+      id="produkt"
       className={`${styles.section} ${visible ? styles.visible : ""}`}
     >
       <svg
@@ -985,7 +986,7 @@ export default function AICopilot() {
       />
 
       <CopilotChatSection
-        anchorId="produkt"
+        anchorId="produkt-copilot"
         currentExample={currentExample}
         visible={visible}
         showQuestionBubble={showQuestionBubble}
@@ -1051,6 +1052,6 @@ export default function AICopilot() {
         onSelectPlanMonth={handleSelectPlanMonth}
         monthLabelsEn={monthLabelsEn}
       />
-    </section>
+    </div>
   );
 }

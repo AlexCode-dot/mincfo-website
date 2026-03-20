@@ -116,6 +116,7 @@ export default function Solutions() {
       ref={sectionRef}
       id="losningar"
       className={`${styles.section} ${visible ? styles.visible : ""}`}
+      data-home-snap-section="true"
     >
       <svg
         className={styles.curveCut}

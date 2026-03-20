@@ -681,6 +681,8 @@ export default function HowItWorks() {
       id="how-it-works"
       className={styles.section}
       data-offer={activeOffer}
+      data-home-snap-section="true"
+      data-home-snap-free="true"
       style={{ "--how-it-works-height": desktopTrackHeight } as CSSProperties}
     >
       <div className={styles.background} aria-hidden="true" />

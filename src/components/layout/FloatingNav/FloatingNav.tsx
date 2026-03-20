@@ -21,6 +21,8 @@ const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.minc
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
+const getPageTop = (element: HTMLElement) =>
+  element.getBoundingClientRect().top + window.scrollY;
 
 export default function FloatingNav() {
   const { content, offering } = useHomeOffering();
@@ -45,7 +47,7 @@ export default function FloatingNav() {
       for (const id of HOMEPAGE_SECTIONS) {
         const el = document.getElementById(id);
         if (!el) continue;
-        if (el.offsetTop <= cursor) {
+        if (getPageTop(el) <= cursor) {
           current = id;
         }
       }
@@ -217,7 +219,8 @@ export default function FloatingNav() {
       return;
     }
 
-    const target = document.getElementById(hash);
+    const resolvedHash = hash === "produkt" ? "produkt-copilot" : hash;
+    const target = document.getElementById(resolvedHash);
     if (!target) {
       onDone?.();
       return;

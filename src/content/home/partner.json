@@ -215,9 +215,9 @@
   },
   "customers": {
     "pill": "Kunder",
-    "title": "Partners som använder MinCFO i sin klientleverans",
-    "intro": "Här är exempel på hur rådgivare och partnerteam använder MinCFO för att få bättre struktur, snabbare analys och en mer skalbar leverans mot flera klienter.",
-    "tickerLabel": "Betrodd av team som vill standardisera och skala sin finance-leverans",
+    "title": "Bolag som använder MinCFO som sin ekonomifunktion",
+    "intro": "Här är exempel på team som använder MinCFO som helhetslösning för att slippa driva finance internt, men ändå ha full insyn i resultat, cashflow och avvikelser.",
+    "tickerLabel": "Betrodd av bolag som vill lägga ekonomi och uppföljning hos en extern partner",
     "controlsAria": "Bläddra kundomdömen",
     "prevAria": "Föregående omdöme",
     "nextAria": "Nästa omdöme",

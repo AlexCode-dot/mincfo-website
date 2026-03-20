@@ -91,7 +91,12 @@ export function DashboardSection({
   const { content } = useHomeOffering();
 
   return (
-    <div className={styles.dashboardSection} ref={dashboardSectionRef}>
+    <section
+      id="produkt-dashboard"
+      className={styles.dashboardSection}
+      ref={dashboardSectionRef}
+      data-home-snap-section="true"
+    >
       <svg
         className={styles.dashboardCut}
         viewBox={`0 0 1440 ${waveHeight}`}
@@ -256,6 +261,6 @@ export function DashboardSection({
           </ul>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

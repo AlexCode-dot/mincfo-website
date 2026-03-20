@@ -86,6 +86,7 @@ export default function Ending() {
       ref={sectionRef}
       className={`${styles.section} ${visible ? styles.visible : ""}`}
       id="kontakt"
+      data-home-snap-section="true"
     >
       <svg
         className={styles.curveCut}
