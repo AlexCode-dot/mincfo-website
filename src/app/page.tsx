@@ -45,6 +45,7 @@ export default async function Home({ searchParams }: HomePageProps) {
           { id: "how-it-works", label: "How it works" },
           { id: "kontakt", label: "Contact" },
           { id: "security", label: "Security" },
+          { id: "footer", label: "Footer" },
         ]}
       />
       <Logo showOfferingSwitch />

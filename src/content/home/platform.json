@@ -3,7 +3,7 @@
     "tagline": "Finance-as-a-Service",
     "titleLine1": "Ge din finansiella data en röst",
     "titleLine2": "",
-    "body": "Maximera bolagets insikter och med AI-driven analys, modulära realtidsdashboards och smarta kassaflödesprognoser. Koppla på MinCFO på dina befintliga finansiella flöden och system.",
+    "body": "Maximera bolagets insikter med AI-driven analys, modulära realtidsdashboards och smarta kassaflödesprognoser.",
     "primaryCta": "Boka demo",
     "address": "app.mincfo.com/dashboard",
     "playAriaLabel": "Play demo video",
@@ -214,7 +214,7 @@
   },
   "customers": {
     "pill": "Kunder",
-    "title": "Team som använder MinCFO som plattform",
+    "title": "Företag som använder MinCFOs plattform idag",
     "intro": "Exempel på hur bolag använder MinCFO för bättre överblick, snabbare analys och starkare beslutsunderlag utan krävande manuella processer.",
     "tickerLabel": "Betrodd av team som använder MinCFO som sin finansiella beslutsyta",
     "controlsAria": "Bläddra kundomdömen",
@@ -327,8 +327,8 @@
     ]
   },
   "ending": {
-    "title": "Se hur MinCFO fungerar som plattform för ert team",
-    "body": "Boka en demo och se hur AI, dashboards och forecasting kan ge er bättre analys, tydligare uppföljning och snabbare beslut i samma flöde.",
-    "primaryCta": "Boka demo av plattformen"
+    "title": "Upptäck kraften i MinCFO - Se hur MinCFO fungerar i praktiken",
+    "body": "Boka en genomgång av plattformen och se hur våra verktyg för analys och uppföljning skapar en modern och datadriven ekonomifunktion.",
+    "primaryCta": "Boka en demo"
   }
 }

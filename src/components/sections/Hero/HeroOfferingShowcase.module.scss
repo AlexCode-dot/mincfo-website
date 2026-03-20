@@ -298,6 +298,38 @@
   text-align: left;
 }
 
+.copyCardPartner {
+  padding: clamp(24px, 3.3vw, 34px);
+}
+
+.copyCardPartner .copyContent {
+  gap: 16px;
+}
+
+.copyCardPartner h2 {
+  max-width: 18ch;
+  font-size: clamp(1.6rem, 2.8vw, 2.8rem);
+}
+
+.copyCardPartner h2 > span {
+  white-space: nowrap;
+}
+
+.copyCardPartner .copyBody {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.copyCardPartner .copyBullets {
+  gap: 2px;
+}
+
+.copyCardPartner .bullet {
+  gap: 10px;
+  font-size: 0.98rem;
+  line-height: 1.18;
+}
+
 .copyContent {
   display: grid;
   gap: 20px;

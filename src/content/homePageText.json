@@ -64,7 +64,7 @@
       "currentPageCtaLabel": "Läs mer om upplägget",
       "platform": {
         "eyebrow": "Plattform",
-        "title": "MinCFO som plattform",
+        "title": "MinCFO plattform",
         "body": "För bolag med ordning på det löpande som vill få ut mer av sin data. Med MinCFO förvandlar ni siffror till strategiska insikter i realtid.",
         "ctaLabel": "Gå till plattformssidan",
         "ctaHref": "/?offering=platform#produkt",
@@ -112,8 +112,8 @@
       },
       "partner": {
         "eyebrow": "För redovisningsbyråer och ekonomikonsulter",
-        "title": "Skalbar leverans för fler klienter",
-        "body": "Standardisera analys, dashboards och rådgivning över flera bolag utan att varje uppdrag blir ett eget specialcase.",
+        "title": "Ökad proaktivitet och skalbarhet",
+        "body": "Standardisera analys och dashboards över hela klientportföljen. Med en enhetlig modell onboardar ni nya bolag snabbare och säkrar en högkvalitativ leverans i varje uppdrag.",
         "ctaLabel": "Gå till byråsidan",
         "ctaHref": "/?offering=partner#produkt",
         "signal": "Klientportfölj synkad",
@@ -137,7 +137,7 @@
       {
         "id": "platform",
         "label": "Plattform",
-        "title": "MinCFO som plattform",
+        "title": "MinCFO plattform",
         "body": "För bolag som redan hanterar ekonomi internt eller via partner och vill ha AI, dashboards och forecasting i ett modernt system.",
         "bullets": [
           "AI-copilot och dashboards i realtid",
@@ -164,9 +164,9 @@
         "title": "MinCFO för multi-client leverans",
         "body": "För byråer och Fractional CFOs som vill standardisera uppföljning, leverera bättre rådgivning och arbeta mer skalbart över flera klienter.",
         "bullets": [
-          "Ett återanvändbart arbetssätt över flera klienter",
-          "Tydligare dashboards, forecast och beslutsunderlag",
-          "Passar byråer, advisors och fractional CFOs"
+          "Onboarda nya klienter i en färdig modell – slipp tidskrävande speciallösningar.",
+          "Visualisera kundens framtid med AI-drivna dashboards och forecasts.",
+          "Den självklara plattformen för byråer, advisors och Fractional CFOs."
         ],
         "cta": "Visa byråupplägg"
       }
@@ -188,7 +188,7 @@
             "title": "Skapa konto",
             "body": "Kom igång direkt i plattformen.",
             "highlights": [
-              "Skapa konto på några minuter",
+              "Skapa konto och integrera till redovisningssystem på några minuter",
               "Säker onboarding med verifiering",
               "Direkt tillgång till plattformen"
             ]
@@ -203,7 +203,7 @@
             ]
           },
           {
-            "title": "Realtidsinsikter & AI",
+            "title": "Realtidsinsikter med MinCFO AI",
             "body": "AI som besvarar frågor om bolagets siffror, realtidsrapportering enligt anpassad struktur och automatiskt uppdaterad kassaflödesprognos.",
             "highlights": [
               "Realtidsrapportering av nyckeltal",
@@ -253,12 +253,12 @@
         "tabLabel": "För byråer",
         "steps": [
           {
-            "title": "Bygg ert klientupplägg",
-            "body": "Sätt en gemensam modell för dashboards, KPI:er, rapportstruktur och uppföljning så att nya klienter kan onboardas i samma arbetssätt i stället för att varje uppdrag blir ett specialcase.",
+            "title": "Optimera er klienthantering",
+            "body": "Sluta bygga varje kundresa från grunden. Genom att sätta en gemensam standard för dashboards och KPI:er onboardas varje ny klient i ett beprövat arbetssätt istället för ett tidskrävande specialfall.",
             "highlights": [
-              "Återanvändbara mallar för dashboards och rapportpaket",
-              "Snabbare onboarding av nya klienter",
-              "Mindre manuellt uppsättningsarbete per uppdrag"
+              "Frigör tid för proaktiv rådgivning genom att automatisera uppsättningen av varje ny klientresa.",
+              "Höj lönsamheten per uppdrag med en standardiserad leverans och ett minskat behov av specialanpassningar.",
+              "Säkra en enhetlig kundupplevelse oavsett konsult som ansvarar för leveransen."
             ]
           },
           {
@@ -271,12 +271,12 @@
             ]
           },
           {
-            "title": "Leverera rådgivning snabbare",
-            "body": "Använd AI, färdiga beslutsunderlag och samma arbetsyta för att gå från rådata till tydliga rekommendationer snabbare i varje kunddialog.",
+            "title": "Skala er rådgivning med precision",
+            "body": "Använd MinCFO som din digitala analytiker. Med AI-stöd och automatiserade rapportpaket kortar ni vägen mellan bokföring och affärsnytta, för att göra att ni kan agera proaktiv partner snarare än en reaktiv leverantör.",
             "highlights": [
-              "Snabbare väg från rådata till kundklar analys",
-              "Mer tid till rådgivning och mindre tid i manuella filer",
-              "Skalbar leverans utan att kvaliteten tappar"
+              "Färdiga analyser och förslag på åtgärder direkt i plattformen",
+              "Presentera proffsiga dashboards direkt i kundens arbetsyta",
+              "Öka antalet klienter med bibehållen precision"
             ]
           }
         ]
@@ -294,14 +294,14 @@
         "buttonLabel": "Skapa konto",
         "existingAccountLabel": "Redan konto?",
         "loginLinkLabel": "Logga in",
-        "welcomeTitle": "Welcome back",
-        "welcomeSubtitle": "Sign in to continue",
-        "continueWithGoogle": "Continue with Google",
-        "continueWithMicrosoft": "Continue with Microsoft",
-        "dividerLabel": "OR",
-        "emailInputAriaLabel": "Enter email address",
-        "emailInputPlaceholder": "Enter email address",
-        "continueLabel": "Continue"
+        "welcomeTitle": "Välkommen tillbaka",
+        "welcomeSubtitle": "Logga in för att fortsätta",
+        "continueWithGoogle": "Logga in med Google",
+        "continueWithMicrosoft": "Logga in med Microsoft",
+        "dividerLabel": "Eller",
+        "emailInputAriaLabel": "Ange e-postadress",
+        "emailInputPlaceholder": "Ange e-postadress",
+        "continueLabel": "Fortsätt"
       },
       "connect": {
         "fortnoxWord": "Fortnox",
@@ -356,11 +356,11 @@
         "skatteverketAlt": "Skatteverket",
         "fortnoxAlt": "Fortnox",
         "partnerLabels": {
-          "topLeft": "Klientmallar",
-          "topCenter": "KPI-ramverk",
-          "topRight": "Fortnox / ERP",
+          "topLeft": "ERP",
+          "topCenter": "Skatteverket",
+          "topRight": "Fortnox",
           "midLeft": "Rapportpaket",
-          "midRight": "Advisory-flöden",
+          "midRight": "CRM",
           "bottomCenter": "Byråteam"
         }
       },
@@ -536,7 +536,7 @@
   "footer": {
     "brandAria": "MinCFO",
     "brandWord": "MinCFO",
-    "intro": "Din moderna ekonomifunktion för tillväxtbolag som vill arbeta mer datadrivet med ekonomi, rapportering och beslut.",
+    "intro": "Maximera bolagets insikter med AI-driven analys, modulära realtidsdashboards och smarta kassaflödesprognoser.",
     "careersCta": "Se våra lediga tjänster",
     "solutionsTitle": "Lösningar",
     "solutions": [
@@ -568,7 +568,7 @@
     "tagline": "Finance-as-a-Service",
     "titleLine1": "Ge din finansiella data en röst",
     "titleLine2": "",
-    "body": "Maximera bolagets insikter och med AI-driven analys, modulära realtidsdashboards och smarta kassaflödesprognoser. Koppla på MinCFO på dina befintliga finansiella flöden och system.",
+    "body": "Maximera bolagets insikter med AI-driven analys, modulära realtidsdashboards och smarta kassaflödesprognoser.",
     "primaryCta": "Boka demo",
     "address": "app.mincfo.com/dashboard",
     "playAriaLabel": "Play demo video",
@@ -780,7 +780,7 @@
   },
   "customers": {
     "pill": "Kunder",
-    "title": "Team som använder MinCFO som plattform",
+    "title": "Företag som använder MinCFOs plattform idag",
     "intro": "Exempel på hur bolag använder MinCFO för bättre överblick, snabbare analys och starkare beslutsunderlag utan krävande manuella processer.",
     "tickerLabel": "Betrodd av team som använder MinCFO som sin finansiella beslutsyta",
     "controlsAria": "Bläddra kundomdömen",
@@ -893,8 +893,8 @@
     ]
   },
   "ending": {
-    "title": "Se hur MinCFO fungerar som plattform för ert team",
-    "body": "Boka en demo och se hur AI, dashboards och forecasting kan ge er bättre analys, tydligare uppföljning och snabbare beslut i samma flöde.",
-    "primaryCta": "Boka demo av plattformen"
+    "title": "Upptäck kraften i MinCFO - Se hur MinCFO fungerar i praktiken",
+    "body": "Boka en genomgång av plattformen och se hur våra verktyg för analys och uppföljning skapar en modern och datadriven ekonomifunktion.",
+    "primaryCta": "Boka en demo"
   }
 }

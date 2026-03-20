@@ -97,11 +97,11 @@
       "metricMenuAria": "Välj metrisk",
       "pill": "Dashboard",
       "title": "Samma kvalitet i fler klientleveranser",
-      "intro": "Bygg återkommande dashboards och rapportunderlag som gör det lättare att följa upp klienter konsekvent, förklara läget tydligt och leverera ett mer professionellt upplägg i varje dialog.",
+      "intro": "Bygg skalbara dashboards och rapportpaket som gör er uppföljning konsekvent över hela portföljen. Ni förklarar läget tydligare, sparar tid på förberedelser och höjer nivån i varje kunddialog.",
       "kpiBullets": [
-        "Standardiserad uppföljning över flera klienter",
-        "Board- och kundredo underlag snabbare",
-        "Mindre tid i manuella sammanställningar och specialfiler"
+        "Skapa en enhetlig modell för alla klienter och slipp tidskrävande speciallösningar.",
+        "Generera styrelseklara underlag på sekunder",
+        "Eliminera manuellt arbete och personberoende filer"
       ],
       "resultTitle": "Income Statement · 2025",
       "currentLabel": "Current",
@@ -139,15 +139,12 @@
     "planning": {
       "panelAria": "Planering och benchmarking",
       "pill": "Planering & Jämförelse",
-      "title": "Forecasting och scenarioarbete som går att återanvända",
-      "intro": "Arbeta med prognoser, scenarier och benchmark på ett sätt som är konsekvent mellan klienter. Det gör det lättare att leverera snabbare, mer jämförbar och mer värdefull rådgivning i skala.",
+      "title": "Skalbar prognostisering och återanvändbara scenarier",
+      "intro": "Standardisera prognos- och scenarioarbete med en konsekvent leveransmodell. Återanvänd beprövade strukturer för benchmark och avvikelseanalys och få djupare insikter snabbare över hela klientportföljen.",
       "bullets": [
         "Scenarioarbete som går att återanvända mellan klienter",
-        "Bättre struktur för forecast, benchmark och avvikelseanalys",
-        "Snabbare framtagning av rådgivnings- och styrelseunderlag",
-        "Tidigare signaler på risk, burn och likviditet",
-        "Mer jämförbara analyser mellan bolag och segment",
-        "Skalbar leverans för team som växer utan att tappa kvalitet"
+        "Generera styrelsefärdiga underlag direkt med automatiserade verktyg för benchmark och kassaflödesanalys.",
+        "Identifiera risker och likviditetsbehov tidigare med skalbara flöden som säkrar kvaliteten när byrån växer."
       ],
       "forecastTitle": "Forecast",
       "liveLabel": "Live forecast",
@@ -328,8 +325,8 @@
     ]
   },
   "ending": {
-    "title": "Se hur MinCFO fungerar i en skalbar klientleverans",
-    "body": "Boka en demo och se hur ni kan standardisera uppföljning, leverera bättre analys och skapa mer värde för varje klient utan att bygga varje leverans från grunden.",
-    "primaryCta": "Boka demo för byrå"
+    "title": "Upptäck kraften i MinCFO - Se hur MinCFO fungerar i en skalbar klientleverans",
+    "body": "Boka en demo och se hur ni kan standardisera uppföljning, leverera bättre analys och skapa värde för varje klient utan att bygga varje leverans från grunden.",
+    "primaryCta": "Boka en demo för byrå"
   }
 }
