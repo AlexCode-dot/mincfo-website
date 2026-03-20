@@ -39,7 +39,7 @@ const smoothstep = (edge0: number, edge1: number, value: number) => {
 export default function Hero() {
   const { content, offering } = useHomeOffering();
   const { isReducedMotion } = useMotion();
-  const sectionRef = useRef<HTMLElement | null>(null);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
   const introRef = useRef<HTMLDivElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const cardWrapRef = useRef<HTMLDivElement | null>(null);
