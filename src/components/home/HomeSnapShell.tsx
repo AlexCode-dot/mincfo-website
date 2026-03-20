@@ -18,6 +18,7 @@ const SNAP_TRANSITION_MS = 720;
 const REDUCED_MOTION_TRANSITION_MS = 120;
 const SCROLL_EDGE_TOLERANCE_PX = 4;
 const SECTION_PROBE_OFFSET_VH = 0.14;
+const SHOW_HOME_SNAP_DOTS = false;
 
 const isTypingTarget = (target: EventTarget | null) => {
   if (!(target instanceof HTMLElement)) return false;
@@ -355,7 +356,7 @@ export default function HomeSnapShell({ sections }: HomeSnapShellProps) {
     updateActiveSection,
   ]);
 
-  if (availableSections.length < 2) {
+  if (!SHOW_HOME_SNAP_DOTS || availableSections.length < 2) {
     return null;
   }
 
