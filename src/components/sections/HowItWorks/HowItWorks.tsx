@@ -130,6 +130,7 @@ const HOW_IT_WORKS_TRANSITION_MS = 720;
 const HOW_IT_WORKS_TRANSITION_REDUCED_MS = 120;
 const HOW_IT_WORKS_PROGRESS_EPSILON = 0.04;
 const HOW_IT_WORKS_SCROLL_EDGE_TOLERANCE_PX = 8;
+const HOW_IT_WORKS_ENTRY_GUARD_MS = 420;
 const HOW_IT_WORKS_PROGRESS_ACCELERATION_BY_OFFER: Record<OfferKey, number> = {
   platform: HOW_IT_WORKS_PROGRESS_ACCELERATION,
   faas: 0.88,
@@ -202,7 +203,7 @@ const getStableDominantStep = (
   maxStep: number,
 ) => {
   if (maxStep <= 0) return 0;
-  if (previousStep < 0) return Math.round(clamp(rawStep, 0, maxStep));
+  if (previousStep < 0) return Math.floor(clamp(rawStep, 0, maxStep));
 
   let nextStep = previousStep;
 
@@ -471,6 +472,8 @@ export default function HowItWorks() {
   const transitionTimeoutRef = useRef<number | null>(null);
   const transitionActiveRef = useRef(false);
   const transitionTargetYRef = useRef<number | null>(null);
+  const sectionActiveRef = useRef(false);
+  const enteredSectionAtRef = useRef(0);
   const [signupEmail, setSignupEmail] = useState("");
   const [partnerWorkspaceView, setPartnerWorkspaceView] = useState<PartnerWorkspaceView>("home");
   const isClientReady = useSyncExternalStore(
@@ -781,6 +784,14 @@ export default function HowItWorks() {
 
   useEffect(() => {
     const onScroll = () => {
+      const isActive = isSectionActive();
+      if (isActive && !sectionActiveRef.current) {
+        sectionActiveRef.current = true;
+        enteredSectionAtRef.current = performance.now();
+      } else if (!isActive && sectionActiveRef.current) {
+        sectionActiveRef.current = false;
+      }
+
       const targetY = transitionTargetYRef.current;
       if (targetY === null) {
         return;
@@ -796,7 +807,7 @@ export default function HowItWorks() {
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [releaseTransition]);
+  }, [isSectionActive, releaseTransition]);
 
   useEffect(() => {
     const media = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -807,6 +818,24 @@ export default function HowItWorks() {
       }
 
       if (Math.abs(event.deltaY) < 4 || !isSectionActive()) {
+        return;
+      }
+
+      const currentProgress = getSectionProgress();
+      const stepStops = getStepProgressStops();
+      const firstAdvanceProgress = stepStops[1] ?? 1;
+      const enteredRecently =
+        performance.now() - enteredSectionAtRef.current < HOW_IT_WORKS_ENTRY_GUARD_MS;
+      if (
+        enteredRecently &&
+        event.deltaY > 0 &&
+        currentProgress < firstAdvanceProgress - HOW_IT_WORKS_PROGRESS_EPSILON
+      ) {
+        wheelDeltaRef.current = 0;
+        event.preventDefault();
+        if (currentProgress > HOW_IT_WORKS_PROGRESS_EPSILON) {
+          animateToStepIndex(0);
+        }
         return;
       }
 
@@ -887,6 +916,7 @@ export default function HowItWorks() {
   }, [
     animateToStepIndex,
     getSectionProgress,
+    getStepProgressStops,
     isReducedMotion,
     isSectionActive,
     navigateSectionByStep,
