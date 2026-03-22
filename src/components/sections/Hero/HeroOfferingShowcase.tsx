@@ -11,8 +11,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import {
-  useCallback,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -35,12 +33,6 @@ const PARTNER_WORKSPACE_INITIAL_AUTOPLAY_DELAY_MS = 1600;
 const PARTNER_WORKSPACE_AUTOPLAY_DELAY_HOME_MS = 3600;
 const PARTNER_WORKSPACE_AUTOPLAY_DELAY_OTHER_MS = 2400;
 const PARTNER_WORKSPACE_AUTOPLAY_CLICK_DELAY_MS = 680;
-const SHOWCASE_PROGRESS_STOPS = [0.34, 0.84] as const;
-const SHOWCASE_PROGRESS_EPSILON = 0.04;
-const SHOWCASE_WHEEL_THRESHOLD = 72;
-const SHOWCASE_WHEEL_RESET_MS = 180;
-const SHOWCASE_TRANSITION_MS = 460;
-const SHOWCASE_TRANSITION_REDUCED_MS = 120;
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const formatTranslate3d = (x: number, y: number, scale?: number) => {
@@ -74,17 +66,6 @@ const getStaggeredProgress = (
   if (total <= 1) return smoothstep(start, end, progress);
   const offset = (index / (total - 1)) * spread;
   return smoothstep(start + offset, end + offset, progress);
-};
-
-const isTypingTarget = (target: EventTarget | null) => {
-  if (!(target instanceof HTMLElement)) return false;
-  const tagName = target.tagName;
-  return (
-    target.isContentEditable ||
-    tagName === "INPUT" ||
-    tagName === "TEXTAREA" ||
-    tagName === "SELECT"
-  );
 };
 
 function MetricCardIcon({
@@ -593,60 +574,10 @@ export default function HeroOfferingShowcase() {
   const positionedRef = useRef(false);
   const previewLabelReadyRef = useRef(false);
   const lastProgressRef = useRef(-1);
-  const wheelDeltaRef = useRef(0);
-  const lastWheelAtRef = useRef(0);
-  const transitionTimeoutRef = useRef<number | null>(null);
-  const transitionActiveRef = useRef(false);
   const showcase = shared.offering.showcase;
   const introLines = showcase.introLines;
   const [isPositioned, setIsPositioned] = useState(false);
   const [previewLabelReady, setPreviewLabelReady] = useState(false);
-
-  const getSectionScrollMetrics = useCallback(() => {
-    const section = sectionRef.current;
-    if (!section) return null;
-
-    const top = section.getBoundingClientRect().top + window.scrollY;
-    const scrollable = Math.max(section.offsetHeight - window.innerHeight, 1);
-
-    return {
-      bottom: top + section.offsetHeight,
-      scrollable,
-      top,
-    };
-  }, []);
-
-  const getSectionProgress = useCallback(() => {
-    const metrics = getSectionScrollMetrics();
-    if (!metrics) return 0;
-
-    return clamp((window.scrollY - metrics.top) / metrics.scrollable, 0, 1);
-  }, [getSectionScrollMetrics]);
-
-  const isSectionActive = useCallback(() => {
-    const metrics = getSectionScrollMetrics();
-    if (!metrics) return false;
-
-    const probe = window.scrollY + window.innerHeight * 0.5;
-    return probe >= metrics.top && probe <= metrics.bottom;
-  }, [getSectionScrollMetrics]);
-
-  const releaseTransition = useCallback(() => {
-    transitionActiveRef.current = false;
-    if (transitionTimeoutRef.current !== null) {
-      window.clearTimeout(transitionTimeoutRef.current);
-      transitionTimeoutRef.current = null;
-    }
-  }, []);
-
-  const scheduleTransitionRelease = useCallback(() => {
-    releaseTransition();
-    transitionActiveRef.current = true;
-    transitionTimeoutRef.current = window.setTimeout(
-      releaseTransition,
-      isReducedMotion ? SHOWCASE_TRANSITION_REDUCED_MS : SHOWCASE_TRANSITION_MS,
-    );
-  }, [isReducedMotion, releaseTransition]);
 
   useLayoutEffect(() => {
     let frame = 0;
@@ -778,152 +709,6 @@ export default function HeroOfferingShowcase() {
     offering === "full-service" || offering === "partner" ? null : showcase[offering].stats;
   const ActiveEyebrowIcon = OFFERING_ICONS[offering];
 
-  const animateScrollTo = useCallback((targetY: number) => {
-    if (Math.abs(window.scrollY - targetY) < 2) {
-      releaseTransition();
-      return;
-    }
-
-    scheduleTransitionRelease();
-    if (isReducedMotion) {
-      window.scrollTo({ top: targetY, left: 0, behavior: "auto" });
-      return;
-    }
-
-    window.scrollTo({ top: targetY, left: 0, behavior: "smooth" });
-  }, [isReducedMotion, releaseTransition, scheduleTransitionRelease]);
-
-  const animateToSectionProgress = useCallback((progress: number) => {
-    const metrics = getSectionScrollMetrics();
-    if (!metrics) return false;
-
-    const targetY = metrics.top + metrics.scrollable * clamp(progress, 0, 1);
-    animateScrollTo(targetY);
-    return true;
-  }, [animateScrollTo, getSectionScrollMetrics]);
-
-  const navigateSectionByStep = useCallback((direction: 1 | -1) => {
-    const currentProgress = getSectionProgress();
-
-    if (direction > 0) {
-      const nextStop = SHOWCASE_PROGRESS_STOPS.find(
-        (stop) => stop > currentProgress + SHOWCASE_PROGRESS_EPSILON,
-      );
-
-      if (!nextStop) {
-        return false;
-      }
-
-      return animateToSectionProgress(nextStop);
-    }
-
-    const previousStops = [...SHOWCASE_PROGRESS_STOPS].reverse();
-    const nextStop = previousStops.find(
-      (stop) => stop < currentProgress - SHOWCASE_PROGRESS_EPSILON,
-    );
-
-    if (nextStop === undefined) {
-      return animateToSectionProgress(0);
-    }
-
-    return animateToSectionProgress(nextStop);
-  }, [animateToSectionProgress, getSectionProgress]);
-
-  useEffect(() => () => {
-    releaseTransition();
-  }, [releaseTransition]);
-
-  useEffect(() => {
-    const media = window.matchMedia("(hover: hover) and (pointer: fine)");
-
-    const onWheel = (event: WheelEvent) => {
-      if (!media.matches || isReducedMotion || event.ctrlKey) {
-        return;
-      }
-
-      if (Math.abs(event.deltaY) < 4 || !isSectionActive()) {
-        return;
-      }
-
-      if (transitionActiveRef.current) {
-        event.preventDefault();
-        return;
-      }
-
-      const now = performance.now();
-      if (now - lastWheelAtRef.current > SHOWCASE_WHEEL_RESET_MS) {
-        wheelDeltaRef.current = 0;
-      }
-      lastWheelAtRef.current = now;
-      wheelDeltaRef.current += event.deltaY;
-
-      if (Math.abs(wheelDeltaRef.current) < SHOWCASE_WHEEL_THRESHOLD) {
-        event.preventDefault();
-        return;
-      }
-
-      const direction = wheelDeltaRef.current > 0 ? 1 : -1;
-      wheelDeltaRef.current = 0;
-      if (navigateSectionByStep(direction)) {
-        event.preventDefault();
-      }
-    };
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (isTypingTarget(event.target) || !isSectionActive()) {
-        return;
-      }
-
-      if (transitionActiveRef.current) {
-        if (
-          event.key === "ArrowDown" ||
-          event.key === "ArrowUp" ||
-          event.key === "PageDown" ||
-          event.key === "PageUp" ||
-          event.key === "Home"
-        ) {
-          event.preventDefault();
-        }
-        return;
-      }
-
-      if (event.key === "ArrowDown" || event.key === "PageDown") {
-        if (navigateSectionByStep(1)) {
-          event.preventDefault();
-        }
-        return;
-      }
-
-      if (event.key === "ArrowUp" || event.key === "PageUp") {
-        if (navigateSectionByStep(-1)) {
-          event.preventDefault();
-        }
-        return;
-      }
-
-      if (event.key === "Home" && getSectionProgress() > SHOWCASE_PROGRESS_EPSILON) {
-        if (animateToSectionProgress(0)) {
-          event.preventDefault();
-        }
-      }
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("keydown", onKeyDown);
-      wheelDeltaRef.current = 0;
-      lastWheelAtRef.current = 0;
-    };
-  }, [
-    animateToSectionProgress,
-    getSectionProgress,
-    isReducedMotion,
-    isSectionActive,
-    navigateSectionByStep,
-  ]);
 
   const handleCurrentPageCtaClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (
@@ -949,17 +734,14 @@ export default function HeroOfferingShowcase() {
       window.getComputedStyle(document.documentElement).scrollPaddingTop,
     ) || 0;
     const targetY = target.getBoundingClientRect().top + window.scrollY - scrollPaddingTop;
-    animateScrollTo(Math.max(0, targetY));
+    window.scrollTo({ top: Math.max(0, targetY), left: 0, behavior: "smooth" });
   };
 
   return (
     <section
       ref={sectionRef}
-      id="hero-showcase"
       className={styles.section}
       aria-label={showcase.sectionAriaLabel}
-      data-home-snap-section="true"
-      data-home-snap-free="true"
     >
       <div className={styles.stickyFrame}>
         <div

@@ -124,13 +124,6 @@ function GradientBarShape(props: GradientBarShapeProps) {
 const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
 const HOW_IT_WORKS_STEP_SCROLL_FACTOR = 0.72;
 const HOW_IT_WORKS_PROGRESS_ACCELERATION = 1.12;
-const HOW_IT_WORKS_WHEEL_THRESHOLD = 72;
-const HOW_IT_WORKS_WHEEL_RESET_MS = 180;
-const HOW_IT_WORKS_TRANSITION_MS = 720;
-const HOW_IT_WORKS_TRANSITION_REDUCED_MS = 120;
-const HOW_IT_WORKS_PROGRESS_EPSILON = 0.04;
-const HOW_IT_WORKS_SCROLL_EDGE_TOLERANCE_PX = 8;
-const HOW_IT_WORKS_ENTRY_GUARD_MS = 420;
 const HOW_IT_WORKS_PROGRESS_ACCELERATION_BY_OFFER: Record<OfferKey, number> = {
   platform: HOW_IT_WORKS_PROGRESS_ACCELERATION,
   faas: 0.88,
@@ -142,16 +135,6 @@ const getPartnerWorkspaceToggleState = (rows: PartnerWorkspaceRow[]) =>
 const subscribeHydration = () => () => {};
 const getHydratedSnapshot = () => true;
 const getHydratedServerSnapshot = () => false;
-const isTypingTarget = (target: EventTarget | null) => {
-  if (!(target instanceof HTMLElement)) return false;
-  const tagName = target.tagName;
-  return (
-    target.isContentEditable ||
-    tagName === "INPUT" ||
-    tagName === "TEXTAREA" ||
-    tagName === "SELECT"
-  );
-};
 
 function GoogleIcon() {
   return (
@@ -195,6 +178,18 @@ const smoothstep = (edge0: number, edge1: number, value: number) => {
   return t * t * (3 - 2 * t);
 };
 
+const cubic = (
+  p0: number,
+  p1: number,
+  p2: number,
+  p3: number,
+  t: number,
+) =>
+  (1 - t) ** 3 * p0 +
+  3 * (1 - t) ** 2 * t * p1 +
+  3 * (1 - t) * t ** 2 * p2 +
+  t ** 3 * p3;
+
 const STEP_SWITCH_HYSTERESIS = 0.62;
 
 const getStableDominantStep = (
@@ -203,7 +198,7 @@ const getStableDominantStep = (
   maxStep: number,
 ) => {
   if (maxStep <= 0) return 0;
-  if (previousStep < 0) return Math.floor(clamp(rawStep, 0, maxStep));
+  if (previousStep < 0) return Math.round(clamp(rawStep, 0, maxStep));
 
   let nextStep = previousStep;
 
@@ -467,13 +462,6 @@ export default function HowItWorks() {
   const stepRowRefs = useRef<Array<HTMLElement | null>>([]);
   const stepTextRefs = useRef<Array<HTMLDivElement | null>>([]);
   const stepVisualRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const wheelDeltaRef = useRef(0);
-  const lastWheelAtRef = useRef(0);
-  const transitionTimeoutRef = useRef<number | null>(null);
-  const transitionActiveRef = useRef(false);
-  const transitionTargetYRef = useRef<number | null>(null);
-  const sectionActiveRef = useRef(false);
-  const enteredSectionAtRef = useRef(0);
   const [signupEmail, setSignupEmail] = useState("");
   const [partnerWorkspaceView, setPartnerWorkspaceView] = useState<PartnerWorkspaceView>("home");
   const isClientReady = useSyncExternalStore(
@@ -540,64 +528,6 @@ export default function HowItWorks() {
     };
   });
 
-  const getSectionScrollMetrics = useCallback(() => {
-    const section = sectionRef.current;
-    if (!section) return null;
-
-    const top = section.getBoundingClientRect().top + window.scrollY;
-    const scrollable = Math.max(section.offsetHeight - window.innerHeight, 1);
-
-    return {
-      bottom: top + section.offsetHeight,
-      scrollable,
-      top,
-    };
-  }, []);
-
-  const getSectionProgress = useCallback(() => {
-    const metrics = getSectionScrollMetrics();
-    if (!metrics) return 0;
-
-    return clamp((window.scrollY - metrics.top) / metrics.scrollable, 0, 1);
-  }, [getSectionScrollMetrics]);
-
-  const isSectionActive = useCallback(() => {
-    const metrics = getSectionScrollMetrics();
-    if (!metrics) return false;
-
-    const probe = window.scrollY + window.innerHeight * 0.5;
-    return probe >= metrics.top && probe <= metrics.bottom;
-  }, [getSectionScrollMetrics]);
-
-  const releaseTransition = useCallback(() => {
-    transitionActiveRef.current = false;
-    transitionTargetYRef.current = null;
-    if (transitionTimeoutRef.current !== null) {
-      window.clearTimeout(transitionTimeoutRef.current);
-      transitionTimeoutRef.current = null;
-    }
-  }, []);
-
-  const scheduleTransitionRelease = useCallback(() => {
-    releaseTransition();
-    transitionActiveRef.current = true;
-    transitionTimeoutRef.current = window.setTimeout(
-      releaseTransition,
-      isReducedMotion ? HOW_IT_WORKS_TRANSITION_REDUCED_MS : HOW_IT_WORKS_TRANSITION_MS,
-    );
-  }, [isReducedMotion, releaseTransition]);
-
-  const getStepProgressStops = useCallback(() => {
-    const maxStep = Math.max(currentOffer.steps.length - 1, 1);
-    return currentOffer.steps.map((_, index) => {
-      if (index === 0) {
-        return 0;
-      }
-
-      return clamp(index / (maxStep * progressAcceleration), 0, 1);
-    });
-  }, [currentOffer.steps, progressAcceleration]);
-
   const handlePartnerWorkspaceNavClick = useCallback((nextView: PartnerWorkspaceView) => {
     setPartnerWorkspaceView(nextView);
   }, []);
@@ -617,9 +547,7 @@ export default function HowItWorks() {
       ([entry]) => {
         section.classList.toggle(styles.visible, entry.isIntersecting);
       },
-      // Snap jumps can land close to the section start. Reveal immediately so the
-      // section does not appear blank until the user nudges the scroll again.
-      { threshold: 0.08, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.08, rootMargin: "0px 0px -4% 0px" },
     );
 
     observer.observe(section);
@@ -680,12 +608,11 @@ export default function HowItWorks() {
       if (rect.bottom < -viewport * 0.2 || rect.top > viewport * 1.2) {
         return;
       }
+      const headerEntryProgress = isReducedMotion
+        ? 1
+        : clamp((viewport * 0.92 - rect.top) / (viewport * 0.24), 0, 1);
       const scrollable = Math.max(rect.height - window.innerHeight, 1);
-      let progress = isReducedMotion ? 1 : clamp(-rect.top / scrollable, 0, 1);
-      const snappedNearTop = rect.top <= viewport * 0.03 && rect.top >= -viewport * 0.14;
-      if (!isReducedMotion && snappedNearTop) {
-        progress = Math.max(progress, 0.18);
-      }
+      const progress = isReducedMotion ? 1 : clamp(-rect.top / scrollable, 0, 1);
       const acceleratedProgress = isReducedMotion
         ? 1
         : clamp(progress * progressAcceleration, 0, 1);
@@ -698,8 +625,8 @@ export default function HowItWorks() {
         lastDominantStepRef.current = dominantStep;
         setDominantStepIndex(dominantStep);
       }
-      const headerReveal = Math.round((isReducedMotion ? 1 : smoothstep(-0.04, 0.08, progress)) * 100) / 100;
-      const panelReveal = Math.round((isReducedMotion ? 1 : smoothstep(-0.02, 0.12, progress)) * 100) / 100;
+      const headerReveal = Math.round((isReducedMotion ? 1 : smoothstep(0.04, 0.72, headerEntryProgress)) * 100) / 100;
+      const panelReveal = Math.round((isReducedMotion ? 1 : smoothstep(0.015, 0.12, progress)) * 100) / 100;
 
       if (headerReveal !== lastHeaderRevealRef.current) {
         lastHeaderRevealRef.current = headerReveal;
@@ -735,194 +662,6 @@ export default function HowItWorks() {
     };
   }, [currentOffer.steps.length, isReducedMotion, activeOffer, progressAcceleration]);
 
-  const animateScrollTo = useCallback((targetY: number) => {
-    if (Math.abs(window.scrollY - targetY) < 2) {
-      releaseTransition();
-      return;
-    }
-
-    scheduleTransitionRelease();
-    transitionTargetYRef.current = targetY;
-    if (isReducedMotion) {
-      window.scrollTo({ top: targetY, left: 0, behavior: "auto" });
-      return;
-    }
-
-    window.scrollTo({ top: targetY, left: 0, behavior: "smooth" });
-  }, [isReducedMotion, releaseTransition, scheduleTransitionRelease]);
-
-  const animateToStepIndex = useCallback((stepIndex: number) => {
-    const metrics = getSectionScrollMetrics();
-    if (!metrics) return false;
-
-    const stepStops = getStepProgressStops();
-    const targetProgress = stepStops[Math.max(0, Math.min(stepIndex, stepStops.length - 1))];
-    const targetY = metrics.top + metrics.scrollable * targetProgress;
-    animateScrollTo(targetY);
-    return true;
-  }, [animateScrollTo, getSectionScrollMetrics, getStepProgressStops]);
-
-  const navigateSectionByStep = useCallback((direction: 1 | -1) => {
-    const stepStops = getStepProgressStops();
-    const currentProgress = getSectionProgress();
-    const currentIndex = stepStops.findLastIndex(
-      (stop) => stop <= currentProgress + HOW_IT_WORKS_PROGRESS_EPSILON,
-    );
-    const baseIndex = Math.max(currentIndex, 0);
-    const nextIndex = baseIndex + direction;
-
-    if (nextIndex < 0 || nextIndex >= stepStops.length) {
-      return false;
-    }
-
-    return animateToStepIndex(nextIndex);
-  }, [animateToStepIndex, getSectionProgress, getStepProgressStops]);
-
-  useEffect(() => () => {
-    releaseTransition();
-  }, [releaseTransition]);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const isActive = isSectionActive();
-      if (isActive && !sectionActiveRef.current) {
-        sectionActiveRef.current = true;
-        enteredSectionAtRef.current = performance.now();
-      } else if (!isActive && sectionActiveRef.current) {
-        sectionActiveRef.current = false;
-      }
-
-      const targetY = transitionTargetYRef.current;
-      if (targetY === null) {
-        return;
-      }
-
-      if (Math.abs(window.scrollY - targetY) <= HOW_IT_WORKS_SCROLL_EDGE_TOLERANCE_PX) {
-        releaseTransition();
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, [isSectionActive, releaseTransition]);
-
-  useEffect(() => {
-    const media = window.matchMedia("(hover: hover) and (pointer: fine)");
-
-    const onWheel = (event: WheelEvent) => {
-      if (!media.matches || isReducedMotion || event.ctrlKey || window.innerWidth <= 900) {
-        return;
-      }
-
-      if (Math.abs(event.deltaY) < 4 || !isSectionActive()) {
-        return;
-      }
-
-      const currentProgress = getSectionProgress();
-      const stepStops = getStepProgressStops();
-      const firstAdvanceProgress = stepStops[1] ?? 1;
-      const enteredRecently =
-        performance.now() - enteredSectionAtRef.current < HOW_IT_WORKS_ENTRY_GUARD_MS;
-      if (
-        enteredRecently &&
-        event.deltaY > 0 &&
-        currentProgress < firstAdvanceProgress - HOW_IT_WORKS_PROGRESS_EPSILON
-      ) {
-        wheelDeltaRef.current = 0;
-        event.preventDefault();
-        if (currentProgress > HOW_IT_WORKS_PROGRESS_EPSILON) {
-          animateToStepIndex(0);
-        }
-        return;
-      }
-
-      if (transitionActiveRef.current) {
-        event.preventDefault();
-        return;
-      }
-
-      const now = performance.now();
-      if (now - lastWheelAtRef.current > HOW_IT_WORKS_WHEEL_RESET_MS) {
-        wheelDeltaRef.current = 0;
-      }
-      lastWheelAtRef.current = now;
-      wheelDeltaRef.current += event.deltaY;
-
-      if (Math.abs(wheelDeltaRef.current) < HOW_IT_WORKS_WHEEL_THRESHOLD) {
-        event.preventDefault();
-        return;
-      }
-
-      const direction = wheelDeltaRef.current > 0 ? 1 : -1;
-      wheelDeltaRef.current = 0;
-      if (navigateSectionByStep(direction)) {
-        event.preventDefault();
-      }
-    };
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (isTypingTarget(event.target) || !isSectionActive() || window.innerWidth <= 900) {
-        return;
-      }
-
-      if (transitionActiveRef.current) {
-        if (
-          event.key === "ArrowDown" ||
-          event.key === "ArrowUp" ||
-          event.key === "PageDown" ||
-          event.key === "PageUp" ||
-          event.key === "Home"
-        ) {
-          event.preventDefault();
-        }
-        return;
-      }
-
-      if (event.key === "ArrowDown" || event.key === "PageDown") {
-        event.preventDefault();
-        if (!navigateSectionByStep(1)) {
-          releaseTransition();
-        }
-        return;
-      }
-
-      if (event.key === "ArrowUp" || event.key === "PageUp") {
-        event.preventDefault();
-        if (!navigateSectionByStep(-1)) {
-          releaseTransition();
-        }
-        return;
-      }
-
-      if (event.key === "Home" && getSectionProgress() > HOW_IT_WORKS_PROGRESS_EPSILON) {
-        if (animateToStepIndex(0)) {
-          event.preventDefault();
-        }
-      }
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("keydown", onKeyDown);
-      wheelDeltaRef.current = 0;
-      lastWheelAtRef.current = 0;
-    };
-  }, [
-    animateToStepIndex,
-    getSectionProgress,
-    getStepProgressStops,
-    isReducedMotion,
-    isSectionActive,
-    navigateSectionByStep,
-    releaseTransition,
-  ]);
-
   useEffect(() => {
     if (isReducedMotion) return undefined;
 
@@ -950,6 +689,21 @@ export default function HowItWorks() {
 
   const totalSteps = currentOffer.steps.length;
   const desktopTrackHeight = `${Math.max(totalSteps * HOW_IT_WORKS_STEP_SCROLL_FACTOR * 100, 100)}vh`;
+  const curvePath = "M0 108 C280 108 480 10 720 10 C960 10 1160 108 1440 108";
+  const curvePoints: string[] = [];
+  for (let i = 0; i <= 18; i += 1) {
+    const t = i / 18;
+    const x = cubic(0, 280, 480, 720, t);
+    const y = cubic(108, 108, 10, 10, t);
+    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
+  }
+  for (let i = 1; i <= 18; i += 1) {
+    const t = i / 18;
+    const x = cubic(720, 960, 1160, 1440, t);
+    const y = cubic(10, 10, 108, 108, t);
+    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
+  }
+  const curveClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0 100%)`;
 
   return (
     <section
@@ -957,11 +711,25 @@ export default function HowItWorks() {
       id="how-it-works"
       className={styles.section}
       data-offer={activeOffer}
-      data-home-snap-section="true"
-      data-home-snap-free="true"
       style={{ "--how-it-works-height": desktopTrackHeight } as CSSProperties}
     >
-      <div className={styles.background} aria-hidden="true" />
+      <svg
+        className={styles.curveCut}
+        viewBox="0 0 1440 190"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path d={curvePath} />
+      </svg>
+      <div
+        className={styles.backgroundStack}
+        aria-hidden="true"
+        style={{ clipPath: curveClip, WebkitClipPath: curveClip } as CSSProperties}
+      >
+        <div className={styles.background} />
+        <div className={styles.backgroundGrid} />
+        <div className={styles.backgroundGlow} />
+      </div>
 
       <div className={styles.container}>
         <div className={styles.stickyFrame}>

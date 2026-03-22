@@ -19,28 +19,6 @@ html {
   scrollbar-gutter: stable;
 }
 
-html[data-home-snap="true"] {
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  scroll-padding-top: 0;
-}
-
-body[data-home-snap="true"] {
-  overscroll-behavior-y: contain;
-}
-
-[data-home-snap-section="true"] {
-  min-height: 100svh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html[data-home-snap="true"] {
-    scroll-behavior: auto;
-  }
-}
-
 body {
   background: #020305;
   color: var(--color-text);

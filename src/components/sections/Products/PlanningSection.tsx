@@ -4,7 +4,7 @@ import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import styles from "./PlanningSection.module.scss";
 
 type PlanningSectionProps = {
-  planSectionRef: RefObject<HTMLElement | null>;
+  planSectionRef: RefObject<HTMLDivElement | null>;
   waveHeight: number;
   planCurvePath: string;
   planCurveClip: string;
@@ -67,9 +67,7 @@ export function PlanningSection({
   const { content } = useHomeOffering();
 
   return (
-    <section
-      id="produkt-planning"
-      data-home-snap-section="true"
+    <div
       className={styles.planSection}
       ref={planSectionRef}
     >
@@ -205,6 +203,6 @@ export function PlanningSection({
           </article>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

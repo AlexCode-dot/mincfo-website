@@ -8,10 +8,6 @@
   border-top: 1px solid var(--border-subtle);
 }
 
-.footer[data-home-snap-section="true"] {
-  min-height: auto;
-}
-
 .footer::before {
   content: "";
   position: absolute;

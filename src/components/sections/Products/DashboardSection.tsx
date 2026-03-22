@@ -8,7 +8,7 @@ type AnalysisMetric = "netIncome" | "ebit" | "ebitda" | "grossProfit";
 type DashboardMetric = { id: AnalysisMetric; label: string; seriesK: number[] };
 
 type DashboardSectionProps = {
-  dashboardSectionRef: RefObject<HTMLElement | null>;
+  dashboardSectionRef: RefObject<HTMLDivElement | null>;
   waveHeight: number;
   dashboardCurvePath: string;
   dashboardCurveClip: string;
@@ -91,10 +91,8 @@ export function DashboardSection({
   const { content } = useHomeOffering();
 
   return (
-    <section
-      id="produkt-dashboard"
-      data-home-snap-section="true"
-      className={`${styles.dashboardSection} ${styles.dashboardSectionShifted}`}
+    <div
+      className={styles.dashboardSection}
       ref={dashboardSectionRef}
     >
       <svg
@@ -261,6 +259,6 @@ export function DashboardSection({
           </ul>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

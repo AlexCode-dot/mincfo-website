@@ -29,7 +29,6 @@ export default function Security() {
       ref={sectionRef}
       id="security"
       className={`${styles.section} ${visible ? styles.visible : ""}`}
-      data-home-snap-section="true"
     >
       <div className={styles.background} aria-hidden="true" />
 

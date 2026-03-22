@@ -180,8 +180,9 @@ export default function FloatingNav() {
       return;
     }
 
-    const resolvedHash = hash === "produkt" ? "produkt-copilot" : hash;
-    const target = document.getElementById(resolvedHash);
+    const target =
+      document.getElementById(hash)
+      ?? (hash === "produkt" ? document.getElementById("produkt-copilot") : null);
     if (!target) {
       onDone?.();
       return;

@@ -155,7 +155,6 @@ export default function Customers() {
       ref={sectionRef}
       id="customers"
       className={`${styles.section} ${visible ? styles.visible : ""}`}
-      data-home-snap-section="true"
     >
       <svg
         className={styles.curveCut}

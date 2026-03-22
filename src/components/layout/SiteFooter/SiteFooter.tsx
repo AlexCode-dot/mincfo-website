@@ -20,12 +20,7 @@ export default function SiteFooter() {
   ];
 
   return (
-    <footer
-      id="footer"
-      className={styles.footer}
-      data-home-snap-section="true"
-      data-home-snap-free="true"
-    >
+    <footer className={styles.footer}>
       <div className={styles.container}>
         <div className={styles.grid}>
           <div className={styles.brandCol}>

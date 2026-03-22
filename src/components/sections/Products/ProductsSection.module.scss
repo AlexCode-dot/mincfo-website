@@ -510,7 +510,7 @@
 .dashboardSection {
   position: relative;
   min-height: 100svh;
-  margin-top: 0;
+  margin-top: clamp(120px, 13vh, 184px);
   padding: clamp(118px, 14vh, 188px) 0 clamp(126px, 15.4vh, 210px);
   overflow: visible;
 }
@@ -1474,7 +1474,7 @@
   }
 
   .dashboardSection {
-    margin-top: 52px;
+    margin-top: 92px;
     padding: 98px 0 116px;
   }
 
@@ -1612,7 +1612,7 @@
   }
 
   .dashboardSection {
-    margin-top: 42px;
+    margin-top: 72px;
     padding: 84px 0 92px;
   }
 

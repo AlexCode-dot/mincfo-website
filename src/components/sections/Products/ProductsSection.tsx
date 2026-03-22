@@ -87,8 +87,8 @@ const buildSmoothPath = (points: Array<[number, number]>) => {
 export default function AICopilot() {
   const { content } = useHomeOffering();
   const sectionRef = useRef<HTMLElement | null>(null);
-  const dashboardSectionRef = useRef<HTMLElement | null>(null);
-  const planSectionRef = useRef<HTMLElement | null>(null);
+  const dashboardSectionRef = useRef<HTMLDivElement | null>(null);
+  const planSectionRef = useRef<HTMLDivElement | null>(null);
   const trendMetricMenuRef = useRef<HTMLDivElement | null>(null);
 
   const [curveScale, setCurveScale] = useState(1);
@@ -960,46 +960,43 @@ export default function AICopilot() {
   };
 
   return (
-    <>
-      <section
-        ref={sectionRef}
-        id="produkt-copilot"
-        data-home-snap-section="true"
-        className={`${styles.section} ${visible ? styles.visible : ""}`}
+    <section
+      ref={sectionRef}
+      className={`${styles.section} ${visible ? styles.visible : ""}`}
+    >
+      <svg
+        className={styles.curveCut}
+        viewBox={`0 0 1440 ${waveHeight}`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
       >
-        <svg
-          className={styles.curveCut}
-          viewBox={`0 0 1440 ${waveHeight}`}
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path d={curvePath} />
-        </svg>
+        <path d={curvePath} />
+      </svg>
 
-        <div
-          className={styles.background}
-          aria-hidden="true"
-          style={
-            {
-              clipPath: curveClip,
-              WebkitClipPath: curveClip,
-            } as CSSProperties
-          }
-        />
+      <div
+        className={styles.background}
+        aria-hidden="true"
+        style={
+          {
+            clipPath: curveClip,
+            WebkitClipPath: curveClip,
+          } as CSSProperties
+        }
+      />
 
-        <CopilotChatSection
-          currentExample={currentExample}
-          visible={visible}
-          showQuestionBubble={showQuestionBubble}
-          isSending={isSending}
-          isLoading={isLoading}
-          showAnswerText={showAnswerText}
-          showChart={showChart}
-          isTyping={isTyping}
-          typedQuestion={typedQuestion}
-          stage={stage}
-        />
-      </section>
+      <CopilotChatSection
+        anchorId="produkt"
+        currentExample={currentExample}
+        visible={visible}
+        showQuestionBubble={showQuestionBubble}
+        isSending={isSending}
+        isLoading={isLoading}
+        showAnswerText={showAnswerText}
+        showChart={showChart}
+        isTyping={isTyping}
+        typedQuestion={typedQuestion}
+        stage={stage}
+      />
 
       <DashboardSection
         dashboardSectionRef={dashboardSectionRef}
@@ -1054,6 +1051,6 @@ export default function AICopilot() {
         onSelectPlanMonth={handleSelectPlanMonth}
         monthLabelsEn={monthLabelsEn}
       />
-    </>
+    </section>
   );
 }
