@@ -17,6 +17,9 @@ const HOMEPAGE_SECTIONS = [
   "security",
 ] as const;
 const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
+const SECTION_SCROLL_ADJUSTMENTS: Partial<Record<(typeof HOMEPAGE_SECTIONS)[number], number>> = {
+  produkt: 140,
+};
 
 const getPageTop = (element: HTMLElement) =>
   element.getBoundingClientRect().top + window.scrollY;
@@ -192,7 +195,9 @@ export default function FloatingNav() {
     const scrollPaddingTop = Number.parseFloat(
       window.getComputedStyle(document.documentElement).scrollPaddingTop,
     ) || 0;
-    const targetY = target.getBoundingClientRect().top + window.scrollY - scrollPaddingTop;
+    const extraOffset = SECTION_SCROLL_ADJUSTMENTS[hash as (typeof HOMEPAGE_SECTIONS)[number]] ?? 0;
+    const targetY =
+      target.getBoundingClientRect().top + window.scrollY - scrollPaddingTop + extraOffset;
     if (scrollRafRef.current) {
       window.cancelAnimationFrame(scrollRafRef.current);
       scrollRafRef.current = null;

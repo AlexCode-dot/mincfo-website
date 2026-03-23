@@ -849,7 +849,7 @@
   display: grid;
   align-content: start;
   justify-items: center;
-  gap: 12px;
+  gap: clamp(6px, 1vw, 12px);
 }
 
 .accountWelcomeWrap {
@@ -861,33 +861,33 @@
 .accountWelcomeTitle {
   margin: 0;
   color: rgba(238, 247, 255, 0.99);
-  font-size: 1.9rem;
+  font-size: clamp(1rem, 1.7vw, 1.9rem);
   font-weight: 650;
 }
 
 .accountWelcomeSub {
   margin: 8px 0 0;
   color: rgba(156, 181, 220, 0.9);
-  font-size: 0.96rem;
+  font-size: clamp(0.62rem, 0.82vw, 0.96rem);
 }
 
 .accountSsoStack {
   margin-top: 4px;
   display: grid;
-  gap: 10px;
+  gap: clamp(4px, 0.75vw, 10px);
   width: 100%;
 }
 
 .accountTab {
-  min-height: 42px;
-  padding: 0 14px;
+  min-height: clamp(28px, 3vw, 42px);
+  padding: 0 clamp(8px, 1vw, 14px);
   border-radius: 9px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: clamp(4px, 0.6vw, 8px);
   color: rgba(226, 239, 255, 0.95);
-  font-size: 0.93rem;
+  font-size: clamp(0.62rem, 0.82vw, 0.93rem);
   font-weight: 600;
   text-decoration: none;
   border: 1px solid rgba(70, 101, 157, 0.4);
@@ -895,8 +895,8 @@
 }
 
 .accountProviderIcon {
-  width: 22px;
-  height: 22px;
+  width: clamp(12px, 1.4vw, 22px);
+  height: clamp(12px, 1.4vw, 22px);
   flex: 0 0 auto;
 }
 
@@ -909,9 +909,9 @@
   display: grid;
   align-items: center;
   grid-template-columns: 1fr auto 1fr;
-  gap: 10px;
+  gap: clamp(4px, 0.75vw, 10px);
   color: rgba(128, 151, 188, 0.84);
-  font-size: 0.76rem;
+  font-size: clamp(0.5rem, 0.68vw, 0.76rem);
   width: 100%;
 }
 
@@ -939,10 +939,10 @@
 .accountField {
   display: block;
   width: 100%;
-  height: 48px;
-  padding: 0 14px;
+  height: clamp(30px, 3.4vw, 48px);
+  padding: 0 clamp(8px, 1vw, 14px);
   color: rgba(236, 247, 255, 0.98);
-  font-size: 0.98rem;
+  font-size: clamp(0.64rem, 0.86vw, 0.98rem);
   outline: 0;
 }
 
@@ -969,12 +969,12 @@
 .accountButton {
   margin-top: 0;
   width: 100%;
-  height: 48px;
+  height: clamp(32px, 3.4vw, 48px);
   border-radius: 9px;
   display: grid;
   place-items: center;
   color: var(--btn-primary-text);
-  font-size: 1.02rem;
+  font-size: clamp(0.68rem, 0.9vw, 1.02rem);
   font-weight: 620;
   letter-spacing: 0.01em;
   background: linear-gradient(
@@ -2701,10 +2701,10 @@
 }
 
 .faasSystemsConnect {
-  --faas-systems-offset-y: -20px;
+  --faas-systems-offset-y: -8px;
   position: relative;
   width: min(100%, 640px);
-  min-height: clamp(408px, 50vh, 500px);
+  min-height: clamp(432px, 54vh, 540px);
   display: grid;
   place-items: center;
   contain: layout paint;
@@ -3657,7 +3657,11 @@
   }
 
   .stepRowFaasSystems .stepVisual {
-    min-height: 280px;
+    min-height: 324px;
+  }
+
+  .faasSystemsConnect {
+    --faas-systems-offset-y: 0px;
   }
 
   .stepRowInsights .stepVisual {
@@ -3676,6 +3680,108 @@
     min-height: clamp(84px, 12vw, 102px);
   }
 
+  .accountMiniScene {
+    width: min(96%, 440px);
+    min-height: 292px;
+  }
+
+  .accountMock {
+    width: min(50%, 220px);
+    min-width: 0;
+    min-height: 184px;
+    gap: 6px;
+  }
+
+  .accountWelcomeWrap {
+    margin-top: 0;
+  }
+
+  .accountWelcomeTitle {
+    font-size: 0.94rem;
+    line-height: 1.02;
+  }
+
+  .accountWelcomeSub {
+    margin-top: 4px;
+    font-size: 0.7rem;
+  }
+
+  .accountSsoStack {
+    gap: 5px;
+  }
+
+  .accountTab {
+    min-height: 30px;
+    padding: 0 9px;
+    font-size: 0.66rem;
+    gap: 5px;
+  }
+
+  .accountProviderIcon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .accountDivider {
+    margin-top: 2px;
+    gap: 5px;
+    font-size: 0.58rem;
+  }
+
+  .accountField {
+    height: 32px;
+    padding: 0 9px;
+    font-size: 0.66rem;
+  }
+
+  .accountButton {
+    height: 34px;
+    font-size: 0.74rem;
+  }
+
+}
+
+@media (max-width: 1100px) {
+  .accountWelcomeTitle {
+    font-size: 1.14rem;
+    line-height: 1.03;
+  }
+
+  .accountWelcomeSub {
+    font-size: 0.76rem;
+  }
+
+  .accountSsoStack {
+    gap: 7px;
+  }
+
+  .accountTab {
+    min-height: 34px;
+    padding: 0 11px;
+    font-size: 0.74rem;
+    gap: 6px;
+  }
+
+  .accountProviderIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .accountDivider {
+    font-size: 0.64rem;
+    gap: 7px;
+  }
+
+  .accountField {
+    height: 36px;
+    padding: 0 11px;
+    font-size: 0.74rem;
+  }
+
+  .accountButton {
+    height: 38px;
+    font-size: 0.82rem;
+  }
 }
 
 @media (max-width: 760px) {
@@ -3817,52 +3923,57 @@
     right: 8px;
     top: 50%;
     transform: translateY(-50%);
-    width: min(52%, 190px);
+    width: min(46%, 172px);
     min-width: 0;
-    min-height: 172px;
-    gap: 8px;
+    min-height: 156px;
+    gap: 5px;
+  }
+
+  .accountWelcomeWrap {
+    margin-top: 10px;
   }
 
   .accountWelcomeTitle {
-    font-size: 1rem;
+    font-size: 0.72rem;
+    line-height: 1;
   }
 
   .accountWelcomeSub {
-    margin-top: 4px;
-    font-size: 0.66rem;
+    margin-top: 2px;
+    font-size: 0.5rem;
   }
 
   .accountSsoStack {
-    gap: 6px;
+    gap: 4px;
   }
 
   .accountTab {
-    min-height: 28px;
-    padding: 0 8px;
-    font-size: 0.64rem;
-    gap: 5px;
+    min-height: 24px;
+    padding: 0 7px;
+    font-size: 0.56rem;
+    gap: 4px;
   }
 
   .accountProviderIcon {
-    width: 13px;
-    height: 13px;
+    width: 12px;
+    height: 12px;
   }
 
   .accountDivider {
-    margin-top: 2px;
-    gap: 5px;
-    font-size: 0.56rem;
+    margin-top: 1px;
+    gap: 4px;
+    font-size: 0.48rem;
   }
 
   .accountField {
-    height: 30px;
-    padding: 0 8px;
-    font-size: 0.64rem;
+    height: 26px;
+    padding: 0 7px;
+    font-size: 0.56rem;
   }
 
   .accountButton {
-    height: 32px;
-    font-size: 0.72rem;
+    height: 28px;
+    font-size: 0.62rem;
   }
 
   .insightsMock {
