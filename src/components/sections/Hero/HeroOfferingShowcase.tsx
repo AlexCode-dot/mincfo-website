@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import {
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -574,10 +575,45 @@ export default function HeroOfferingShowcase() {
   const positionedRef = useRef(false);
   const previewLabelReadyRef = useRef(false);
   const lastProgressRef = useRef(-1);
+  const lastEntranceProgressRef = useRef(-1);
   const showcase = shared.offering.showcase;
   const introLines = showcase.introLines;
   const [isPositioned, setIsPositioned] = useState(false);
   const [previewLabelReady, setPreviewLabelReady] = useState(false);
+  const [introEntranceProgress, setIntroEntranceProgress] = useState(isReducedMotion ? 1 : 0);
+
+  useEffect(() => {
+    let frame = 0;
+
+    if (isReducedMotion) {
+      frame = window.requestAnimationFrame(() => {
+        setIntroEntranceProgress(1);
+      });
+      return () => {
+        if (frame) window.cancelAnimationFrame(frame);
+      };
+    }
+
+    let startTime = 0;
+    const duration = 780;
+
+    const tick = (now: number) => {
+      if (!startTime) startTime = now;
+      const elapsed = now - startTime;
+      const progress = clamp(elapsed / duration, 0, 1);
+      const eased = 1 - (1 - progress) ** 3;
+      setIntroEntranceProgress(eased);
+      if (progress < 1) {
+        frame = window.requestAnimationFrame(tick);
+      }
+    };
+
+    frame = window.requestAnimationFrame(tick);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [isReducedMotion]);
 
   useLayoutEffect(() => {
     let frame = 0;
@@ -595,10 +631,12 @@ export default function HeroOfferingShowcase() {
       const rect = section.getBoundingClientRect();
       const scrollable = Math.max(rect.height - window.innerHeight, 1);
       const next = Math.round(clamp(-rect.top / scrollable, 0, 1) / 0.01) * 0.01;
-      if (next === lastProgressRef.current) return;
+      const entranceSnapshot = Math.round(introEntranceProgress * 1000) / 1000;
+      if (next === lastProgressRef.current && entranceSnapshot === lastEntranceProgressRef.current) return;
       lastProgressRef.current = next;
+      lastEntranceProgressRef.current = entranceSnapshot;
 
-      const introOpacity = isReducedMotion
+      const introScrollOpacity = isReducedMotion
         ? 1
         : next <= 0.04
           ? 0
@@ -607,13 +645,15 @@ export default function HeroOfferingShowcase() {
             : next <= 0.56
               ? 1
               : 1 - smoothstep(0.56, 0.9, next);
-      const introShift = isReducedMotion
+      const introScrollShift = isReducedMotion
         ? 0
         : next <= 0.16
           ? 22 - smoothstep(0.04, 0.16, next) * 22
           : next <= 0.56
             ? 0
             : smoothstep(0.56, 0.9, next) * -18;
+      const introOpacity = isReducedMotion ? 1 : introScrollOpacity * introEntranceProgress;
+      const introShift = isReducedMotion ? 0 : introScrollShift + ((1 - introEntranceProgress) * 18);
       const showcaseOpacity = isReducedMotion ? 1 : smoothstep(0.7, 0.92, next);
       const showcaseTranslate = isReducedMotion ? 0 : 48 - showcaseOpacity * 48;
       const controlsReveal = isReducedMotion ? 1 : smoothstep(0.74, 0.94, next);
@@ -680,8 +720,8 @@ export default function HeroOfferingShowcase() {
           total,
           0.08,
         );
-        const charOpacity = isReducedMotion ? 1 : isSpace ? 1 : charIn * (1 - charOut);
-        const charY = isReducedMotion ? 0 : isSpace ? 0 : (1 - charIn) * 42 - charOut * 24;
+        const charOpacity = isReducedMotion ? 1 : isSpace ? 1 : (charIn * (1 - charOut) * introEntranceProgress);
+        const charY = isReducedMotion ? 0 : isSpace ? 0 : ((1 - introEntranceProgress) * 18) + ((1 - charIn) * 42) - (charOut * 24);
         node.style.opacity = `${charOpacity}`;
         node.style.transform = `translate3d(0, ${charY}px, 0)`;
       });
@@ -703,7 +743,7 @@ export default function HeroOfferingShowcase() {
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, [isReducedMotion, options.length]);
+  }, [introEntranceProgress, isReducedMotion, options.length]);
   const visual = showcase[offering];
   const metricStats =
     offering === "full-service" || offering === "partner" ? null : showcase[offering].stats;
