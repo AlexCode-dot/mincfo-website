@@ -3,9 +3,8 @@
   --hero-globe-handoff-fade: 1;
   --hero-globe-handoff-drift: 72px;
   --desktop-stage-progress: 0;
-  --desktop-copy-exit-progress: 0;
-  --desktop-copy-title-progress: 0;
-  --desktop-copy-support-progress: 0;
+  --desktop-stage-outgoing-progress: 0;
+  --desktop-stage-incoming-progress: 0;
   position: relative;
   min-height: 100vh;
   margin-top: 0;
@@ -54,31 +53,15 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  will-change: opacity, transform, filter;
+  will-change: opacity;
 }
 
 .ambientLayerActive {
-  opacity: calc(1 - var(--desktop-stage-progress, 0));
-  transform:
-    translate3d(
-      calc(var(--desktop-stage-progress, 0) * -2.5%),
-      calc(var(--desktop-stage-progress, 0) * 3.5%),
-      0
-    )
-    scale(calc(1 + (var(--desktop-stage-progress, 0) * 0.045)));
-  filter: saturate(calc(1 - (var(--desktop-stage-progress, 0) * 0.18))) blur(calc(var(--desktop-stage-progress, 0) * 10px));
+  opacity: calc(1 - var(--desktop-stage-outgoing-progress, 0));
 }
 
 .ambientLayerIncoming {
-  opacity: var(--desktop-stage-progress, 0);
-  transform:
-    translate3d(
-      calc((1 - var(--desktop-stage-progress, 0)) * 3.5%),
-      calc((1 - var(--desktop-stage-progress, 0)) * -4.5%),
-      0
-    )
-    scale(calc(1.06 - (var(--desktop-stage-progress, 0) * 0.06)));
-  filter: saturate(calc(0.88 + (var(--desktop-stage-progress, 0) * 0.2))) blur(calc((1 - var(--desktop-stage-progress, 0)) * 14px));
+  opacity: var(--desktop-stage-incoming-progress, 0);
 }
 
 .ambientCopilot {
@@ -350,7 +333,8 @@
   .sectionSticky .copyLayer {
     display: flex;
     align-items: center;
-    transform: translate3d(0, 24px, 0);
+    transform: translate3d(0, 18px, 0);
+    transition: opacity 360ms ease, transform 360ms ease;
   }
 
   .sectionSticky .copyLayer > * {
@@ -361,7 +345,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: translate3d(38vw, 0, 0) scale(0.94);
+    transform: translate3d(0, 22px, 0) scale(0.985);
+    transition: opacity 360ms ease, transform 360ms ease;
   }
 
   .sectionSticky .visualLayer > * {
@@ -421,61 +406,39 @@
   }
 
   .sectionSticky .copyLayer.stageLayerCurrent {
-    opacity: calc(1 - (var(--desktop-copy-exit-progress) * 0.98));
-    transform: translate3d(
-      calc(var(--desktop-copy-exit-progress) * -3%),
-      calc(var(--desktop-copy-exit-progress) * -76px),
-      0
-    );
+    opacity: calc(1 - var(--desktop-stage-outgoing-progress));
+    transform: translate3d(0, calc(var(--desktop-stage-outgoing-progress) * -18px), 0);
   }
 
   .sectionSticky .visualLayer.stageLayerCurrent {
-    opacity: calc(1 - (var(--desktop-stage-progress) * 0.96));
-    transform: translate3d(
-      calc(var(--desktop-stage-progress) * -3vw),
-      calc(var(--desktop-stage-progress) * -58vh),
-      0
-    ) scale(calc(1 - (var(--desktop-stage-progress) * 0.14)));
+    opacity: calc(1 - var(--desktop-stage-outgoing-progress));
+    transform: translate3d(0, calc(var(--desktop-stage-outgoing-progress) * -16px), 0) scale(calc(1 - (var(--desktop-stage-outgoing-progress) * 0.02)));
   }
 
   .sectionSticky .copyLayer.stageLayerIncoming {
-    opacity: 1;
-    transform: translate3d(
-      calc((1 - var(--desktop-copy-title-progress)) * 8%),
-      calc((1 - var(--desktop-copy-title-progress)) * 18px),
-      0
-    );
+    opacity: var(--desktop-stage-incoming-progress);
+    transform: translate3d(0, calc((1 - var(--desktop-stage-incoming-progress)) * 18px), 0);
     z-index: 3;
   }
 
   .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyPill {
-    opacity: var(--desktop-copy-support-progress);
-    transform: translate3d(0, calc((1 - var(--desktop-copy-support-progress)) * 10px), 0);
+    opacity: var(--desktop-stage-incoming-progress);
+    transform: none;
   }
 
   .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyTitle {
-    opacity: 1;
-  }
-
-  .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyTitleActive {
-    opacity: var(--desktop-copy-title-progress);
+    opacity: var(--desktop-stage-incoming-progress);
   }
 
   .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyText,
   .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyList {
-    opacity: var(--desktop-copy-support-progress);
-    transform: translate3d(0, calc((1 - var(--desktop-copy-support-progress)) * 18px), 0);
+    opacity: var(--desktop-stage-incoming-progress);
+    transform: none;
   }
 
   .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyListItem {
-    opacity: var(--desktop-copy-support-progress);
-    transform: translate3d(0, calc((1 - var(--desktop-copy-support-progress)) * 14px), 0);
-  }
-
-  .sectionSticky[data-scroll-direction="reverse"] .copyLayer.stageLayerIncoming {
-    opacity: 0;
-    transform: translate3d(4%, 12px, 0);
-    pointer-events: none;
+    opacity: var(--desktop-stage-incoming-progress);
+    transform: none;
   }
 
   .sectionSticky .copyLayer.stageLayerCurrent .desktopCopyPill,
@@ -483,36 +446,32 @@
   .sectionSticky .copyLayer.stageLayerCurrent .desktopCopyText,
   .sectionSticky .copyLayer.stageLayerCurrent .desktopCopyList,
   .sectionSticky .copyLayer.stageLayerCurrent .desktopCopyListItem {
-    opacity: calc(1 - var(--desktop-copy-exit-progress));
+    opacity: calc(1 - var(--desktop-stage-outgoing-progress));
   }
 
   .sectionSticky .visualLayer.stageLayerIncoming {
-    opacity: calc(var(--desktop-stage-progress) * 0.98);
-    transform: translate3d(
-      calc((1 - var(--desktop-stage-progress)) * 42vw),
-      calc((1 - var(--desktop-stage-progress)) * 4px),
-      0
-    ) scale(calc(0.88 + (var(--desktop-stage-progress) * 0.12)));
+    opacity: var(--desktop-stage-incoming-progress);
+    transform: translate3d(0, calc((1 - var(--desktop-stage-incoming-progress)) * 22px), 0) scale(calc(0.985 + (var(--desktop-stage-incoming-progress) * 0.015)));
     z-index: 3;
   }
 
   .sectionSticky .copyLayer.stageLayerBefore {
-    transform: translate3d(-2%, -58px, 0);
+    transform: translate3d(0, -20px, 0);
     opacity: 0;
   }
 
   .sectionSticky .visualLayer.stageLayerBefore {
-    transform: translate3d(-3vw, -48vh, 0) scale(0.84);
+    transform: translate3d(0, -18px, 0) scale(0.97);
     opacity: 0;
   }
 
   .sectionSticky .copyLayer.stageLayerAfter {
-    transform: translate3d(6%, 22px, 0);
+    transform: translate3d(0, 20px, 0);
     opacity: 0;
   }
 
   .sectionSticky .visualLayer.stageLayerAfter {
-    transform: translate3d(36vw, 0, 0) scale(0.84);
+    transform: translate3d(0, 20px, 0) scale(0.97);
     opacity: 0;
   }
 
@@ -574,30 +533,6 @@
   padding-right: 0.06em;
   padding-bottom: 0.08em;
   will-change: opacity, clip-path, transform;
-}
-
-.desktopTypedTitle {
-  position: relative;
-  display: block;
-  overflow: visible;
-}
-
-.desktopTypedTitleGhost {
-  display: block;
-  white-space: pre-wrap;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.desktopTypedTitleActive {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-}
-
-.desktopTypedTitleCursor {
-  color: oklch(0.74 0.12 255 / 0.82);
 }
 
 .text {

@@ -20,7 +20,6 @@ import {
   PlanningCopy,
   PlanningVisual,
 } from "./PlanningSection";
-import TextType from "../Hero/TextType";
 
 type CopilotStage = "idle" | "typing" | "sending" | "loading" | "answer" | "chart";
 type AnalysisMetric = "netIncome" | "ebit" | "ebitda" | "grossProfit";
@@ -72,7 +71,6 @@ const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const progressBetween = (value: number, start: number, end: number) =>
   clamp((value - start) / Math.max(end - start, 0.0001), 0, 1);
-
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 const lerpSeries = (from: number[], to: number[], t: number) =>
   to.map((targetValue, index) => lerp(from[index] ?? targetValue, targetValue, t));
@@ -112,63 +110,6 @@ const buildSmoothPath = (points: Array<[number, number]>) => {
   return path;
 };
 
-const renderDesktopAnimatedTitle = (
-  title: string,
-  animationEnabled: boolean,
-  animationStarted: boolean,
-) => {
-  const formattedTitle = preventShortWordOrphans(title);
-
-  if (!animationEnabled) return formattedTitle;
-  if (!animationStarted) {
-    return (
-      <span className={styles.desktopTypedTitle}>
-        <span className={styles.desktopTypedTitleGhost} aria-hidden="true">
-          {formattedTitle}
-        </span>
-      </span>
-    );
-  }
-
-  return (
-    <span className={styles.desktopTypedTitle}>
-      <span className={styles.desktopTypedTitleGhost} aria-hidden="true">
-        {formattedTitle}
-      </span>
-      <span className={styles.desktopTypedTitleActive}>
-        <TextType
-          key={formattedTitle}
-          text={formattedTitle}
-          typingSpeed={20}
-          initialDelay={60}
-          cursorCharacter="_"
-          cursorClassName={styles.desktopTypedTitleCursor}
-        />
-      </span>
-    </span>
-  );
-};
-
-const renderPlanningTitle = (animationEnabled: boolean, animationStarted: boolean) => {
-  const plainTitle = (
-    <>
-      Forecasting, scenarier
-      <br />
-      och bättre
-      <br />
-      framförhållning
-    </>
-  );
-
-  if (!animationEnabled) return plainTitle;
-
-  return renderDesktopAnimatedTitle(
-    "Forecasting, scenarier\noch bättre\nframförhållning",
-    animationEnabled,
-    animationStarted,
-  );
-};
-
 export default function AICopilot() {
   const { content } = useHomeOffering();
   const { isReducedMotion } = useMotion();
@@ -187,14 +128,12 @@ export default function AICopilot() {
   const [desktopActiveDotIndex, setDesktopActiveDotIndex] = useState(0);
   const [desktopStageProgressValue, setDesktopStageProgressValue] = useState(0);
   const [desktopIntroEntered, setDesktopIntroEntered] = useState(false);
-  const [desktopIsScrollingForward, setDesktopIsScrollingForward] = useState(true);
   const [dashboardVisible, setDashboardVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
   const [curveProgress, setCurveProgress] = useState(0);
   const [dashboardCurveProgress, setDashboardCurveProgress] = useState(0);
   const [planCurveProgress, setPlanCurveProgress] = useState(0);
   const [exampleIndex, setExampleIndex] = useState(0);
-  const [typedLength, setTypedLength] = useState(0);
   const [stage, setStage] = useState<CopilotStage>("idle");
   const [analysisMetric, setAnalysisMetric] = useState<AnalysisMetric>("netIncome");
   const [analysisMetricOpen, setAnalysisMetricOpen] = useState(false);
@@ -449,7 +388,6 @@ export default function AICopilot() {
       const viewportHeight = Math.max(window.innerHeight, 1);
       const totalScrollable = Math.max(rect.height - viewportHeight, 1);
       const progress = clamp((-rect.top) / totalScrollable, 0, 1);
-      const scrollingForward = progress >= desktopScrollProgressRef.current;
       desktopScrollProgressRef.current = progress;
       const phaseHoldStart = 0.16;
       const phaseTransitionFirst = 0.28;
@@ -515,9 +453,6 @@ export default function AICopilot() {
       }
       setDesktopStageProgressValue((current) =>
         Math.abs(current - stageProgress) < 0.01 ? current : stageProgress,
-      );
-      setDesktopIsScrollingForward((current) =>
-        current === scrollingForward ? current : scrollingForward,
       );
       setDesktopActiveDotIndex((current) => (current === nextDotIndex ? current : nextDotIndex));
       if (desktopStageRef.current !== nextStage) {
@@ -709,7 +644,6 @@ export default function AICopilot() {
 
     let cancelled = false;
     const timers: Array<ReturnType<typeof setTimeout>> = [];
-    const intervals: Array<ReturnType<typeof setInterval>> = [];
 
     const queueTimeout = (fn: () => void, delay: number) => {
       const timeoutId = setTimeout(() => {
@@ -720,40 +654,18 @@ export default function AICopilot() {
 
     const runCycle = (index: number) => {
       if (cancelled) return;
-      const example = examples[index];
-      const typingTick = 34;
-      const typingDuration = example.question.length * typingTick;
       setExampleIndex(index);
-      setStage("typing");
-      setTypedLength(0);
-
-      const typingInterval = setInterval(() => {
-        setTypedLength((previous) => {
-          if (previous >= example.question.length) {
-            clearInterval(typingInterval);
-            return previous;
-          }
-          return previous + 1;
-        });
-      }, typingTick);
-      intervals.push(typingInterval);
-
-      queueTimeout(() => {
-        clearInterval(typingInterval);
-        setTypedLength(example.question.length);
-        setStage("sending");
-      }, typingDuration + 220);
-      queueTimeout(() => setStage("loading"), typingDuration + 900);
-      queueTimeout(() => setStage("answer"), typingDuration + 2050);
-      queueTimeout(() => setStage("chart"), typingDuration + 2850);
-      queueTimeout(() => runCycle((index + 1) % examples.length), typingDuration + 6900);
+      setStage("sending");
+      queueTimeout(() => setStage("loading"), 760);
+      queueTimeout(() => setStage("answer"), 1880);
+      queueTimeout(() => setStage("chart"), 2660);
+      queueTimeout(() => runCycle((index + 1) % examples.length), 6500);
     };
 
     runCycle(0);
     return () => {
       cancelled = true;
       timers.forEach((timer) => clearTimeout(timer));
-      intervals.forEach((interval) => clearInterval(interval));
     };
   }, [effectiveCopilotVisible, examples]);
 
@@ -1213,42 +1125,24 @@ export default function AICopilot() {
   }, [planForecastValues, planMonthIndex]);
 
   const currentExample = examples[exampleIndex];
-  const typedQuestion = currentExample.question.slice(0, typedLength);
-  const isTyping = stage === "typing";
+  const typedQuestion = currentExample.question;
+  const isTyping = false;
   const isSending = stage === "sending";
   const isLoading = stage === "loading";
   const showAnswerText = stage === "answer" || stage === "chart";
   const showChart = stage === "chart";
-  const showQuestionBubble = stage !== "idle" && stage !== "typing";
+  const showQuestionBubble = stage !== "idle";
   const desktopCopilotVisible = desktopStickyEnabled ? true : visible;
   const desktopDashboardVisible = desktopStickyEnabled ? true : dashboardVisible;
   const desktopPlanVisible = desktopStickyEnabled ? true : planVisible;
-  const desktopForwardTransitionStarted =
-    desktopIsScrollingForward && desktopStageProgressValue > 0.26;
-  const desktopReverseTransitionStarted =
-    !desktopIsScrollingForward && desktopStageProgressValue < 0.74;
-  const desktopCopilotTitleAnimated =
-    (desktopStickyEnabled && desktopStageIndex === 0 && !desktopIsScrollingForward)
-    || (desktopIntroEntered && desktopIsScrollingForward);
-  const desktopDashboardTitleAnimated =
-    desktopStickyEnabled
-    && (
-      (desktopIsScrollingForward && desktopStageIndex === 0)
-      || (!desktopIsScrollingForward && desktopStageIndex === 1)
-    );
-  const desktopPlanningTitleAnimated =
-    desktopStickyEnabled && desktopIsScrollingForward && desktopStageIndex === 1;
   const desktopStageStyle = desktopStickyEnabled
     ? ({
         "--desktop-stage-progress": desktopStageProgressValue.toFixed(3),
-        "--desktop-copy-exit-progress": easeInOut(
-          progressBetween(desktopStageProgressValue, 0, 0.26),
+        "--desktop-stage-outgoing-progress": easeInOut(
+          progressBetween(desktopStageProgressValue, 0.06, 0.42),
         ).toFixed(3),
-        "--desktop-copy-title-progress": easeInOut(
-          progressBetween(desktopStageProgressValue, 0.18, 0.62),
-        ).toFixed(3),
-        "--desktop-copy-support-progress": easeInOut(
-          progressBetween(desktopStageProgressValue, 0.52, 0.88),
+        "--desktop-stage-incoming-progress": easeInOut(
+          progressBetween(desktopStageProgressValue, 0.58, 0.94),
         ).toFixed(3),
       } as CSSProperties)
     : undefined;
@@ -1302,11 +1196,7 @@ export default function AICopilot() {
           textClassName={styles.desktopCopyText}
           listClassName={styles.desktopCopyList}
           listItemClassName={styles.desktopCopyListItem}
-          title={renderDesktopAnimatedTitle(
-            content.aicopilot.leftTitle,
-            desktopCopilotTitleAnimated,
-            desktopIsScrollingForward ? desktopIntroEntered : desktopReverseTransitionStarted,
-          )}
+          title={preventShortWordOrphans(content.aicopilot.leftTitle)}
         />
       ),
       visual: (
@@ -1335,13 +1225,7 @@ export default function AICopilot() {
           textClassName={styles.desktopCopyText}
           listClassName={styles.desktopCopyList}
           listItemClassName={styles.desktopCopyListItem}
-          title={renderDesktopAnimatedTitle(
-            content.aicopilot.dashboard.title,
-            desktopDashboardTitleAnimated,
-            desktopIsScrollingForward
-              ? desktopForwardTransitionStarted
-              : desktopReverseTransitionStarted,
-          )}
+          title={preventShortWordOrphans(content.aicopilot.dashboard.title)}
         />
       ),
       visual: (
@@ -1385,9 +1269,14 @@ export default function AICopilot() {
           textClassName={styles.desktopCopyText}
           listClassName={styles.desktopCopyList}
           listItemClassName={styles.desktopCopyListItem}
-          title={renderPlanningTitle(
-            desktopPlanningTitleAnimated,
-            desktopForwardTransitionStarted,
+          title={(
+            <>
+              Forecasting, scenarier
+              <br />
+              och bättre
+              <br />
+              framförhållning
+            </>
           )}
         />
       ),
@@ -1418,7 +1307,6 @@ export default function AICopilot() {
       id="produkt"
       className={`${styles.section} ${visible ? styles.visible : ""} ${desktopStickyEnabled ? styles.sectionSticky : ""} ${desktopIntroEntered ? styles.desktopIntroEntered : ""}`}
       data-active-stage={productStages[desktopActiveDotIndex]?.id}
-      data-scroll-direction={desktopIsScrollingForward ? "forward" : "reverse"}
       style={desktopStageStyle}
     >
       <svg
