@@ -212,7 +212,7 @@
     ]
   },
   "customers": {
-    "pill": "Kunder",
+    "pill": "KUNDCASE",
     "title": "Bolag som använder MinCFO som sin ekonomifunktion",
     "intro": "Här är exempel på team som använder MinCFO som helhetslösning för att slippa driva finance internt, men ändå ha full insyn i resultat, cashflow och avvikelser.",
     "tickerLabel": "Betrodd av bolag som vill lägga ekonomi och uppföljning hos en extern partner",

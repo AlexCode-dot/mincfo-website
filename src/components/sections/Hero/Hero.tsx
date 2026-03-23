@@ -73,6 +73,7 @@ export default function Hero() {
   const [isVideoRevealing, setIsVideoRevealing] = useState(false);
   const [showEndBrand, setShowEndBrand] = useState(false);
   const [isCardEntered, setIsCardEntered] = useState(false);
+  const [isHeroReady, setIsHeroReady] = useState(false);
   const [introRingProgress, setIntroRingProgress] = useState(0);
   const [isCardFullscreen, setIsCardFullscreen] = useState(false);
   const [endAudioLevels, setEndAudioLevels] = useState<number[]>(
@@ -90,6 +91,7 @@ export default function Hero() {
   });
 
   useLayoutEffect(() => {
+    setIsHeroReady(true);
     const sectionNode = sectionRef.current;
     const topBackgroundLayerNode = topBackgroundLayerRef.current;
     const introNode = introRef.current;
@@ -650,7 +652,7 @@ export default function Hero() {
 
         <div
           ref={cardStageRef}
-          className={`${styles.cardStage} ${isCardEntered || isReducedMotion ? styles.cardStageEntered : ""}`}
+          className={`${styles.cardStage} ${isHeroReady ? styles.cardStageReady : ""} ${isCardEntered || isReducedMotion ? styles.cardStageEntered : ""}`}
         >
           <div className={styles.cardWrap} ref={cardWrapRef}>
             <div className={`${styles.card} ${styles.glass}`} ref={cardRef}>
