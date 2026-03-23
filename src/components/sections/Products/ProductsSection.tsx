@@ -135,6 +135,7 @@ export default function AICopilot() {
   const [planCurveProgress, setPlanCurveProgress] = useState(0);
   const [exampleIndex, setExampleIndex] = useState(0);
   const [stage, setStage] = useState<CopilotStage>("idle");
+  const [typedQuestion, setTypedQuestion] = useState("");
   const [analysisMetric, setAnalysisMetric] = useState<AnalysisMetric>("netIncome");
   const [analysisMetricOpen, setAnalysisMetricOpen] = useState(false);
   const [analysisAutoplayPreviewMetric, setAnalysisAutoplayPreviewMetric] = useState<AnalysisMetric | null>(null);
@@ -211,7 +212,7 @@ export default function AICopilot() {
 
   useEffect(() => {
     const syncDesktopMode = () => {
-      setDesktopStickyEnabled(window.innerWidth > 980);
+      setDesktopStickyEnabled(window.innerWidth > 1100);
     };
 
     syncDesktopMode();
@@ -655,11 +656,13 @@ export default function AICopilot() {
     const runCycle = (index: number) => {
       if (cancelled) return;
       setExampleIndex(index);
-      setStage("sending");
-      queueTimeout(() => setStage("loading"), 760);
-      queueTimeout(() => setStage("answer"), 1880);
-      queueTimeout(() => setStage("chart"), 2660);
-      queueTimeout(() => runCycle((index + 1) % examples.length), 6500);
+      setTypedQuestion("");
+      setStage("typing");
+      queueTimeout(() => setStage("sending"), 1400);
+      queueTimeout(() => setStage("loading"), 2160);
+      queueTimeout(() => setStage("answer"), 3280);
+      queueTimeout(() => setStage("chart"), 4060);
+      queueTimeout(() => runCycle((index + 1) % examples.length), 7200);
     };
 
     runCycle(0);
@@ -668,6 +671,36 @@ export default function AICopilot() {
       timers.forEach((timer) => clearTimeout(timer));
     };
   }, [effectiveCopilotVisible, examples]);
+
+  useEffect(() => {
+    if (stage !== "typing") return;
+
+    const question = examples[exampleIndex]?.question ?? "";
+    if (!question) return;
+
+    let cancelled = false;
+    const timeouts: Array<ReturnType<typeof setTimeout>> = [];
+    const clearId = setTimeout(() => {
+      if (!cancelled) {
+        setTypedQuestion("");
+      }
+    }, 0);
+    timeouts.push(clearId);
+
+    Array.from(question).forEach((_, index) => {
+      const timeoutId = setTimeout(() => {
+        if (!cancelled) {
+          setTypedQuestion(question.slice(0, index + 1));
+        }
+      }, 40 * index + 60);
+      timeouts.push(timeoutId);
+    });
+
+    return () => {
+      cancelled = true;
+      timeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+    };
+  }, [stage, exampleIndex, examples]);
 
   const waveHeight = curveScale < 0.7 ? 160 : 190;
   const curveValue = (start: number, end: number, progress: number) =>
@@ -1125,8 +1158,7 @@ export default function AICopilot() {
   }, [planForecastValues, planMonthIndex]);
 
   const currentExample = examples[exampleIndex];
-  const typedQuestion = currentExample.question;
-  const isTyping = false;
+  const isTyping = stage === "typing";
   const isSending = stage === "sending";
   const isLoading = stage === "loading";
   const showAnswerText = stage === "answer" || stage === "chart";

@@ -71,6 +71,6 @@
 
   /* Layout */
   --container-max: 1200px;
-  --container-pad: 24px;
+  --container-pad: clamp(16px, 3vw, 24px);
   --blur-glass: 14px;
 }

@@ -8,7 +8,7 @@
 .stickyFrame {
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 100svh;
   display: grid;
   place-items: center;
   padding: 7vh 0 6vh;
@@ -27,30 +27,38 @@
 }
 
 .introStage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   display: grid;
   place-items: center;
-  pointer-events: none;
-  position: relative;
   justify-items: center;
-  gap: 12px;
+  pointer-events: none;
+  z-index: 3;
 }
 
 .splitTitle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: inline-grid;
   gap: 0;
-  width: fit-content;
+  width: max-content;
   max-width: none;
   justify-items: center;
   text-align: center;
-  position: relative;
   z-index: 2;
 }
 
 .splitLine {
-  display: inline-block;
-  width: fit-content;
+  display: block;
+  width: auto;
   margin: 0;
   text-wrap: nowrap;
+  text-align: center;
   color: var(--text-primary);
   font-size: clamp(2rem, 5.3vw, 4.9rem);
   line-height: 0.92;
@@ -73,6 +81,10 @@
 }
 
 .scrollHint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(84px, 12vh, 120px);
+  transform: translateX(-50%);
   z-index: 2;
   display: inline-flex;
   margin-top: 0;
@@ -101,6 +113,8 @@
 }
 
 .showcase {
+  position: relative;
+  z-index: 2;
   pointer-events: none;
 }
 
@@ -2541,22 +2555,53 @@
 
 @media (max-width: 720px) {
   .section {
-    height: 328vh;
-    margin-top: 32px;
+    height: 460vh;
+    margin-top: 0;
+    padding-bottom: 160px;
   }
 
   .stickyFrame {
-    padding: 8vh 0 3vh;
+    position: sticky;
+    height: 100svh;
+    display: grid;
+    padding: 0;
+  }
+
+  .introStage {
+    min-height: 100svh;
+    align-content: center;
+  }
+
+  .showcase {
+    width: min(100%, calc(100vw - (var(--container-pad) * 2)));
+  }
+
+  .panel {
+    gap: 20px;
+    padding-top: 64px;
+  }
+
+  .scrollHint {
+    bottom: clamp(72px, 11vh, 96px);
   }
 
   .controls {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     width: min(100%, 420px);
+    gap: 8px;
+    padding: 6px;
+    border-radius: 22px;
+    background: linear-gradient(180deg, oklch(0.14 0.013 262 / 0.86), oklch(0.12 0.011 262 / 0.9));
+    box-shadow:
+      inset 0 0 0 1px oklch(0.72 0.02 262 / 0.08),
+      0 12px 28px oklch(0.05 0.008 262 / 0.18);
   }
 
   .controlsHeader {
-    gap: 8px;
+    display: grid;
+    gap: 6px;
+    padding: 0 10px;
   }
 
   .previewLabel,
@@ -2564,19 +2609,77 @@
     text-align: center;
   }
 
+  .previewLabel {
+    max-width: 30ch;
+    font-size: 0.66rem;
+    line-height: 1.35;
+    letter-spacing: 0.05em;
+    opacity: 0.72;
+  }
+
   .optionSlot {
     width: 100%;
   }
 
   .option {
-    justify-content: center;
-    min-height: 54px;
+    grid-auto-flow: row;
+    justify-items: center;
+    align-content: center;
+    gap: 6px;
+    min-height: 70px;
     width: 100%;
+    padding: 10px 8px 12px;
+    border-radius: 16px;
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    font-size: 0.76rem;
+    text-align: center;
+  }
+
+  .option:hover {
+    border-color: transparent;
+    background: oklch(0.17 0.016 262 / 0.32);
+  }
+
+  .optionActive {
+    border-color: color-mix(in oklab, var(--btn-primary-bg) 34%, white 8%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--btn-primary-bg) 20%, oklch(0.18 0.016 262 / 0.96)) 0%,
+        color-mix(in oklab, var(--btn-primary-bg) 28%, oklch(0.13 0.012 262 / 0.98)) 100%
+      );
+    box-shadow:
+      inset 0 1px 0 oklch(0.95 0.02 260 / 0.14),
+      0 8px 18px color-mix(in oklab, var(--btn-primary-bg) 14%, transparent);
+  }
+
+  .optionIcon {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+  }
+
+  .option > span:last-child {
+    transform: none;
+    line-height: 1.15;
+    text-wrap: balance;
   }
 
   .copyCard h2,
   .splitTitle {
     max-width: none;
+  }
+
+  .copyCard,
+  .visualCard {
+    min-height: auto;
+    height: auto;
+  }
+
+  .visualContent {
+    min-height: 0;
   }
 
   .copyCardPartner {
@@ -2631,8 +2734,35 @@
     white-space: normal;
   }
 
+  .splitTitle {
+    width: min(100%, calc(100vw - 36px));
+    max-width: 21rem;
+  }
+
   .metricGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .metricCard {
+    padding: 10px 8px 11px;
+    border-radius: 14px;
+    text-align: center;
+  }
+
+  .metricCard span {
+    font-size: 0.62rem;
+  }
+
+  .metricCard strong,
+  .metricValueRow {
+    margin-top: 6px;
+    font-size: 0.9rem;
+    justify-content: center;
+  }
+
+  .metricValueRow {
+    gap: 6px;
   }
 
   .serviceBoardTop,
@@ -2650,7 +2780,8 @@
   }
 
   .serviceSummaryCompact {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .serviceOrbitNodes {
@@ -2672,6 +2803,13 @@
   .barChart {
     gap: 10px;
     height: 180px;
+  }
+}
+
+@media (max-width: 520px) {
+  .section {
+    height: 520vh;
+    padding-bottom: 200px;
   }
 }
 
@@ -2801,13 +2939,10 @@
     min-height: 116px;
   }
 
-  .serviceSummaryCompact {
-    gap: 8px;
-  }
-
   .serviceSummaryCard {
     padding: 10px 11px 11px;
     border-radius: 18px;
+    min-width: 0;
   }
 
   .serviceSummaryLabel {

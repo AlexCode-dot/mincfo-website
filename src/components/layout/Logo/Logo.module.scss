@@ -6,6 +6,7 @@
   display: inline-flex;
   align-items: center;
   gap: 18px;
+  max-width: calc(100vw - 128px);
 }
 
 .logo {
@@ -45,6 +46,7 @@
     top: 18px;
     left: 18px;
     gap: 12px;
+    max-width: calc(100vw - 92px);
   }
 
   .logo {

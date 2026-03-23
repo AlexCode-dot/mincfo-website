@@ -1,7 +1,7 @@
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: 150vh;
+  min-height: 138svh;
   padding: 0;
   overflow: visible;
   background: #020305;
@@ -10,8 +10,8 @@
 .topBackground {
   position: sticky;
   top: 0;
-  height: 100vh;
-  margin-bottom: -100vh;
+  height: 100svh;
+  margin-bottom: -100svh;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
@@ -29,18 +29,20 @@
   z-index: 2;
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 136px var(--container-pad) 72px;
+  padding: clamp(112px, 12vh, 136px) var(--container-pad) clamp(56px, 7vh, 72px);
   text-align: center;
 }
 
 .intro {
   position: relative;
   z-index: 3;
-  min-height: calc(100vh - 208px);
+  width: 100%;
+  min-height: calc(100svh - 208px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   transform: translate3d(0, 0, 0);
   transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, opacity;
@@ -80,10 +82,25 @@
 
 .title {
   margin: 28px auto 18px;
+  width: 100%;
   font-size: clamp(2.4rem, 4vw, 4.4rem);
   font-weight: 600;
   line-height: 1.05;
   color: var(--color-text);
+  max-width: none;
+  text-wrap: initial;
+}
+
+.titleSplit {
+  width: 100%;
+  max-width: 100%;
+  text-wrap: initial;
+}
+
+.titleLine {
+  display: block;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .subtitle {
@@ -91,6 +108,7 @@
   max-width: 640px;
   color: var(--color-muted);
   font-size: 1.05rem;
+  text-wrap: pretty;
 }
 
 .ctaRow {
@@ -135,7 +153,7 @@
 }
 
 .cardWrap {
-  margin-top: 154px;
+  margin-top: clamp(88px, 10vw, 154px);
   display: flex;
   justify-content: center;
   transition: transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -700,17 +718,45 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .hero {
-    min-height: 144vh;
+    min-height: 132svh;
   }
 
   .container {
-    padding: 124px var(--container-pad) 64px;
+    padding-top: 118px;
   }
 
   .intro {
-    min-height: calc(100vh - 188px);
+    min-height: calc(100svh - 188px);
+  }
+
+  .title {
+    font-size: clamp(2.15rem, 5vw, 3.7rem);
+  }
+
+  .titleSplit {
+    max-width: 100%;
+    font-size: clamp(1.95rem, 4.4vw, 3.25rem);
+  }
+
+  .subtitle {
+    max-width: 34rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: 126svh;
+  }
+
+  .container {
+    padding: 116px var(--container-pad) 64px;
+  }
+
+  .intro {
+    min-height: calc(100svh - 176px);
   }
 
   .card {
@@ -724,19 +770,41 @@
 
 @media (max-width: 600px) {
   .hero {
-    min-height: 136vh;
+    min-height: 118svh;
   }
 
   .container {
-    padding: 112px var(--container-pad) 56px;
+    padding: 104px var(--container-pad) 52px;
   }
 
   .intro {
-    min-height: calc(100vh - 168px);
+    min-height: calc(100svh - 152px);
+  }
+
+  .tag {
+    gap: 8px;
+    padding: 6px 12px;
+    font-size: 0.76rem;
+  }
+
+  .title {
+    margin-top: 22px;
+    font-size: clamp(1.96rem, 10vw, 2.9rem);
+  }
+
+  .titleSplit {
+    max-width: 100%;
+    font-size: clamp(1.75rem, 8.2vw, 2.45rem);
+  }
+
+  .titleSplit .titleLine {
+    white-space: normal;
+    text-wrap: balance;
   }
 
   .subtitle {
     font-size: 0.95rem;
+    margin-bottom: 24px;
   }
 
   .cardHeader {
@@ -747,10 +815,46 @@
   .address {
     width: 100%;
     justify-content: center;
+    overflow-wrap: anywhere;
   }
 
   .cardWrap {
-    margin-top: 108px;
+    margin-top: 72px;
+  }
+
+  .ctaRow {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .primaryCta {
+    width: min(100%, 320px);
+    justify-content: center;
+  }
+
+  .playButton {
+    width: 82px;
+    height: 82px;
+  }
+
+  .fullscreenButton {
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .videoEndBrandWord {
+    font-size: clamp(2rem, 12vw, 3rem);
+  }
+
+  .logoIntroBadge {
+    gap: 12px;
+    padding: 16px 22px;
+  }
+
+  .logoIntroWord {
+    font-size: 1.18rem;
   }
 }
 

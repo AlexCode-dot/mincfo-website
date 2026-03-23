@@ -384,6 +384,28 @@
   .grid {
     gap: 16px;
   }
+
+  .card {
+    min-height: 288px;
+  }
+}
+
+@media (max-width: 820px) {
+  .card {
+    flex-basis: 100%;
+    max-width: 100%;
+    min-height: 0;
+  }
+
+  .card:nth-child(1),
+  .card:nth-child(2),
+  .card:nth-child(3),
+  .card:nth-child(4),
+  .card:nth-child(5) {
+    --card-enter-x: 0px;
+    --card-enter-y: 28px;
+    --card-enter-rotate: 0deg;
+  }
 }
 
 @media (max-width: 600px) {
@@ -412,6 +434,7 @@
     flex-basis: 100%;
     max-width: 100%;
     gap: 12px;
+    padding: 20px;
     opacity: 1;
     transform: none;
     will-change: auto;

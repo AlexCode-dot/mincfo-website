@@ -6,6 +6,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  max-width: calc(100vw - 32px);
 }
 
 .nav {
@@ -372,6 +373,7 @@
   .navShell {
     top: 14px;
     right: 14px;
+    max-width: calc(100vw - 28px);
   }
 
   .desktopNav {
@@ -429,7 +431,8 @@
     top: calc(100% + 10px);
     right: 0;
     width: min(92vw, 380px);
-    max-height: 75vh;
+    max-width: calc(100vw - 28px);
+    max-height: min(75vh, 560px);
     overflow: auto;
     display: grid;
     gap: 8px;
@@ -570,5 +573,30 @@
     font-size: 0.9rem;
     font-weight: 560;
     border: 1px solid oklch(0.72 0.02 262 / 0.24);
+  }
+}
+
+@media (max-width: 600px) {
+  .navShell {
+    top: 12px;
+    right: 12px;
+    max-width: calc(100vw - 24px);
+  }
+
+  .nav {
+    min-width: 52px;
+    min-height: 52px;
+  }
+
+  .mobileToggle {
+    width: 52px;
+    height: 52px;
+  }
+
+  .mobilePanel {
+    top: calc(100% + 8px);
+    width: min(100vw - 24px, 360px);
+    padding: 12px;
+    border-radius: 12px;
   }
 }
