@@ -345,7 +345,7 @@ export function ShowcaseGradientBarChart() {
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={activeLiquidityChart.data}
-              margin={{ top: 14, right: 4, left: 4, bottom: 0 }}
+              margin={{ top: 14, right: 4, left: 4, bottom: 14 }}
             >
               <CartesianGrid
                 vertical={false}

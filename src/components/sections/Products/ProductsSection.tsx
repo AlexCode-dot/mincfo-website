@@ -40,6 +40,8 @@ type ProductStageDefinition = {
   visual: ReactNode;
 };
 
+const NON_BREAKING_SPACE = "\u00A0";
+
 const DEFAULT_PLAN_MONTH_INDEX = 8;
 const PLAN_MONTH_AUTOPLAY_SEQUENCE = [8, 1, 7, 11, 4, 9, 2, 10, 5];
 const PLAN_MONTH_AUTOPLAY_DELAY_MS = 3400;
@@ -75,6 +77,8 @@ const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 const lerpSeries = (from: number[], to: number[], t: number) =>
   to.map((targetValue, index) => lerp(from[index] ?? targetValue, targetValue, t));
 const easeInOut = (t: number) => t * t * (3 - 2 * t);
+const preventShortWordOrphans = (text: string) =>
+  text.replace(/\b(\p{L}{1,4}) (?=\p{L}{5,})/gu, `$1${NON_BREAKING_SPACE}`);
 
 const cubic = (
   p0: number,
@@ -113,12 +117,14 @@ const renderDesktopAnimatedTitle = (
   animationEnabled: boolean,
   animationStarted: boolean,
 ) => {
-  if (!animationEnabled) return title;
+  const formattedTitle = preventShortWordOrphans(title);
+
+  if (!animationEnabled) return formattedTitle;
   if (!animationStarted) {
     return (
       <span className={styles.desktopTypedTitle}>
         <span className={styles.desktopTypedTitleGhost} aria-hidden="true">
-          {title}
+          {formattedTitle}
         </span>
       </span>
     );
@@ -127,12 +133,12 @@ const renderDesktopAnimatedTitle = (
   return (
     <span className={styles.desktopTypedTitle}>
       <span className={styles.desktopTypedTitleGhost} aria-hidden="true">
-        {title}
+        {formattedTitle}
       </span>
       <span className={styles.desktopTypedTitleActive}>
         <TextType
-          key={title}
-          text={title}
+          key={formattedTitle}
+          text={formattedTitle}
           typingSpeed={20}
           initialDelay={60}
           cursorCharacter="_"
@@ -140,6 +146,26 @@ const renderDesktopAnimatedTitle = (
         />
       </span>
     </span>
+  );
+};
+
+const renderPlanningTitle = (animationEnabled: boolean, animationStarted: boolean) => {
+  const plainTitle = (
+    <>
+      Forecasting, scenarier
+      <br />
+      och bättre
+      <br />
+      framförhållning
+    </>
+  );
+
+  if (!animationEnabled) return plainTitle;
+
+  return renderDesktopAnimatedTitle(
+    "Forecasting, scenarier\noch bättre\nframförhållning",
+    animationEnabled,
+    animationStarted,
   );
 };
 
@@ -1359,8 +1385,7 @@ export default function AICopilot() {
           textClassName={styles.desktopCopyText}
           listClassName={styles.desktopCopyList}
           listItemClassName={styles.desktopCopyListItem}
-          title={renderDesktopAnimatedTitle(
-            content.aicopilot.planning.title,
+          title={renderPlanningTitle(
             desktopPlanningTitleAnimated,
             desktopForwardTransitionStarted,
           )}
@@ -1387,16 +1412,6 @@ export default function AICopilot() {
       ),
     },
   ];
-  const desktopProgressStops = Math.max(productStages.length - 1, 1);
-  const desktopProgressValue = clamp(
-    (desktopStageIndex + desktopStageProgressValue) / desktopProgressStops,
-    0,
-    1,
-  );
-  const desktopProgressCircumference = 2 * Math.PI * 20;
-  const desktopProgressOffset =
-    desktopProgressCircumference * (1 - desktopProgressValue);
-
   return (
     <section
       ref={sectionRef}
@@ -1458,41 +1473,6 @@ export default function AICopilot() {
           </div>
         </div>
 
-        <div className={styles.desktopStageProgress} aria-hidden="true">
-          <svg
-            className={styles.desktopStageProgressRing}
-            viewBox="0 0 48 48"
-            role="presentation"
-          >
-            <defs>
-              <linearGradient id="desktop-stage-progress-gradient" x1="4" y1="24" x2="44" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="var(--btn-primary-bg)" />
-                <stop offset="100%" stopColor="var(--btn-primary-bg-hover)" />
-              </linearGradient>
-            </defs>
-            <circle
-              className={styles.desktopStageProgressTrack}
-              cx="24"
-              cy="24"
-              r="20"
-            />
-            <circle
-              className={styles.desktopStageProgressValue}
-              cx="24"
-              cy="24"
-              r="20"
-              style={
-                {
-                  "--desktop-progress-circumference": `${desktopProgressCircumference}px`,
-                  "--desktop-progress-offset": `${desktopProgressOffset}px`,
-                } as CSSProperties
-              }
-            />
-          </svg>
-          <span className={styles.desktopStageProgressLabel}>
-            {desktopActiveDotIndex + 1}
-          </span>
-        </div>
       </div>
 
       <div className={styles.mobileFlow}>

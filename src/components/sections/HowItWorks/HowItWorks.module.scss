@@ -425,7 +425,7 @@
     column-gap: clamp(150px, 15vw, 250px);
     align-items: center;
     z-index: 2;
-    contain: layout paint;
+    contain: layout;
     will-change: transform, opacity;
   }
 
@@ -665,7 +665,7 @@
     scale(calc(0.76 + var(--step-progress) * 0.08 + var(--step-focus) * 0.16));
   filter: blur(calc((1 - var(--step-progress)) * 1px + (1 - var(--step-focus)) * 0.9px));
   transition: opacity 220ms linear, transform 220ms linear, filter 220ms linear;
-  contain: layout paint;
+  contain: layout;
 }
 
 .stepVisual::before {
