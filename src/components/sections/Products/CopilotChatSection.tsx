@@ -1,5 +1,5 @@
 import { Check, SendHorizontal } from "lucide-react";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import styles from "./CopilotChatSection.module.scss";
 
@@ -15,6 +15,7 @@ type CopilotExample = {
 
 type CopilotChatSectionProps = {
   anchorId?: string;
+  className?: string;
   currentExample: CopilotExample;
   visible: boolean;
   showQuestionBubble: boolean;
@@ -25,6 +26,31 @@ type CopilotChatSectionProps = {
   isTyping: boolean;
   typedQuestion: string;
   stage: CopilotStage;
+};
+
+type CopilotCopyProps = {
+  className?: string;
+  pillClassName?: string;
+  title?: ReactNode;
+  titleClassName?: string;
+  textClassName?: string;
+  listClassName?: string;
+  listItemClassName?: string;
+  visible: boolean;
+};
+
+type CopilotVisualProps = {
+  className?: string;
+  currentExample: CopilotExample;
+  showQuestionBubble: boolean;
+  isSending: boolean;
+  isLoading: boolean;
+  showAnswerText: boolean;
+  showChart: boolean;
+  isTyping: boolean;
+  typedQuestion: string;
+  stage: CopilotStage;
+  visible: boolean;
 };
 
 function MiniMincfoBrand() {
@@ -45,8 +71,152 @@ function MiniMincfoBrand() {
   );
 }
 
+export function CopilotCopy({
+  className,
+  pillClassName,
+  title,
+  titleClassName,
+  textClassName,
+  listClassName,
+  listItemClassName,
+  visible,
+}: CopilotCopyProps) {
+  const { content } = useHomeOffering();
+
+  return (
+    <div className={`${styles.left} ${styles.aiLeft} ${visible ? styles.shown : ""} ${className ?? ""}`}>
+      <span className={`${styles.pill} ${pillClassName ?? ""}`}>{content.aicopilot.leftPill}</span>
+      <h2 className={`${styles.title} ${titleClassName ?? ""}`}>{title ?? content.aicopilot.leftTitle}</h2>
+      <p className={`${styles.text} ${textClassName ?? ""}`}>{content.aicopilot.leftIntro}</p>
+
+      <ul className={`${styles.list} ${listClassName ?? ""}`}>
+        {content.aicopilot.leftBullets.map((item) => (
+          <li key={item} className={listItemClassName}>
+            <Check aria-hidden="true" size={14} />
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export function CopilotVisual({
+  className,
+  currentExample,
+  showQuestionBubble,
+  isSending,
+  isLoading,
+  showAnswerText,
+  showChart,
+  isTyping,
+  typedQuestion,
+  stage,
+  visible,
+}: CopilotVisualProps) {
+  const { content } = useHomeOffering();
+
+  return (
+    <div className={`${styles.right} ${styles.aiRight} ${visible ? styles.shownDelayed : ""} ${className ?? ""}`}>
+      <div className={styles.glow} />
+
+      <article className={styles.panel} aria-label={content.aicopilot.panelTitle}>
+        <MiniMincfoBrand />
+
+        <header className={styles.header}>
+          <span className={styles.dot} />
+          <p>{content.aicopilot.panelTitle}</p>
+        </header>
+
+        <div className={styles.body}>
+          <div
+            className={`${styles.question} ${showQuestionBubble ? styles.questionVisible : styles.questionHidden} ${isSending ? styles.questionSent : ""}`}
+          >
+            {showQuestionBubble ? currentExample.question : <span className={styles.ghostText}> </span>}
+          </div>
+
+          <div className={styles.answer} aria-live="polite">
+            {isLoading && (
+              <div
+                className={styles.loadingAnswer}
+                role="status"
+                aria-label={content.aicopilot.loadingAria}
+              >
+                <span />
+                <span />
+                <span />
+              </div>
+            )}
+            {showAnswerText && <p>{currentExample.answer}</p>}
+            <div
+              className={`${styles.chart} ${showChart ? styles.chartVisible : ""}`}
+              aria-hidden={!showChart}
+            >
+              <div className={styles.chartHead}>
+                <span>{currentExample.chartTitle}</span>
+                <span>{currentExample.chartUnit}</span>
+              </div>
+              <div className={styles.chartPlot}>
+                <div className={styles.chartYAxis} aria-hidden="true">
+                  {currentExample.yTicks.map((tick) => (
+                    <span key={tick}>{tick}</span>
+                  ))}
+                </div>
+                <div
+                  className={styles.chartBars}
+                  style={{ "--bar-count": currentExample.bars.length } as CSSProperties}
+                >
+                  {currentExample.bars.map((bar, index) => (
+                    <div
+                      key={bar.label}
+                      className={styles.chartBar}
+                      style={
+                        {
+                          "--bar-height": bar.height,
+                          "--bar-delay": `${index * 110}ms`,
+                        } as CSSProperties
+                      }
+                    >
+                      <span className={styles.barValue}>{bar.value}</span>
+                      <span className={styles.barFill} />
+                      <span className={styles.barLabel}>{bar.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer className={styles.inputRow}>
+          <span className={styles.inputText}>
+            {isTyping && (
+              <>
+                {typedQuestion}
+                <span className={styles.caret} aria-hidden="true" />
+              </>
+            )}
+            {isSending && content.aicopilot.statusSending}
+            {isLoading && content.aicopilot.statusAnalyzing}
+            {(stage === "idle" || stage === "answer" || stage === "chart") &&
+              content.aicopilot.inputPlaceholder}
+          </span>
+          <button
+            type="button"
+            aria-label={content.aicopilot.sendAria}
+            className={`${isSending ? styles.sending : ""} ${isLoading ? styles.loading : ""}`}
+          >
+            <SendHorizontal aria-hidden="true" size={14} />
+          </button>
+        </footer>
+      </article>
+    </div>
+  );
+}
+
 export function CopilotChatSection({
   anchorId,
+  className,
   currentExample,
   visible,
   showQuestionBubble,
@@ -58,123 +228,25 @@ export function CopilotChatSection({
   typedQuestion,
   stage,
 }: CopilotChatSectionProps) {
-  const { content } = useHomeOffering();
-
   return (
     <div
       id={anchorId}
-      className={styles.container}
+      className={`${styles.container} ${className ?? ""}`}
       style={{ scrollMarginTop: "clamp(88px, 12vh, 140px)" } as CSSProperties}
     >
-      <div className={`${styles.left} ${styles.aiLeft} ${visible ? styles.shown : ""}`}>
-        <span className={styles.pill}>{content.aicopilot.leftPill}</span>
-        <h2 className={styles.title}>{content.aicopilot.leftTitle}</h2>
-        <p className={styles.text}>{content.aicopilot.leftIntro}</p>
-
-        <ul className={styles.list}>
-          {content.aicopilot.leftBullets.map((item) => (
-            <li key={item}>
-              <Check aria-hidden="true" size={14} />
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className={`${styles.right} ${styles.aiRight} ${visible ? styles.shownDelayed : ""}`}>
-        <div className={styles.glow} />
-
-        <article className={styles.panel} aria-label={content.aicopilot.panelTitle}>
-          <MiniMincfoBrand />
-
-          <header className={styles.header}>
-            <span className={styles.dot} />
-            <p>{content.aicopilot.panelTitle}</p>
-          </header>
-
-          <div className={styles.body}>
-            <div
-              className={`${styles.question} ${showQuestionBubble ? styles.questionVisible : styles.questionHidden} ${isSending ? styles.questionSent : ""}`}
-            >
-              {showQuestionBubble ? currentExample.question : <span className={styles.ghostText}> </span>}
-            </div>
-
-            <div className={styles.answer} aria-live="polite">
-              {isLoading && (
-                <div
-                  className={styles.loadingAnswer}
-                  role="status"
-                  aria-label={content.aicopilot.loadingAria}
-                >
-                  <span />
-                  <span />
-                  <span />
-                </div>
-              )}
-              {showAnswerText && <p>{currentExample.answer}</p>}
-              <div
-                className={`${styles.chart} ${showChart ? styles.chartVisible : ""}`}
-                aria-hidden={!showChart}
-              >
-                <div className={styles.chartHead}>
-                  <span>{currentExample.chartTitle}</span>
-                  <span>{currentExample.chartUnit}</span>
-                </div>
-                <div className={styles.chartPlot}>
-                  <div className={styles.chartYAxis} aria-hidden="true">
-                    {currentExample.yTicks.map((tick) => (
-                      <span key={tick}>{tick}</span>
-                    ))}
-                  </div>
-                  <div
-                    className={styles.chartBars}
-                    style={{ "--bar-count": currentExample.bars.length } as CSSProperties}
-                  >
-                    {currentExample.bars.map((bar, index) => (
-                      <div
-                        key={bar.label}
-                        className={styles.chartBar}
-                        style={
-                          {
-                            "--bar-height": bar.height,
-                            "--bar-delay": `${index * 110}ms`,
-                          } as CSSProperties
-                        }
-                      >
-                        <span className={styles.barValue}>{bar.value}</span>
-                        <span className={styles.barFill} />
-                        <span className={styles.barLabel}>{bar.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <footer className={styles.inputRow}>
-            <span className={styles.inputText}>
-              {isTyping && (
-                <>
-                  {typedQuestion}
-                  <span className={styles.caret} aria-hidden="true" />
-                </>
-              )}
-              {isSending && content.aicopilot.statusSending}
-              {isLoading && content.aicopilot.statusAnalyzing}
-              {(stage === "idle" || stage === "answer" || stage === "chart") &&
-                content.aicopilot.inputPlaceholder}
-            </span>
-            <button
-              type="button"
-              aria-label={content.aicopilot.sendAria}
-              className={`${isSending ? styles.sending : ""} ${isLoading ? styles.loading : ""}`}
-            >
-              <SendHorizontal aria-hidden="true" size={14} />
-            </button>
-          </footer>
-        </article>
-      </div>
+      <CopilotCopy visible={visible} />
+      <CopilotVisual
+        currentExample={currentExample}
+        visible={visible}
+        showQuestionBubble={showQuestionBubble}
+        isSending={isSending}
+        isLoading={isLoading}
+        showAnswerText={showAnswerText}
+        showChart={showChart}
+        isTyping={isTyping}
+        typedQuestion={typedQuestion}
+        stage={stage}
+      />
     </div>
   );
 }

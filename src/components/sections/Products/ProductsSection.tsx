@@ -1,12 +1,26 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
+import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./ProductsSection.module.scss";
-import { CopilotChatSection } from "./CopilotChatSection";
-import { DashboardSection } from "./DashboardSection";
-import { PlanningSection } from "./PlanningSection";
+import {
+  CopilotChatSection,
+  CopilotCopy,
+  CopilotVisual,
+} from "./CopilotChatSection";
+import {
+  DashboardSection,
+  DashboardCopy,
+  DashboardVisual,
+} from "./DashboardSection";
+import {
+  PlanningSection,
+  PlanningCopy,
+  PlanningVisual,
+} from "./PlanningSection";
+import TextType from "../Hero/TextType";
 
 type CopilotStage = "idle" | "typing" | "sending" | "loading" | "answer" | "chart";
 type AnalysisMetric = "netIncome" | "ebit" | "ebitda" | "grossProfit";
@@ -17,6 +31,13 @@ type CopilotExample = {
   bars: Array<{ height: string; label: string; value: string }>;
   question: string;
   yTicks: string[];
+};
+
+type ProductStageDefinition = {
+  ambientClassName: string;
+  copy: ReactNode;
+  id: string;
+  visual: ReactNode;
 };
 
 const DEFAULT_PLAN_MONTH_INDEX = 8;
@@ -47,10 +68,13 @@ const ANALYSIS_METRIC_AUTOPLAY_PAUSE_AFTER_MANUAL_MS = 6000;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
+const progressBetween = (value: number, start: number, end: number) =>
+  clamp((value - start) / Math.max(end - start, 0.0001), 0, 1);
 
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 const lerpSeries = (from: number[], to: number[], t: number) =>
   to.map((targetValue, index) => lerp(from[index] ?? targetValue, targetValue, t));
+const easeInOut = (t: number) => t * t * (3 - 2 * t);
 
 const cubic = (
   p0: number,
@@ -84,15 +108,60 @@ const buildSmoothPath = (points: Array<[number, number]>) => {
   return path;
 };
 
+const renderDesktopAnimatedTitle = (
+  title: string,
+  animationEnabled: boolean,
+  animationStarted: boolean,
+) => {
+  if (!animationEnabled) return title;
+  if (!animationStarted) {
+    return (
+      <span className={styles.desktopTypedTitle}>
+        <span className={styles.desktopTypedTitleGhost} aria-hidden="true">
+          {title}
+        </span>
+      </span>
+    );
+  }
+
+  return (
+    <span className={styles.desktopTypedTitle}>
+      <span className={styles.desktopTypedTitleGhost} aria-hidden="true">
+        {title}
+      </span>
+      <span className={styles.desktopTypedTitleActive}>
+        <TextType
+          key={title}
+          text={title}
+          typingSpeed={20}
+          initialDelay={60}
+          cursorCharacter="_"
+          cursorClassName={styles.desktopTypedTitleCursor}
+        />
+      </span>
+    </span>
+  );
+};
+
 export default function AICopilot() {
   const { content } = useHomeOffering();
+  const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
+  const desktopStageRef = useRef(0);
+  const desktopIntroFrameRef = useRef<number | null>(null);
+  const desktopScrollProgressRef = useRef(0);
   const dashboardSectionRef = useRef<HTMLDivElement | null>(null);
   const planSectionRef = useRef<HTMLDivElement | null>(null);
   const trendMetricMenuRef = useRef<HTMLDivElement | null>(null);
 
   const [curveScale, setCurveScale] = useState(1);
+  const [desktopStickyEnabled, setDesktopStickyEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [desktopStageIndex, setDesktopStageIndex] = useState(0);
+  const [desktopActiveDotIndex, setDesktopActiveDotIndex] = useState(0);
+  const [desktopStageProgressValue, setDesktopStageProgressValue] = useState(0);
+  const [desktopIntroEntered, setDesktopIntroEntered] = useState(false);
+  const [desktopIsScrollingForward, setDesktopIsScrollingForward] = useState(true);
   const [dashboardVisible, setDashboardVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
   const [curveProgress, setCurveProgress] = useState(0);
@@ -176,6 +245,16 @@ export default function AICopilot() {
   );
 
   useEffect(() => {
+    const syncDesktopMode = () => {
+      setDesktopStickyEnabled(window.innerWidth > 980);
+    };
+
+    syncDesktopMode();
+    window.addEventListener("resize", syncDesktopMode);
+    return () => window.removeEventListener("resize", syncDesktopMode);
+  }, []);
+
+  useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
@@ -189,8 +268,55 @@ export default function AICopilot() {
   }, []);
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    if (isReducedMotion) {
+      section.style.setProperty("--hero-globe-handoff", "1");
+      section.style.setProperty("--hero-globe-handoff-fade", "0.22");
+      section.style.setProperty("--hero-globe-handoff-drift", "0px");
+      return undefined;
+    }
+
+    let frame = 0;
+
+    const updateHandoff = () => {
+      frame = 0;
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = Math.max(window.innerHeight, 1);
+      const progress = clamp((viewportHeight - rect.top) / (viewportHeight * 0.88), 0, 1);
+      const fade = 1 - progress;
+      const drift = (1 - progress) * 72;
+
+      section.style.setProperty("--hero-globe-handoff", progress.toFixed(3));
+      section.style.setProperty("--hero-globe-handoff-fade", fade.toFixed(3));
+      section.style.setProperty("--hero-globe-handoff-drift", `${drift.toFixed(1)}px`);
+    };
+
+    const scheduleUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateHandoff);
+    };
+
+    scheduleUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      section.style.removeProperty("--hero-globe-handoff");
+      section.style.removeProperty("--hero-globe-handoff-fade");
+      section.style.removeProperty("--hero-globe-handoff-drift");
+    };
+  }, [isReducedMotion]);
+
+  useEffect(() => {
     const dashboardSection = dashboardSectionRef.current;
-    if (!dashboardSection) return;
+    if (!dashboardSection || desktopStickyEnabled) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => setDashboardVisible(entry.isIntersecting),
@@ -199,11 +325,11 @@ export default function AICopilot() {
 
     observer.observe(dashboardSection);
     return () => observer.disconnect();
-  }, []);
+  }, [desktopStickyEnabled]);
 
   useEffect(() => {
     const planSection = planSectionRef.current;
-    if (!planSection) return;
+    if (!planSection || desktopStickyEnabled) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => setPlanVisible(entry.isIntersecting),
@@ -212,7 +338,7 @@ export default function AICopilot() {
 
     observer.observe(planSection);
     return () => observer.disconnect();
-  }, []);
+  }, [desktopStickyEnabled]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -241,17 +367,164 @@ export default function AICopilot() {
   }, [analysisAutoplayMenuAnimating]);
 
   useEffect(() => {
-    if (!dashboardVisible) return;
+    if (!desktopStickyEnabled) {
+      if (desktopIntroFrameRef.current) {
+        window.cancelAnimationFrame(desktopIntroFrameRef.current);
+        desktopIntroFrameRef.current = null;
+      }
+      desktopIntroFrameRef.current = window.requestAnimationFrame(() => {
+        desktopIntroFrameRef.current = null;
+        setDesktopIntroEntered(false);
+      });
+      return;
+    }
+
+    const section = sectionRef.current;
+    if (!visible || !section) {
+      if (desktopIntroFrameRef.current) {
+        window.cancelAnimationFrame(desktopIntroFrameRef.current);
+        desktopIntroFrameRef.current = null;
+      }
+      desktopIntroFrameRef.current = window.requestAnimationFrame(() => {
+        desktopIntroFrameRef.current = null;
+        setDesktopIntroEntered(false);
+      });
+      return;
+    }
+
+    if (desktopStageIndex !== 0 || desktopIntroEntered) return;
+
+    const rect = section.getBoundingClientRect();
+    const viewportHeight = Math.max(window.innerHeight, 1);
+    const introStartThreshold = viewportHeight * 0.68;
+
+    if (rect.top > introStartThreshold) return;
+
+    desktopIntroFrameRef.current = window.requestAnimationFrame(() => {
+      desktopIntroFrameRef.current = null;
+      setDesktopIntroEntered(true);
+    });
+
+    return () => {
+      if (desktopIntroFrameRef.current) {
+        window.cancelAnimationFrame(desktopIntroFrameRef.current);
+        desktopIntroFrameRef.current = null;
+      }
+    };
+  }, [desktopIntroEntered, desktopStageIndex, desktopStickyEnabled, visible]);
+
+  useEffect(() => {
+    if (!desktopStickyEnabled) return;
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const updateDesktopStage = () => {
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = Math.max(window.innerHeight, 1);
+      const totalScrollable = Math.max(rect.height - viewportHeight, 1);
+      const progress = clamp((-rect.top) / totalScrollable, 0, 1);
+      const scrollingForward = progress >= desktopScrollProgressRef.current;
+      desktopScrollProgressRef.current = progress;
+      const phaseHoldStart = 0.16;
+      const phaseTransitionFirst = 0.28;
+      const phaseHoldMiddle = 0.12;
+      const phaseTransitionSecond = 0.28;
+      const phaseTransitionFirstEnd = phaseHoldStart + phaseTransitionFirst;
+      const phaseHoldMiddleEnd = phaseTransitionFirstEnd + phaseHoldMiddle;
+      const phaseTransitionSecondEnd = phaseHoldMiddleEnd + phaseTransitionSecond;
+      const settleHysteresis = 0.016;
+      const currentStage = desktopStageRef.current;
+
+      let nextStage = 0;
+      let stageProgress = 0;
+      let nextDotIndex = 0;
+
+      if (
+        progress >= phaseTransitionFirstEnd - settleHysteresis
+        && progress <= phaseTransitionFirstEnd + settleHysteresis
+      ) {
+        if (currentStage >= 1) {
+          nextStage = 1;
+          stageProgress = 0;
+          nextDotIndex = 1;
+        } else {
+          nextStage = 0;
+          stageProgress = 1;
+          nextDotIndex = 1;
+        }
+      } else if (
+        progress >= phaseTransitionSecondEnd - settleHysteresis
+        && progress <= phaseTransitionSecondEnd + settleHysteresis
+      ) {
+        if (currentStage >= 2) {
+          nextStage = 2;
+          stageProgress = 0;
+          nextDotIndex = 2;
+        } else {
+          nextStage = 1;
+          stageProgress = 1;
+          nextDotIndex = 2;
+        }
+      } else
+      if (progress < phaseHoldStart) {
+        nextStage = 0;
+        stageProgress = 0;
+        nextDotIndex = 0;
+      } else if (progress < phaseTransitionFirstEnd) {
+        nextStage = 0;
+        stageProgress = easeInOut((progress - phaseHoldStart) / phaseTransitionFirst);
+        nextDotIndex = stageProgress >= 0.5 ? 1 : 0;
+      } else if (progress < phaseHoldMiddleEnd) {
+        nextStage = 1;
+        stageProgress = 0;
+        nextDotIndex = 1;
+      } else if (progress < phaseTransitionSecondEnd) {
+        nextStage = 1;
+        stageProgress = easeInOut((progress - phaseHoldMiddleEnd) / phaseTransitionSecond);
+        nextDotIndex = stageProgress >= 0.5 ? 2 : 1;
+      } else {
+        nextStage = 2;
+        stageProgress = 0;
+        nextDotIndex = 2;
+      }
+      setDesktopStageProgressValue((current) =>
+        Math.abs(current - stageProgress) < 0.01 ? current : stageProgress,
+      );
+      setDesktopIsScrollingForward((current) =>
+        current === scrollingForward ? current : scrollingForward,
+      );
+      setDesktopActiveDotIndex((current) => (current === nextDotIndex ? current : nextDotIndex));
+      if (desktopStageRef.current !== nextStage) {
+        desktopStageRef.current = nextStage;
+        setDesktopStageIndex(nextStage);
+      }
+    };
+
+    updateDesktopStage();
+    window.addEventListener("scroll", updateDesktopStage, { passive: true });
+    window.addEventListener("resize", updateDesktopStage);
+    return () => {
+      window.removeEventListener("scroll", updateDesktopStage);
+      window.removeEventListener("resize", updateDesktopStage);
+    };
+  }, [desktopStickyEnabled]);
+
+  const effectiveDashboardVisible = desktopStickyEnabled ? desktopStageIndex === 1 && visible : dashboardVisible;
+  const effectivePlanVisible = desktopStickyEnabled ? desktopStageIndex === 2 && visible : planVisible;
+  const effectiveCopilotVisible = desktopStickyEnabled ? desktopStageIndex === 0 && visible : visible;
+
+  useEffect(() => {
+    if (!effectiveDashboardVisible) return;
     const startTimer = setTimeout(() => setAnalysisUpdating(true), 0);
     const timeoutId = setTimeout(() => setAnalysisUpdating(false), 260);
     return () => {
       clearTimeout(startTimer);
       clearTimeout(timeoutId);
     };
-  }, [analysisMetric, dashboardVisible]);
+  }, [analysisMetric, effectiveDashboardVisible]);
 
   useEffect(() => {
-    if (!dashboardVisible || ANALYSIS_METRIC_AUTOPLAY_SEQUENCE.length < 2) return;
+    if (!effectiveDashboardVisible || ANALYSIS_METRIC_AUTOPLAY_SEQUENCE.length < 2) return;
 
     const clearTimers = () => {
       if (analysisAutoplaySequenceTimeoutRef.current) {
@@ -318,20 +591,20 @@ export default function AICopilot() {
     return () => {
       clearTimers();
     };
-  }, [dashboardVisible]);
+  }, [effectiveDashboardVisible]);
 
   useEffect(() => {
-    if (!planVisible) return;
+    if (!effectivePlanVisible) return;
     const startTimer = setTimeout(() => setPlanUpdating(true), 0);
     const timeoutId = setTimeout(() => setPlanUpdating(false), 760);
     return () => {
       clearTimeout(startTimer);
       clearTimeout(timeoutId);
     };
-  }, [planMonthIndex, planVisible]);
+  }, [planMonthIndex, effectivePlanVisible]);
 
   useEffect(() => {
-    if (!planVisible || PLAN_MONTH_AUTOPLAY_SEQUENCE.length < 2) return;
+    if (!effectivePlanVisible || PLAN_MONTH_AUTOPLAY_SEQUENCE.length < 2) return;
 
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     const scheduleNext = () => {
@@ -353,7 +626,7 @@ export default function AICopilot() {
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [planVisible]);
+  }, [effectivePlanVisible]);
 
   useEffect(() => {
     const updateCurve = () => {
@@ -406,7 +679,7 @@ export default function AICopilot() {
   }, []);
 
   useEffect(() => {
-    if (!visible) return;
+    if (!effectiveCopilotVisible) return;
 
     let cancelled = false;
     const timers: Array<ReturnType<typeof setTimeout>> = [];
@@ -456,7 +729,7 @@ export default function AICopilot() {
       timers.forEach((timer) => clearTimeout(timer));
       intervals.forEach((interval) => clearInterval(interval));
     };
-  }, [examples, visible]);
+  }, [effectiveCopilotVisible, examples]);
 
   const waveHeight = curveScale < 0.7 ? 160 : 190;
   const curveValue = (start: number, end: number, progress: number) =>
@@ -921,6 +1194,38 @@ export default function AICopilot() {
   const showAnswerText = stage === "answer" || stage === "chart";
   const showChart = stage === "chart";
   const showQuestionBubble = stage !== "idle" && stage !== "typing";
+  const desktopCopilotVisible = desktopStickyEnabled ? true : visible;
+  const desktopDashboardVisible = desktopStickyEnabled ? true : dashboardVisible;
+  const desktopPlanVisible = desktopStickyEnabled ? true : planVisible;
+  const desktopForwardTransitionStarted =
+    desktopIsScrollingForward && desktopStageProgressValue > 0.26;
+  const desktopReverseTransitionStarted =
+    !desktopIsScrollingForward && desktopStageProgressValue < 0.74;
+  const desktopCopilotTitleAnimated =
+    (desktopStickyEnabled && desktopStageIndex === 0 && !desktopIsScrollingForward)
+    || (desktopIntroEntered && desktopIsScrollingForward);
+  const desktopDashboardTitleAnimated =
+    desktopStickyEnabled
+    && (
+      (desktopIsScrollingForward && desktopStageIndex === 0)
+      || (!desktopIsScrollingForward && desktopStageIndex === 1)
+    );
+  const desktopPlanningTitleAnimated =
+    desktopStickyEnabled && desktopIsScrollingForward && desktopStageIndex === 1;
+  const desktopStageStyle = desktopStickyEnabled
+    ? ({
+        "--desktop-stage-progress": desktopStageProgressValue.toFixed(3),
+        "--desktop-copy-exit-progress": easeInOut(
+          progressBetween(desktopStageProgressValue, 0, 0.26),
+        ).toFixed(3),
+        "--desktop-copy-title-progress": easeInOut(
+          progressBetween(desktopStageProgressValue, 0.18, 0.62),
+        ).toFixed(3),
+        "--desktop-copy-support-progress": easeInOut(
+          progressBetween(desktopStageProgressValue, 0.52, 0.88),
+        ).toFixed(3),
+      } as CSSProperties)
+    : undefined;
   const handleToggleAnalysisMetricMenu = () => {
     if (analysisAutoplayStepTimeoutRef.current) {
       clearTimeout(analysisAutoplayStepTimeoutRef.current);
@@ -959,10 +1264,147 @@ export default function AICopilot() {
     }
   };
 
+  const productStages: ProductStageDefinition[] = [
+    {
+      id: "copilot",
+      ambientClassName: styles.ambientCopilot,
+      copy: (
+        <CopilotCopy
+          visible={desktopCopilotVisible}
+          pillClassName={styles.desktopCopyPill}
+          titleClassName={styles.desktopCopyTitle}
+          textClassName={styles.desktopCopyText}
+          listClassName={styles.desktopCopyList}
+          listItemClassName={styles.desktopCopyListItem}
+          title={renderDesktopAnimatedTitle(
+            content.aicopilot.leftTitle,
+            desktopCopilotTitleAnimated,
+            desktopIsScrollingForward ? desktopIntroEntered : desktopReverseTransitionStarted,
+          )}
+        />
+      ),
+      visual: (
+        <CopilotVisual
+          currentExample={currentExample}
+          visible={desktopCopilotVisible}
+          showQuestionBubble={showQuestionBubble}
+          isSending={isSending}
+          isLoading={isLoading}
+          showAnswerText={showAnswerText}
+          showChart={showChart}
+          isTyping={isTyping}
+          typedQuestion={typedQuestion}
+          stage={stage}
+        />
+      ),
+    },
+    {
+      id: "dashboard",
+      ambientClassName: styles.ambientDashboard,
+      copy: (
+        <DashboardCopy
+          dashboardVisible={desktopDashboardVisible}
+          pillClassName={styles.desktopCopyPill}
+          titleClassName={styles.desktopCopyTitle}
+          textClassName={styles.desktopCopyText}
+          listClassName={styles.desktopCopyList}
+          listItemClassName={styles.desktopCopyListItem}
+          title={renderDesktopAnimatedTitle(
+            content.aicopilot.dashboard.title,
+            desktopDashboardTitleAnimated,
+            desktopIsScrollingForward
+              ? desktopForwardTransitionStarted
+              : desktopReverseTransitionStarted,
+          )}
+        />
+      ),
+      visual: (
+        <DashboardVisual
+          dashboardVisible={desktopDashboardVisible}
+          analysisUpdating={analysisUpdating}
+          trendAnimating={desktopDashboardVisible}
+          trendResetting={trendResetting}
+          trendSeries={trendSeries}
+          trendAreaPath={trendAreaPath}
+          trendLinePath={trendLinePath}
+          analysisMetricOpen={analysisMetricOpen}
+          trendMetricMenuRef={trendMetricMenuRef}
+          activeMetric={activeMetric}
+          analysisMetric={analysisMetric}
+          analysisMetrics={analysisMetrics}
+          selectedMetricAmount={selectedMetricAmount}
+          selectedMetricPreviousAmount={selectedMetricPreviousAmount}
+          selectedMetricDelta={selectedMetricDelta}
+          selectedMetricPreviousDelta={selectedMetricPreviousDelta}
+          analysisCompareLabel={analysisCompareLabel}
+          autoplayPreviewMetric={analysisAutoplayPreviewMetric}
+          autoplayMenuAnimating={analysisAutoplayMenuAnimating}
+          onToggleMetricMenu={handleToggleAnalysisMetricMenu}
+          onSelectMetric={handleSelectAnalysisMetric}
+          formatSek={formatSek}
+          formatPercent={formatPercent}
+          monthLabels={monthLabels}
+          trendAxisTicks={trendAxisTicks}
+        />
+      ),
+    },
+    {
+      id: "planning",
+      ambientClassName: styles.ambientPlanning,
+      copy: (
+        <PlanningCopy
+          planVisible={desktopPlanVisible}
+          pillClassName={styles.desktopCopyPill}
+          titleClassName={styles.desktopCopyTitle}
+          textClassName={styles.desktopCopyText}
+          listClassName={styles.desktopCopyList}
+          listItemClassName={styles.desktopCopyListItem}
+          title={renderDesktopAnimatedTitle(
+            content.aicopilot.planning.title,
+            desktopPlanningTitleAnimated,
+            desktopForwardTransitionStarted,
+          )}
+        />
+      ),
+      visual: (
+        <PlanningVisual
+          planVisible={desktopPlanVisible}
+          planUpdating={planUpdating}
+          planMonthIndex={planMonthIndex}
+          selectedPlanMode={selectedPlanMode}
+          animatedPlanValue={animatedPlanValue}
+          animatedSelectedPlanDelta={animatedSelectedPlanDelta}
+          animatedPlanTotalDelta={animatedPlanTotalDelta}
+          planForecastAreaPath={planForecastAreaPath}
+          planForecastLinePath={planForecastLinePath}
+          selectedPlanPointX={selectedPlanPointX}
+          selectedPlanPointY={selectedPlanPointY}
+          formatSek={formatSek}
+          formatPercent={formatPercent}
+          onSelectPlanMonth={handleSelectPlanMonth}
+          monthLabelsEn={monthLabelsEn}
+        />
+      ),
+    },
+  ];
+  const desktopProgressStops = Math.max(productStages.length - 1, 1);
+  const desktopProgressValue = clamp(
+    (desktopStageIndex + desktopStageProgressValue) / desktopProgressStops,
+    0,
+    1,
+  );
+  const desktopProgressCircumference = 2 * Math.PI * 20;
+  const desktopProgressOffset =
+    desktopProgressCircumference * (1 - desktopProgressValue);
+
   return (
     <section
       ref={sectionRef}
-      className={`${styles.section} ${visible ? styles.visible : ""}`}
+      id="produkt"
+      className={`${styles.section} ${visible ? styles.visible : ""} ${desktopStickyEnabled ? styles.sectionSticky : ""} ${desktopIntroEntered ? styles.desktopIntroEntered : ""}`}
+      data-active-stage={productStages[desktopActiveDotIndex]?.id}
+      data-scroll-direction={desktopIsScrollingForward ? "forward" : "reverse"}
+      style={desktopStageStyle}
     >
       <svg
         className={styles.curveCut}
@@ -982,75 +1424,146 @@ export default function AICopilot() {
             WebkitClipPath: curveClip,
           } as CSSProperties
         }
-      />
+      >
+        {productStages.map((productStage, index) => (
+          <div
+            key={productStage.id}
+            className={`${styles.ambientLayer} ${productStage.ambientClassName} ${index === desktopStageIndex ? styles.ambientLayerActive : ""} ${index === desktopStageIndex + 1 ? styles.ambientLayerIncoming : ""}`}
+          />
+        ))}
+      </div>
 
-      <CopilotChatSection
-        anchorId="produkt"
-        currentExample={currentExample}
-        visible={visible}
-        showQuestionBubble={showQuestionBubble}
-        isSending={isSending}
-        isLoading={isLoading}
-        showAnswerText={showAnswerText}
-        showChart={showChart}
-        isTyping={isTyping}
-        typedQuestion={typedQuestion}
-        stage={stage}
-      />
+      <div className={styles.desktopStage}>
+        <div className={styles.desktopStageInner}>
+          <div className={styles.desktopCopyStack}>
+            {productStages.map((productStage, index) => (
+              <div
+                key={`${productStage.id}-copy`}
+                className={`${styles.stageLayer} ${styles.copyLayer} ${index === desktopStageIndex ? styles.stageLayerCurrent : ""} ${index === desktopStageIndex + 1 ? styles.stageLayerIncoming : ""} ${index < desktopStageIndex ? styles.stageLayerBefore : ""} ${index > desktopStageIndex + 1 ? styles.stageLayerAfter : ""} ${index === 0 && desktopStageIndex === 0 ? styles.desktopIntroStage : ""}`}
+              >
+                {productStage.copy}
+              </div>
+            ))}
+          </div>
 
-      <DashboardSection
-        dashboardSectionRef={dashboardSectionRef}
-        waveHeight={waveHeight}
-        dashboardCurvePath={dashboardCurvePath}
-        dashboardCurveClip={dashboardCurveClip}
-        dashboardVisible={dashboardVisible}
-        analysisUpdating={analysisUpdating}
-        trendAnimating={trendAnimating}
-        trendResetting={trendResetting}
-        trendSeries={trendSeries}
-        trendAreaPath={trendAreaPath}
-        trendLinePath={trendLinePath}
-        analysisMetricOpen={analysisMetricOpen}
-        trendMetricMenuRef={trendMetricMenuRef}
-        activeMetric={activeMetric}
-        analysisMetric={analysisMetric}
-        analysisMetrics={analysisMetrics}
-        selectedMetricAmount={selectedMetricAmount}
-        selectedMetricPreviousAmount={selectedMetricPreviousAmount}
-        selectedMetricDelta={selectedMetricDelta}
-        selectedMetricPreviousDelta={selectedMetricPreviousDelta}
-        analysisCompareLabel={analysisCompareLabel}
-        autoplayPreviewMetric={analysisAutoplayPreviewMetric}
-        autoplayMenuAnimating={analysisAutoplayMenuAnimating}
-        onToggleMetricMenu={handleToggleAnalysisMetricMenu}
-        onSelectMetric={handleSelectAnalysisMetric}
-        formatSek={formatSek}
-        formatPercent={formatPercent}
-        monthLabels={monthLabels}
-        trendAxisTicks={trendAxisTicks}
-      />
+          <div className={styles.desktopVisualStack}>
+            {productStages.map((productStage, index) => (
+              <div
+                key={`${productStage.id}-visual`}
+                className={`${styles.stageLayer} ${styles.visualLayer} ${index === desktopStageIndex ? styles.stageLayerCurrent : ""} ${index === desktopStageIndex + 1 ? styles.stageLayerIncoming : ""} ${index < desktopStageIndex ? styles.stageLayerBefore : ""} ${index > desktopStageIndex + 1 ? styles.stageLayerAfter : ""} ${index === 0 && desktopStageIndex === 0 ? styles.desktopIntroStage : ""}`}
+              >
+                {productStage.visual}
+              </div>
+            ))}
+          </div>
+        </div>
 
-      <PlanningSection
-        planSectionRef={planSectionRef}
-        waveHeight={waveHeight}
-        planCurvePath={planCurvePath}
-        planCurveClip={planCurveClip}
-        planVisible={planVisible}
-        planUpdating={planUpdating}
-        planMonthIndex={planMonthIndex}
-        selectedPlanMode={selectedPlanMode}
-        animatedPlanValue={animatedPlanValue}
-        animatedSelectedPlanDelta={animatedSelectedPlanDelta}
-        animatedPlanTotalDelta={animatedPlanTotalDelta}
-        planForecastAreaPath={planForecastAreaPath}
-        planForecastLinePath={planForecastLinePath}
-        selectedPlanPointX={selectedPlanPointX}
-        selectedPlanPointY={selectedPlanPointY}
-        formatSek={formatSek}
-        formatPercent={formatPercent}
-        onSelectPlanMonth={handleSelectPlanMonth}
-        monthLabelsEn={monthLabelsEn}
-      />
+        <div className={styles.desktopStageProgress} aria-hidden="true">
+          <svg
+            className={styles.desktopStageProgressRing}
+            viewBox="0 0 48 48"
+            role="presentation"
+          >
+            <defs>
+              <linearGradient id="desktop-stage-progress-gradient" x1="4" y1="24" x2="44" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="var(--btn-primary-bg)" />
+                <stop offset="100%" stopColor="var(--btn-primary-bg-hover)" />
+              </linearGradient>
+            </defs>
+            <circle
+              className={styles.desktopStageProgressTrack}
+              cx="24"
+              cy="24"
+              r="20"
+            />
+            <circle
+              className={styles.desktopStageProgressValue}
+              cx="24"
+              cy="24"
+              r="20"
+              style={
+                {
+                  "--desktop-progress-circumference": `${desktopProgressCircumference}px`,
+                  "--desktop-progress-offset": `${desktopProgressOffset}px`,
+                } as CSSProperties
+              }
+            />
+          </svg>
+          <span className={styles.desktopStageProgressLabel}>
+            {desktopActiveDotIndex + 1}
+          </span>
+        </div>
+      </div>
+
+      <div className={styles.mobileFlow}>
+        <CopilotChatSection
+          anchorId="produkt-copilot"
+          currentExample={currentExample}
+          visible={visible}
+          showQuestionBubble={showQuestionBubble}
+          isSending={isSending}
+          isLoading={isLoading}
+          showAnswerText={showAnswerText}
+          showChart={showChart}
+          isTyping={isTyping}
+          typedQuestion={typedQuestion}
+          stage={stage}
+        />
+
+        <DashboardSection
+          dashboardSectionRef={dashboardSectionRef}
+          waveHeight={waveHeight}
+          dashboardCurvePath={dashboardCurvePath}
+          dashboardCurveClip={dashboardCurveClip}
+          dashboardVisible={dashboardVisible}
+          analysisUpdating={analysisUpdating}
+          trendAnimating={trendAnimating}
+          trendResetting={trendResetting}
+          trendSeries={trendSeries}
+          trendAreaPath={trendAreaPath}
+          trendLinePath={trendLinePath}
+          analysisMetricOpen={analysisMetricOpen}
+          trendMetricMenuRef={trendMetricMenuRef}
+          activeMetric={activeMetric}
+          analysisMetric={analysisMetric}
+          analysisMetrics={analysisMetrics}
+          selectedMetricAmount={selectedMetricAmount}
+          selectedMetricPreviousAmount={selectedMetricPreviousAmount}
+          selectedMetricDelta={selectedMetricDelta}
+          selectedMetricPreviousDelta={selectedMetricPreviousDelta}
+          analysisCompareLabel={analysisCompareLabel}
+          autoplayPreviewMetric={analysisAutoplayPreviewMetric}
+          autoplayMenuAnimating={analysisAutoplayMenuAnimating}
+          onToggleMetricMenu={handleToggleAnalysisMetricMenu}
+          onSelectMetric={handleSelectAnalysisMetric}
+          formatSek={formatSek}
+          formatPercent={formatPercent}
+          monthLabels={monthLabels}
+          trendAxisTicks={trendAxisTicks}
+        />
+
+        <PlanningSection
+          planSectionRef={planSectionRef}
+          waveHeight={waveHeight}
+          planCurvePath={planCurvePath}
+          planCurveClip={planCurveClip}
+          planVisible={planVisible}
+          planUpdating={planUpdating}
+          planMonthIndex={planMonthIndex}
+          selectedPlanMode={selectedPlanMode}
+          animatedPlanValue={animatedPlanValue}
+          animatedSelectedPlanDelta={animatedSelectedPlanDelta}
+          animatedPlanTotalDelta={animatedPlanTotalDelta}
+          planForecastAreaPath={planForecastAreaPath}
+          planForecastLinePath={planForecastLinePath}
+          selectedPlanPointX={selectedPlanPointX}
+          selectedPlanPointY={selectedPlanPointY}
+          formatSek={formatSek}
+          formatPercent={formatPercent}
+          onSelectPlanMonth={handleSelectPlanMonth}
+          monthLabelsEn={monthLabelsEn}
+        />
+      </div>
     </section>
   );
 }

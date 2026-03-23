@@ -40,6 +40,8 @@ export default function Hero() {
   const { content, offering } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
+  const topBackgroundLayerRef = useRef<HTMLDivElement | null>(null);
+  const cardStageRef = useRef<HTMLDivElement | null>(null);
   const introRef = useRef<HTMLDivElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const cardWrapRef = useRef<HTMLDivElement | null>(null);
@@ -70,6 +72,7 @@ export default function Hero() {
   const [showLogoIntro, setShowLogoIntro] = useState(false);
   const [isVideoRevealing, setIsVideoRevealing] = useState(false);
   const [showEndBrand, setShowEndBrand] = useState(false);
+  const [isCardEntered, setIsCardEntered] = useState(false);
   const [introRingProgress, setIntroRingProgress] = useState(0);
   const [isCardFullscreen, setIsCardFullscreen] = useState(false);
   const [endAudioLevels, setEndAudioLevels] = useState<number[]>(
@@ -88,7 +91,10 @@ export default function Hero() {
 
   useLayoutEffect(() => {
     const sectionNode = sectionRef.current;
+    const topBackgroundLayerNode = topBackgroundLayerRef.current;
     const introNode = introRef.current;
+    const cardStageNode = cardStageRef.current;
+    const cardWrapNode = cardWrapRef.current;
     const state = stateRef.current;
     state.reduceMotion = isReducedMotion;
     state.allowPointer = window.matchMedia(
@@ -96,27 +102,54 @@ export default function Hero() {
     ).matches;
 
     const update = () => {
+      const topBackgroundLayer = topBackgroundLayerRef.current;
+      const cardStage = cardStageRef.current;
       const intro = introRef.current;
       const card = cardRef.current;
       const cardWrap = cardWrapRef.current;
       if (!card || !cardWrap) return;
 
-      const introProgress = clamp(state.progress / 0.5, 0, 1);
-      const cardProgress = clamp((state.progress - 0.08) / 0.84, 0, 1);
+      const introProgress = clamp(state.progress / 0.38, 0, 1);
+      const cardProgress = clamp((state.progress - 0.05) / 0.87, 0, 1);
+      const cardHandoff = state.reduceMotion ? 1 : smoothstep(0.44, 0.78, state.progress);
 
       const baseRotateX = 16 - state.progress * 9;
-      const baseScale = 1 - state.progress * 0.03;
+      const baseScale = 1 - state.progress * 0.03 - cardHandoff * 0.025;
       const mouseRotateX = state.hovering ? -state.mouseY * 1.25 : 0;
       const mouseRotateY = state.hovering ? state.mouseX * 0.65 : 0;
       const travelY = state.reduceMotion ? 0 : cardProgress * 400;
+      const backgroundShiftY = state.reduceMotion ? 0 : state.progress * 28;
+
+      if (topBackgroundLayer) {
+        topBackgroundLayer.style.transform = `translate3d(0, ${backgroundShiftY}px, 0)`;
+      }
+
+      if (cardStage) {
+        const stageRect = cardStage.getBoundingClientRect();
+        const viewport = window.innerHeight;
+        const stageReveal = state.reduceMotion
+          ? 1
+          : smoothstep(0.02, 0.98, clamp((viewport - stageRect.top) / (viewport * 0.92), 0, 1));
+        const stageScale = 0.8 + stageReveal * 0.2;
+        const stageOpacity = 0.24 + stageReveal * 0.76;
+        const stageLift = (1 - stageReveal) * 78;
+        cardStage.style.opacity = `${stageOpacity}`;
+        cardStage.style.transform = `translate3d(0, ${stageLift}px, 0) scale(${stageScale})`;
+      }
 
       if (intro) {
-        const introLift = state.reduceMotion ? 0 : introProgress * 280;
-        intro.style.transform = `translate3d(0, -${introLift}px, 0)`;
-        intro.style.opacity = `${Math.pow(1 - introProgress, 1.8)}`;
+        const introLift = state.reduceMotion ? 0 : introProgress * 310;
+        const introSwipeX = state.reduceMotion ? 0 : introProgress * 28;
+        const introScale = state.reduceMotion ? 1 : 1 - introProgress * 0.14;
+        const introBlur = state.reduceMotion ? 0 : smoothstep(0.24, 1, introProgress) * 7;
+        const introOpacity = Math.pow(1 - introProgress, 2.55);
+        intro.style.transform = `translate3d(${introSwipeX}px, -${introLift}px, 0) scale(${introScale})`;
+        intro.style.opacity = `${introOpacity}`;
+        intro.style.filter = `blur(${introBlur}px)`;
       }
 
       cardWrap.style.transform = `translate3d(0, -${travelY}px, 0)`;
+      cardWrap.style.opacity = `${1 - cardHandoff * 0.24}`;
 
       card.style.transform = `perspective(2000px) rotateX(${baseRotateX + mouseRotateX}deg) rotateY(${mouseRotateY}deg) scale(${baseScale})`;
     };
@@ -168,9 +201,20 @@ export default function Hero() {
       return () => {
         window.removeEventListener("scroll", handleScroll);
         window.removeEventListener("resize", handleScroll);
+        if (topBackgroundLayerNode) {
+          topBackgroundLayerNode.style.transform = "";
+        }
+        if (cardStageNode) {
+          cardStageNode.style.opacity = "";
+          cardStageNode.style.transform = "";
+        }
         if (introNode) {
           introNode.style.transform = "";
           introNode.style.opacity = "";
+          introNode.style.filter = "";
+        }
+        if (cardWrapNode) {
+          cardWrapNode.style.opacity = "";
         }
         card.removeEventListener("mousemove", handleMove);
         card.removeEventListener("mouseleave", handleLeave);
@@ -180,9 +224,20 @@ export default function Hero() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
+      if (topBackgroundLayerNode) {
+        topBackgroundLayerNode.style.transform = "";
+      }
+      if (cardStageNode) {
+        cardStageNode.style.opacity = "";
+        cardStageNode.style.transform = "";
+      }
       if (introNode) {
         introNode.style.transform = "";
         introNode.style.opacity = "";
+        introNode.style.filter = "";
+      }
+      if (cardWrapNode) {
+        cardWrapNode.style.opacity = "";
       }
     };
   }, [isReducedMotion]);
@@ -393,11 +448,14 @@ export default function Hero() {
   }, [isAudioReactiveReady, isPlaying, isReducedMotion, showEndBrand, useFullVideo]);
 
   useEffect(() => {
-    const target = cardWrapRef.current;
+    const target = cardStageRef.current ?? cardWrapRef.current;
     if (!target) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.18) {
+          setIsCardEntered(true);
+        }
         if (entry.isIntersecting && entry.intersectionRatio >= 0.35) return;
         const video = videoRef.current;
         if (!video || video.paused) return;
@@ -409,7 +467,7 @@ export default function Hero() {
         setShowEndBrand(false);
         setIsPlaying(false);
       },
-      { threshold: [0, 0.2, 0.35, 0.6] },
+      { threshold: [0, 0.18, 0.2, 0.35, 0.6] },
     );
 
     observer.observe(target);
@@ -551,13 +609,15 @@ export default function Hero() {
   return (
     <section ref={sectionRef} id="hero" className={styles.hero}>
       <div className={styles.topBackground} aria-hidden="true">
-        {offering === "full-service" ? (
-          <HeroAuraBackground />
-        ) : offering === "partner" ? (
-          <HeroPartnerLinesBackground />
-        ) : (
-          <HeroParticleGlobe />
-        )}
+        <div ref={topBackgroundLayerRef} className={styles.topBackgroundLayer}>
+          {offering === "full-service" ? (
+            <HeroAuraBackground />
+          ) : offering === "partner" ? (
+            <HeroPartnerLinesBackground />
+          ) : (
+            <HeroParticleGlobe />
+          )}
+        </div>
       </div>
 
       <div className={styles.container}>
@@ -588,8 +648,12 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className={styles.cardWrap} ref={cardWrapRef}>
-          <div className={`${styles.card} ${styles.glass}`} ref={cardRef}>
+        <div
+          ref={cardStageRef}
+          className={`${styles.cardStage} ${isCardEntered || isReducedMotion ? styles.cardStageEntered : ""}`}
+        >
+          <div className={styles.cardWrap} ref={cardWrapRef}>
+            <div className={`${styles.card} ${styles.glass}`} ref={cardRef}>
             <div className={styles.cardHeader}>
               <span className={styles.dot} />
               <span className={styles.dot} />
@@ -767,6 +831,7 @@ export default function Hero() {
               </video>
             </div>
           </div>
+        </div>
         </div>
 
         <HeroOfferingShowcase />

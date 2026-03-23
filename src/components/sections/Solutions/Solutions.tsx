@@ -52,9 +52,7 @@ export default function Solutions() {
       ([entry]) => {
         setVisible(entry.isIntersecting);
       },
-      // Anchor-jumps can land near the section top; use a forgiving threshold
-      // so content is revealed immediately instead of waiting for extra scroll.
-      { threshold: 0.08, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.3, rootMargin: "0px 0px -30% 0px" },
     );
 
     observer.observe(section);

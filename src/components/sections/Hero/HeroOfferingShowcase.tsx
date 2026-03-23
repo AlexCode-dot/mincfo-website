@@ -600,26 +600,26 @@ export default function HeroOfferingShowcase() {
 
       const introOpacity = isReducedMotion
         ? 1
-        : next <= 0.12
+        : next <= 0.04
           ? 0
-          : next <= 0.28
-            ? smoothstep(0.12, 0.28, next)
-            : next <= 0.58
+          : next <= 0.16
+            ? smoothstep(0.04, 0.16, next)
+            : next <= 0.56
               ? 1
-              : 1 - smoothstep(0.58, 0.78, next);
+              : 1 - smoothstep(0.56, 0.9, next);
       const introShift = isReducedMotion
         ? 0
-        : next <= 0.28
-          ? 22 - smoothstep(0.12, 0.28, next) * 22
-          : next <= 0.58
+        : next <= 0.16
+          ? 22 - smoothstep(0.04, 0.16, next) * 22
+          : next <= 0.56
             ? 0
-            : smoothstep(0.58, 0.78, next) * -18;
-      const showcaseOpacity = isReducedMotion ? 1 : smoothstep(0.62, 0.82, next);
-      const showcaseTranslate = isReducedMotion ? 0 : 34 - showcaseOpacity * 34;
-      const controlsReveal = isReducedMotion ? 1 : smoothstep(0.64, 0.82, next);
-      const copyReveal = isReducedMotion ? 1 : smoothstep(0.68, 0.86, next);
-      const visualReveal = isReducedMotion ? 1 : smoothstep(0.72, 0.9, next);
-      const scrollHintReveal = isReducedMotion ? 0 : smoothstep(0.18, 0.28, next) * (1 - smoothstep(0.56, 0.68, next));
+            : smoothstep(0.56, 0.9, next) * -18;
+      const showcaseOpacity = isReducedMotion ? 1 : smoothstep(0.7, 0.92, next);
+      const showcaseTranslate = isReducedMotion ? 0 : 48 - showcaseOpacity * 48;
+      const controlsReveal = isReducedMotion ? 1 : smoothstep(0.74, 0.94, next);
+      const copyReveal = isReducedMotion ? 1 : smoothstep(0.78, 0.98, next);
+      const visualReveal = isReducedMotion ? 1 : smoothstep(0.82, 1, next);
+      const scrollHintReveal = isReducedMotion ? 0 : smoothstep(0.1, 0.18, next) * (1 - smoothstep(0.54, 0.72, next));
 
       introStage.style.opacity = `${introOpacity}`;
       introStage.style.transform = `translate3d(0, ${introShift}px, 0)`;
@@ -666,16 +666,16 @@ export default function HeroOfferingShowcase() {
         const lineOffset = lineIndex * 0.03;
         const charIn = getStaggeredProgress(
           next,
-          0.12 + lineOffset,
-          0.26 + lineOffset,
+          0.04 + lineOffset,
+          0.16 + lineOffset,
           charIndex,
           total,
           0.1,
         );
         const charOut = getStaggeredProgress(
           next,
-          0.58,
-          0.74,
+          0.56,
+          0.86,
           charIndex,
           total,
           0.08,

@@ -122,19 +122,14 @@ function GradientBarShape(props: GradientBarShapeProps) {
 }
 
 const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
-const HOW_IT_WORKS_STEP_SCROLL_FACTOR = 0.72;
-const HOW_IT_WORKS_PROGRESS_ACCELERATION = 1.12;
-const HOW_IT_WORKS_PROGRESS_ACCELERATION_BY_OFFER: Record<OfferKey, number> = {
-  platform: HOW_IT_WORKS_PROGRESS_ACCELERATION,
-  faas: 0.88,
-  partner: HOW_IT_WORKS_PROGRESS_ACCELERATION,
-};
 const FAAS_ALERT_ROTATION_INTERVAL_MS = 3200;
 const getPartnerWorkspaceToggleState = (rows: PartnerWorkspaceRow[]) =>
   Object.fromEntries(rows.map((row) => [row.label, row.status === "Aktiv"]));
 const subscribeHydration = () => () => {};
 const getHydratedSnapshot = () => true;
 const getHydratedServerSnapshot = () => false;
+const clamp = (value: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, value));
 
 function GoogleIcon() {
   return (
@@ -170,14 +165,6 @@ function MicrosoftIcon() {
   );
 }
 
-const clamp = (value: number, min: number, max: number) =>
-  Math.max(min, Math.min(max, value));
-
-const smoothstep = (edge0: number, edge1: number, value: number) => {
-  const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
-  return t * t * (3 - 2 * t);
-};
-
 const cubic = (
   p0: number,
   p1: number,
@@ -189,29 +176,6 @@ const cubic = (
   3 * (1 - t) ** 2 * t * p1 +
   3 * (1 - t) * t ** 2 * p2 +
   t ** 3 * p3;
-
-const STEP_SWITCH_HYSTERESIS = 0.62;
-
-const getStableDominantStep = (
-  rawStep: number,
-  previousStep: number,
-  maxStep: number,
-) => {
-  if (maxStep <= 0) return 0;
-  if (previousStep < 0) return Math.round(clamp(rawStep, 0, maxStep));
-
-  let nextStep = previousStep;
-
-  while (nextStep < maxStep && rawStep >= nextStep + STEP_SWITCH_HYSTERESIS) {
-    nextStep += 1;
-  }
-
-  while (nextStep > 0 && rawStep <= nextStep - STEP_SWITCH_HYSTERESIS) {
-    nextStep -= 1;
-  }
-
-  return clamp(nextStep, 0, maxStep);
-};
 
 const PLATFORM_ICONS: LucideIcon[] = [UserRound, Plug, BrainCircuit, Sparkles];
 const FAAS_ICONS: LucideIcon[] = [FolderPlus, Plug, Workflow, Sparkles];
@@ -452,16 +416,9 @@ export default function HowItWorks() {
   const { content, offering } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
-  const lastDominantStepRef = useRef(-1);
-  const lastHeaderRevealRef = useRef(-1);
-  const lastPanelRevealRef = useRef(-1);
-  const lastAppliedStepRef = useRef(-1);
-  const [dominantStepIndex, setDominantStepIndex] = useState(0);
-  const headerInnerRef = useRef<HTMLDivElement | null>(null);
-  const panelRef = useRef<HTMLDivElement | null>(null);
-  const stepRowRefs = useRef<Array<HTMLElement | null>>([]);
-  const stepTextRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const stepVisualRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const accountSceneRef = useRef<HTMLDivElement | null>(null);
+  const accountBeamRefreshedRef = useRef(false);
+  const [accountBeamVersion, setAccountBeamVersion] = useState(0);
   const [signupEmail, setSignupEmail] = useState("");
   const [partnerWorkspaceView, setPartnerWorkspaceView] = useState<PartnerWorkspaceView>("home");
   const isClientReady = useSyncExternalStore(
@@ -503,7 +460,6 @@ export default function HowItWorks() {
   const activeOffer: OfferKey =
     offering === "full-service" ? "faas" : offering === "partner" ? "partner" : "platform";
   const currentOffer = offers[activeOffer];
-  const progressAcceleration = HOW_IT_WORKS_PROGRESS_ACCELERATION_BY_OFFER[activeOffer];
   const sectionIntroByOffer = content.howItWorks.sectionIntroByOffer as Record<OfferKey, string>;
   const partnerWorkspaceContent = content.howItWorks.ui.partnerWorkspace;
   const partnerWorkspaceScreens: Record<PartnerWorkspaceView, PartnerWorkspaceScreen> =
@@ -555,98 +511,54 @@ export default function HowItWorks() {
   }, []);
 
   useEffect(() => {
-    let frame = 0;
-    const totalSteps = currentOffer.steps.length;
-    lastAppliedStepRef.current = -1;
-    lastHeaderRevealRef.current = -1;
-    lastPanelRevealRef.current = -1;
+    const section = sectionRef.current;
+    if (!section) return;
 
-    const applyStepState = (dominantStep: number) => {
-      stepRowRefs.current.forEach((row, index) => {
-        const text = stepTextRefs.current[index];
-        const visual = stepVisualRefs.current[index];
-        if (!row || !text || !visual) return;
-
-        const isReversed = index % 2 === 1;
-        const isActive = isReducedMotion ? index === 0 : index === dominantStep;
-        const isBeforeActive = index < dominantStep;
-        const stepReveal = isActive ? 1 : 0;
-        const spineProgress = isActive ? 1 : 0;
-        const rowTranslateY = isActive ? 0 : isBeforeActive ? -28 : 28;
-        const rowScale = isActive ? 1 : 0.985;
-        const textReveal = isActive ? 1 : 0;
-        const visualReveal = isActive ? 1 : 0;
-        const textTranslateX = isActive ? 0 : isReversed ? 18 : -18;
-        const visualTranslateX = isActive ? 0 : isReversed ? -22 : 22;
-        const textTranslateY = isActive ? 0 : isBeforeActive ? -10 : 10;
-        const visualTranslateY = isActive ? 0 : isBeforeActive ? -14 : 14;
-        const visualScale = isActive ? 1 : 0.985;
-
-        row.hidden = !isActive;
-        row.setAttribute("aria-hidden", isActive ? "false" : "true");
-        row.style.opacity = `${stepReveal}`;
-        row.style.transform = `translate3d(0, ${rowTranslateY}px, 0) scale(${rowScale})`;
-        row.style.setProperty("--step-spine-progress", `${spineProgress}`);
-        row.classList.toggle(styles.stepRowVisible, isActive);
-
-        text.style.opacity = `${textReveal}`;
-        text.style.transform = `translate3d(${textTranslateX}px, ${textTranslateY}px, 0)`;
-        visual.style.opacity = `${visualReveal}`;
-        visual.style.transform = `translate3d(${visualTranslateX}px, ${visualTranslateY}px, 0) scale(${visualScale})`;
-      });
-    };
-
-    const updateProgress = () => {
-      frame = 0;
-      const section = sectionRef.current;
-      const headerInner = headerInnerRef.current;
-      const panel = panelRef.current;
-      if (!section || !headerInner || !panel) return;
-
-      const rect = section.getBoundingClientRect();
-      const viewport = window.innerHeight;
-      if (rect.bottom < -viewport * 0.2 || rect.top > viewport * 1.2) {
-        return;
-      }
-      const headerEntryProgress = isReducedMotion
-        ? 1
-        : clamp((viewport * 0.92 - rect.top) / (viewport * 0.24), 0, 1);
-      const scrollable = Math.max(rect.height - window.innerHeight, 1);
-      const progress = isReducedMotion ? 1 : clamp(-rect.top / scrollable, 0, 1);
-      const acceleratedProgress = isReducedMotion
-        ? 1
-        : clamp(progress * progressAcceleration, 0, 1);
-      const dominantStep = getStableDominantStep(
-        acceleratedProgress * Math.max(totalSteps - 1, 1),
-        lastDominantStepRef.current,
-        totalSteps - 1,
+    if (isReducedMotion) {
+      const rows = Array.from(
+        section.querySelectorAll<HTMLElement>("[data-how-it-works-step]"),
       );
-      if (dominantStep !== lastDominantStepRef.current) {
-        lastDominantStepRef.current = dominantStep;
-        setDominantStepIndex(dominantStep);
-      }
-      const headerReveal = Math.round((isReducedMotion ? 1 : smoothstep(0.04, 0.72, headerEntryProgress)) * 100) / 100;
-      const panelReveal = Math.round((isReducedMotion ? 1 : smoothstep(0.015, 0.12, progress)) * 100) / 100;
+      rows.forEach((row) => {
+        row.style.setProperty("--step-progress", "1");
+        row.style.setProperty("--step-focus", "1");
+        row.style.setProperty("--step-spine-progress", "1");
+        row.classList.add(styles.stepRowVisible);
+      });
+      return undefined;
+    }
 
-      if (headerReveal !== lastHeaderRevealRef.current) {
-        lastHeaderRevealRef.current = headerReveal;
-        headerInner.style.opacity = `${headerReveal}`;
-        headerInner.style.transform = `translate3d(0, ${(1 - headerReveal) * 22}px, 0)`;
-      }
-      if (panelReveal !== lastPanelRevealRef.current) {
-        lastPanelRevealRef.current = panelReveal;
-        panel.style.opacity = `${panelReveal}`;
-        panel.style.transform = `translate3d(0, ${(1 - panelReveal) * 28}px, 0)`;
-      }
-      if (dominantStep !== lastAppliedStepRef.current) {
-        lastAppliedStepRef.current = dominantStep;
-        applyStepState(dominantStep);
-      }
+    const rows = Array.from(
+      section.querySelectorAll<HTMLElement>("[data-how-it-works-step]"),
+    );
+    let frame = 0;
+
+    const updateStepProgress = () => {
+      frame = 0;
+      const viewportHeight = window.innerHeight;
+      const startCenter = viewportHeight * 1.12;
+      const endCenter = viewportHeight * 0.34;
+      const progressRange = Math.max(startCenter - endCenter, 1);
+      const focusCenter = viewportHeight * 0.46;
+      const focusRange = viewportHeight * 0.42;
+      const focusPlateau = viewportHeight * 0.12;
+
+      rows.forEach((row) => {
+        const rect = row.getBoundingClientRect();
+        const rowAnchor = rect.top + Math.min(rect.height * 0.34, 180);
+        const progress = clamp((startCenter - rowAnchor) / progressRange, 0, 1);
+        const focusDistance = Math.abs(rowAnchor - focusCenter);
+        const focus = clamp(1 - Math.max(focusDistance - focusPlateau, 0) / focusRange, 0, 1);
+
+        row.style.setProperty("--step-progress", progress.toFixed(3));
+        row.style.setProperty("--step-focus", focus.toFixed(3));
+        row.style.setProperty("--step-spine-progress", progress.toFixed(3));
+        row.classList.toggle(styles.stepRowVisible, progress > 0.02);
+      });
     };
 
     const scheduleUpdate = () => {
       if (frame) return;
-      frame = window.requestAnimationFrame(updateProgress);
+      frame = window.requestAnimationFrame(updateStepProgress);
     };
 
     scheduleUpdate();
@@ -660,7 +572,7 @@ export default function HowItWorks() {
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, [currentOffer.steps.length, isReducedMotion, activeOffer, progressAcceleration]);
+  }, [activeOffer, isReducedMotion]);
 
   useEffect(() => {
     if (isReducedMotion) return undefined;
@@ -682,13 +594,45 @@ export default function HowItWorks() {
     return () => window.clearTimeout(timeout);
   }, [isReducedMotion]);
 
+  useEffect(() => {
+    accountBeamRefreshedRef.current = false;
+  }, [activeOffer]);
+
+  useEffect(() => {
+    if (isReducedMotion || activeOffer !== "platform") return undefined;
+
+    const scene = accountSceneRef.current;
+    if (!scene) return undefined;
+
+    let frame = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting || accountBeamRefreshedRef.current) return;
+
+        accountBeamRefreshedRef.current = true;
+        frame = window.requestAnimationFrame(() => {
+          setAccountBeamVersion((current) => current + 1);
+        });
+        observer.disconnect();
+      },
+      { threshold: 0.32 },
+    );
+
+    observer.observe(scene);
+
+    return () => {
+      observer.disconnect();
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+    };
+  }, [activeOffer, isReducedMotion]);
+
   const handleAccountHandoff = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     window.location.href = APP_LOGIN_URL;
   };
 
-  const totalSteps = currentOffer.steps.length;
-  const desktopTrackHeight = `${Math.max(totalSteps * HOW_IT_WORKS_STEP_SCROLL_FACTOR * 100, 100)}vh`;
   const curvePath = "M0 108 C280 108 480 10 720 10 C960 10 1160 108 1440 108";
   const curvePoints: string[] = [];
   for (let i = 0; i <= 18; i += 1) {
@@ -711,7 +655,6 @@ export default function HowItWorks() {
       id="how-it-works"
       className={styles.section}
       data-offer={activeOffer}
-      style={{ "--how-it-works-height": desktopTrackHeight } as CSSProperties}
     >
       <svg
         className={styles.curveCut}
@@ -734,14 +677,13 @@ export default function HowItWorks() {
       <div className={styles.container}>
         <div className={styles.stickyFrame}>
           <header className={styles.header}>
-            <div ref={headerInnerRef}>
+            <div>
               <h2>{content.howItWorks.sectionTitle}</h2>
               <p>{sectionIntroByOffer[currentOffer.key]}</p>
             </div>
           </header>
 
           <div
-            ref={panelRef}
             id={`how-panel-${currentOffer.key}`}
             className={`${styles.panel} ${
               currentOffer.isPrimary ? styles.panelPrimary : styles.panelSecondary
@@ -783,14 +725,13 @@ export default function HowItWorks() {
                 isFaasRealtimeStep ||
                 isPartnerPortfolioStep;
               const hasHighlights = Array.isArray(step.highlights) && step.highlights.length > 0;
-              const shouldRenderRichVisual = dominantStepIndex === index;
+              const shouldRenderRichVisual = true;
 
               return (
                 <article
-                  ref={(node) => {
-                    stepRowRefs.current[index] = node;
-                  }}
                   key={`${currentOffer.key}-${step.title}`}
+                  data-how-it-works-step="true"
+                  data-step-index={index}
                   className={`${styles.stepRow} ${isReversed ? styles.stepRowReverse : ""} ${
                     isCreateAccountStep ? styles.stepRowCreate : ""
                   } ${
@@ -806,12 +747,7 @@ export default function HowItWorks() {
                     {stepNum}
                   </span>
 
-                  <div
-                    ref={(node) => {
-                      stepTextRefs.current[index] = node;
-                    }}
-                    className={styles.stepText}
-                  >
+                  <div className={styles.stepText}>
                     {isCenteredPlatformStep ? (
                       <div className={`${styles.stepCopy} ${styles.stepCopyCreate}`}>
                         <div className={styles.stepCreateLead}>
@@ -883,9 +819,6 @@ export default function HowItWorks() {
                   </div>
 
                   <div
-                    ref={(node) => {
-                      stepVisualRefs.current[index] = node;
-                    }}
                     className={`${styles.stepVisual} ${styles[`visualVariant${visualVariant}`]} ${
                       isCreateAccountStep ? styles.stepVisualCreate : ""
                     } ${isConnectFortnoxStep ? styles.stepVisualConnect : ""} ${
@@ -900,9 +833,10 @@ export default function HowItWorks() {
                   >
                     <div className={styles.visualSurface}>
                       {shouldRenderRichVisual && isCreateAccountStep ? (
-                        <div className={styles.accountMiniScene}>
+                        <div ref={accountSceneRef} className={styles.accountMiniScene}>
                           <div className={styles.accountMiniBackdrop} aria-hidden="true">
                             <BeamBackgroundMain
+                              key={`account-beam-${accountBeamVersion}`}
                               className={styles.accountMiniBeam}
                               extendBottom={260}
                             />

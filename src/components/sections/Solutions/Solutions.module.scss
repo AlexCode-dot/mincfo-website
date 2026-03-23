@@ -120,6 +120,9 @@
 }
 
 .card {
+  --card-enter-x: 0px;
+  --card-enter-y: 0px;
+  --card-enter-rotate: 0deg;
   position: relative;
   overflow: hidden;
   flex: 0 1 calc((100% - 40px) / 3);
@@ -135,7 +138,74 @@
   gap: 18px;
   align-items: start;
   min-height: 322px;
-  transition: border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+  opacity: 0;
+  transform:
+    translate3d(var(--card-enter-x), var(--card-enter-y), 0)
+    rotate(var(--card-enter-rotate))
+    scale(0.84);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  transition:
+    opacity 720ms ease,
+    transform 860ms cubic-bezier(0.16, 0.88, 0.24, 1),
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    background 200ms ease;
+}
+
+.card:nth-child(1) {
+  --card-enter-x: 360px;
+  --card-enter-y: 182px;
+  --card-enter-rotate: -5deg;
+}
+
+.card:nth-child(2) {
+  --card-enter-x: 0px;
+  --card-enter-y: 188px;
+  --card-enter-rotate: -1.5deg;
+}
+
+.card:nth-child(3) {
+  --card-enter-x: -360px;
+  --card-enter-y: 182px;
+  --card-enter-rotate: 5deg;
+}
+
+.card:nth-child(4) {
+  --card-enter-x: 190px;
+  --card-enter-y: -156px;
+  --card-enter-rotate: -3.5deg;
+}
+
+.card:nth-child(5) {
+  --card-enter-x: -190px;
+  --card-enter-y: -156px;
+  --card-enter-rotate: 3.5deg;
+}
+
+.visible .card {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+}
+
+.visible .card:nth-child(1) {
+  transition-delay: 40ms, 40ms, 0ms, 0ms, 0ms;
+}
+
+.visible .card:nth-child(2) {
+  transition-delay: 100ms, 100ms, 0ms, 0ms, 0ms;
+}
+
+.visible .card:nth-child(3) {
+  transition-delay: 160ms, 160ms, 0ms, 0ms, 0ms;
+}
+
+.visible .card:nth-child(4) {
+  transition-delay: 220ms, 220ms, 0ms, 0ms, 0ms;
+}
+
+.visible .card:nth-child(5) {
+  transition-delay: 280ms, 280ms, 0ms, 0ms, 0ms;
 }
 
 .card:hover {
@@ -265,6 +335,31 @@
     flex-basis: calc((100% - 20px) / 2);
     max-width: calc((100% - 20px) / 2);
   }
+
+  .card:nth-child(1) {
+    --card-enter-x: 220px;
+    --card-enter-y: 152px;
+  }
+
+  .card:nth-child(2) {
+    --card-enter-x: -220px;
+    --card-enter-y: 152px;
+  }
+
+  .card:nth-child(3) {
+    --card-enter-x: 220px;
+    --card-enter-y: 0px;
+  }
+
+  .card:nth-child(4) {
+    --card-enter-x: -220px;
+    --card-enter-y: 0px;
+  }
+
+  .card:nth-child(5) {
+    --card-enter-x: 0px;
+    --card-enter-y: -164px;
+  }
 }
 
 @media (max-width: 980px) {
@@ -317,12 +412,20 @@
     flex-basis: 100%;
     max-width: 100%;
     gap: 12px;
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+    transition:
+      border-color 200ms ease,
+      box-shadow 200ms ease,
+      background 200ms ease;
   }
 }
 
 :global(html[data-motion="reduced"]) {
   .header,
-  .grid {
+  .grid,
+  .card {
     opacity: 1;
     transform: none;
     transition: none;
