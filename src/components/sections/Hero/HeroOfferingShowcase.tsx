@@ -630,7 +630,8 @@ export default function HeroOfferingShowcase() {
 
       const rect = section.getBoundingClientRect();
       const scrollable = Math.max(rect.height - window.innerHeight, 1);
-      const next = Math.round(clamp(-rect.top / scrollable, 0, 1) / 0.01) * 0.01;
+      const holdSpan = 0.82;
+      const next = Math.round(clamp(-rect.top / (scrollable * holdSpan), 0, 1) / 0.01) * 0.01;
       const entranceSnapshot = Math.round(introEntranceProgress * 1000) / 1000;
       if (next === lastProgressRef.current && entranceSnapshot === lastEntranceProgressRef.current) return;
       lastProgressRef.current = next;

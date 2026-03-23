@@ -1,6 +1,6 @@
 .section {
   position: relative;
-  height: 226vh;
+  height: 252vh;
   margin-top: clamp(-18px, -1vh, -8px);
   z-index: 3;
 }
@@ -17,7 +17,7 @@
 .introStage,
 .showcase {
   grid-area: 1 / 1;
-  width: min(1040px, calc(100vw - (var(--container-pad) * 2)));
+  width: min(1120px, calc(100vw - (var(--container-pad) * 2)));
   will-change: transform, opacity;
   visibility: hidden;
 }
@@ -236,7 +236,7 @@
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 22px;
+  gap: 24px;
   align-items: stretch;
 }
 
@@ -282,7 +282,8 @@
   position: relative;
   overflow: hidden;
   border-radius: 30px;
-  min-height: 520px;
+  min-height: 560px;
+  height: 560px;
   background:
     radial-gradient(circle at top left, oklch(0.36 0.04 266 / 0.11), transparent 34%),
     linear-gradient(180deg, oklch(0.19 0.018 262 / 0.88), oklch(0.15 0.014 262 / 0.9));
@@ -299,19 +300,20 @@
 }
 
 .copyCardPartner {
-  padding: clamp(24px, 3.3vw, 34px);
+  padding: clamp(26px, 3.2vw, 34px);
 }
 
 .copyCardPartner .copyContent {
-  gap: 14px;
+  gap: 16px;
+  grid-template-rows: auto auto auto auto auto;
 }
 
 .copyCardPartner .copyEyebrow {
   max-width: 100%;
   min-height: 40px;
-  padding: 8px 12px;
-  font-size: 0.68rem;
-  line-height: 1.15;
+  padding: 9px 14px;
+  font-size: 0.7rem;
+  line-height: 1.22;
   letter-spacing: 0.06em;
   text-wrap: balance;
 }
@@ -322,9 +324,11 @@
 }
 
 .copyCardPartner h2 {
-  max-width: 14ch;
-  font-size: clamp(1.42rem, 2.3vw, 2.24rem);
-  line-height: 0.98;
+  max-width: 15ch;
+  font-size: clamp(1.56rem, 2.4vw, 2.34rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 
 .copyCardPartner h2 > span {
@@ -332,20 +336,32 @@
 }
 
 .copyCardPartner .copyBody {
-  max-width: 40ch;
-  font-size: 0.94rem;
-  line-height: 1.42;
+  max-width: 42ch;
+  font-size: 0.96rem;
+  line-height: 1.52;
+  color: oklch(0.84 0.012 258 / 0.88);
 }
 
 .copyCardPartner .copyBullets {
-  margin-top: 12px;
-  gap: 14px;
+  margin-top: 2px;
+  gap: 13px;
 }
 
 .copyCardPartner .bullet {
-  gap: 10px;
-  font-size: 0.88rem;
-  line-height: 1.2;
+  gap: 12px;
+  max-width: 42ch;
+  font-size: 0.92rem;
+  line-height: 1.3;
+  color: oklch(0.94 0.006 258 / 0.94);
+}
+
+.copyCardPartner .bullet svg {
+  margin-top: 4px;
+}
+
+.copyCardPartner .inlineCta {
+  align-self: start;
+  margin-top: 8px;
 }
 
 .copyContent {
@@ -510,7 +526,6 @@
 .visualCard {
   padding: 0;
   display: grid;
-  height: 560px;
   min-height: 560px;
 }
 
@@ -1781,7 +1796,8 @@
 }
 
 .partnerWorkspaceCanvas {
-  height: 340px;
+  min-height: 340px;
+  height: 100%;
 }
 
 .partnerWorkspaceShell {
@@ -2470,7 +2486,7 @@
 
 @media (max-width: 1080px) {
   .section {
-    height: 284vh;
+    height: 312vh;
   }
 
   .grid {
@@ -2481,11 +2497,51 @@
   .visualCard {
     min-height: 0;
   }
+
+  .partnerWorkspaceSummary {
+    display: none;
+  }
+
+  .copyCardPartner {
+    padding: 26px 26px 28px;
+  }
+
+  .copyCardPartner .copyContent {
+    gap: 16px;
+  }
+
+  .copyCardPartner h2 {
+    max-width: 14ch;
+    font-size: clamp(1.5rem, 2.2vw, 2.18rem);
+  }
+
+  .copyCardPartner .copyBody {
+    max-width: 39ch;
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+
+  .copyCardPartner .copyBullets {
+    gap: 14px;
+  }
+
+  .copyCardPartner .bullet {
+    max-width: 38ch;
+    font-size: 0.9rem;
+    line-height: 1.28;
+  }
+
+  .copyCardPartner .inlineCta {
+    margin-top: 8px;
+    min-height: 54px;
+    padding: 0 20px;
+    font-size: 0.94rem;
+  }
 }
 
 @media (max-width: 720px) {
   .section {
-    height: 300vh;
+    height: 328vh;
     margin-top: 32px;
   }
 
@@ -2521,6 +2577,54 @@
   .copyCard h2,
   .splitTitle {
     max-width: none;
+  }
+
+  .copyCardPartner {
+    padding: 22px 22px 24px;
+  }
+
+  .copyCardPartner .copyContent {
+    gap: 14px;
+  }
+
+  .copyCardPartner .copyEyebrow {
+    min-height: auto;
+    padding: 8px 12px;
+    font-size: 0.66rem;
+  }
+
+  .copyCardPartner h2 {
+    max-width: 12ch;
+    font-size: clamp(1.42rem, 5.6vw, 1.92rem);
+    line-height: 1;
+  }
+
+  .copyCardPartner .copyBody,
+  .copyCardPartner .bullet {
+    max-width: none;
+  }
+
+  .copyCardPartner .copyBody {
+    font-size: 0.92rem;
+    line-height: 1.48;
+  }
+
+  .copyCardPartner .copyBullets {
+    margin-top: 2px;
+    gap: 12px;
+  }
+
+  .copyCardPartner .bullet {
+    gap: 10px;
+    font-size: 0.88rem;
+    line-height: 1.26;
+  }
+
+  .copyCardPartner .inlineCta {
+    min-height: 50px;
+    margin-top: 10px;
+    padding: 0 18px;
+    font-size: 0.9rem;
   }
 
   .splitLine {
@@ -2573,7 +2677,7 @@
 
 @media (min-width: 721px) and (max-height: 860px) {
   .section {
-    height: 222vh;
+    height: 246vh;
   }
 
   .stickyFrame {
@@ -2595,9 +2699,6 @@
   .copyCard,
   .visualCard {
     min-height: 470px;
-  }
-
-  .visualCard {
     height: 470px;
   }
 
@@ -2716,19 +2817,20 @@
   .serviceSummaryCard strong {
     font-size: 0.84rem;
   }
+
+  .partnerWorkspaceSummary {
+    display: none;
+  }
 }
 
 @media (min-width: 721px) and (max-height: 760px) {
   .section {
-    height: 228vh;
+    height: 252vh;
   }
 
   .copyCard,
   .visualCard {
     min-height: 430px;
-  }
-
-  .visualCard {
     height: 430px;
   }
 
@@ -2827,6 +2929,10 @@
   .serviceSummaryLabel,
   .serviceSummaryCard strong {
     font-size: 0.72rem;
+  }
+
+  .partnerWorkspaceSummary {
+    display: none;
   }
 }
 

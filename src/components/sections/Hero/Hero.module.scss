@@ -29,13 +29,18 @@
   z-index: 2;
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 286px var(--container-pad) 72px;
+  padding: 136px var(--container-pad) 72px;
   text-align: center;
 }
 
 .intro {
   position: relative;
   z-index: 3;
+  min-height: calc(100vh - 208px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   transform: translate3d(0, 0, 0);
   transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, opacity;
@@ -93,7 +98,7 @@
   flex-wrap: wrap;
   gap: 16px;
   justify-content: center;
-  margin-bottom: 100px;
+  margin-bottom: 0;
 }
 
 .primaryCta {
@@ -701,7 +706,11 @@
   }
 
   .container {
-    padding: 230px var(--container-pad) 64px;
+    padding: 124px var(--container-pad) 64px;
+  }
+
+  .intro {
+    min-height: calc(100vh - 188px);
   }
 
   .card {
@@ -719,7 +728,11 @@
   }
 
   .container {
-    padding: 197px var(--container-pad) 56px;
+    padding: 112px var(--container-pad) 56px;
+  }
+
+  .intro {
+    min-height: calc(100vh - 168px);
   }
 
   .subtitle {
