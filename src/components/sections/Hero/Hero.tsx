@@ -89,6 +89,7 @@ export default function Hero() {
     hovering: false,
     reduceMotion: false,
     allowPointer: false,
+    videoInteractive: false,
   });
 
   useLayoutEffect(() => {
@@ -103,6 +104,7 @@ export default function Hero() {
     state.allowPointer = window.matchMedia(
       "(hover: hover) and (pointer: fine)",
     ).matches;
+    state.videoInteractive = useFullVideo;
 
     const update = () => {
       const topBackgroundLayer = topBackgroundLayerRef.current;
@@ -125,6 +127,22 @@ export default function Hero() {
 
       if (topBackgroundLayer) {
         topBackgroundLayer.style.transform = `translate3d(0, ${backgroundShiftY}px, 0)`;
+      }
+
+      if (state.videoInteractive) {
+        if (cardStage) {
+          cardStage.style.opacity = "1";
+          cardStage.style.transform = "none";
+        }
+        if (intro) {
+          intro.style.transform = "";
+          intro.style.opacity = "";
+          intro.style.filter = "";
+        }
+        cardWrap.style.transform = "none";
+        cardWrap.style.opacity = "1";
+        card.style.transform = "none";
+        return;
       }
 
       if (cardStage) {
@@ -179,7 +197,7 @@ export default function Hero() {
     window.addEventListener("resize", handleScroll);
 
     const card = cardRef.current;
-    if (card && state.allowPointer && !state.reduceMotion) {
+    if (card && state.allowPointer && !state.reduceMotion && !state.videoInteractive) {
       const handleMove = (event: globalThis.MouseEvent) => {
         const bounds = card.getBoundingClientRect();
         const x = (event.clientX - bounds.left) / bounds.width;
@@ -242,7 +260,7 @@ export default function Hero() {
         cardWrapNode.style.opacity = "";
       }
     };
-  }, [isReducedMotion]);
+  }, [isReducedMotion, useFullVideo]);
 
   useEffect(() => {
     return () => {
