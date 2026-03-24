@@ -29,7 +29,7 @@
   z-index: 2;
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: clamp(112px, 12vh, 136px) var(--container-pad) clamp(56px, 7vh, 72px);
+  padding: clamp(112px, 12vh, 136px) var(--container-pad) 16px;
   text-align: center;
 }
 

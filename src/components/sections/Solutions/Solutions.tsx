@@ -39,24 +39,38 @@ const cubic = (
 export default function Solutions() {
   const { content, offering } = useHomeOffering();
   const sectionRef = useRef<HTMLElement | null>(null);
+  const headerRef = useRef<HTMLElement | null>(null);
   const [curveProgress, setCurveProgress] = useState(0);
-  const [visible, setVisible] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(false);
+  const [cardsVisible, setCardsVisible] = useState(false);
 
   useEffect(() => {
     if (offering !== "platform") return;
 
+    const header = headerRef.current;
     const section = sectionRef.current;
-    if (!section) return;
+    if (!header || !section) return;
 
-    const observer = new IntersectionObserver(
+    const headerObserver = new IntersectionObserver(
       ([entry]) => {
-        setVisible(entry.isIntersecting);
+        setHeaderVisible(entry.isIntersecting);
+      },
+      { threshold: 0.01, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    const cardsObserver = new IntersectionObserver(
+      ([entry]) => {
+        setCardsVisible(entry.isIntersecting);
       },
       { threshold: 0.3, rootMargin: "0px 0px -30% 0px" },
     );
 
-    observer.observe(section);
-    return () => observer.disconnect();
+    headerObserver.observe(header);
+    cardsObserver.observe(section);
+    return () => {
+      headerObserver.disconnect();
+      cardsObserver.disconnect();
+    };
   }, [offering]);
 
   useEffect(() => {
@@ -113,7 +127,7 @@ export default function Solutions() {
     <section
       ref={sectionRef}
       id="losningar"
-      className={`${styles.section} ${visible ? styles.visible : ""}`}
+      className={`${styles.section} ${headerVisible ? styles.headerVisible : ""} ${cardsVisible ? styles.cardsVisible : ""}`}
     >
       <svg
         className={styles.curveCut}
@@ -137,7 +151,7 @@ export default function Solutions() {
 
       <div className={styles.container}>
         <div className={styles.layout}>
-          <header className={styles.header}>
+          <header ref={headerRef} className={styles.header}>
             <span className={styles.pill}>{content.solutions.pill}</span>
             <h2>{content.solutions.title}</h2>
             <p>{content.solutions.intro}</p>
