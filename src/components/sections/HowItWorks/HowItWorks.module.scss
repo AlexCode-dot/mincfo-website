@@ -199,7 +199,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(14px, 2vw, 24px);
   align-items: stretch;
-  opacity: calc(0.05 + var(--step-progress) * (0.24 + var(--step-focus) * 0.71));
+  opacity: calc(0.08 + var(--step-progress) * 0.8 + var(--step-focus) * 0.12);
   transition: opacity 220ms linear;
 }
 
@@ -240,7 +240,7 @@
   min-height: clamp(360px, 48vh, 500px);
 }
 
-.stepSpineMarker {
+  .stepSpineMarker {
   display: none;
 }
 
@@ -257,11 +257,11 @@
   box-shadow: none;
   display: grid;
   align-content: center;
-  opacity: calc(0.06 + var(--step-progress) * (0.22 + var(--step-focus) * 0.72));
+  opacity: calc(0.08 + var(--step-progress) * 0.8 + var(--step-focus) * 0.12);
   transform:
-    translate3d(0, calc((1 - var(--step-progress)) * 42px + (1 - var(--step-focus)) * 12px), 0)
-    scale(calc(0.84 + var(--step-progress) * 0.06 + var(--step-focus) * 0.1));
-  filter: blur(calc((1 - var(--step-progress)) * 0.8px + (1 - var(--step-focus)) * 0.6px));
+    translate3d(0, calc((1 - var(--step-progress)) * (42px + (1 - var(--step-focus)) * 12px)), 0)
+    scale(calc(0.88 + var(--step-progress) * 0.1 + var(--step-focus) * 0.02));
+  filter: blur(calc((1 - var(--step-progress)) * (0.8px + (1 - var(--step-focus)) * 0.6px)));
   transition: opacity 220ms linear, transform 220ms linear, filter 220ms linear;
 }
 
@@ -324,8 +324,8 @@
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.02em;
-  opacity: calc(0.3 + var(--step-progress) * (0.24 + var(--step-focus) * 0.46));
-  transform: scale(calc(0.82 + var(--step-progress) * 0.06 + var(--step-focus) * 0.14));
+  opacity: calc(0.34 + var(--step-progress) * 0.54 + var(--step-focus) * 0.12);
+  transform: scale(calc(0.86 + var(--step-progress) * 0.12 + var(--step-focus) * 0.02));
   box-shadow:
     inset 0 1px 0 rgba(178, 206, 255, calc(0.1 + var(--step-focus) * 0.16)),
     0 0 0 1px rgba(121, 159, 236, calc(0.14 + var(--step-focus) * 0.24)),
@@ -429,7 +429,7 @@
     will-change: transform, opacity;
   }
 
-  .stepSpineMarker {
+.stepSpineMarker {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -454,8 +454,8 @@
       0 0 10px rgba(59, 130, 246, 0.24),
       0 0 18px rgba(59, 130, 246, 0.14);
     z-index: 4;
-    opacity: calc(0.18 + var(--step-progress) * (0.18 + var(--step-focus) * 0.64));
-    transform: translate(-50%, -50%) scale(calc(0.78 + var(--step-progress) * 0.08 + var(--step-focus) * 0.18));
+    opacity: calc(0.24 + var(--step-progress) * 0.62 + var(--step-focus) * 0.12);
+    transform: translate(-50%, -50%) scale(calc(0.84 + var(--step-progress) * 0.12 + var(--step-focus) * 0.02));
     box-shadow:
       inset 0 1px 0 rgba(196, 220, 255, calc(0.08 + var(--step-focus) * 0.18)),
       0 0 0 1px rgba(103, 154, 246, calc(0.08 + var(--step-focus) * 0.2)),
@@ -489,8 +489,8 @@
   }
 
   .stepRowVisible .stepSpineMarker {
-    opacity: calc(0.18 + var(--step-progress) * (0.18 + var(--step-focus) * 0.64));
-    transform: translate(-50%, -50%) scale(calc(0.78 + var(--step-progress) * 0.08 + var(--step-focus) * 0.18));
+    opacity: calc(0.24 + var(--step-progress) * 0.62 + var(--step-focus) * 0.12);
+    transform: translate(-50%, -50%) scale(calc(0.84 + var(--step-progress) * 0.12 + var(--step-focus) * 0.02));
   }
 
   .stepOrb {
@@ -659,11 +659,11 @@
   background: transparent;
   box-shadow: none;
   transform-origin: 50% 50%;
-  opacity: calc(0.04 + var(--step-progress) * (0.22 + var(--step-focus) * 0.74));
+  opacity: calc(0.08 + var(--step-progress) * 0.8 + var(--step-focus) * 0.12);
   transform:
-    translate3d(0, calc((1 - var(--step-progress)) * 64px + (1 - var(--step-focus)) * 16px), 0)
-    scale(calc(0.76 + var(--step-progress) * 0.08 + var(--step-focus) * 0.16));
-  filter: blur(calc((1 - var(--step-progress)) * 1px + (1 - var(--step-focus)) * 0.9px));
+    translate3d(0, calc((1 - var(--step-progress)) * (64px + (1 - var(--step-focus)) * 16px)), 0)
+    scale(calc(0.84 + var(--step-progress) * 0.14 + var(--step-focus) * 0.02));
+  filter: blur(calc((1 - var(--step-progress)) * (1px + (1 - var(--step-focus)) * 0.9px)));
   transition: opacity 220ms linear, transform 220ms linear, filter 220ms linear;
   contain: layout;
 }

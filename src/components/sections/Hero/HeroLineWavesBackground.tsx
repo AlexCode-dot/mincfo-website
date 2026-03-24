@@ -3,7 +3,16 @@
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
 import { useMotion } from "@/components/system/MotionProvider";
-import styles from "./HeroAuraBackground.module.scss";
+import styles from "./HeroLineWavesBackground.module.scss";
+
+function hexToVec3(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  return [
+    Number.parseInt(h.slice(0, 2), 16) / 255,
+    Number.parseInt(h.slice(2, 4), 16) / 255,
+    Number.parseInt(h.slice(4, 6), 16) / 255,
+  ];
+}
 
 const vertexShader = `
 attribute vec2 uv;
@@ -11,7 +20,7 @@ attribute vec2 position;
 varying vec2 vUv;
 void main() {
   vUv = uv;
-  gl_Position = vec4(position, 0.0, 1.0);
+  gl_Position = vec4(position, 0, 1);
 }
 `;
 
@@ -124,51 +133,52 @@ void main() {
 }
 `;
 
-const hexToVec3 = (hex: string): [number, number, number] => {
-  const normalized = hex.replace("#", "");
-  return [
-    Number.parseInt(normalized.slice(0, 2), 16) / 255,
-    Number.parseInt(normalized.slice(2, 4), 16) / 255,
-    Number.parseInt(normalized.slice(4, 6), 16) / 255,
-  ];
-};
-
-export default function HeroAuraBackground() {
+export default function HeroLineWavesBackground() {
   const { isReducedMotion } = useMotion();
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (!containerRef.current || isReducedMotion) return;
+
     const container = containerRef.current;
-    if (!container || isReducedMotion) return undefined;
-
-    const renderer = new Renderer({
-      alpha: true,
-      antialias: true,
-      dpr: Math.min(window.devicePixelRatio || 1, 2),
-      premultipliedAlpha: false,
-    });
-    const { gl } = renderer;
+    const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
+    const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
-    gl.canvas.className = styles.lineWavesCanvas;
 
-    let frameId = 0;
+    const currentMouse = [0.5, 0.5];
+    let targetMouse = [0.5, 0.5];
+
+    function handleMouseMove(event: MouseEvent) {
+      const rect = gl.canvas.getBoundingClientRect();
+      targetMouse = [
+        (event.clientX - rect.left) / rect.width,
+        1.0 - (event.clientY - rect.top) / rect.height,
+      ];
+    }
+
+    function handleMouseLeave() {
+      targetMouse = [0.5, 0.5];
+    }
 
     const geometry = new Triangle(gl);
+    const rotationRad = (-45 * Math.PI) / 180;
     const program = new Program(gl, {
       vertex: vertexShader,
       fragment: fragmentShader,
       uniforms: {
         uTime: { value: 0 },
-        uResolution: { value: [gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height] },
-        uSpeed: { value: 0.1 },
+        uResolution: {
+          value: [gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height],
+        },
+        uSpeed: { value: 0.085 },
         uInnerLines: { value: 32 },
         uOuterLines: { value: 36 },
-        uWarpIntensity: { value: 1 },
-        uRotation: { value: (-45 * Math.PI) / 180 },
+        uWarpIntensity: { value: 0.9 },
+        uRotation: { value: rotationRad },
         uEdgeFadeWidth: { value: 0 },
-        uColorCycleSpeed: { value: 1 },
-        uBrightness: { value: 0.2 },
-        uColor1: { value: hexToVec3("#871ddd") },
+        uColorCycleSpeed: { value: 0.8 },
+        uBrightness: { value: 0.15 },
+        uColor1: { value: hexToVec3("#201ddd") },
         uColor2: { value: hexToVec3("#2a45b2") },
         uColor3: { value: hexToVec3("#4e2fc1") },
         uMouse: { value: new Float32Array([0.5, 0.5]) },
@@ -176,34 +186,55 @@ export default function HeroAuraBackground() {
         uEnableMouse: { value: false },
       },
     });
-    const mesh = new Mesh(gl, { geometry, program });
 
-    const resize = () => {
-      const width = container.offsetWidth;
-      const height = container.offsetHeight;
-      renderer.setSize(width, height);
+    function resize() {
+      renderer.setSize(container.offsetWidth, container.offsetHeight);
       program.uniforms.uResolution.value = [
         gl.canvas.width,
         gl.canvas.height,
-        gl.canvas.width / Math.max(gl.canvas.height, 1),
+        gl.canvas.width / gl.canvas.height,
       ];
-    };
+    }
 
-    container.appendChild(gl.canvas);
+    window.addEventListener("resize", resize);
     resize();
 
-    const animate = (time: number) => {
-      frameId = window.requestAnimationFrame(animate);
-      program.uniforms.uTime.value = time * 0.001;
-      renderer.render({ scene: mesh });
-    };
+    const mesh = new Mesh(gl, { geometry, program });
+    container.appendChild(gl.canvas);
 
-    animate(0);
-    window.addEventListener("resize", resize);
+    if (program.uniforms.uEnableMouse.value) {
+      gl.canvas.addEventListener("mousemove", handleMouseMove);
+      gl.canvas.addEventListener("mouseleave", handleMouseLeave);
+    }
+
+    let animationFrameId = 0;
+
+    function update(time: number) {
+      animationFrameId = window.requestAnimationFrame(update);
+      program.uniforms.uTime.value = time * 0.001;
+
+      if (program.uniforms.uEnableMouse.value) {
+        currentMouse[0] += 0.05 * (targetMouse[0] - currentMouse[0]);
+        currentMouse[1] += 0.05 * (targetMouse[1] - currentMouse[1]);
+        program.uniforms.uMouse.value[0] = currentMouse[0];
+        program.uniforms.uMouse.value[1] = currentMouse[1];
+      } else {
+        program.uniforms.uMouse.value[0] = 0.5;
+        program.uniforms.uMouse.value[1] = 0.5;
+      }
+
+      renderer.render({ scene: mesh });
+    }
+
+    animationFrameId = window.requestAnimationFrame(update);
 
     return () => {
-      window.cancelAnimationFrame(frameId);
+      window.cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", resize);
+      if (program.uniforms.uEnableMouse.value) {
+        gl.canvas.removeEventListener("mousemove", handleMouseMove);
+        gl.canvas.removeEventListener("mouseleave", handleMouseLeave);
+      }
       if (gl.canvas.parentNode === container) {
         container.removeChild(gl.canvas);
       }
@@ -213,10 +244,11 @@ export default function HeroAuraBackground() {
 
   return (
     <div className={styles.wrapper} aria-hidden="true">
-      <div ref={containerRef} className={styles.lineWavesLayer} />
-      <div className={styles.ambientGradient} />
-      <div className={styles.topGlow} />
-      <div className={styles.dotMatrix} />
+      <div className={styles.base} />
+      <div className={styles.glow} />
+      <div ref={containerRef} className={styles.lineWavesContainer} />
+      <div className={styles.textSafeZone} />
+      <div className={styles.vignette} />
     </div>
   );
 }

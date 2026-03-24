@@ -4,18 +4,22 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  filter: brightness(1.04) hue-rotate(6deg);
+  filter: brightness(1.04) saturate(1.02);
 }
 
-.auraVideo {
+.lineWavesLayer {
   position: absolute;
-  inset: 0;
+  inset: -6%;
   z-index: 0;
+  opacity: 0.92;
+  transform: scale(1.08);
+}
+
+.lineWavesCanvas {
   width: 100%;
   height: 100%;
-  object-fit: cover;
   display: block;
-  filter: brightness(1) contrast(1.03) saturate(1.05);
+  filter: saturate(1.05) brightness(0.9);
 }
 
 .ambientGradient {
@@ -23,22 +27,25 @@
   inset: 0;
   z-index: 1;
   background:
-    radial-gradient(circle at 50% 44%, rgb(16 54 142 / 0.06), transparent 38%),
-    linear-gradient(to bottom, #020408 0%, #050a14 45%, #020408 100%);
-  opacity: 0.42;
+    radial-gradient(circle at 50% 38%, rgb(84 52 201 / 0.16), transparent 32%),
+    radial-gradient(circle at 24% 24%, rgb(135 29 221 / 0.14), transparent 36%),
+    radial-gradient(circle at 76% 28%, rgb(42 69 178 / 0.14), transparent 34%),
+    linear-gradient(180deg, rgb(1 3 10 / 0.86) 0%, rgb(3 6 15 / 0.72) 34%, rgb(2 5 12 / 0.9) 100%);
+  opacity: 0.9;
 }
 
 .topGlow {
   position: absolute;
-  top: -20%;
+  top: -24%;
   left: 50%;
-  width: 800px;
-  height: 800px;
+  width: 920px;
+  height: 920px;
   border-radius: 50%;
   transform: translateX(-50%);
-  filter: blur(72px);
-  background: rgb(30 58 138 / 0.2);
-  opacity: 0.18;
+  filter: blur(92px);
+  background:
+    radial-gradient(circle, rgb(110 74 241 / 0.2) 0%, rgb(68 43 187 / 0.08) 44%, transparent 72%);
+  opacity: 0.42;
   z-index: 2;
 }
 
@@ -46,18 +53,23 @@
   position: absolute;
   inset: 0;
   z-index: 3;
-  background-image: radial-gradient(rgb(56 189 248 / 0.1) 1px, transparent 1px);
-  background-size: 26px 26px;
-  mask-image: radial-gradient(circle at center, black, transparent 80%);
-  -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
-  opacity: 0.14;
+  background-image: radial-gradient(rgb(170 188 255 / 0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at center, black 20%, transparent 82%);
+  -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 82%);
+  opacity: 0.1;
 }
 
 @media (max-width: 900px) {
+  .lineWavesLayer {
+    inset: -10%;
+    transform: scale(1.14);
+  }
+
   .topGlow {
-    width: 620px;
-    height: 620px;
-    top: -24%;
+    width: 640px;
+    height: 640px;
+    top: -18%;
   }
 }
 
@@ -66,7 +78,11 @@
     filter: none;
   }
 
-  .auraVideo {
+  .lineWavesLayer {
     display: none;
+  }
+
+  .ambientGradient {
+    opacity: 1;
   }
 }

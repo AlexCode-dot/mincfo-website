@@ -422,10 +422,10 @@ export default function AICopilot() {
       const totalScrollable = Math.max(rect.height - viewportHeight, 1);
       const progress = clamp((-rect.top) / totalScrollable, 0, 1);
       desktopScrollProgressRef.current = progress;
-      const phaseHoldStart = 0.1;
-      const phaseTransitionFirst = 0.22;
-      const phaseHoldMiddle = 0.08;
-      const phaseTransitionSecond = 0.22;
+      const phaseHoldStart = 0.04;
+      const phaseTransitionFirst = 0.24;
+      const phaseHoldMiddle = 0.04;
+      const phaseTransitionSecond = 0.44;
       const phaseTransitionFirstEnd = phaseHoldStart + phaseTransitionFirst;
       const phaseHoldMiddleEnd = phaseTransitionFirstEnd + phaseHoldMiddle;
       const phaseTransitionSecondEnd = phaseHoldMiddleEnd + phaseTransitionSecond;

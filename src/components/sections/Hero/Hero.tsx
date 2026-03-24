@@ -11,6 +11,7 @@ import {
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
 import HeroAuraBackground from "./HeroAuraBackground";
+import HeroLineWavesBackground from "./HeroLineWavesBackground";
 import HeroOfferingShowcase from "./HeroOfferingShowcase";
 import HeroPartnerLinesBackground from "./HeroPartnerLinesBackground";
 import HeroParticleGlobe from "./HeroParticleGlobe";
@@ -612,7 +613,7 @@ export default function Hero() {
       <div className={styles.topBackground} aria-hidden="true">
         <div ref={topBackgroundLayerRef} className={styles.topBackgroundLayer}>
           {offering === "full-service" ? (
-            <HeroAuraBackground />
+            <HeroLineWavesBackground />
           ) : offering === "partner" ? (
             <HeroPartnerLinesBackground />
           ) : (
