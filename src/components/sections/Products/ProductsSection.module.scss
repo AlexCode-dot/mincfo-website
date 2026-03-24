@@ -35,9 +35,21 @@
   pointer-events: none;
   z-index: 0;
   background:
+    radial-gradient(92% 76% at 50% -6%, oklch(0.24 0.04 246 / 0.28), transparent 58%),
     radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
     radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
     linear-gradient(180deg, oklch(0.145 0.012 262 / 1) 0%, oklch(0.14 0.011 262 / 1) 50%, oklch(0.135 0.01 262 / 1) 100%);
+}
+
+.background::before {
+  content: "";
+  position: absolute;
+  inset: -8% -6% 0;
+  background:
+    radial-gradient(74% 58% at 50% 18%, oklch(0.36 0.06 244 / 0.12), transparent 68%),
+    linear-gradient(180deg, oklch(0.18 0.014 252 / 0.08) 0%, transparent 42%);
+  filter: blur(42px);
+  opacity: 0.9;
 }
 
 .background::after {
@@ -53,15 +65,26 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  will-change: opacity;
+  transform: translate3d(0, 0, 0) scale(1.02);
+  transform-origin: 50% 50%;
+  filter: saturate(1.04);
+  will-change: opacity, transform, filter;
 }
 
 .ambientLayerActive {
-  opacity: calc(1 - var(--desktop-stage-outgoing-progress, 0));
+  opacity: calc(0.42 + ((1 - var(--desktop-stage-outgoing-progress, 0)) * 0.58));
+  transform:
+    translate3d(0, calc(var(--desktop-stage-outgoing-progress, 0) * -2.5%), 0)
+    scale(calc(1.01 + (var(--desktop-stage-outgoing-progress, 0) * 0.04)));
+  filter: saturate(calc(1.02 + (var(--desktop-stage-outgoing-progress, 0) * 0.04)));
 }
 
 .ambientLayerIncoming {
-  opacity: var(--desktop-stage-incoming-progress, 0);
+  opacity: calc(0.14 + (var(--desktop-stage-incoming-progress, 0) * 0.86));
+  transform:
+    translate3d(0, calc((1 - var(--desktop-stage-incoming-progress, 0)) * 2.5%), 0)
+    scale(calc(1.05 - (var(--desktop-stage-incoming-progress, 0) * 0.04)));
+  filter: saturate(calc(1.08 + ((1 - var(--desktop-stage-incoming-progress, 0)) * 0.06)));
 }
 
 .ambientCopilot {
@@ -360,37 +383,37 @@
 
   .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage,
   .sectionSticky .visualLayer.stageLayerCurrent.desktopIntroStage {
-    transition: opacity 860ms cubic-bezier(0.22, 1, 0.36, 1), transform 860ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: opacity 560ms cubic-bezier(0.22, 1, 0.36, 1), transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage {
     opacity: 0;
-    transform: translate3d(0, 42px, 0);
+    transform: translate3d(0, 20px, 0);
   }
 
   .sectionSticky:not(.desktopIntroEntered) .visualLayer.stageLayerCurrent.desktopIntroStage {
     opacity: 0;
-    transform: translate3d(5vw, 28px, 0) scale(0.96);
+    transform: translate3d(2.2vw, 16px, 0) scale(0.975);
   }
 
   .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyPill,
   .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyText,
   .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyList,
   .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyListItem {
-    transition: opacity 420ms ease, transform 420ms ease;
+    transition: opacity 280ms ease, transform 280ms ease;
   }
 
   .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyPill {
-    transition-delay: 420ms;
+    transition-delay: 120ms;
   }
 
   .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyText {
-    transition-delay: 620ms;
+    transition-delay: 180ms;
   }
 
   .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyList,
   .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyListItem {
-    transition-delay: 720ms;
+    transition-delay: 240ms;
   }
 
   .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyPill,
@@ -398,7 +421,7 @@
   .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyList,
   .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyListItem {
     opacity: 0;
-    transform: translate3d(0, 18px, 0);
+    transform: translate3d(0, 10px, 0);
   }
 
   .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyTitleActive {

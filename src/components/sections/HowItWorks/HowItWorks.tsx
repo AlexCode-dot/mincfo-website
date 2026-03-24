@@ -538,9 +538,9 @@ export default function HowItWorks() {
       const startCenter = viewportHeight * 1.12;
       const endCenter = viewportHeight * 0.34;
       const progressRange = Math.max(startCenter - endCenter, 1);
-      const focusCenter = viewportHeight * 0.46;
-      const focusRange = viewportHeight * 0.42;
-      const focusPlateau = viewportHeight * 0.12;
+      const focusCenter = viewportHeight * 0.58;
+      const focusRange = viewportHeight * 0.34;
+      const focusPlateau = viewportHeight * 0.08;
 
       rows.forEach((row) => {
         const rect = row.getBoundingClientRect();

@@ -1171,10 +1171,10 @@ export default function AICopilot() {
     ? ({
         "--desktop-stage-progress": desktopStageProgressValue.toFixed(3),
         "--desktop-stage-outgoing-progress": easeInOut(
-          progressBetween(desktopStageProgressValue, 0.06, 0.42),
+          progressBetween(desktopStageProgressValue, 0.12, 0.78),
         ).toFixed(3),
         "--desktop-stage-incoming-progress": easeInOut(
-          progressBetween(desktopStageProgressValue, 0.58, 0.94),
+          progressBetween(desktopStageProgressValue, 0.22, 0.88),
         ).toFixed(3),
       } as CSSProperties)
     : undefined;
