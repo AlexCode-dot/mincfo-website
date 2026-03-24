@@ -639,17 +639,17 @@ export default function HeroOfferingShowcase() {
 
       const introScrollOpacity = isReducedMotion
         ? 1
-        : next <= 0.04
+        : next <= 0
           ? 0
-          : next <= 0.16
-            ? smoothstep(0.04, 0.16, next)
+          : next <= 0.08
+            ? smoothstep(0, 0.08, next)
             : next <= 0.56
               ? 1
               : 1 - smoothstep(0.56, 0.9, next);
       const introScrollShift = isReducedMotion
         ? 0
-        : next <= 0.16
-          ? 22 - smoothstep(0.04, 0.16, next) * 22
+        : next <= 0.08
+          ? 22 - smoothstep(0, 0.08, next) * 22
           : next <= 0.56
             ? 0
             : smoothstep(0.56, 0.9, next) * -18;

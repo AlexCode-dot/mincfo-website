@@ -1,8 +1,8 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, UserRound } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import HomeOfferingSwitch from "@/components/home/HomeOfferingSwitch";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
@@ -35,8 +35,18 @@ export default function FloatingNav() {
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
+  const [showSignupLabel, setShowSignupLabel] = useState(false);
+  const [loginOutVisible, setLoginOutVisible] = useState(true);
+  const [loginInVisible, setLoginInVisible] = useState(false);
+  const [incomingSignupLabel, setIncomingSignupLabel] = useState<boolean | null>(null);
+  const [loginIconPulse, setLoginIconPulse] = useState(false);
   const navRef = useRef<HTMLElement | null>(null);
   const scrollRafRef = useRef<number | null>(null);
+  const activeSignupRef = useRef(showSignupLabel);
+
+  useEffect(() => {
+    activeSignupRef.current = showSignupLabel;
+  }, [showSignupLabel]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -147,6 +157,81 @@ export default function FloatingNav() {
     "Logga in / Sign up";
   const navDemoCta =
     content.navigation.demoCta ?? content.hero.primaryCta;
+  const loginLabels = loginSignupLabel
+    .split("/")
+    .map((label) => label.trim())
+    .filter(Boolean);
+  const loginPrimaryLabel = loginLabels[0] ?? loginSignupLabel;
+  const loginSecondaryLabel = loginLabels[1] ?? "";
+  const holdMs = 5200;
+  const fadeOutMs = 2000;
+  const fadeInMs = 3800;
+  const fadeInLeadMs = 320;
+  const fadeInStartMs = Math.max(0, fadeOutMs - fadeInLeadMs);
+  const pulseDurationMs = fadeInStartMs + fadeInMs;
+
+  useEffect(() => {
+    if (!loginSecondaryLabel) {
+      return;
+    }
+
+    let holdTimer: number | null = null;
+    let fadeInStartTimer: number | null = null;
+    let cycleEndTimer: number | null = null;
+    let pulseTimer: number | null = null;
+    let revealRaf1: number | null = null;
+    let revealRaf2: number | null = null;
+    let cancelled = false;
+
+    const schedule = () => {
+      holdTimer = window.setTimeout(() => {
+        const nextIsSignup = !activeSignupRef.current;
+        setLoginIconPulse(true);
+        if (pulseTimer) window.clearTimeout(pulseTimer);
+        pulseTimer = window.setTimeout(() => {
+          if (cancelled) return;
+          setLoginIconPulse(false);
+        }, pulseDurationMs);
+
+        setLoginOutVisible(false);
+
+        fadeInStartTimer = window.setTimeout(() => {
+          if (cancelled) return;
+          setIncomingSignupLabel(nextIsSignup);
+          setLoginInVisible(false);
+          revealRaf1 = window.requestAnimationFrame(() => {
+            revealRaf2 = window.requestAnimationFrame(() => {
+              if (cancelled) return;
+              setLoginInVisible(true);
+            });
+          });
+        }, fadeInStartMs);
+
+        cycleEndTimer = window.setTimeout(() => {
+          if (cancelled) return;
+          setShowSignupLabel(nextIsSignup);
+          activeSignupRef.current = nextIsSignup;
+          setLoginOutVisible(true);
+          setLoginInVisible(false);
+          setIncomingSignupLabel(null);
+          schedule();
+        }, fadeInStartMs + fadeInMs);
+      }, holdMs);
+    };
+
+    schedule();
+
+    return () => {
+      cancelled = true;
+      if (holdTimer) window.clearTimeout(holdTimer);
+      if (fadeInStartTimer) window.clearTimeout(fadeInStartTimer);
+      if (cycleEndTimer) window.clearTimeout(cycleEndTimer);
+      if (pulseTimer) window.clearTimeout(pulseTimer);
+      if (revealRaf1) window.cancelAnimationFrame(revealRaf1);
+      if (revealRaf2) window.cancelAnimationFrame(revealRaf2);
+      setLoginIconPulse(false);
+    };
+  }, [fadeInStartMs, fadeInMs, holdMs, loginSecondaryLabel, pulseDurationMs]);
 
   const handleSectionAnchorClick = (
     event: MouseEvent<HTMLAnchorElement>,
@@ -412,7 +497,54 @@ export default function FloatingNav() {
           </a>
         </div>
       </nav>
-
+      <a href={APP_LOGIN_URL} className={styles.loginFloat} aria-label={loginSignupLabel}>
+        <span
+          className={`${styles.loginIconWrap} ${loginSecondaryLabel && loginIconPulse ? styles.loginIconWrapPulse : ""}`}
+          style={{ "--login-pulse-duration": `${pulseDurationMs}ms` } as CSSProperties}
+          aria-hidden="true"
+        >
+          <UserRound size={17} />
+        </span>
+        <span className={styles.loginLabel}>
+          {!loginSecondaryLabel ? (
+            loginSignupLabel
+          ) : (
+            <span className={styles.loginLabelSwap} aria-hidden="true">
+              <span
+                className={`${styles.loginWord} ${
+                  !showSignupLabel
+                    ? `${styles.loginWordOutgoing} ${
+                        loginOutVisible ? styles.loginWordOutgoingVisible : styles.loginWordOutgoingHidden
+                      }`
+                    : styles.loginWordDormant
+                }`}
+              >
+                {loginPrimaryLabel}
+              </span>
+              <span
+                className={`${styles.loginWord} ${
+                  showSignupLabel
+                    ? `${styles.loginWordOutgoing} ${
+                        loginOutVisible ? styles.loginWordOutgoingVisible : styles.loginWordOutgoingHidden
+                      }`
+                    : styles.loginWordDormant
+                }`}
+              >
+                {loginSecondaryLabel}
+              </span>
+              {incomingSignupLabel !== null ? (
+                <span
+                  className={`${styles.loginWord} ${styles.loginWordIncoming} ${
+                    loginInVisible ? styles.loginWordIncomingVisible : styles.loginWordIncomingHidden
+                  }`}
+                >
+                  {incomingSignupLabel ? loginSecondaryLabel : loginPrimaryLabel}
+                </span>
+              ) : null}
+            </span>
+          )}
+        </span>
+      </a>
     </div>
   );
 }

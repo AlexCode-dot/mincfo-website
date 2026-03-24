@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./HeroParticleGlobe.module.scss";
 
-const MAX_DPR = 1.1;
+const MAX_DPR = 1;
 const MOBILE_BREAKPOINT = 900;
 const GLOBE_RADIUS = 10;
 const GLOBE_SPHERE_RADIUS = GLOBE_RADIUS * 0.78;
@@ -61,8 +61,8 @@ type GlobeProfile = {
 
 const GLOBE_PROFILES: Record<GlobeVariant, GlobeProfile> = {
   premium: {
-    desktopCount: 19000,
-    mobileCount: 11000,
+    desktopCount: 12000,
+    mobileCount: 7000,
     rotationSpeed: 0.1,
     breathAmplitude: 0.048,
     cameraZ: 27.8,
@@ -249,9 +249,6 @@ const globeVertexShader = `
   uniform float uVoidRadius;
   uniform float uTime;
   uniform vec2 uLayerParallax;
-  uniform vec3 uPointer;
-  uniform float uPointerStrength;
-  uniform float uHoverRadius;
 
   attribute vec3 aDonut;
   attribute float aSize;
@@ -266,9 +263,6 @@ const globeVertexShader = `
   varying float vCollapse;
   varying float vTwinkle;
   varying float vSpark;
-  varying vec2 vSparkDir;
-  varying float vPointerZone;
-  varying float vCoreFlow;
 
   void main() {
     float collapseMix = smoothstep(0.0, 1.0, uCollapse);
@@ -325,64 +319,6 @@ const globeVertexShader = `
     float sparkShift = sparkPulse * (0.02 + 0.05 * (0.5 + 0.5 * sin(uTime * 1.35 + aSeed * 71.0)));
     p.xy += tangent * sparkShift;
 
-    // Pointer interaction: stable circular mini-collapse around the cursor.
-    // Use a cleaner source position so the shape does not drift into irregular blobs over time.
-    vec3 pointerDeltaStable = (mix(position, donutTarget, uCollapse)) - uPointer;
-    float pointerDistance = length(pointerDeltaStable);
-    float pointerZone =
-      (1.0 - smoothstep(uHoverRadius * 0.14, uHoverRadius * 1.62, pointerDistance)) *
-      uPointerStrength;
-    float coreFlow = 0.0;
-    if (pointerZone > 0.0001) {
-      vec2 localRadial = normalize(pointerDeltaStable.xy + vec2(0.0001));
-      float tinyRingRadius = uHoverRadius * 0.78;
-      float tinyTubeRadius = uHoverRadius * 0.34;
-      float tinyPulse = 1.0 + 0.06 * sin(uTime * 1.1);
-      float wobbleAngle = 0.12 * sin(uTime * 0.72 + uPointer.x * 0.65 + uPointer.y * 0.42);
-      mat2 wobbleRot = mat2(
-        cos(wobbleAngle), -sin(wobbleAngle),
-        sin(wobbleAngle), cos(wobbleAngle)
-      );
-      vec2 wobbleRadial = wobbleRot * localRadial;
-      float ellipseA = 1.0 + 0.14 * sin(uTime * 0.44 + uPointer.y * 0.7);
-      float ellipseB = 1.0 - 0.1 * sin(uTime * 0.44 + uPointer.y * 0.7);
-      vec2 organicShape = vec2(wobbleRadial.x * ellipseA, wobbleRadial.y * ellipseB);
-      float edgeNoise =
-        sin((pointerDeltaStable.x + pointerDeltaStable.y) * 1.05 + uTime * 0.9) * 0.065 +
-        cos(pointerDeltaStable.z * 1.35 - uTime * 0.72) * 0.04;
-      float organicRadius = tinyRingRadius * tinyPulse * (1.0 + edgeNoise);
-
-      vec3 tinyDonut = vec3(
-        organicShape * organicRadius,
-        pointerDeltaStable.z * (0.14 + tinyTubeRadius * 0.08)
-      );
-
-      p = mix(p, uPointer + tinyDonut, min(1.0, pointerZone * 1.28));
-
-      float tinyVoid = uHoverRadius * 0.26;
-      float coreMask =
-        (1.0 - smoothstep(0.0, tinyVoid * 1.46, pointerDistance)) * pointerZone;
-      if (coreMask > 0.0001) {
-        float flowPhase = fract(uTime * 0.42 + aSeed * 4.71);
-        float flowRadius = flowPhase * tinyRingRadius * 0.96;
-        vec2 flowDir = normalize(localRadial + vec2(
-          sin(aSeed * 23.0 + uTime * 0.16) * 0.22,
-          cos(aSeed * 19.0 - uTime * 0.14) * 0.22
-        ));
-        vec3 flowTarget = vec3(
-          flowDir * flowRadius,
-          pointerDeltaStable.z * 0.08
-        );
-        p = mix(p, uPointer + flowTarget, coreMask * 0.9);
-        coreFlow = coreMask;
-      }
-      if (pointerDistance < tinyVoid) {
-        vec3 pushDir = normalize(pointerDeltaStable + vec3(0.0001));
-        float push = (tinyVoid - pointerDistance) * pointerZone;
-        p += pushDir * push * 0.42;
-      }
-    }
-
     if (length(p) < uVoidRadius) {
       p = normalize(p + vec3(0.0001)) * uVoidRadius;
     }
@@ -394,18 +330,14 @@ const globeVertexShader = `
       1.2,
       uSize * aSize * uPixelRatio * (28.0 / -mvPosition.z)
     );
-    gl_PointSize *= (1.0 + sparkPulse * 0.22 + pointerZone * 0.2);
+    gl_PointSize *= (1.0 + sparkPulse * 0.22);
     gl_PointSize *= mix(1.0, 1.12, uCollapse);
 
     vColor = color;
-    vAlpha = aAlpha * mix(1.0, 0.9 + outlier * 0.12, uCollapse) *
-      (1.0 + sparkPulse * 0.26 + pointerZone * 0.32);
+    vAlpha = aAlpha * mix(1.0, 0.9 + outlier * 0.12, uCollapse) * (1.0 + sparkPulse * 0.26);
     vPosition = p;
     vCollapse = uCollapse;
     vSpark = sparkPulse;
-    vSparkDir = tangent;
-    vPointerZone = pointerZone;
-    vCoreFlow = coreFlow;
 
     float angle = atan(p.y, p.x);
     float sweep = 0.5 + 0.5 * sin(uTime * 0.5 + angle * 2.8 + length(p.xy) * 0.28);
@@ -415,9 +347,6 @@ const globeVertexShader = `
 `;
 
 const globeFragmentShader = `
-  uniform vec3 uPointer;
-  uniform float uPointerStrength;
-  uniform float uHoverRadius;
   uniform float uVoidRadius;
   uniform float uRingRadius;
   uniform float uRingFade;
@@ -428,9 +357,6 @@ const globeFragmentShader = `
   varying float vCollapse;
   varying float vTwinkle;
   varying float vSpark;
-  varying vec2 vSparkDir;
-  varying float vPointerZone;
-  varying float vCoreFlow;
 
   void main() {
     vec2 uv = gl_PointCoord - vec2(0.5);
@@ -438,38 +364,19 @@ const globeFragmentShader = `
 
     float dotMask = smoothstep(0.5, 0.0, d);
     dotMask = pow(dotMask, 1.2);
-
-    float pointerDistance = length(vPosition - uPointer);
-    float hole =
-      (1.0 - smoothstep(uHoverRadius * 0.32, uHoverRadius, pointerDistance)) *
-      uPointerStrength;
-
-    float pointerField =
-      (1.0 - smoothstep(uHoverRadius * 0.04, uHoverRadius * 1.52, pointerDistance)) *
-      uPointerStrength;
-
-    float pointerRing =
-      smoothstep(uHoverRadius * 0.2, uHoverRadius * 0.52, pointerDistance) *
-      (1.0 - smoothstep(uHoverRadius * 0.52, uHoverRadius * 1.28, pointerDistance));
-    pointerRing *= uPointerStrength;
     float r = length(vPosition);
     float globeCore =
       (1.0 - vCollapse) *
       (1.0 - smoothstep(uRingRadius * 0.34, uRingRadius * 0.9, r));
 
     vec3 color = vColor;
-    color = mix(color, vec3(0.16, 0.34, 1.0), pointerRing * 1.05);
     float shimmer = clamp(vTwinkle, 0.9, 1.09);
-    float localShimmer = 1.0 + (shimmer - 1.0) * (1.0 - vPointerZone * 0.88);
+    float localShimmer = shimmer;
     color = mix(color, vec3(0.44, 0.58, 1.0), (localShimmer - 0.9) * 0.26);
     vec3 sparkTint = vec3(0.26, 0.4, 1.0);
     vec3 sparkGlow = vec3(0.12, 0.28, 0.98);
     color = mix(color, sparkTint, vSpark * 0.54);
     color += sparkGlow * vSpark * 0.14;
-    color += vec3(0.06, 0.18, 0.94) * pointerRing * 0.52;
-    color = mix(color, vec3(0.09, 0.26, 0.96), vPointerZone * 0.56);
-    color = mix(color, vec3(0.14, 0.4, 1.0), vCoreFlow * 0.62);
-    color += vec3(0.05, 0.14, 0.8) * pointerField * 0.52;
     color = mix(color, vec3(0.62, 0.72, 1.0), globeCore * 0.2);
 
     float coreCut = 1.0 - smoothstep(uVoidRadius - 0.08, uVoidRadius + 0.02, r);
@@ -487,9 +394,6 @@ const globeFragmentShader = `
     if (vCollapse > 0.12 && r < (uVoidRadius + 0.01)) discard;
 
     float alpha = dotMask * vAlpha * 1.28;
-    alpha *= (1.0 - hole * 0.08);
-    alpha *= (1.0 + pointerField * 0.4 + pointerRing * 0.38 + vPointerZone * 0.14);
-    alpha *= (1.0 + vCoreFlow * 0.62);
     alpha *= collapseCut;
     alpha *= (1.0 - outerFade * 0.88);
     alpha *= localShimmer;
@@ -503,9 +407,8 @@ const globeFragmentShader = `
     alpha *= coreSoften;
     float haloWide = pow(smoothstep(1.35, 0.18, centeredLen), 2.3);
     float haloSoft = pow(smoothstep(1.15, 0.0, centeredLen), 3.2);
-    float pointerHaloDamp = 1.0 - vPointerZone * 0.82;
-    alpha += vSpark * haloWide * 0.18 * pointerHaloDamp;
-    alpha += vSpark * haloSoft * 0.09 * pointerHaloDamp;
+    alpha += vSpark * haloWide * 0.18;
+    alpha += vSpark * haloSoft * 0.09;
 
     if (alpha < 0.0035) discard;
 
@@ -569,9 +472,6 @@ export default function HeroParticleGlobe() {
             ? ACTIVE_PROFILE.pointSizeMobile
             : ACTIVE_PROFILE.pointSizeDesktop,
         },
-        uPointer: { value: new THREE.Vector3(0, 0, GLOBE_SPHERE_RADIUS * 0.25) },
-        uPointerStrength: { value: 0 },
-        uHoverRadius: { value: GLOBE_SPHERE_RADIUS * ACTIVE_PROFILE.hoverRadiusScale },
       },
       transparent: true,
       depthWrite: false,
@@ -712,7 +612,6 @@ export default function HeroParticleGlobe() {
       wrapper.style.setProperty("--spotlight-y", `${spotlightTarget.y.toFixed(2)}%`);
       globeMaterial.uniforms.uCollapse.value = 0;
       globeMaterial.uniforms.uSwirl.value = 0.05;
-      globeMaterial.uniforms.uPointerStrength.value = 0;
       renderer.render(scene, camera);
     } else {
       scheduleFrame();
