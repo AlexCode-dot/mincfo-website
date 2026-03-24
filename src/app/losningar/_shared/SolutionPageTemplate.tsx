@@ -62,10 +62,10 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             <p className={styles.subtitle}>{content.heroSubheadline}</p>
 
             <div className={styles.heroActions}>
-              <a href="#kontakt" className={styles.primaryCta}>
+              <Link href="/contact" className={styles.primaryCta}>
                 {SOLUTION_SHARED_CONTENT.heroPrimaryCta}{" "}
                 <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
-              </a>
+              </Link>
               <a href="#utmaning" className={styles.secondaryCta}>
                 {SOLUTION_SHARED_CONTENT.heroSecondaryCta}
               </a>
@@ -421,7 +421,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
               <span className={styles.closingTitleMain}>{content.trustHeadline}</span>
             </h2>
             <p>{content.trustSub}</p>
-            <Link href="/#hero" className={styles.primaryCta}>
+            <Link href="/contact" className={styles.primaryCta}>
               {SOLUTION_SHARED_CONTENT.closingCta}{" "}
               <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
             </Link>

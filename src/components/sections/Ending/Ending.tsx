@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import styles from "./Ending.module.scss";
@@ -105,9 +106,9 @@ export default function Ending() {
         <div className={styles.ctaPanel}>
           <h2>{content.ending.title}</h2>
           <p>{content.ending.body}</p>
-          <a href="#hero" className={styles.primaryCta}>
+          <Link href="/contact?returnTo=%2F%3FcontactReturn%3Dending" className={styles.primaryCta}>
             {content.ending.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
-          </a>
+          </Link>
         </div>
       </div>
     </section>

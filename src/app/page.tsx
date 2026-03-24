@@ -1,3 +1,4 @@
+import HomeReturnScroll from "@/app/HomeReturnScroll";
 import { HomeOfferingProvider } from "@/components/home/HomeOfferingProvider";
 import FloatingNav from "@/components/layout/FloatingNav/FloatingNav";
 import Logo from "@/components/layout/Logo/Logo";
@@ -31,6 +32,7 @@ export default async function Home({ searchParams }: HomePageProps) {
 
   return (
     <HomeOfferingProvider initialOffering={initialOffering}>
+      <HomeReturnScroll />
       <Logo showOfferingSwitch />
       <FloatingNav />
       <Hero />

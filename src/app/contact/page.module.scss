@@ -1,0 +1,220 @@
+.page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgb(65 87 255 / 0.22), transparent 32%),
+    linear-gradient(180deg, #060816 0%, #020305 100%);
+}
+
+.topRail {
+  position: fixed;
+  top: 22px;
+  left: 28px;
+  right: 28px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.main {
+  padding: 6.5rem 1.5rem 4rem;
+}
+
+.shell {
+  width: min(980px, 100%);
+  margin: 0 auto;
+}
+
+.backWrap {
+  display: inline-flex;
+  pointer-events: auto;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.72rem 1rem;
+  border: 1px solid rgb(143 158 255 / 0.18);
+  border-radius: 999px;
+  background: rgb(15 20 40 / 0.72);
+  color: rgb(237 240 255 / 0.9);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.backButton:hover {
+  transform: translateY(-1px);
+  border-color: rgb(143 158 255 / 0.34);
+  background: rgb(20 27 53 / 0.9);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text);
+  pointer-events: auto;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.logo:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.mark {
+  width: 26px;
+  height: 26px;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.wordmark {
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  font-family: var(--font-geist-sans), "Geist", "Segoe UI", sans-serif;
+}
+
+.hero {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgb(143 158 255 / 0.22);
+  border-radius: 999px;
+  background: rgb(15 20 40 / 0.72);
+  color: rgb(201 210 255 / 0.88);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 1rem;
+  font-size: clamp(2.4rem, 4vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.subtitle {
+  width: min(640px, 100%);
+  margin: 1rem auto 0;
+  color: rgb(215 219 235 / 0.72);
+  font-size: 1.05rem;
+}
+
+.card {
+  padding: 0.9rem;
+  border: 1px solid rgb(138 156 255 / 0.16);
+  border-radius: 1.6rem;
+  background:
+    linear-gradient(180deg, rgb(15 21 42 / 0.96), rgb(8 12 24 / 0.96)),
+    rgb(10 13 24 / 0.96);
+  box-shadow:
+    0 40px 120px rgb(0 0 0 / 0.42),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+.frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.05rem;
+  background: #fff;
+}
+
+.frame::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  z-index: 1;
+  width: 100%;
+  height: 3rem;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.98), rgb(255 255 255 / 0));
+  pointer-events: none;
+}
+
+.embed {
+  display: block;
+  width: 100%;
+  min-height: 1040px;
+  border: 0;
+  background: #fff;
+}
+
+@media (max-width: 900px) {
+  .main {
+    padding-top: 6rem;
+  }
+
+  .card {
+    padding: 0.75rem;
+    border-radius: 1.3rem;
+  }
+
+  .frame {
+    border-radius: 1rem;
+  }
+
+  .embed {
+    min-height: 980px;
+  }
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding-inline: 1rem;
+    padding-top: 5.4rem;
+  }
+
+  .backWrap {
+    top: auto;
+    left: auto;
+  }
+
+  .topRail {
+    top: 18px;
+    left: 18px;
+    right: 18px;
+  }
+
+  .logo {
+    gap: 7px;
+  }
+
+  .mark {
+    width: 22px;
+    height: 22px;
+  }
+
+  .wordmark {
+    font-size: 1.3rem;
+  }
+
+  .title {
+    font-size: clamp(2.1rem, 13vw, 3.4rem);
+  }
+
+  .subtitle {
+    font-size: 0.98rem;
+  }
+
+  .embed {
+    min-height: 860px;
+  }
+}

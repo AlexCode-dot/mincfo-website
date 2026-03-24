@@ -149,7 +149,10 @@ export default function FloatingNav() {
 
   const sectionHref = (id: (typeof HOMEPAGE_SECTIONS)[number]) =>
     pathname === "/" ? `#${id}` : `/#${id}`;
-  const demoHref = pathname === "/" ? "#kontakt" : "/#kontakt";
+  const demoReturnTarget = pathname === "/"
+    ? `/#${activeSection}`
+    : pathname;
+  const demoHref = `/contact?returnTo=${encodeURIComponent(demoReturnTarget)}`;
   const legacyLoginLabel = (content.navigation as unknown as { kontaktaOss?: string }).kontaktaOss;
   const loginSignupLabel =
     content.navigation.loginSignupLabel ??
