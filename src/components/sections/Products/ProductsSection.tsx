@@ -66,6 +66,8 @@ const ANALYSIS_METRIC_AUTOPLAY_SEQUENCE: AnalysisMetric[] = [
 ];
 const ANALYSIS_METRIC_AUTOPLAY_DELAY_MS = 3600;
 const ANALYSIS_METRIC_AUTOPLAY_PAUSE_AFTER_MANUAL_MS = 6000;
+const COPILOT_SECTION_REVEAL_START = 0.48;
+const DESKTOP_COPILOT_INTRO_START = 0.48;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -224,13 +226,33 @@ export default function AICopilot() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.12, rootMargin: "0px 0px -28% 0px" },
-    );
+    let frame = 0;
 
-    observer.observe(section);
-    return () => observer.disconnect();
+    const syncVisibility = () => {
+      frame = 0;
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = Math.max(window.innerHeight, 1);
+      const revealThreshold = viewportHeight * COPILOT_SECTION_REVEAL_START;
+      const nextVisible = rect.top <= revealThreshold && rect.bottom > viewportHeight * 0.2;
+      setVisible(nextVisible);
+    };
+
+    const scheduleSync = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(syncVisibility);
+    };
+
+    scheduleSync();
+    window.addEventListener("scroll", scheduleSync, { passive: true });
+    window.addEventListener("resize", scheduleSync);
+
+    return () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+      window.removeEventListener("scroll", scheduleSync);
+      window.removeEventListener("resize", scheduleSync);
+    };
   }, []);
 
   useEffect(() => {
@@ -346,7 +368,7 @@ export default function AICopilot() {
     }
 
     const section = sectionRef.current;
-    if (!visible || !section) {
+    if (!section) {
       if (desktopIntroFrameRef.current) {
         window.cancelAnimationFrame(desktopIntroFrameRef.current);
         desktopIntroFrameRef.current = null;
@@ -358,26 +380,36 @@ export default function AICopilot() {
       return;
     }
 
-    if (desktopStageIndex !== 0 || desktopIntroEntered) return;
+    const syncDesktopIntro = () => {
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = Math.max(window.innerHeight, 1);
+      const introStartThreshold = viewportHeight * DESKTOP_COPILOT_INTRO_START;
+      const shouldEnter = desktopStageIndex === 0 && rect.top <= introStartThreshold;
 
-    const rect = section.getBoundingClientRect();
-    const viewportHeight = Math.max(window.innerHeight, 1);
-    const introStartThreshold = viewportHeight * 0.68;
+      if (shouldEnter === desktopIntroEntered) return;
 
-    if (rect.top > introStartThreshold) return;
+      if (desktopIntroFrameRef.current) {
+        window.cancelAnimationFrame(desktopIntroFrameRef.current);
+      }
+      desktopIntroFrameRef.current = window.requestAnimationFrame(() => {
+        desktopIntroFrameRef.current = null;
+        setDesktopIntroEntered(shouldEnter);
+      });
+    };
 
-    desktopIntroFrameRef.current = window.requestAnimationFrame(() => {
-      desktopIntroFrameRef.current = null;
-      setDesktopIntroEntered(true);
-    });
+    syncDesktopIntro();
+    window.addEventListener("scroll", syncDesktopIntro, { passive: true });
+    window.addEventListener("resize", syncDesktopIntro);
 
     return () => {
+      window.removeEventListener("scroll", syncDesktopIntro);
+      window.removeEventListener("resize", syncDesktopIntro);
       if (desktopIntroFrameRef.current) {
         window.cancelAnimationFrame(desktopIntroFrameRef.current);
         desktopIntroFrameRef.current = null;
       }
     };
-  }, [desktopIntroEntered, desktopStageIndex, desktopStickyEnabled, visible]);
+  }, [desktopIntroEntered, desktopStageIndex, desktopStickyEnabled]);
 
   useEffect(() => {
     if (!desktopStickyEnabled) return;
@@ -390,10 +422,10 @@ export default function AICopilot() {
       const totalScrollable = Math.max(rect.height - viewportHeight, 1);
       const progress = clamp((-rect.top) / totalScrollable, 0, 1);
       desktopScrollProgressRef.current = progress;
-      const phaseHoldStart = 0.16;
-      const phaseTransitionFirst = 0.28;
-      const phaseHoldMiddle = 0.12;
-      const phaseTransitionSecond = 0.28;
+      const phaseHoldStart = 0.1;
+      const phaseTransitionFirst = 0.22;
+      const phaseHoldMiddle = 0.08;
+      const phaseTransitionSecond = 0.22;
       const phaseTransitionFirstEnd = phaseHoldStart + phaseTransitionFirst;
       const phaseHoldMiddleEnd = phaseTransitionFirstEnd + phaseHoldMiddle;
       const phaseTransitionSecondEnd = phaseHoldMiddleEnd + phaseTransitionSecond;
@@ -1164,7 +1196,7 @@ export default function AICopilot() {
   const showAnswerText = stage === "answer" || stage === "chart";
   const showChart = stage === "chart";
   const showQuestionBubble = stage !== "idle";
-  const desktopCopilotVisible = desktopStickyEnabled ? true : visible;
+  const desktopCopilotVisible = desktopStickyEnabled ? desktopIntroEntered : visible;
   const desktopDashboardVisible = desktopStickyEnabled ? true : dashboardVisible;
   const desktopPlanVisible = desktopStickyEnabled ? true : planVisible;
   const desktopStageStyle = desktopStickyEnabled

@@ -310,8 +310,8 @@
 
 @media (min-width: 1101px) {
   .sectionSticky {
-    min-height: 440vh;
-    padding-bottom: clamp(180px, 20vh, 260px);
+    min-height: 360vh;
+    padding-bottom: clamp(160px, 16vh, 220px);
     overflow: visible;
   }
 
