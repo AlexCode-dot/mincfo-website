@@ -1,25 +1,13 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./ProductsSection.module.scss";
-import {
-  CopilotChatSection,
-  CopilotCopy,
-  CopilotVisual,
-} from "./CopilotChatSection";
-import {
-  DashboardSection,
-  DashboardCopy,
-  DashboardVisual,
-} from "./DashboardSection";
-import {
-  PlanningSection,
-  PlanningCopy,
-  PlanningVisual,
-} from "./PlanningSection";
+import { CopilotChatSection } from "./CopilotChatSection";
+import { DashboardSection } from "./DashboardSection";
+import { PlanningSection } from "./PlanningSection";
 
 type CopilotStage = "idle" | "typing" | "sending" | "loading" | "answer" | "chart";
 type AnalysisMetric = "netIncome" | "ebit" | "ebitda" | "grossProfit";
@@ -31,15 +19,6 @@ type CopilotExample = {
   question: string;
   yTicks: string[];
 };
-
-type ProductStageDefinition = {
-  ambientClassName: string;
-  copy: ReactNode;
-  id: string;
-  visual: ReactNode;
-};
-
-const NON_BREAKING_SPACE = "\u00A0";
 
 const DEFAULT_PLAN_MONTH_INDEX = 8;
 const PLAN_MONTH_AUTOPLAY_SEQUENCE = [8, 1, 7, 11, 4, 9, 2, 10, 5];
@@ -66,8 +45,8 @@ const ANALYSIS_METRIC_AUTOPLAY_SEQUENCE: AnalysisMetric[] = [
 ];
 const ANALYSIS_METRIC_AUTOPLAY_DELAY_MS = 3600;
 const ANALYSIS_METRIC_AUTOPLAY_PAUSE_AFTER_MANUAL_MS = 6000;
-const COPILOT_SECTION_REVEAL_START = 0.48;
-const DESKTOP_COPILOT_INTRO_START = 0.48;
+const COPILOT_SECTION_REVEAL_START = 0.68;
+const COPILOT_SECTION_REVEAL_END = -0.18;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -77,8 +56,6 @@ const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 const lerpSeries = (from: number[], to: number[], t: number) =>
   to.map((targetValue, index) => lerp(from[index] ?? targetValue, targetValue, t));
 const easeInOut = (t: number) => t * t * (3 - 2 * t);
-const preventShortWordOrphans = (text: string) =>
-  text.replace(/\b(\p{L}{1,4}) (?=\p{L}{5,})/gu, `$1${NON_BREAKING_SPACE}`);
 
 const cubic = (
   p0: number,
@@ -116,25 +93,17 @@ export default function AICopilot() {
   const { content } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
-  const desktopStageRef = useRef(0);
-  const desktopIntroFrameRef = useRef<number | null>(null);
-  const desktopScrollProgressRef = useRef(0);
+  const copilotTitleRef = useRef<HTMLHeadingElement | null>(null);
   const dashboardSectionRef = useRef<HTMLDivElement | null>(null);
   const planSectionRef = useRef<HTMLDivElement | null>(null);
   const trendMetricMenuRef = useRef<HTMLDivElement | null>(null);
+  const ambientStageIndexRef = useRef(0);
 
   const [curveScale, setCurveScale] = useState(1);
-  const [desktopStickyEnabled, setDesktopStickyEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [desktopStageIndex, setDesktopStageIndex] = useState(0);
-  const [desktopActiveDotIndex, setDesktopActiveDotIndex] = useState(0);
-  const [desktopStageProgressValue, setDesktopStageProgressValue] = useState(0);
-  const [desktopIntroEntered, setDesktopIntroEntered] = useState(false);
   const [dashboardVisible, setDashboardVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
-  const [curveProgress, setCurveProgress] = useState(0);
-  const [dashboardCurveProgress, setDashboardCurveProgress] = useState(0);
-  const [planCurveProgress, setPlanCurveProgress] = useState(0);
+  const [ambientStageIndex, setAmbientStageIndex] = useState(0);
   const [exampleIndex, setExampleIndex] = useState(0);
   const [stage, setStage] = useState<CopilotStage>("idle");
   const [typedQuestion, setTypedQuestion] = useState("");
@@ -213,27 +182,18 @@ export default function AICopilot() {
   );
 
   useEffect(() => {
-    const syncDesktopMode = () => {
-      setDesktopStickyEnabled(window.innerWidth > 1100);
-    };
-
-    syncDesktopMode();
-    window.addEventListener("resize", syncDesktopMode);
-    return () => window.removeEventListener("resize", syncDesktopMode);
-  }, []);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    const title = copilotTitleRef.current;
+    if (!title) return;
 
     let frame = 0;
 
     const syncVisibility = () => {
       frame = 0;
-      const rect = section.getBoundingClientRect();
+      const rect = title.getBoundingClientRect();
       const viewportHeight = Math.max(window.innerHeight, 1);
-      const revealThreshold = viewportHeight * COPILOT_SECTION_REVEAL_START;
-      const nextVisible = rect.top <= revealThreshold && rect.bottom > viewportHeight * 0.2;
+      const startLine = viewportHeight * COPILOT_SECTION_REVEAL_START;
+      const endLine = viewportHeight * COPILOT_SECTION_REVEAL_END;
+      const nextVisible = rect.top <= startLine && rect.bottom >= endLine;
       setVisible(nextVisible);
     };
 
@@ -304,7 +264,7 @@ export default function AICopilot() {
 
   useEffect(() => {
     const dashboardSection = dashboardSectionRef.current;
-    if (!dashboardSection || desktopStickyEnabled) return;
+    if (!dashboardSection) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => setDashboardVisible(entry.isIntersecting),
@@ -313,11 +273,11 @@ export default function AICopilot() {
 
     observer.observe(dashboardSection);
     return () => observer.disconnect();
-  }, [desktopStickyEnabled]);
+  }, []);
 
   useEffect(() => {
     const planSection = planSectionRef.current;
-    if (!planSection || desktopStickyEnabled) return;
+    if (!planSection) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => setPlanVisible(entry.isIntersecting),
@@ -326,7 +286,7 @@ export default function AICopilot() {
 
     observer.observe(planSection);
     return () => observer.disconnect();
-  }, [desktopStickyEnabled]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -354,158 +314,9 @@ export default function AICopilot() {
     analysisAutoplayMenuAnimatingRef.current = analysisAutoplayMenuAnimating;
   }, [analysisAutoplayMenuAnimating]);
 
-  useEffect(() => {
-    if (!desktopStickyEnabled) {
-      if (desktopIntroFrameRef.current) {
-        window.cancelAnimationFrame(desktopIntroFrameRef.current);
-        desktopIntroFrameRef.current = null;
-      }
-      desktopIntroFrameRef.current = window.requestAnimationFrame(() => {
-        desktopIntroFrameRef.current = null;
-        setDesktopIntroEntered(false);
-      });
-      return;
-    }
-
-    const section = sectionRef.current;
-    if (!section) {
-      if (desktopIntroFrameRef.current) {
-        window.cancelAnimationFrame(desktopIntroFrameRef.current);
-        desktopIntroFrameRef.current = null;
-      }
-      desktopIntroFrameRef.current = window.requestAnimationFrame(() => {
-        desktopIntroFrameRef.current = null;
-        setDesktopIntroEntered(false);
-      });
-      return;
-    }
-
-    const syncDesktopIntro = () => {
-      const rect = section.getBoundingClientRect();
-      const viewportHeight = Math.max(window.innerHeight, 1);
-      const introStartThreshold = viewportHeight * DESKTOP_COPILOT_INTRO_START;
-      const shouldEnter = desktopStageIndex === 0 && rect.top <= introStartThreshold;
-
-      if (shouldEnter === desktopIntroEntered) return;
-
-      if (desktopIntroFrameRef.current) {
-        window.cancelAnimationFrame(desktopIntroFrameRef.current);
-      }
-      desktopIntroFrameRef.current = window.requestAnimationFrame(() => {
-        desktopIntroFrameRef.current = null;
-        setDesktopIntroEntered(shouldEnter);
-      });
-    };
-
-    syncDesktopIntro();
-    window.addEventListener("scroll", syncDesktopIntro, { passive: true });
-    window.addEventListener("resize", syncDesktopIntro);
-
-    return () => {
-      window.removeEventListener("scroll", syncDesktopIntro);
-      window.removeEventListener("resize", syncDesktopIntro);
-      if (desktopIntroFrameRef.current) {
-        window.cancelAnimationFrame(desktopIntroFrameRef.current);
-        desktopIntroFrameRef.current = null;
-      }
-    };
-  }, [desktopIntroEntered, desktopStageIndex, desktopStickyEnabled]);
-
-  useEffect(() => {
-    if (!desktopStickyEnabled) return;
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const updateDesktopStage = () => {
-      const rect = section.getBoundingClientRect();
-      const viewportHeight = Math.max(window.innerHeight, 1);
-      const totalScrollable = Math.max(rect.height - viewportHeight, 1);
-      const progress = clamp((-rect.top) / totalScrollable, 0, 1);
-      desktopScrollProgressRef.current = progress;
-      const phaseHoldStart = 0.04;
-      const phaseTransitionFirst = 0.24;
-      const phaseHoldMiddle = 0.04;
-      const phaseTransitionSecond = 0.44;
-      const phaseTransitionFirstEnd = phaseHoldStart + phaseTransitionFirst;
-      const phaseHoldMiddleEnd = phaseTransitionFirstEnd + phaseHoldMiddle;
-      const phaseTransitionSecondEnd = phaseHoldMiddleEnd + phaseTransitionSecond;
-      const settleHysteresis = 0.016;
-      const currentStage = desktopStageRef.current;
-
-      let nextStage = 0;
-      let stageProgress = 0;
-      let nextDotIndex = 0;
-
-      if (
-        progress >= phaseTransitionFirstEnd - settleHysteresis
-        && progress <= phaseTransitionFirstEnd + settleHysteresis
-      ) {
-        if (currentStage >= 1) {
-          nextStage = 1;
-          stageProgress = 0;
-          nextDotIndex = 1;
-        } else {
-          nextStage = 0;
-          stageProgress = 1;
-          nextDotIndex = 1;
-        }
-      } else if (
-        progress >= phaseTransitionSecondEnd - settleHysteresis
-        && progress <= phaseTransitionSecondEnd + settleHysteresis
-      ) {
-        if (currentStage >= 2) {
-          nextStage = 2;
-          stageProgress = 0;
-          nextDotIndex = 2;
-        } else {
-          nextStage = 1;
-          stageProgress = 1;
-          nextDotIndex = 2;
-        }
-      } else
-      if (progress < phaseHoldStart) {
-        nextStage = 0;
-        stageProgress = 0;
-        nextDotIndex = 0;
-      } else if (progress < phaseTransitionFirstEnd) {
-        nextStage = 0;
-        stageProgress = easeInOut((progress - phaseHoldStart) / phaseTransitionFirst);
-        nextDotIndex = stageProgress >= 0.5 ? 1 : 0;
-      } else if (progress < phaseHoldMiddleEnd) {
-        nextStage = 1;
-        stageProgress = 0;
-        nextDotIndex = 1;
-      } else if (progress < phaseTransitionSecondEnd) {
-        nextStage = 1;
-        stageProgress = easeInOut((progress - phaseHoldMiddleEnd) / phaseTransitionSecond);
-        nextDotIndex = stageProgress >= 0.5 ? 2 : 1;
-      } else {
-        nextStage = 2;
-        stageProgress = 0;
-        nextDotIndex = 2;
-      }
-      setDesktopStageProgressValue((current) =>
-        Math.abs(current - stageProgress) < 0.01 ? current : stageProgress,
-      );
-      setDesktopActiveDotIndex((current) => (current === nextDotIndex ? current : nextDotIndex));
-      if (desktopStageRef.current !== nextStage) {
-        desktopStageRef.current = nextStage;
-        setDesktopStageIndex(nextStage);
-      }
-    };
-
-    updateDesktopStage();
-    window.addEventListener("scroll", updateDesktopStage, { passive: true });
-    window.addEventListener("resize", updateDesktopStage);
-    return () => {
-      window.removeEventListener("scroll", updateDesktopStage);
-      window.removeEventListener("resize", updateDesktopStage);
-    };
-  }, [desktopStickyEnabled]);
-
-  const effectiveDashboardVisible = desktopStickyEnabled ? desktopStageIndex === 1 && visible : dashboardVisible;
-  const effectivePlanVisible = desktopStickyEnabled ? desktopStageIndex === 2 && visible : planVisible;
-  const effectiveCopilotVisible = desktopStickyEnabled ? desktopStageIndex === 0 && visible : visible;
+  const effectiveDashboardVisible = dashboardVisible;
+  const effectivePlanVisible = planVisible;
+  const effectiveCopilotVisible = visible;
 
   useEffect(() => {
     if (!effectiveDashboardVisible) return;
@@ -623,7 +434,10 @@ export default function AICopilot() {
   }, [effectivePlanVisible]);
 
   useEffect(() => {
+    let frame = 0;
+
     const updateCurve = () => {
+      frame = 0;
       const width = window.innerWidth;
       const nextCurveScale = width <= 600 ? 0.46 : width <= 980 ? 0.62 : 1;
       setCurveScale((previous) =>
@@ -633,42 +447,81 @@ export default function AICopilot() {
       const section = sectionRef.current;
       if (section) {
         const rect = section.getBoundingClientRect();
-        const start = window.innerHeight * 0.84;
-        const end = window.innerHeight * 0.36;
-        const progress = clamp((start - rect.top) / (start - end), 0, 1);
-        setCurveProgress(progress);
-      }
-
-      const dashboardSection = dashboardSectionRef.current;
-      if (dashboardSection) {
-        const rect = dashboardSection.getBoundingClientRect();
-        const viewport = window.innerHeight;
-        if (rect.top >= viewport) {
-          setDashboardCurveProgress(0);
-        } else {
-          const start = viewport * 0.9;
-          const end = viewport * 0.42;
-          const progress = clamp((start - rect.top) / (start - end), 0, 1);
-          setDashboardCurveProgress(progress);
-        }
+        const viewportHeight = Math.max(window.innerHeight, 1);
+        const scrollableDistance = Math.max(section.offsetHeight - viewportHeight, viewportHeight);
+        const sectionProgress = clamp((-rect.top) / scrollableDistance, 0, 1);
+        section.style.setProperty("--ambient-scroll-progress", sectionProgress.toFixed(3));
       }
 
       const planSection = planSectionRef.current;
-      if (planSection) {
-        const rect = planSection.getBoundingClientRect();
-        const start = window.innerHeight * 1.12;
-        const end = window.innerHeight * 0.58;
-        const progress = clamp((start - rect.top) / (start - end), 0, 1);
-        setPlanCurveProgress(progress);
+      const mainSection = sectionRef.current;
+      const dashboardElement = dashboardSectionRef.current;
+      if (mainSection && dashboardElement && planSection) {
+        const viewportHeight = Math.max(window.innerHeight, 1);
+        const dashboardRect = dashboardElement.getBoundingClientRect();
+        const planRect = planSection.getBoundingClientRect();
+        const firstTransition = progressBetween(
+          viewportHeight * 0.9 - dashboardRect.top,
+          0,
+          viewportHeight * 0.88,
+        );
+        const secondTransition = progressBetween(
+          viewportHeight * 0.9 - planRect.top,
+          0,
+          viewportHeight * 0.88,
+        );
+
+        let nextStage = 0;
+        let nextProgress = 0;
+
+        if (firstTransition <= 0) {
+          nextStage = 0;
+          nextProgress = 0;
+        } else if (firstTransition < 1) {
+          nextStage = 0;
+          nextProgress = firstTransition;
+        } else if (secondTransition <= 0) {
+          nextStage = 1;
+          nextProgress = 0;
+        } else if (secondTransition < 1) {
+          nextStage = 1;
+          nextProgress = secondTransition;
+        } else {
+          nextStage = 2;
+          nextProgress = 0;
+        }
+
+        mainSection.style.setProperty(
+          "--desktop-stage-outgoing-progress",
+          easeInOut(progressBetween(nextProgress, 0.04, 0.96)).toFixed(3),
+        );
+        mainSection.style.setProperty(
+          "--desktop-stage-incoming-progress",
+          easeInOut(progressBetween(nextProgress, 0.08, 1)).toFixed(3),
+        );
+
+        setAmbientStageIndex((current) => {
+          if (current === nextStage) return current;
+          ambientStageIndexRef.current = nextStage;
+          return nextStage;
+        });
       }
     };
 
+    const scheduleUpdateCurve = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateCurve);
+    };
+
     updateCurve();
-    window.addEventListener("scroll", updateCurve, { passive: true });
-    window.addEventListener("resize", updateCurve);
+    window.addEventListener("scroll", scheduleUpdateCurve, { passive: true });
+    window.addEventListener("resize", scheduleUpdateCurve);
     return () => {
-      window.removeEventListener("scroll", updateCurve);
-      window.removeEventListener("resize", updateCurve);
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+      window.removeEventListener("scroll", scheduleUpdateCurve);
+      window.removeEventListener("resize", scheduleUpdateCurve);
     };
   }, []);
 
@@ -734,14 +587,13 @@ export default function AICopilot() {
     };
   }, [stage, exampleIndex, examples]);
 
-  const waveHeight = curveScale < 0.7 ? 160 : 190;
+  const waveHeight = curveScale < 0.7 ? 132 : 154;
   const curveValue = (start: number, end: number, progress: number) =>
     lerp(start, start + (end - start) * curveScale, progress);
 
-  const sideY = curveValue(1, 16, curveProgress);
-  const centerY = curveValue(1, 128, curveProgress);
+  const sideY = curveValue(1, 16, 1);
+  const centerY = curveValue(1, 128, 1);
   const curvePath = `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`;
-
   const curvePoints: string[] = [];
   for (let i = 0; i <= 18; i += 1) {
     const t = i / 18;
@@ -755,10 +607,9 @@ export default function AICopilot() {
     const y = cubic(centerY, centerY, sideY, sideY, t);
     curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
   }
-  const curveClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
-
-  const dashboardSideY = curveValue(1, 128, dashboardCurveProgress);
-  const dashboardCenterY = curveValue(1, 16, dashboardCurveProgress);
+  const topCurveClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
+  const dashboardSideY = curveValue(1, 128, 1);
+  const dashboardCenterY = curveValue(1, 16, 1);
   const dashboardCurvePath = `M0 ${dashboardSideY} C280 ${dashboardSideY} 480 ${dashboardCenterY} 720 ${dashboardCenterY} C960 ${dashboardCenterY} 1160 ${dashboardSideY} 1440 ${dashboardSideY}`;
   const dashboardCurvePoints: string[] = [];
   for (let i = 0; i <= 18; i += 1) {
@@ -775,8 +626,8 @@ export default function AICopilot() {
   }
   const dashboardCurveClip = `polygon(${dashboardCurvePoints.join(", ")}, 100% 100%, 0% 100%)`;
 
-  const planSideY = curveValue(1, 16, planCurveProgress);
-  const planCenterY = curveValue(1, 128, planCurveProgress);
+  const planSideY = curveValue(1, 16, 1);
+  const planCenterY = curveValue(1, 128, 1);
   const planCurvePath = `M0 ${planSideY} C280 ${planSideY} 480 ${planCenterY} 720 ${planCenterY} C960 ${planCenterY} 1160 ${planSideY} 1440 ${planSideY}`;
   const planCurvePoints: string[] = [];
   for (let i = 0; i <= 18; i += 1) {
@@ -1196,20 +1047,6 @@ export default function AICopilot() {
   const showAnswerText = stage === "answer" || stage === "chart";
   const showChart = stage === "chart";
   const showQuestionBubble = stage !== "idle";
-  const desktopCopilotVisible = desktopStickyEnabled ? desktopIntroEntered : visible;
-  const desktopDashboardVisible = desktopStickyEnabled ? true : dashboardVisible;
-  const desktopPlanVisible = desktopStickyEnabled ? true : planVisible;
-  const desktopStageStyle = desktopStickyEnabled
-    ? ({
-        "--desktop-stage-progress": desktopStageProgressValue.toFixed(3),
-        "--desktop-stage-outgoing-progress": easeInOut(
-          progressBetween(desktopStageProgressValue, 0.12, 0.78),
-        ).toFixed(3),
-        "--desktop-stage-incoming-progress": easeInOut(
-          progressBetween(desktopStageProgressValue, 0.22, 0.88),
-        ).toFixed(3),
-      } as CSSProperties)
-    : undefined;
   const handleToggleAnalysisMetricMenu = () => {
     if (analysisAutoplayStepTimeoutRef.current) {
       clearTimeout(analysisAutoplayStepTimeoutRef.current);
@@ -1248,130 +1085,16 @@ export default function AICopilot() {
     }
   };
 
-  const productStages: ProductStageDefinition[] = [
-    {
-      id: "copilot",
-      ambientClassName: styles.ambientCopilot,
-      copy: (
-        <CopilotCopy
-          visible={desktopCopilotVisible}
-          pillClassName={styles.desktopCopyPill}
-          titleClassName={styles.desktopCopyTitle}
-          textClassName={styles.desktopCopyText}
-          listClassName={styles.desktopCopyList}
-          listItemClassName={styles.desktopCopyListItem}
-          title={preventShortWordOrphans(content.aicopilot.leftTitle)}
-        />
-      ),
-      visual: (
-        <CopilotVisual
-          currentExample={currentExample}
-          visible={desktopCopilotVisible}
-          showQuestionBubble={showQuestionBubble}
-          isSending={isSending}
-          isLoading={isLoading}
-          showAnswerText={showAnswerText}
-          showChart={showChart}
-          isTyping={isTyping}
-          typedQuestion={typedQuestion}
-          stage={stage}
-        />
-      ),
-    },
-    {
-      id: "dashboard",
-      ambientClassName: styles.ambientDashboard,
-      copy: (
-        <DashboardCopy
-          dashboardVisible={desktopDashboardVisible}
-          pillClassName={styles.desktopCopyPill}
-          titleClassName={styles.desktopCopyTitle}
-          textClassName={styles.desktopCopyText}
-          listClassName={styles.desktopCopyList}
-          listItemClassName={styles.desktopCopyListItem}
-          title={preventShortWordOrphans(content.aicopilot.dashboard.title)}
-        />
-      ),
-      visual: (
-        <DashboardVisual
-          dashboardVisible={desktopDashboardVisible}
-          analysisUpdating={analysisUpdating}
-          trendAnimating={desktopDashboardVisible}
-          trendResetting={trendResetting}
-          trendSeries={trendSeries}
-          trendAreaPath={trendAreaPath}
-          trendLinePath={trendLinePath}
-          analysisMetricOpen={analysisMetricOpen}
-          trendMetricMenuRef={trendMetricMenuRef}
-          activeMetric={activeMetric}
-          analysisMetric={analysisMetric}
-          analysisMetrics={analysisMetrics}
-          selectedMetricAmount={selectedMetricAmount}
-          selectedMetricPreviousAmount={selectedMetricPreviousAmount}
-          selectedMetricDelta={selectedMetricDelta}
-          selectedMetricPreviousDelta={selectedMetricPreviousDelta}
-          analysisCompareLabel={analysisCompareLabel}
-          autoplayPreviewMetric={analysisAutoplayPreviewMetric}
-          autoplayMenuAnimating={analysisAutoplayMenuAnimating}
-          onToggleMetricMenu={handleToggleAnalysisMetricMenu}
-          onSelectMetric={handleSelectAnalysisMetric}
-          formatSek={formatSek}
-          formatPercent={formatPercent}
-          monthLabels={monthLabels}
-          trendAxisTicks={trendAxisTicks}
-        />
-      ),
-    },
-    {
-      id: "planning",
-      ambientClassName: styles.ambientPlanning,
-      copy: (
-        <PlanningCopy
-          planVisible={desktopPlanVisible}
-          pillClassName={styles.desktopCopyPill}
-          titleClassName={styles.desktopCopyTitle}
-          textClassName={styles.desktopCopyText}
-          listClassName={styles.desktopCopyList}
-          listItemClassName={styles.desktopCopyListItem}
-          title={(
-            <>
-              Forecasting, scenarier
-              <br />
-              och bättre
-              <br />
-              framförhållning
-            </>
-          )}
-        />
-      ),
-      visual: (
-        <PlanningVisual
-          planVisible={desktopPlanVisible}
-          planUpdating={planUpdating}
-          planMonthIndex={planMonthIndex}
-          selectedPlanMode={selectedPlanMode}
-          animatedPlanValue={animatedPlanValue}
-          animatedSelectedPlanDelta={animatedSelectedPlanDelta}
-          animatedPlanTotalDelta={animatedPlanTotalDelta}
-          planForecastAreaPath={planForecastAreaPath}
-          planForecastLinePath={planForecastLinePath}
-          selectedPlanPointX={selectedPlanPointX}
-          selectedPlanPointY={selectedPlanPointY}
-          formatSek={formatSek}
-          formatPercent={formatPercent}
-          onSelectPlanMonth={handleSelectPlanMonth}
-          monthLabelsEn={monthLabelsEn}
-        />
-      ),
-    },
-  ];
   return (
     <section
       ref={sectionRef}
       id="produkt"
-      className={`${styles.section} ${visible ? styles.visible : ""} ${desktopStickyEnabled ? styles.sectionSticky : ""} ${desktopIntroEntered ? styles.desktopIntroEntered : ""}`}
-      data-active-stage={productStages[desktopActiveDotIndex]?.id}
-      style={desktopStageStyle}
+      className={`${styles.section} ${visible ? styles.visible : ""}`}
+      style={
+        {
+          "--section-top-overlap": `${waveHeight}px`,
+        } as CSSProperties
+      }
     >
       <svg
         className={styles.curveCut}
@@ -1379,7 +1102,7 @@ export default function AICopilot() {
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d={curvePath} />
+        <path className={styles.curveStroke} d={curvePath} />
       </svg>
 
       <div
@@ -1387,49 +1110,25 @@ export default function AICopilot() {
         aria-hidden="true"
         style={
           {
-            clipPath: curveClip,
-            WebkitClipPath: curveClip,
+            clipPath: topCurveClip,
+            WebkitClipPath: topCurveClip,
           } as CSSProperties
         }
       >
-        {productStages.map((productStage, index) => (
-          <div
-            key={productStage.id}
-            className={`${styles.ambientLayer} ${productStage.ambientClassName} ${index === desktopStageIndex ? styles.ambientLayerActive : ""} ${index === desktopStageIndex + 1 ? styles.ambientLayerIncoming : ""}`}
-          />
-        ))}
+        <div
+          className={`${styles.ambientLayer} ${styles.ambientCopilot} ${ambientStageIndex === 0 ? styles.ambientLayerActive : ""}`}
+        />
+        <div
+          className={`${styles.ambientLayer} ${styles.ambientDashboard} ${ambientStageIndex === 0 ? styles.ambientLayerIncoming : ""} ${ambientStageIndex === 1 ? styles.ambientLayerActive : ""}`}
+        />
+        <div
+          className={`${styles.ambientLayer} ${styles.ambientPlanning} ${ambientStageIndex === 1 ? styles.ambientLayerIncoming : ""} ${ambientStageIndex === 2 ? styles.ambientLayerActive : ""}`}
+        />
       </div>
-
-      <div className={styles.desktopStage}>
-        <div className={styles.desktopStageInner}>
-          <div className={styles.desktopCopyStack}>
-            {productStages.map((productStage, index) => (
-              <div
-                key={`${productStage.id}-copy`}
-                className={`${styles.stageLayer} ${styles.copyLayer} ${index === desktopStageIndex ? styles.stageLayerCurrent : ""} ${index === desktopStageIndex + 1 ? styles.stageLayerIncoming : ""} ${index < desktopStageIndex ? styles.stageLayerBefore : ""} ${index > desktopStageIndex + 1 ? styles.stageLayerAfter : ""} ${index === 0 && desktopStageIndex === 0 ? styles.desktopIntroStage : ""}`}
-              >
-                {productStage.copy}
-              </div>
-            ))}
-          </div>
-
-          <div className={styles.desktopVisualStack}>
-            {productStages.map((productStage, index) => (
-              <div
-                key={`${productStage.id}-visual`}
-                className={`${styles.stageLayer} ${styles.visualLayer} ${index === desktopStageIndex ? styles.stageLayerCurrent : ""} ${index === desktopStageIndex + 1 ? styles.stageLayerIncoming : ""} ${index < desktopStageIndex ? styles.stageLayerBefore : ""} ${index > desktopStageIndex + 1 ? styles.stageLayerAfter : ""} ${index === 0 && desktopStageIndex === 0 ? styles.desktopIntroStage : ""}`}
-              >
-                {productStage.visual}
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </div>
-
       <div className={styles.mobileFlow}>
         <CopilotChatSection
           anchorId="produkt-copilot"
+          titleRef={copilotTitleRef}
           currentExample={currentExample}
           visible={visible}
           showQuestionBubble={showQuestionBubble}

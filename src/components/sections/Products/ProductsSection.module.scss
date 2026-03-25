@@ -2,14 +2,15 @@
   --hero-globe-handoff: 0;
   --hero-globe-handoff-fade: 1;
   --hero-globe-handoff-drift: 72px;
-  --desktop-stage-progress: 0;
   --desktop-stage-outgoing-progress: 0;
   --desktop-stage-incoming-progress: 0;
+  --ambient-scroll-progress: 0;
+  --section-top-overlap: 190px;
   position: relative;
   min-height: 100vh;
-  margin-top: 0;
-  padding: clamp(156px, 18vh, 226px) 0 clamp(206px, 24vh, 292px);
-  overflow: hidden;
+  margin-top: calc(var(--section-top-overlap) * -1);
+  padding: var(--section-top-overlap) 0 clamp(206px, 24vh, 292px);
+  overflow: visible;
   overflow-anchor: none;
   isolation: isolate;
 }
@@ -18,15 +19,16 @@
   position: absolute;
   inset: 0 0 auto;
   width: 100%;
-  height: 190px;
+  height: var(--section-top-overlap);
   z-index: 2;
   pointer-events: none;
 }
 
-.curveCut path {
+.curveStroke {
   fill: transparent;
-  stroke: oklch(0.55 0.035 262 / 0.36);
+  stroke: oklch(0.58 0.03 262 / 0.28);
   stroke-width: 1.6;
+  filter: drop-shadow(0 0 10px oklch(0.48 0.16 262 / 0.14));
 }
 
 .background {
@@ -35,21 +37,17 @@
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(92% 76% at 50% -6%, oklch(0.24 0.04 246 / 0.28), transparent 58%),
-    radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
-    radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
     linear-gradient(180deg, oklch(0.145 0.012 262 / 1) 0%, oklch(0.14 0.011 262 / 1) 50%, oklch(0.135 0.01 262 / 1) 100%);
+  overflow: hidden;
 }
 
 .background::before {
   content: "";
   position: absolute;
-  inset: -8% -6% 0;
+  inset: 0;
   background:
-    radial-gradient(74% 58% at 50% 18%, oklch(0.36 0.06 244 / 0.12), transparent 68%),
-    linear-gradient(180deg, oklch(0.18 0.014 252 / 0.08) 0%, transparent 42%);
-  filter: blur(42px);
-  opacity: 0.9;
+    radial-gradient(60% 46% at 50% 16%, oklch(0.34 0.05 240 / 0.12), transparent 70%);
+  opacity: 0.52;
 }
 
 .background::after {
@@ -57,65 +55,54 @@
   position: absolute;
   inset: 0;
   background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
-  background-size: 8px 8px;
-  opacity: 0.16;
+  background-size: 10px 10px;
+  opacity: 0.06;
 }
 
 .ambientLayer {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transform: translate3d(0, 0, 0) scale(1.02);
-  transform-origin: 50% 50%;
-  filter: saturate(1.04);
-  will-change: opacity, transform, filter;
+  transition: opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .ambientLayerActive {
-  opacity: calc(0.42 + ((1 - var(--desktop-stage-outgoing-progress, 0)) * 0.58));
-  transform:
-    translate3d(0, calc(var(--desktop-stage-outgoing-progress, 0) * -2.5%), 0)
-    scale(calc(1.01 + (var(--desktop-stage-outgoing-progress, 0) * 0.04)));
-  filter: saturate(calc(1.02 + (var(--desktop-stage-outgoing-progress, 0) * 0.04)));
+  opacity: calc(0.28 + ((1 - var(--desktop-stage-outgoing-progress, 0)) * 0.4));
 }
 
 .ambientLayerIncoming {
-  opacity: calc(0.14 + (var(--desktop-stage-incoming-progress, 0) * 0.86));
-  transform:
-    translate3d(0, calc((1 - var(--desktop-stage-incoming-progress, 0)) * 2.5%), 0)
-    scale(calc(1.05 - (var(--desktop-stage-incoming-progress, 0) * 0.04)));
-  filter: saturate(calc(1.08 + ((1 - var(--desktop-stage-incoming-progress, 0)) * 0.06)));
+  opacity: calc(0.08 + (var(--desktop-stage-incoming-progress, 0) * 0.44));
 }
 
 .ambientCopilot {
   background:
-    radial-gradient(92% 72% at 82% 14%, oklch(0.48 0.13 258 / 0.24), transparent 54%),
-    radial-gradient(76% 64% at 20% 42%, oklch(0.34 0.07 236 / 0.18), transparent 62%),
-    radial-gradient(56% 42% at 58% 72%, oklch(0.24 0.045 248 / 0.16), transparent 76%),
-    linear-gradient(180deg, oklch(0.145 0.012 262 / 1) 0%, oklch(0.136 0.012 258 / 1) 52%, oklch(0.128 0.012 252 / 1) 100%);
+    radial-gradient(52% 40% at 72% 18%, oklch(0.56 0.18 270 / 0.24), transparent 52%),
+    radial-gradient(56% 46% at 18% 48%, oklch(0.42 0.12 226 / 0.18), transparent 58%),
+    linear-gradient(180deg, oklch(0.16 0.018 258 / 0.28) 0%, transparent 46%),
+    linear-gradient(180deg, oklch(0.145 0.014 258 / 1) 0%, oklch(0.131 0.013 252 / 1) 56%, oklch(0.122 0.012 246 / 1) 100%);
 }
 
 .ambientDashboard {
   background:
-    radial-gradient(88% 76% at 82% 26%, oklch(0.74 0.17 205 / 0.28), transparent 54%),
-    radial-gradient(68% 56% at 18% 76%, oklch(0.54 0.12 215 / 0.2), transparent 66%),
-    radial-gradient(42% 36% at 56% 16%, oklch(0.82 0.08 190 / 0.09), transparent 72%),
-    linear-gradient(180deg, oklch(0.155 0.02 220 / 1) 0%, oklch(0.128 0.016 228 / 1) 100%);
+    radial-gradient(58% 46% at 68% 24%, oklch(0.74 0.16 182 / 0.24), transparent 54%),
+    radial-gradient(60% 50% at 24% 68%, oklch(0.46 0.12 196 / 0.18), transparent 58%),
+    linear-gradient(180deg, oklch(0.17 0.024 192 / 0.22) 0%, transparent 46%),
+    linear-gradient(180deg, oklch(0.14 0.022 198 / 1) 0%, oklch(0.124 0.02 192 / 1) 56%, oklch(0.116 0.018 188 / 1) 100%);
 }
 
 .ambientPlanning {
   background:
-    radial-gradient(96% 76% at 12% 28%, oklch(0.68 0.16 230 / 0.28), transparent 50%),
-    radial-gradient(78% 58% at 86% 16%, oklch(0.62 0.18 282 / 0.24), transparent 56%),
-    radial-gradient(58% 46% at 70% 76%, oklch(0.42 0.09 248 / 0.18), transparent 72%),
-    radial-gradient(34% 28% at 48% 12%, oklch(0.84 0.05 255 / 0.08), transparent 70%),
-    linear-gradient(180deg, oklch(0.148 0.02 242 / 1) 0%, oklch(0.126 0.017 250 / 1) 54%, oklch(0.118 0.015 258 / 1) 100%);
+    radial-gradient(60% 50% at 20% 36%, oklch(0.62 0.14 204 / 0.22), transparent 54%),
+    radial-gradient(52% 42% at 78% 20%, oklch(0.48 0.14 222 / 0.18), transparent 56%),
+    linear-gradient(180deg, oklch(0.16 0.024 214 / 0.22) 0%, transparent 46%),
+    linear-gradient(180deg, oklch(0.136 0.022 214 / 1) 0%, oklch(0.12 0.02 220 / 1) 54%, oklch(0.112 0.018 226 / 1) 100%);
 }
 
 .heroGlobeHandoff {
   position: absolute;
   inset: max(-10vh, -92px) 0 auto;
   height: min(70vh, 680px);
+  z-index: 1;
   pointer-events: none;
   opacity: calc(0.12 + var(--hero-globe-handoff-fade) * 0.88);
   transform: translate3d(0, var(--hero-globe-handoff-drift), 0);
@@ -139,8 +126,7 @@
       color-mix(in oklab, var(--btn-primary-bg) 18%, transparent) 26%,
       transparent 68%
     );
-  opacity: calc(0.16 + var(--hero-globe-handoff-fade) * 0.42);
-  filter: blur(42px);
+  opacity: calc(0.08 + var(--hero-globe-handoff-fade) * 0.18);
 }
 
 .heroGlobeCore {
@@ -170,22 +156,11 @@
       rgba(47, 61, 181, 0.06) 34%,
       transparent 56%
     );
-  opacity: calc(0.14 + var(--hero-globe-handoff-fade) * 0.72);
-  filter: blur(calc(8px + (1 - var(--hero-globe-handoff-fade)) * 14px));
+  opacity: calc(0.06 + var(--hero-globe-handoff-fade) * 0.22);
 }
 
 .heroGlobeParticleField {
-  top: 0;
-  bottom: 10%;
-  width: min(30vw, 380px);
-  opacity: calc(0.1 + var(--hero-globe-handoff-fade) * 0.84);
-  background-image:
-    radial-gradient(circle, rgba(113, 140, 255, 0.92) 0 1px, transparent 1.5px),
-    radial-gradient(circle, rgba(93, 119, 245, 0.68) 0 0.85px, transparent 1.35px),
-    radial-gradient(circle, rgba(184, 197, 255, 0.54) 0 0.75px, transparent 1.25px);
-  background-size: 15px 15px, 21px 21px, 29px 29px;
-  filter: blur(0.2px) drop-shadow(0 0 16px rgba(88, 111, 255, 0.14));
-  animation: heroGlobeParticleFall 18s linear infinite;
+  display: none;
 }
 
 .heroGlobeParticleFieldLeft {
@@ -215,21 +190,7 @@
 }
 
 .heroGlobeMist {
-  background:
-    radial-gradient(56% 26% at 50% 10%, rgba(85, 105, 238, 0.16) 0%, rgba(85, 105, 238, 0.06) 28%, transparent 70%),
-    radial-gradient(42% 18% at 50% 4%, rgba(215, 223, 255, 0.08) 0%, transparent 74%);
-  opacity: calc(0.1 + var(--hero-globe-handoff-fade) * 0.54);
-  filter: blur(36px);
-}
-
-@keyframes heroGlobeParticleFall {
-  0% {
-    background-position: 0 0, 0 0, 0 0;
-  }
-
-  100% {
-    background-position: 0 190px, 34px 230px, -26px 270px;
-  }
+  display: none;
 }
 
 .container {
@@ -238,19 +199,22 @@
   max-width: 1360px;
   margin: 0 auto;
   padding: 0 var(--container-pad);
-  padding-top: clamp(48px, 5.6vh, 82px);
+  padding-top: clamp(18px, 2.8vh, 40px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(48px, 5.8vw, 96px);
   align-items: center;
 }
 
-.desktopStage {
-  display: none;
+.mobileFlow {
+  display: block;
+  position: relative;
+  z-index: 3;
+  padding-top: clamp(20px, 3vh, 40px);
 }
 
-.mobileFlow {
-  display: contents;
+.mobileFlow > :first-child {
+  margin-top: clamp(12px, 2vh, 28px);
 }
 
 .container > * {
@@ -306,201 +270,6 @@
 
 .planVisible .planRight {
   transition-delay: 90ms;
-}
-
-@media (min-width: 1101px) {
-  .sectionSticky {
-    min-height: 288vh;
-    padding-bottom: clamp(120px, 11vh, 172px);
-    overflow: visible;
-  }
-
-  .sectionSticky .desktopStage {
-    position: sticky;
-    top: 0;
-    z-index: 3;
-    min-height: 100svh;
-    display: flex;
-    align-items: center;
-    padding: clamp(56px, 7.5vh, 92px) 0 clamp(56px, 7vh, 88px);
-  }
-
-  .sectionSticky .desktopStageInner {
-    position: relative;
-    max-width: 1360px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 var(--container-pad);
-    display: grid;
-    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
-    gap: clamp(48px, 5.8vw, 96px);
-    align-items: center;
-  }
-
-  .sectionSticky .desktopCopyStack,
-  .sectionSticky .desktopVisualStack {
-    position: relative;
-    min-height: min(82vh, 860px);
-    overflow: visible;
-  }
-
-  .sectionSticky .stageLayer {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0;
-    will-change: opacity, transform;
-    overflow: visible;
-  }
-
-  .sectionSticky .copyLayer {
-    display: flex;
-    align-items: center;
-    transform: translate3d(0, 18px, 0);
-    transition: opacity 360ms ease, transform 360ms ease;
-  }
-
-  .sectionSticky .copyLayer > * {
-    width: 100%;
-  }
-
-  .sectionSticky .visualLayer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform: translate3d(0, 22px, 0) scale(0.985);
-    transition: opacity 360ms ease, transform 360ms ease;
-  }
-
-  .sectionSticky .visualLayer > * {
-    width: 100%;
-  }
-
-  .sectionSticky .stageLayerCurrent {
-    pointer-events: auto;
-    z-index: 2;
-  }
-
-  .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage,
-  .sectionSticky .visualLayer.stageLayerCurrent.desktopIntroStage {
-    transition: opacity 560ms cubic-bezier(0.22, 1, 0.36, 1), transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage {
-    opacity: 0;
-    transform: translate3d(0, 20px, 0);
-  }
-
-  .sectionSticky:not(.desktopIntroEntered) .visualLayer.stageLayerCurrent.desktopIntroStage {
-    opacity: 0;
-    transform: translate3d(2.2vw, 16px, 0) scale(0.975);
-  }
-
-  .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyPill,
-  .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyText,
-  .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyList,
-  .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyListItem {
-    transition: opacity 280ms ease, transform 280ms ease;
-  }
-
-  .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyPill {
-    transition-delay: 120ms;
-  }
-
-  .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyText {
-    transition-delay: 180ms;
-  }
-
-  .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyList,
-  .sectionSticky .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyListItem {
-    transition-delay: 240ms;
-  }
-
-  .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyPill,
-  .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyText,
-  .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyList,
-  .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyListItem {
-    opacity: 0;
-    transform: translate3d(0, 10px, 0);
-  }
-
-  .sectionSticky:not(.desktopIntroEntered) .copyLayer.stageLayerCurrent.desktopIntroStage .desktopCopyTitleActive {
-    opacity: 0;
-  }
-
-  .sectionSticky .copyLayer.stageLayerCurrent {
-    opacity: calc(1 - var(--desktop-stage-outgoing-progress));
-    transform: translate3d(0, calc(var(--desktop-stage-outgoing-progress) * -18px), 0);
-  }
-
-  .sectionSticky .visualLayer.stageLayerCurrent {
-    opacity: calc(1 - var(--desktop-stage-outgoing-progress));
-    transform: translate3d(0, calc(var(--desktop-stage-outgoing-progress) * -16px), 0) scale(calc(1 - (var(--desktop-stage-outgoing-progress) * 0.02)));
-  }
-
-  .sectionSticky .copyLayer.stageLayerIncoming {
-    opacity: var(--desktop-stage-incoming-progress);
-    transform: translate3d(0, calc((1 - var(--desktop-stage-incoming-progress)) * 18px), 0);
-    z-index: 3;
-  }
-
-  .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyPill {
-    opacity: var(--desktop-stage-incoming-progress);
-    transform: none;
-  }
-
-  .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyTitle {
-    opacity: var(--desktop-stage-incoming-progress);
-  }
-
-  .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyText,
-  .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyList {
-    opacity: var(--desktop-stage-incoming-progress);
-    transform: none;
-  }
-
-  .sectionSticky .copyLayer.stageLayerIncoming .desktopCopyListItem {
-    opacity: var(--desktop-stage-incoming-progress);
-    transform: none;
-  }
-
-  .sectionSticky .copyLayer.stageLayerCurrent .desktopCopyPill,
-  .sectionSticky .copyLayer.stageLayerCurrent .desktopCopyTitle,
-  .sectionSticky .copyLayer.stageLayerCurrent .desktopCopyText,
-  .sectionSticky .copyLayer.stageLayerCurrent .desktopCopyList,
-  .sectionSticky .copyLayer.stageLayerCurrent .desktopCopyListItem {
-    opacity: calc(1 - var(--desktop-stage-outgoing-progress));
-  }
-
-  .sectionSticky .visualLayer.stageLayerIncoming {
-    opacity: var(--desktop-stage-incoming-progress);
-    transform: translate3d(0, calc((1 - var(--desktop-stage-incoming-progress)) * 22px), 0) scale(calc(0.985 + (var(--desktop-stage-incoming-progress) * 0.015)));
-    z-index: 3;
-  }
-
-  .sectionSticky .copyLayer.stageLayerBefore {
-    transform: translate3d(0, -20px, 0);
-    opacity: 0;
-  }
-
-  .sectionSticky .visualLayer.stageLayerBefore {
-    transform: translate3d(0, -18px, 0) scale(0.97);
-    opacity: 0;
-  }
-
-  .sectionSticky .copyLayer.stageLayerAfter {
-    transform: translate3d(0, 20px, 0);
-    opacity: 0;
-  }
-
-  .sectionSticky .visualLayer.stageLayerAfter {
-    transform: translate3d(0, 20px, 0) scale(0.97);
-    opacity: 0;
-  }
-
-  .sectionSticky .mobileFlow {
-    display: none;
-  }
 }
 
 .pill {
@@ -955,10 +724,7 @@
   inset: 0 0 -190px;
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(76% 62% at 78% 36%, var(--ambient-spot-1), transparent 74%),
-    radial-gradient(64% 54% at 22% 72%, var(--ambient-spot-2), transparent 76%),
-    linear-gradient(180deg, oklch(0.16 0.012 262 / 0.84) 0%, oklch(0.15 0.011 262 / 0.9) 42%, oklch(0.14 0.01 262 / 0.95) 100%);
+  background: transparent;
 }
 
 .dashboardBackground::after {
@@ -967,7 +733,7 @@
   inset: 0;
   background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
   background-size: 8px 8px;
-  opacity: 0.12;
+  opacity: 0.05;
 }
 
 .dashboardPanel {
@@ -1007,10 +773,7 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background:
-    radial-gradient(80% 62% at 18% 42%, var(--ambient-spot-2), transparent 72%),
-    radial-gradient(62% 44% at 72% 12%, var(--ambient-spot-1), transparent 72%),
-    linear-gradient(180deg, oklch(0.145 0.012 262 / 0.96) 0%, oklch(0.14 0.011 262 / 0.95) 50%, oklch(0.135 0.01 262 / 0.98) 100%);
+  background: transparent;
 }
 
 .planBackground::after {
@@ -1019,7 +782,7 @@
   inset: 0;
   background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
   background-size: 8px 8px;
-  opacity: 0.16;
+  opacity: 0.06;
 }
 
 .planContainer {
@@ -1842,20 +1605,6 @@
 }
 
 @media (min-width: 1101px) and (max-width: 1360px), (min-width: 1101px) and (max-height: 860px) {
-  .sectionSticky .desktopStage {
-    padding: clamp(40px, 5.4vh, 68px) 0 clamp(42px, 5.4vh, 68px);
-  }
-
-  .sectionSticky .desktopStageInner {
-    max-width: 1220px;
-    gap: clamp(32px, 4.2vw, 64px);
-  }
-
-  .sectionSticky .desktopCopyStack,
-  .sectionSticky .desktopVisualStack {
-    min-height: min(76vh, 760px);
-  }
-
   .pill {
     padding: 7px 14px;
     font-size: 0.76rem;
@@ -2165,8 +1914,8 @@
   }
 
   .answer {
-    min-height: 176px;
-    height: auto;
+    min-height: 216px;
+    height: 216px;
     padding: 12px;
     font-size: 0.9rem;
   }
@@ -2422,8 +2171,12 @@
 
 @media (max-width: 720px) {
   .section {
-    margin-top: 180px;
+    margin-top: 0;
     padding-top: 48px;
+  }
+
+  .heroGlobeHandoff {
+    display: none;
   }
 
   .curveCut {

@@ -7,6 +7,7 @@ import HomeOfferingSwitch from "@/components/home/HomeOfferingSwitch";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import ContactLink from "@/components/system/ContactLink";
 import { useMotion } from "@/components/system/MotionProvider";
+import { getOfferingFromPathname } from "@/lib/homeRoutes";
 import styles from "./FloatingNav.module.scss";
 
 const HOMEPAGE_SECTIONS = [
@@ -31,6 +32,8 @@ export default function FloatingNav() {
   const pathname = usePathname();
   const solutionGroups = content.navigation.groups;
   const showSolutions = offering === "platform";
+  const currentPath = pathname || "/";
+  const isHomeOfferingRoute = getOfferingFromPathname(currentPath) !== null;
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<(typeof HOMEPAGE_SECTIONS)[number]>("hero");
   const [solutionsOpen, setSolutionsOpen] = useState(false);
@@ -90,7 +93,7 @@ export default function FloatingNav() {
   }, []);
 
   useEffect(() => {
-    if (pathname !== "/") return;
+    if (!isHomeOfferingRoute) return;
 
     const previousRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
@@ -108,7 +111,7 @@ export default function FloatingNav() {
     return () => {
       window.history.scrollRestoration = previousRestoration;
     };
-  }, [pathname]);
+  }, [isHomeOfferingRoute]);
 
   useEffect(() => {
     const onPointerDown = (event: PointerEvent) => {
@@ -149,7 +152,9 @@ export default function FloatingNav() {
   };
 
   const sectionHref = (id: (typeof HOMEPAGE_SECTIONS)[number]) =>
-    pathname === "/" ? `#${id}` : `/#${id}`;
+    isHomeOfferingRoute
+      ? (currentPath === "/" ? `#${id}` : `${currentPath}#${id}`)
+      : `/#${id}`;
   const demoHref = "/contact";
   const legacyLoginLabel = (content.navigation as unknown as { kontaktaOss?: string }).kontaktaOss;
   const loginSignupLabel =
@@ -374,8 +379,8 @@ export default function FloatingNav() {
           </a>
           <ContactLink
             href={demoHref}
-            returnPath={pathname === "/" ? "/" : pathname}
-            returnSectionId={pathname === "/" ? activeSection : undefined}
+            returnPath={currentPath}
+            returnSectionId={isHomeOfferingRoute ? activeSection : undefined}
             className={styles.cta}
             onClick={(event) => handleSectionAnchorClick(event, demoHref)}
           >
@@ -485,8 +490,8 @@ export default function FloatingNav() {
 
           <ContactLink
             href={demoHref}
-            returnPath={pathname === "/" ? "/" : pathname}
-            returnSectionId={pathname === "/" ? activeSection : undefined}
+            returnPath={currentPath}
+            returnSectionId={isHomeOfferingRoute ? activeSection : undefined}
             className={styles.mobileCta}
             onClick={(event) => handleSectionAnchorClick(event, demoHref, closeMobileMenu)}
           >

@@ -43,13 +43,12 @@ const liquidityChartData = liquidityMonths.map((month, index) => {
 
 const chartOptions = {
   liquidity: {
-    label: "Likviditet framåt",
-    subtitle: "Utfall och prognos",
+    label: "Kassaflödesprognos",
     unit: "tkr",
     data: liquidityChartData,
   },
   runway: {
-    label: "Runway framåt",
+    label: "Runway",
     subtitle: "Månader kvar",
   },
 } as const;
@@ -301,20 +300,17 @@ export function ShowcaseGradientBarChart() {
               </div>
             )}
           </div>
-          {activeLiquidityChart && (
-            <span className={styles.evilSubtle}>{activeLiquidityChart.subtitle}</span>
-          )}
         </div>
 
         <div className={styles.evilLegend}>
           {selectedChart === "liquidity" ? (
             <>
               <span className={styles.evilLegendItem}>
-                <span className={`${styles.evilLegendDot} ${styles.evilLegendDotActual}`} />
+                <span className={`${styles.evilLegendLine} ${styles.evilLegendLineActual}`} />
                 <span>Utfall</span>
               </span>
               <span className={styles.evilLegendItem}>
-                <span className={`${styles.evilLegendDot} ${styles.evilLegendDotForecast}`} />
+                <span className={`${styles.evilLegendLine} ${styles.evilLegendLineForecast}`} />
                 <span>Prognos</span>
               </span>
             </>

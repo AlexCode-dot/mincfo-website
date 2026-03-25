@@ -534,15 +534,17 @@
 
 @media (max-width: 760px) {
   .container {
-    padding-top: 72px;
+    padding-top: 48px;
   }
 
   .section {
-    padding: 98px 0 94px;
+    margin-top: -54px;
+    padding: 82px 0 88px;
   }
 
   .curveCut {
-    height: 150px;
+    transform: scaleY(0.62);
+    transform-origin: top center;
   }
 
   .cardsShell {
@@ -561,7 +563,7 @@
   }
 
   .trustedTicker {
-    margin-top: 52px;
+    margin-top: 36px;
     padding: 0;
   }
 
@@ -585,6 +587,16 @@
     --ticker-gap: 42px;
     --ticker-duration: 44s;
     padding: 10px 0;
+  }
+
+  .background::after {
+    opacity: 0.16;
+    background-size: auto, 24px 24px;
+  }
+
+  .background {
+    transform: scaleY(0.62);
+    transform-origin: top center;
   }
 
   .tickerItem {

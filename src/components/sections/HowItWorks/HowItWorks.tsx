@@ -29,6 +29,7 @@ import {
 } from "react";
 import { Bar, BarChart, Cell, ResponsiveContainer, XAxis } from "recharts";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
+import PartnerWorkspaceSettingsPanel from "@/components/home/PartnerWorkspaceSettingsPanel";
 import { useMotion } from "@/components/system/MotionProvider";
 import BeamBackgroundMain from "@/components/visual/BeamBackgroundMain/BeamBackgroundMain";
 import styles from "./HowItWorks.module.scss";
@@ -253,55 +254,7 @@ const PartnerWorkspaceMock = memo(function PartnerWorkspaceMock({
 
           {view === "settings" ? (
             <div key="settings" className={`${styles.partnerSettingsPanel} ${styles.partnerWorkspaceViewPanel}`}>
-              <div className={styles.partnerSettingsTabs}>
-                <span className={styles.partnerSettingsTab}>{content.settings.tabs.profile}</span>
-                <span className={`${styles.partnerSettingsTab} ${styles.partnerSettingsTabActive}`}>
-                  {content.settings.tabs.appearance}
-                </span>
-              </div>
-
-              <div className={styles.partnerSettingsSection}>
-                <div className={styles.partnerSettingsSectionCopy}>
-                  <strong>{content.settings.appearanceTitle}</strong>
-                  <span>{content.settings.appearanceBody}</span>
-                </div>
-
-                <div className={styles.partnerSettingsModes}>
-                  <article className={styles.partnerSettingsMode}>
-                    <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewSystem}`}>
-                      <span className={styles.partnerSettingsPreviewSidebar} />
-                      <span className={styles.partnerSettingsPreviewCanvas} />
-                    </div>
-                    <strong>{content.settings.modes.system}</strong>
-                  </article>
-                  <article className={styles.partnerSettingsMode}>
-                    <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewLight}`}>
-                      <span className={styles.partnerSettingsPreviewSidebar} />
-                      <span className={styles.partnerSettingsPreviewCanvas} />
-                    </div>
-                    <strong>{content.settings.modes.light}</strong>
-                  </article>
-                  <article className={`${styles.partnerSettingsMode} ${styles.partnerSettingsModeActive}`}>
-                    <div className={`${styles.partnerSettingsModePreview} ${styles.partnerSettingsModePreviewDark}`}>
-                      <span className={styles.partnerSettingsPreviewSidebar} />
-                      <span className={styles.partnerSettingsPreviewCanvas} />
-                    </div>
-                    <strong>{content.settings.modes.dark}</strong>
-                  </article>
-                </div>
-              </div>
-
-              <div className={styles.partnerSettingsSection}>
-                <div className={styles.partnerSettingsSectionCopy}>
-                  <strong>{content.settings.languageTitle}</strong>
-                  <span>{content.settings.languageBody}</span>
-                </div>
-
-                <div className={styles.partnerSettingsLanguage}>
-                  <span>{content.settings.languageValue}</span>
-                  <span>▾</span>
-                </div>
-              </div>
+              <PartnerWorkspaceSettingsPanel content={content.settings} />
             </div>
           ) : view === "users" ? (
             <div key="users" className={`${styles.partnerUsersPanel} ${styles.partnerWorkspaceViewPanel}`}>

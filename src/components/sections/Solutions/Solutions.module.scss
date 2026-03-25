@@ -414,16 +414,25 @@
 
 @media (max-width: 600px) {
   .section {
-    margin-top: -56px;
-    padding: 104px 0 124px;
+    margin-top: -40px;
+    padding: 84px 0 112px;
   }
 
   .curveCut {
     inset: -2px 0 auto;
+    transform: scaleY(0.62);
+    transform-origin: top center;
   }
 
   .background {
     inset: -2px 0 0;
+    transform: scaleY(0.62);
+    transform-origin: top center;
+  }
+
+  .background::after {
+    background-size: 28px 28px, 28px 28px;
+    opacity: 0.12;
   }
 
   .header h2 {
