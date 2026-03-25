@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import HomeOfferingSwitch from "@/components/home/HomeOfferingSwitch";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
+import ContactLink from "@/components/system/ContactLink";
 import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./FloatingNav.module.scss";
 
@@ -149,10 +150,7 @@ export default function FloatingNav() {
 
   const sectionHref = (id: (typeof HOMEPAGE_SECTIONS)[number]) =>
     pathname === "/" ? `#${id}` : `/#${id}`;
-  const demoReturnTarget = pathname === "/"
-    ? `/#${activeSection}`
-    : pathname;
-  const demoHref = `/contact?returnTo=${encodeURIComponent(demoReturnTarget)}`;
+  const demoHref = "/contact";
   const legacyLoginLabel = (content.navigation as unknown as { kontaktaOss?: string }).kontaktaOss;
   const loginSignupLabel =
     content.navigation.loginSignupLabel ??
@@ -374,14 +372,16 @@ export default function FloatingNav() {
           >
             {content.navigation.sakerhet}
           </a>
-          <a
+          <ContactLink
             href={demoHref}
+            returnPath={pathname === "/" ? "/" : pathname}
+            returnSectionId={pathname === "/" ? activeSection : undefined}
             className={styles.cta}
             onClick={(event) => handleSectionAnchorClick(event, demoHref)}
           >
             {navDemoCta}
             <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
-          </a>
+          </ContactLink>
         </div>
 
         <button
@@ -483,13 +483,15 @@ export default function FloatingNav() {
             </>
           ) : null}
 
-          <a
+          <ContactLink
             href={demoHref}
+            returnPath={pathname === "/" ? "/" : pathname}
+            returnSectionId={pathname === "/" ? activeSection : undefined}
             className={styles.mobileCta}
             onClick={(event) => handleSectionAnchorClick(event, demoHref, closeMobileMenu)}
           >
             {navDemoCta}
-          </a>
+          </ContactLink>
 
           <a
             href={APP_LOGIN_URL}

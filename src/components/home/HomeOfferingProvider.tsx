@@ -4,18 +4,18 @@ import {
   createContext,
   startTransition,
   useContext,
-  useEffect,
   useState,
   type PropsWithChildren,
 } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   DEFAULT_HOME_OFFERING_MODE,
   HOME_OFFERING_MODES,
   HOME_PAGE_SHARED_TEXT,
   getHomePageText,
-  isHomeOfferingMode,
   type HomeOfferingMode,
 } from "@/content/homePageText";
+import { getHomeRouteForOffering, getOfferingFromPathname } from "@/lib/homeRoutes";
 
 type OfferingOption = (typeof HOME_PAGE_SHARED_TEXT.offering.options)[number] & {
   id: HomeOfferingMode;
@@ -61,28 +61,18 @@ export function HomeOfferingProvider({
   initialOffering,
   syncWithUrl = true,
 }: HomeOfferingProviderProps) {
-  const [offering, setOfferingState] = useState<HomeOfferingMode>(() =>
+  const pathname = usePathname();
+  const router = useRouter();
+  const [localOffering, setOfferingState] = useState<HomeOfferingMode>(() =>
     resolveInitialOffering(allowedOfferings, initialOffering),
   );
   const options = OPTIONS.filter((option) => allowedOfferings.includes(option.id));
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !syncWithUrl) return;
-
-    const syncFromUrl = () => {
-      const params = new URLSearchParams(window.location.search);
-      const next = params.get("offering");
-      if (!isHomeOfferingMode(next) || !allowedOfferings.includes(next)) {
-        setOfferingState(resolveInitialOffering(allowedOfferings, initialOffering));
-        return;
-      }
-      setOfferingState(next);
-    };
-
-    syncFromUrl();
-    window.addEventListener("popstate", syncFromUrl);
-    return () => window.removeEventListener("popstate", syncFromUrl);
-  }, [allowedOfferings, initialOffering, syncWithUrl]);
+  const pathnameOffering = pathname ? getOfferingFromPathname(pathname) : null;
+  const offering = syncWithUrl
+    ? (pathnameOffering && allowedOfferings.includes(pathnameOffering)
+        ? pathnameOffering
+        : resolveInitialOffering(allowedOfferings, initialOffering))
+    : localOffering;
 
   const setOffering = (next: HomeOfferingMode) => {
     if (!allowedOfferings.includes(next)) return;
@@ -93,13 +83,10 @@ export function HomeOfferingProvider({
 
     if (typeof window === "undefined" || !syncWithUrl) return;
 
-    const url = new URL(window.location.href);
-    if (next === DEFAULT_HOME_OFFERING_MODE) {
-      url.searchParams.delete("offering");
-    } else {
-      url.searchParams.set("offering", next);
+    const targetRoute = getHomeRouteForOffering(next);
+    if (pathname !== targetRoute) {
+      router.replace(targetRoute, { scroll: false });
     }
-    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
   };
 
   const value: HomeOfferingContextValue = {

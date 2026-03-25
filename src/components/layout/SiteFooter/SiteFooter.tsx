@@ -3,6 +3,7 @@
 import { ChevronRight, Linkedin } from "lucide-react";
 import Link from "next/link";
 import { useOptionalHomeOffering } from "@/components/home/HomeOfferingProvider";
+import ContactLink from "@/components/system/ContactLink";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import { useMotion } from "@/components/system/MotionProvider";
 import type { MotionPreference } from "@/lib/motion";
@@ -20,7 +21,7 @@ export default function SiteFooter() {
   ];
 
   return (
-    <footer className={styles.footer}>
+    <footer id="footer" className={styles.footer}>
       <div className={styles.container}>
         <div className={styles.grid}>
           <div className={styles.brandCol}>
@@ -38,9 +39,9 @@ export default function SiteFooter() {
             <p>
               {HOME_PAGE_TEXT.footer.intro}
             </p>
-            <Link href="/karriar" className={styles.careersCta}>
+            <ContactLink href="/karriar" className={styles.careersCta} returnPath="/" returnSectionId="footer">
               {HOME_PAGE_TEXT.footer.careersCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
-            </Link>
+            </ContactLink>
           </div>
 
           {showSolutions ? (
@@ -57,7 +58,9 @@ export default function SiteFooter() {
             <h3>{HOME_PAGE_TEXT.footer.companyTitle}</h3>
             <Link href="#customers">{HOME_PAGE_TEXT.footer.company[0]}</Link>
             <Link href="#security">{HOME_PAGE_TEXT.footer.company[1]}</Link>
-            <Link href="/karriar">{HOME_PAGE_TEXT.footer.company[2]}</Link>
+            <ContactLink href="/karriar" returnPath="/" returnSectionId="footer">
+              {HOME_PAGE_TEXT.footer.company[2]}
+            </ContactLink>
             <a href={`mailto:${HOME_PAGE_TEXT.footer.email}`}>{HOME_PAGE_TEXT.footer.email}</a>
           </div>
 

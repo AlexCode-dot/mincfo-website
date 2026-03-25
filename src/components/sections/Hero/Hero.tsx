@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronRight, Lock, Maximize2, Minimize2, Play } from "lucide-react";
-import Link from "next/link";
 import {
   useEffect,
   useLayoutEffect,
@@ -10,6 +9,7 @@ import {
   type MouseEvent as ReactMouseEvent,
 } from "react";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
+import ContactLink from "@/components/system/ContactLink";
 import { useMotion } from "@/components/system/MotionProvider";
 import HeroLineWavesBackground from "./HeroLineWavesBackground";
 import HeroOfferingShowcase from "./HeroOfferingShowcase";
@@ -662,9 +662,9 @@ export default function Hero() {
           </p>
 
           <div className={styles.ctaRow}>
-            <Link className={styles.primaryCta} href="/contact?returnTo=%2F%23hero">
+            <ContactLink className={styles.primaryCta} href="/contact" returnPath="/" returnSectionId="hero">
               {content.hero.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
-            </Link>
+            </ContactLink>
           </div>
         </div>
 

@@ -22,7 +22,6 @@ import { useMotion } from "@/components/system/MotionProvider";
 import {
   ShowcaseGradientBarChart,
 } from "./HeroOfferingCharts";
-import TextType from "./TextType";
 import styles from "./HeroOfferingShowcase.module.scss";
 
 const OFFERING_ICONS = {
@@ -674,7 +673,7 @@ export default function HeroOfferingShowcase() {
         setIsPositioned(true);
       }
 
-      const shouldShowPreviewLabel = isReducedMotion || showcaseOpacity >= 0.96;
+      const shouldShowPreviewLabel = isReducedMotion || showcaseOpacity >= 0.995;
       if (previewLabelReadyRef.current !== shouldShowPreviewLabel) {
         previewLabelReadyRef.current = shouldShowPreviewLabel;
         setPreviewLabelReady(shouldShowPreviewLabel);
@@ -833,20 +832,8 @@ export default function HeroOfferingShowcase() {
         >
           <div className={styles.panel}>
             <div className={styles.controlsHeader}>
-              <p className={styles.previewLabel}>
-                {previewLabelReady ? (
-                  <TextType
-                    text={showcase.previewLabel}
-                    typingSpeed={18}
-                    initialDelay={140}
-                    cursorCharacter="_"
-                    cursorClassName={styles.previewLabelCursor}
-                  />
-                ) : (
-                  <span className={styles.previewLabelGhost} aria-hidden="true">
-                    {showcase.previewLabel}
-                  </span>
-                )}
+              <p className={`${styles.previewLabel} ${previewLabelReady ? styles.previewLabelVisible : ""}`}>
+                <span>{showcase.previewLabel}</span>
               </p>
             </div>
 

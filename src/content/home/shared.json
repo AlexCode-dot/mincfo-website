@@ -67,7 +67,7 @@
         "title": "MinCFO plattform",
         "body": "För bolag med ordning på det löpande som vill få ut mer av sin data. Med MinCFO förvandlar ni siffror till strategiska insikter i realtid.",
         "ctaLabel": "Gå till plattformssidan",
-        "ctaHref": "/?offering=platform#produkt",
+        "ctaHref": "/plattform",
         "signal": "AI Copilot aktiv",
         "chartLabel": "Användning senaste 30 dagarna",
         "stats": [
@@ -90,7 +90,7 @@
         "title": "Ekonomifunktionen som tjänst",
         "body": "MinCFO tar fullt ansvar för rapportering, uppföljning och finansiell struktur.Ta nästa steg mot en state-of-the-art-ekonomifunktion!",
         "ctaLabel": "Gå till helhetslösningen",
-        "ctaHref": "/?offering=full-service#produkt",
+        "ctaHref": "/full-service",
         "serviceVisual": {
           "chipOwnership": "Fakturor och bokföring",
           "chipDelivery": "Löpande uppföljning",
@@ -115,7 +115,7 @@
         "title": "Ökad proaktivitet och skalbarhet",
         "body": "Standardisera analys och dashboards över hela klientportföljen. Med en enhetlig modell onboardar ni nya bolag snabbare och säkrar en högkvalitativ leverans i varje uppdrag.",
         "ctaLabel": "Gå till byråsidan",
-        "ctaHref": "/?offering=partner#produkt",
+        "ctaHref": "/partner",
         "signal": "Klientportfölj synkad",
         "stats": [
           {
@@ -551,7 +551,7 @@
       "Säkerhet",
       "Karriär"
     ],
-    "email": "kontakt@example.com",
+    "email": "victor@mincfo.com",
     "officesTitle": "Kontor",
     "office1": "Västra Hamngatan 11 / 411 17 Gothenburg Sweden",
     "office2": "Stora Nygatan 33 / 111 27 Stockholm Sweden",

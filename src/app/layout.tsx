@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import ContactReturnRestore from "@/components/system/ContactReturnRestore";
 import { MotionProvider } from "@/components/system/MotionProvider";
 import { HOME_PAGE_SHARED_TEXT } from "@/content/homePageText";
 import "@/styles/globals.scss";
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
       { url: "/icon.svg", type: "image/svg+xml" },
     ],
     shortcut: "/icon.svg",
-    apple: "/icon.svg",
+    apple: "/apple-icon",
   },
   openGraph: {
     title: HOME_PAGE_SHARED_TEXT.siteMeta.title,
@@ -54,7 +55,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <MotionProvider>{children}</MotionProvider>
+        <MotionProvider>
+          <ContactReturnRestore />
+          {children}
+        </MotionProvider>
       </body>
     </html>
   );

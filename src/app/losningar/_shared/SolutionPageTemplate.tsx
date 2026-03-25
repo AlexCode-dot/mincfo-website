@@ -2,6 +2,7 @@ import FloatingNav from "@/components/layout/FloatingNav/FloatingNav";
 import Logo from "@/components/layout/Logo/Logo";
 import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
 import { HomeOfferingProvider } from "@/components/home/HomeOfferingProvider";
+import ContactLink from "@/components/system/ContactLink";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import { SOLUTION_SHARED_CONTENT } from "@/content/solutionSharedContent";
 import {
@@ -22,7 +23,6 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import RevealSection from "../ceo-founders/RevealSection";
 import SectionTopCurve from "../ceo-founders/SectionTopCurve";
 import ScenarioVisualization from "../ceo-founders/ScenarioVisualization";
@@ -62,10 +62,10 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             <p className={styles.subtitle}>{content.heroSubheadline}</p>
 
             <div className={styles.heroActions}>
-              <Link href="/contact" className={styles.primaryCta}>
+              <ContactLink href="/contact" className={styles.primaryCta} returnPath="/losningar">
                 {SOLUTION_SHARED_CONTENT.heroPrimaryCta}{" "}
                 <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
-              </Link>
+              </ContactLink>
               <a href="#utmaning" className={styles.secondaryCta}>
                 {SOLUTION_SHARED_CONTENT.heroSecondaryCta}
               </a>
@@ -421,10 +421,10 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
               <span className={styles.closingTitleMain}>{content.trustHeadline}</span>
             </h2>
             <p>{content.trustSub}</p>
-            <Link href="/contact" className={styles.primaryCta}>
+            <ContactLink href="/contact" className={styles.primaryCta} returnPath="/losningar">
               {SOLUTION_SHARED_CONTENT.closingCta}{" "}
               <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
-            </Link>
+            </ContactLink>
           </div>
         </RevealSection>
       </main>

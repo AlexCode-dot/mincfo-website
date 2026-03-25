@@ -45,7 +45,7 @@ export default function Logo({ showOfferingSwitch = false }: LogoProps) {
     <div className={styles.cluster}>
       <Link
         className={styles.logo}
-        href="/#hero"
+        href="/"
         aria-label={HOME_PAGE_TEXT.footer.brandAria}
         onClick={handleClick}
       >
