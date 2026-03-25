@@ -79,7 +79,7 @@ export default function SiteFooter() {
         <div className={styles.bottom}>
           <span className={styles.copy}>{HOME_PAGE_TEXT.footer.copyright}</span>
           <a
-            href="https://www.linkedin.com/company/mincfo/"
+            href="https://www.linkedin.com/company/mincfocom/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label={HOME_PAGE_TEXT.footer.linkedinAria}
