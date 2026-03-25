@@ -6,17 +6,28 @@ import styles from "./page.module.scss";
 
 const HUBSPOT_MEETINGS_URL = "https://meetings-eu1.hubspot.com/vpernvik/webpagelink";
 
+type ContactPageSearchParams = Promise<{
+  returnTo?: string;
+}>;
+
+type ContactPageProps = {
+  searchParams?: ContactPageSearchParams;
+};
+
 export const metadata: Metadata = {
   title: "Boka demo | MinCFO",
   description: "Boka en demo med MinCFO och hitta en tid som passar direkt i kalendern.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage({ searchParams }: ContactPageProps) {
+  const params = searchParams ? await searchParams : undefined;
+  const returnTo = params?.returnTo ?? null;
+
   return (
     <div className={styles.page}>
       <div className={styles.topRail}>
         <div className={styles.backWrap}>
-          <BackButton />
+          <BackButton returnTo={returnTo} />
         </div>
 
         <Link href="/" className={styles.logo} aria-label="MinCFO">

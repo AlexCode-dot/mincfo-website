@@ -1,15 +1,15 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 const ENDING_RETURN_OFFSET = 280;
 
-export default function HomeReturnScroll() {
-  const searchParams = useSearchParams();
+type HomeReturnScrollProps = {
+  contactReturn?: string | null;
+};
 
+export default function HomeReturnScroll({ contactReturn }: HomeReturnScrollProps) {
   useEffect(() => {
-    const contactReturn = searchParams.get("contactReturn");
     if (contactReturn !== "ending") {
       return;
     }
@@ -36,7 +36,7 @@ export default function HomeReturnScroll() {
       url.searchParams.delete("contactReturn");
       window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
     });
-  }, [searchParams]);
+  }, [contactReturn]);
 
   return null;
 }

@@ -17,6 +17,7 @@ import {
 
 type PageSearchParams = Promise<{
   offering?: string;
+  contactReturn?: string;
 }>;
 
 type HomePageProps = {
@@ -26,13 +27,14 @@ type HomePageProps = {
 export default async function Home({ searchParams }: HomePageProps) {
   const params = searchParams ? await searchParams : undefined;
   const offeringParam = params?.offering ?? null;
+  const contactReturn = params?.contactReturn ?? null;
   const initialOffering: HomeOfferingMode | undefined = isHomeOfferingMode(offeringParam)
     ? offeringParam
     : undefined;
 
   return (
     <HomeOfferingProvider initialOffering={initialOffering}>
-      <HomeReturnScroll />
+      <HomeReturnScroll contactReturn={contactReturn} />
       <Logo showOfferingSwitch />
       <FloatingNav />
       <Hero />
