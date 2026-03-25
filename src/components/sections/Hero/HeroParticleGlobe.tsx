@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./HeroParticleGlobe.module.scss";
@@ -116,6 +116,7 @@ const GLOBE_PROFILES: Record<GlobeVariant, GlobeProfile> = {
   },
 };
 const ACTIVE_PROFILE = GLOBE_PROFILES[GLOBE_VARIANT];
+const globeGeometryCache = new Map<string, THREE.BufferGeometry>();
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
@@ -239,6 +240,38 @@ const createGlobeGeometry = (count: number, profile: GlobeProfile) => {
   geometry.setAttribute("aSpark", new THREE.Float32BufferAttribute(sparks, 1));
 
   return geometry;
+};
+
+const getCachedGlobeGeometry = (count: number, profile: GlobeProfile) => {
+  const cacheKey = [
+    GLOBE_VARIANT,
+    count,
+    profile.shellOuterChance,
+    profile.shellOuterMin,
+    profile.shellOuterMax,
+    profile.shellInnerMin,
+    profile.shellInnerMax,
+  ].join(":");
+
+  const cached = globeGeometryCache.get(cacheKey);
+  if (cached) {
+    return cached.clone();
+  }
+
+  const geometry = createGlobeGeometry(count, profile);
+  globeGeometryCache.set(cacheKey, geometry);
+  return geometry.clone();
+};
+
+export const prewarmHeroParticleGlobe = () => {
+  const isMobile =
+    typeof window !== "undefined"
+    && window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
+  const globeCount = isMobile
+    ? ACTIVE_PROFILE.mobileCount
+    : ACTIVE_PROFILE.desktopCount;
+
+  getCachedGlobeGeometry(globeCount, ACTIVE_PROFILE).dispose();
 };
 
 const globeVertexShader = `
@@ -420,11 +453,15 @@ export default function HeroParticleGlobe() {
   const { isReducedMotion } = useMotion();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const revealFrameRef = useRef<number | null>(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
     const wrapper = wrapperRef.current;
     if (!container || !wrapper) return;
+
+    setIsReady(false);
 
     const reduceMotion = isReducedMotion;
     const isMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
@@ -454,7 +491,7 @@ export default function HeroParticleGlobe() {
     globeGroup.position.y = ACTIVE_PROFILE.groupY;
     scene.add(globeGroup);
 
-    const globeGeometry = createGlobeGeometry(globeCount, ACTIVE_PROFILE);
+    const globeGeometry = getCachedGlobeGeometry(globeCount, ACTIVE_PROFILE);
     const globeMaterial = new THREE.ShaderMaterial({
       vertexShader: globeVertexShader,
       fragmentShader: globeFragmentShader,
@@ -504,6 +541,7 @@ export default function HeroParticleGlobe() {
 
     resize();
     updateSpotlightFromScroll();
+    renderer.compile(scene, camera);
 
     window.addEventListener("resize", resize);
     window.addEventListener("scroll", updateSpotlightFromScroll, { passive: true });
@@ -613,12 +651,23 @@ export default function HeroParticleGlobe() {
       globeMaterial.uniforms.uCollapse.value = 0;
       globeMaterial.uniforms.uSwirl.value = 0.05;
       renderer.render(scene, camera);
+      setIsReady(true);
     } else {
+      renderer.render(scene, camera);
+      revealFrameRef.current = window.requestAnimationFrame(() => {
+        revealFrameRef.current = window.requestAnimationFrame(() => {
+          setIsReady(true);
+        });
+      });
       scheduleFrame();
     }
 
     return () => {
       if (rafId) window.cancelAnimationFrame(rafId);
+      if (revealFrameRef.current) {
+        window.cancelAnimationFrame(revealFrameRef.current);
+        revealFrameRef.current = null;
+      }
       visibilityObserver.disconnect();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("resize", resize);
@@ -638,7 +687,9 @@ export default function HeroParticleGlobe() {
   return (
     <div
       ref={wrapperRef}
-      className={`${styles.wrapper} ${GLOBE_VARIANT === "showy" ? styles.showy : styles.premium}`}
+      className={`${styles.wrapper} ${GLOBE_VARIANT === "showy" ? styles.showy : styles.premium} ${
+        isReady ? styles.ready : ""
+      }`}
       aria-hidden="true"
     >
       <div className={styles.globeAura} />

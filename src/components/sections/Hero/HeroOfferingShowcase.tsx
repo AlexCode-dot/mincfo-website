@@ -590,8 +590,8 @@ export default function HeroOfferingShowcase() {
       if (titleNode) {
         const titleRect = titleNode.getBoundingClientRect();
         const titleCenter = titleRect.top + (titleRect.height / 2);
-        const revealStart = viewportHeight * 0.72;
-        const revealEnd = viewportHeight * 0.08;
+        const revealStart = viewportHeight * 0.58;
+        const revealEnd = viewportHeight * 0.14;
         const fadeProgress = clamp(
           (viewportHeight * 0.56 - titleCenter) / (viewportHeight * 0.48),
           0,
