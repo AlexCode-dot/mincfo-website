@@ -583,6 +583,7 @@ export default function HeroOfferingShowcase() {
       if (!handoffStage) return;
 
       const viewportHeight = window.innerHeight;
+      const useCompactViewport = window.innerWidth <= 720 || viewportHeight <= 820;
       let nextOpacity = 1;
       let nextScale = 1;
       let nextIntroVisible = false;
@@ -619,8 +620,10 @@ export default function HeroOfferingShowcase() {
           1,
         );
         const showcaseCenter = showcaseRect.top + (showcaseRect.height / 2);
+        const exitStart = viewportHeight * (useCompactViewport ? 0.32 : 0.52);
+        const exitRange = viewportHeight * (useCompactViewport ? 0.56 : 0.42);
         const exitProgress = clamp(
-          (viewportHeight * 0.52 - showcaseCenter) / (viewportHeight * 0.42),
+          (exitStart - showcaseCenter) / exitRange,
           0,
           1,
         );
@@ -793,17 +796,7 @@ export default function HeroOfferingShowcase() {
                     <ActiveEyebrowIcon size={13} aria-hidden="true" />
                     <span>{visual.eyebrow}</span>
                   </span>
-                  <h2>
-                    {offering === "partner" ? (
-                      <>
-                        <span>Ökad proaktivitet</span>
-                        <br />
-                        <span>och skalbarhet</span>
-                      </>
-                    ) : (
-                      visual.title
-                    )}
-                  </h2>
+                  <h2>{visual.title}</h2>
                   <p className={styles.copyBody}>{visual.body}</p>
 
                   <div className={styles.copyBullets}>
@@ -851,6 +844,8 @@ export default function HeroOfferingShowcase() {
 
                   <div
                     className={`${styles.visualBody} ${
+                      offering === "platform" ? styles.visualBodyPlatform : ""
+                    } ${
                       offering === "full-service" ? styles.visualBodyFullService : ""
                     }`}
                   >

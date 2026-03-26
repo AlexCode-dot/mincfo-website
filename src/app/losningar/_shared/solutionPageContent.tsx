@@ -22,6 +22,15 @@ export type SolutionScenario = {
   metricValues: [string, string];
   metricHints: [string, string];
   activeMonth: string;
+  visualPreset?: "compare" | "forecast" | "gauge" | "ring";
+  variants?: Array<{
+    question: string;
+    answer: [string, string];
+    metricValues: [string, string];
+    metricHints: [string, string];
+    activeMonth: string;
+    visualPreset?: "compare" | "forecast" | "gauge" | "ring";
+  }>;
 };
 
 export type ImpactVisualType =
@@ -81,6 +90,16 @@ type RawScenario = {
   metricValues: string[];
   metricHints: string[];
   activeMonth: string;
+  visualPreset?: "compare" | "forecast" | "gauge" | "ring";
+  variants?: Array<{
+    question: string;
+    answer1: string;
+    answer2: string;
+    metricValues: string[];
+    metricHints: string[];
+    activeMonth: string;
+    visualPreset?: "compare" | "forecast" | "gauge" | "ring";
+  }>;
 };
 
 type RawHeadline = {
@@ -186,6 +205,15 @@ function mapScenario(page: RawPage): SolutionScenario {
     metricValues: asTuple2(page.scenario.metricValues, `${page.key} scenario.metricValues`),
     metricHints: asTuple2(page.scenario.metricHints, `${page.key} scenario.metricHints`),
     activeMonth: page.scenario.activeMonth,
+    visualPreset: page.scenario.visualPreset,
+    variants: page.scenario.variants?.map((variant, index) => ({
+      question: variant.question,
+      answer: [variant.answer1, variant.answer2],
+      metricValues: asTuple2(variant.metricValues, `${page.key} scenario.variants[${index}].metricValues`),
+      metricHints: asTuple2(variant.metricHints, `${page.key} scenario.variants[${index}].metricHints`),
+      activeMonth: variant.activeMonth,
+      visualPreset: variant.visualPreset,
+    })),
   };
 }
 

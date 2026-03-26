@@ -608,6 +608,10 @@
   grid-template-rows: 1fr;
 }
 
+.visualBodyPlatform {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
 .visualBodyFullService {
   padding-top: 20px;
   align-items: stretch;
@@ -794,12 +798,12 @@
 .evilCard {
   box-sizing: border-box;
   display: grid;
-  grid-template-rows: auto 248px;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-self: stretch;
   align-items: start;
   width: 100%;
-  height: 356px;
-  min-height: 356px;
-  max-height: 356px;
+  height: 100%;
+  min-height: 0;
   gap: 12px;
   padding: 14px 16px 16px;
   border-radius: 20px;
@@ -1046,6 +1050,7 @@
 .evilChartWrap {
   position: relative;
   height: 100%;
+  min-height: 0;
   margin-top: 0;
 }
 
@@ -2516,7 +2521,19 @@
   }
 
   .partnerWorkspaceSummary {
-    display: none;
+    margin-top: 14px;
+    padding: 12px 14px 14px;
+    border-radius: 14px;
+  }
+
+  .partnerWorkspaceSummaryLabel {
+    margin-bottom: 5px;
+    font-size: 0.64rem;
+  }
+
+  .partnerWorkspaceSummary strong {
+    font-size: 0.88rem;
+    line-height: 1.28;
   }
 
   .copyCardPartner {
@@ -2557,6 +2574,10 @@
 }
 
 @media (max-width: 720px) {
+  .showcase {
+    --showcase-mobile-visual-height: 540px;
+  }
+
   .section {
     padding-bottom: 104px;
   }
@@ -2571,14 +2592,14 @@
     opacity:
       calc(
         (0.12 + var(--showcase-progress, 0) * 0.8 + var(--showcase-focus, 0) * 0.08)
-        * (1 - (var(--showcase-exit-progress, 0) * 0.38))
+        * (1 - (var(--showcase-exit-progress, 0) * 0.22))
       );
     transform:
       translate3d(
         0,
         calc(
           ((1 - var(--showcase-progress, 0)) * (24px + (1 - var(--showcase-focus, 0)) * 8px))
-          + (var(--showcase-exit-progress, 0) * -32px)
+          + (var(--showcase-exit-progress, 0) * -18px)
         ),
         0
       )
@@ -2587,7 +2608,7 @@
       blur(
         calc(
           ((1 - var(--showcase-progress, 0)) * 0.45px)
-          + (var(--showcase-exit-progress, 0) * 0.25px)
+          + (var(--showcase-exit-progress, 0) * 0.12px)
         )
       );
   }
@@ -2703,14 +2724,19 @@
     white-space: normal;
   }
 
-  .copyCard,
-  .visualCard {
-    min-height: auto;
+  .copyCard {
+    min-height: 0;
     height: auto;
   }
 
+  .visualCard {
+    overflow: hidden;
+    min-height: var(--showcase-mobile-visual-height);
+    height: var(--showcase-mobile-visual-height);
+  }
+
   .visualContent {
-    min-height: 0;
+    min-height: 100%;
   }
 
   .copyCardPartner {
@@ -2836,13 +2862,62 @@
     height: 180px;
   }
 
+  .runwayPanel {
+    gap: 8px;
+    padding-top: 0;
+  }
+
+  .runwayCashflowBlock,
+  .runwayDivider {
+    transform: none;
+  }
+
+  .runwayCashflowValue strong {
+    font-size: 1.14rem;
+  }
+
+  .runwayCashflowValue span,
+  .runwayDivider span,
+  .runwayGaugeCenter span {
+    font-size: 0.74rem;
+  }
+
+  .runwayGauge {
+    align-self: stretch;
+    align-items: end;
+  }
+
+  .runwayGaugeSvg {
+    width: min(100%, 288px);
+    transform: translateY(0);
+  }
+
+  .runwayGaugeCenter {
+    padding-top: 16px;
+  }
+
+  .runwayGaugeCenter strong {
+    font-size: 1.48rem;
+  }
+
   .partnerWorkspaceCanvas {
     min-height: 278px;
+    height: auto;
+    align-self: start;
+  }
+
+  .partnerWorkspaceShowcase {
+    grid-template-rows: auto;
+    align-content: start;
+    min-height: 0;
+    height: auto;
   }
 
   .partnerWorkspaceShell {
     grid-template-columns: 78px minmax(0, 1fr);
     border-radius: 16px;
+    min-height: 0;
+    height: auto;
   }
 
   .partnerWorkspaceSidebar {
@@ -2873,7 +2948,8 @@
 
   .partnerWorkspaceMain {
     padding: 10px 0 10px 10px;
-    gap: 12px;
+    gap: 10px;
+    min-height: 0;
   }
 
   .partnerWorkspaceIntro strong {
@@ -2889,6 +2965,7 @@
   .partnerWorkspacePanel,
   .partnerWorkspaceSettings {
     border-radius: 12px 0 0 12px;
+    min-height: 0;
   }
 
   .partnerWorkspaceTableHead,
@@ -3081,8 +3158,46 @@
 }
 
 @media (max-width: 520px) {
+  .showcase {
+    --showcase-mobile-visual-height: 500px;
+  }
+
   .section {
     padding-bottom: 92px;
+  }
+
+  .runwayPanel {
+    gap: 6px;
+  }
+
+  .runwayCashflowValue strong {
+    font-size: 1.02rem;
+  }
+
+  .runwayCashflowValue span,
+  .runwayDivider span,
+  .runwayGaugeCenter span {
+    font-size: 0.68rem;
+  }
+
+  .runwayGaugeSvg {
+    width: min(100%, 248px);
+  }
+
+  .runwayGaugeCenter {
+    padding-top: 12px;
+  }
+
+  .runwayGaugeCenter strong {
+    font-size: 1.28rem;
+  }
+
+  .partnerWorkspaceCanvas {
+    min-height: 258px;
+  }
+
+  .partnerWorkspaceMain {
+    gap: 8px;
   }
 }
 
@@ -3115,6 +3230,54 @@
 
   .copyCard h2 {
     font-size: clamp(1.34rem, 2.2vw, 2.14rem);
+  }
+
+  .copyCardPartner {
+    padding: 18px 20px 20px;
+  }
+
+  .copyCardPartner .copyContent {
+    gap: 12px;
+  }
+
+  .copyCardPartner .copyEyebrow {
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 0.64rem;
+    line-height: 1.16;
+  }
+
+  .copyCardPartner h2 {
+    max-width: 13.5ch;
+    font-size: clamp(1.28rem, 2vw, 1.82rem);
+    line-height: 0.98;
+  }
+
+  .copyCardPartner .copyBody {
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+
+  .copyCardPartner .copyBullets {
+    margin-top: 0;
+    gap: 10px;
+  }
+
+  .copyCardPartner .bullet {
+    gap: 9px;
+    font-size: 0.84rem;
+    line-height: 1.18;
+  }
+
+  .copyCardPartner .bullet svg {
+    margin-top: 2px;
+  }
+
+  .copyCardPartner .inlineCta {
+    min-height: 48px;
+    margin-top: 6px;
+    padding: 0 18px;
+    font-size: 0.88rem;
   }
 
   .copyBody {
@@ -3186,6 +3349,44 @@
     height: 160px;
   }
 
+  .runwayPanel {
+    gap: 8px;
+    padding-top: 2px;
+  }
+
+  .runwayCashflowBlock,
+  .runwayDivider {
+    transform: none;
+  }
+
+  .runwayCashflowValue strong {
+    font-size: 1.22rem;
+  }
+
+  .runwayCashflowValue span,
+  .runwayDivider span,
+  .runwayGaugeCenter span {
+    font-size: 0.76rem;
+  }
+
+  .runwayGauge {
+    align-self: stretch;
+    align-items: end;
+  }
+
+  .runwayGaugeSvg {
+    width: min(100%, 296px);
+    transform: translateY(0);
+  }
+
+  .runwayGaugeCenter {
+    padding-top: 18px;
+  }
+
+  .runwayGaugeCenter strong {
+    font-size: 1.56rem;
+  }
+
   .serviceHeroPanel {
     padding: 13px 15px 14px;
     gap: 4px;
@@ -3219,7 +3420,19 @@
   }
 
   .partnerWorkspaceSummary {
-    display: none;
+    margin-top: 10px;
+    padding: 10px 12px 12px;
+    border-radius: 12px;
+  }
+
+  .partnerWorkspaceSummaryLabel {
+    margin-bottom: 4px;
+    font-size: 0.6rem;
+  }
+
+  .partnerWorkspaceSummary strong {
+    font-size: 0.8rem;
+    line-height: 1.24;
   }
 }
 
@@ -3236,6 +3449,54 @@
 
   .copyCard h2 {
     font-size: clamp(1.2rem, 1.9vw, 1.8rem);
+  }
+
+  .copyCardPartner {
+    padding: 16px 18px 18px;
+  }
+
+  .copyCardPartner .copyContent {
+    gap: 10px;
+  }
+
+  .copyCardPartner .copyEyebrow {
+    min-height: 34px;
+    padding: 7px 11px;
+    font-size: 0.6rem;
+    line-height: 1.14;
+  }
+
+  .copyCardPartner h2 {
+    max-width: 13ch;
+    font-size: clamp(1.16rem, 1.75vw, 1.56rem);
+    line-height: 0.96;
+  }
+
+  .copyCardPartner .copyBody {
+    font-size: 0.8rem;
+    line-height: 1.32;
+  }
+
+  .copyCardPartner .copyBullets {
+    margin-top: 0;
+    gap: 8px;
+  }
+
+  .copyCardPartner .bullet {
+    gap: 8px;
+    font-size: 0.76rem;
+    line-height: 1.12;
+  }
+
+  .copyCardPartner .bullet svg {
+    margin-top: 1px;
+  }
+
+  .copyCardPartner .inlineCta {
+    min-height: 44px;
+    margin-top: 4px;
+    padding: 0 16px;
+    font-size: 0.82rem;
   }
 
   .copyBody,
@@ -3295,6 +3556,44 @@
     height: 146px;
   }
 
+  .runwayPanel {
+    gap: 6px;
+    padding-top: 0;
+  }
+
+  .runwayCashflowBlock,
+  .runwayDivider {
+    transform: none;
+  }
+
+  .runwayCashflowValue strong {
+    font-size: 1.08rem;
+  }
+
+  .runwayCashflowValue span,
+  .runwayDivider span,
+  .runwayGaugeCenter span {
+    font-size: 0.7rem;
+  }
+
+  .runwayGauge {
+    align-self: stretch;
+    align-items: end;
+  }
+
+  .runwayGaugeSvg {
+    width: min(100%, 264px);
+    transform: translateY(0);
+  }
+
+  .runwayGaugeCenter {
+    padding-top: 12px;
+  }
+
+  .runwayGaugeCenter strong {
+    font-size: 1.34rem;
+  }
+
   .serviceHeroPanel {
     padding: 11px 13px 12px;
     gap: 3px;
@@ -3328,7 +3627,19 @@
   }
 
   .partnerWorkspaceSummary {
-    display: none;
+    margin-top: 8px;
+    padding: 9px 10px 10px;
+    border-radius: 12px;
+  }
+
+  .partnerWorkspaceSummaryLabel {
+    margin-bottom: 4px;
+    font-size: 0.58rem;
+  }
+
+  .partnerWorkspaceSummary strong {
+    font-size: 0.74rem;
+    line-height: 1.22;
   }
 }
 

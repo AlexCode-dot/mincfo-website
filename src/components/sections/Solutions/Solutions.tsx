@@ -40,6 +40,7 @@ export default function Solutions() {
   const { content, offering } = useHomeOffering();
   const sectionRef = useRef<HTMLElement | null>(null);
   const headerRef = useRef<HTMLElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
   const [curveProgress, setCurveProgress] = useState(0);
   const [headerVisible, setHeaderVisible] = useState(false);
   const [cardsVisible, setCardsVisible] = useState(false);
@@ -48,25 +49,25 @@ export default function Solutions() {
     if (offering !== "platform") return;
 
     const header = headerRef.current;
-    const section = sectionRef.current;
-    if (!header || !section) return;
+    const grid = gridRef.current;
+    if (!header || !grid) return;
 
     const headerObserver = new IntersectionObserver(
       ([entry]) => {
         setHeaderVisible(entry.isIntersecting);
       },
-      { threshold: 0.01, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.01, rootMargin: "0px 0px -6% 0px" },
     );
 
     const cardsObserver = new IntersectionObserver(
       ([entry]) => {
         setCardsVisible(entry.isIntersecting);
       },
-      { threshold: 0.3, rootMargin: "0px 0px -30% 0px" },
+      { threshold: 0.02, rootMargin: "0px 0px -6% 0px" },
     );
 
     headerObserver.observe(header);
-    cardsObserver.observe(section);
+    cardsObserver.observe(grid);
     return () => {
       headerObserver.disconnect();
       cardsObserver.disconnect();
@@ -158,7 +159,7 @@ export default function Solutions() {
           </header>
 
           <div className={styles.cardsColumn}>
-            <div className={styles.grid}>
+            <div ref={gridRef} className={styles.grid}>
               {content.solutions.cards.map((item) => {
                 const Icon = ICON_BY_KEY[item.icon as SolutionIconKey];
                 return (

@@ -25,7 +25,6 @@ import {
 import Image from "next/image";
 import RevealSection from "../ceo-founders/RevealSection";
 import SectionTopCurve from "../ceo-founders/SectionTopCurve";
-import ScenarioVisualization from "../ceo-founders/ScenarioVisualization";
 import styles from "../ceo-founders/page.module.scss";
 import type { SolutionPageContent } from "./solutionPageContent";
 
@@ -39,9 +38,6 @@ const CARD_TRACER_PATH =
 
 export default function SolutionPageTemplate({ content }: { content: SolutionPageContent }) {
   const impactVisuals = content.impactVisuals ?? ["realtime", "flow", "accuracy", "analysis"];
-  const scenarioDescription =
-    content.scenario.description ??
-    `${SOLUTION_SHARED_CONTENT.scenarioPromptPrefix}: ${content.scenario.question}`;
 
   return (
     <HomeOfferingProvider allowedOfferings={["platform"]} syncWithUrl={false}>
@@ -220,21 +216,6 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             </div>
           </div>
         </RevealSection>
-        <ScenarioVisualization
-          heading={content.scenario.heading}
-          description={scenarioDescription}
-          prompt={content.scenario.question}
-          summary={content.scenario.answer}
-          primaryMetricLabel={content.scenario.metrics[0]}
-          primaryMetricValue={content.scenario.metricValues[0]}
-          primaryMetricHint={content.scenario.metricHints[0]}
-          secondaryMetricLabel={content.scenario.metrics[1]}
-          secondaryMetricValue={content.scenario.metricValues[1]}
-          secondaryMetricHint={content.scenario.metricHints[1]}
-          activeMonth={content.scenario.activeMonth}
-          chartSubtitle={content.scenario.metrics[2]}
-          ui={SOLUTION_SHARED_CONTENT.scenarioUi}
-        />
 
         <RevealSection className={`${styles.section} ${styles.impactSection}`}>
           <SectionTopCurve

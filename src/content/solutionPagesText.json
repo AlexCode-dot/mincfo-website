@@ -18,13 +18,13 @@
       "copilotLabel": "AI Copilot",
       "copilotResponseLabel": "MinCFO Copilot",
       "metaLoadingLabel": "Analyserar...",
-      "metaReadyLabel": "Generated in 1.2s",
-      "boardAriaLabel": "Scenario dashboard visual",
-      "boardTitle": "Forecast Impact",
-      "boardBadge": "Live Scenario",
-      "chartComparisonLabel": "Base vs Proposed",
-      "legendBase": "Base",
-      "legendScenario": "Proposed",
+      "metaReadyLabel": "Genererad på 1,2 s",
+      "boardAriaLabel": "Scenariovisualisering",
+      "boardTitle": "Scenarioutfall",
+      "boardBadge": "Aktivt scenario",
+      "chartComparisonLabel": "Bas vs scenario",
+      "legendBase": "Bas",
+      "legendScenario": "Scenario",
       "startLabel": "Start",
       "waitingLabel": "Väntar på scenario...",
       "rerunAriaLabel": "Kör scenariot igen",
@@ -89,13 +89,13 @@
       "scenario": {
         "heading": "Scenario visualization",
         "description": "Testa tillväxtbeslut och se direkt effekt på runway och EBITDA tydligt visualiserat",
-        "question": "Om vi ökar säljbudgeten med 18% från augusti och anställer två säljare i  i september, hur påverkas runway och EBITDA till årsskiftet?",
+        "question": "Om vi ökar säljbudgeten med 18% från augusti och anställer två säljare i september, hur påverkas runway och EBITDA till årsskiftet?",
         "answer1": "Med nuvarande antaganden sjunker runway från 13.8 till 12.4 månader. EBITDA blir cirka 0.8 procentenheter svagare i Q4.",
         "answer2": "Om rekryteringen flyttas sex veckor framåt ligger runway fortsatt på 13 månader och tillväxtmålet till årsskiftet kan behållas.",
         "metricLabels": [
-          "Runway (Current)",
-          "Runway (Scenario)",
-          "Runway forecast"
+          "Runway idag",
+          "Runway i scenario",
+          "Runway-prognos"
         ],
         "metricValues": [
           "13.8 mån",
@@ -105,7 +105,55 @@
           "Nuvarande plan",
           "-1.4 månader"
         ],
-        "activeMonth": "Aug"
+        "activeMonth": "Aug",
+        "visualPreset": "compare",
+        "variants": [
+          {
+            "question": "Om vi ökar säljbudgeten med 18% från augusti och anställer två säljare i september, hur påverkas runway och EBITDA till årsskiftet?",
+            "answer1": "Med nuvarande antaganden sjunker runway från 13.8 till 12.4 månader. EBITDA blir cirka 0.8 procentenheter svagare i Q4.",
+            "answer2": "Om rekryteringen flyttas sex veckor framåt ligger runway fortsatt på 13 månader och tillväxtmålet till årsskiftet kan behållas.",
+            "metricValues": [
+              "13.8 mån",
+              "12.4 mån"
+            ],
+            "metricHints": [
+              "Nuvarande plan",
+              "-1.4 månader"
+            ],
+            "activeMonth": "Aug",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "Vad händer med runway och EBITDA om vi skjuter upp två planerade säljarrekryteringar till oktober men behåller GTM-budgeten enligt plan?",
+            "answer1": "När säljhiringarna skjuts upp förbättras kortsiktig cash-effekt och runway stärks till cirka 13.1 månader utan att EBITDA pressas lika hårt i Q4.",
+            "answer2": "Nackdelen är att intäktsuppväxlingen förskjuts in i nästa kvartal, så tillväxtmålet till årsskiftet blir något svårare att nå.",
+            "metricValues": [
+              "13.8 mån",
+              "13.1 mån"
+            ],
+            "metricHints": [
+              "Nuvarande plan",
+              "-0.7 månader"
+            ],
+            "activeMonth": "Sep",
+            "visualPreset": "gauge"
+          },
+          {
+            "question": "Om vi minskar burn med 8% från september och samtidigt ökar marknadsbudgeten inför Q4, hur påverkas runway och tillväxtmålet?",
+            "answer1": "Lägre burn neutraliserar större delen av den ökade marknadsspenden, vilket gör att runway landar runt 13.0 månader trots högre aktivitet i Q4.",
+            "answer2": "Scenariot ger bättre balans mellan offensiv och kontroll, men kräver att effektiviteten i kampanjerna håller plan för att tillväxtmålet ska nås.",
+            "metricValues": [
+              "13.8 mån",
+              "13.0 mån"
+            ],
+            "metricHints": [
+              "Nuvarande plan",
+              "-0.8 månader"
+            ],
+            "activeMonth": "Sep",
+            "visualPreset": "compare"
+          }
+        ]
       },
       "impactHeadline": {
         "first": "Mätbara resultat.",
@@ -193,19 +241,67 @@
         "answer1": "68% av avvikelsen kommer från personalkostnad och lägre bruttomarginal i två affärsområden.",
         "answer2": "Om trenden kvarstår blir helårseffekten cirka -3,2 MSEK. Prioritera åtgärder i de två mest avvikande områdena först.",
         "metricLabels": [
-          "Closing cycle",
-          "Forecast delta",
-          "Finance forecast"
+          "Största drivare",
+          "Helårseffekt",
+          "Helårsprognos"
         ],
         "metricValues": [
-          "-32%",
-          "2.8%"
+          "Personalkostnad",
+          "-3,2 MSEK"
         ],
         "metricHints": [
-          "Snabbare periodstängning",
-          "Nuvarande prognosavvikelse"
+          "68% av avvikelsen",
+          "Om trenden kvarstår"
         ],
-        "activeMonth": "Q4"
+        "activeMonth": "Okt",
+        "visualPreset": "compare",
+        "variants": [
+          {
+            "question": "Vilka kostnadsdrivare förklarar EBITDA-avvikelsen mot budget i senaste kvartalet?",
+            "answer1": "68% av avvikelsen kommer från personalkostnad och lägre bruttomarginal i två affärsområden.",
+            "answer2": "Om trenden kvarstår blir helårseffekten cirka -3,2 MSEK. Prioritera åtgärder i de två mest avvikande områdena först.",
+            "metricValues": [
+              "Personalkostnad",
+              "-3,2 MSEK"
+            ],
+            "metricHints": [
+              "68% av avvikelsen",
+              "Om trenden kvarstår"
+            ],
+            "activeMonth": "Okt",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "Vilka två affärsområden driver störst negativ forecast-delta just nu, och vilken helårseffekt ger det om trenden fortsätter?",
+            "answer1": "Två affärsområden står tillsammans för merparten av forecast-gapet, främst drivet av lägre bruttomarginal och högre leveranskostnad än plan.",
+            "answer2": "Fortsätter utvecklingen oförändrat ökar negativ helårseffekt till cirka -4,1 MSEK, vilket motiverar riktade åtgärder redan i nästa period.",
+            "metricValues": [
+              "Två affärsområden",
+              "-4,1 MSEK"
+            ],
+            "metricHints": [
+              "Driver största gapet",
+              "Vid oförändrad trend"
+            ],
+            "activeMonth": "Okt",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "Hur påverkas helårsprognosen om vi återställer bruttomarginalen i de svagaste segmenten och håller personalkostnaden flat i Q4?",
+            "answer1": "Om bruttomarginalen återhämtas i de svagaste segmenten samtidigt som personalkostnaden hålls flat, förbättras helårsprognosen tydligt redan i Q4.",
+            "answer2": "Forecast-gapet minskar då till cirka -1,1 MSEK, vilket ger bättre kontroll utan att kräva breda kostnadsstopp i resten av verksamheten.",
+            "metricValues": [
+              "Bruttomarginal",
+              "-1,1 MSEK"
+            ],
+            "metricHints": [
+              "Största förbättringsdrivare",
+              "Efter åtgärd i Q4"
+            ],
+            "activeMonth": "Okt",
+            "visualPreset": "forecast"
+          }
+        ]
       },
       "impactHeadline": {
         "first": "Mätbara resultat.",
@@ -314,8 +410,8 @@
         "answer2": "CAC payback förbättras med cirka två månader och runway stärks med omkring 1,3 månader jämfört med nuvarande plan.",
         "metricLabels": [
           "CAC payback",
-          "Runway delta",
-          "SaaS growth forecast"
+          "Runway-effekt",
+          "Tillväxtprognos"
         ],
         "metricValues": [
           "9.4 mån",
@@ -325,7 +421,55 @@
           "Scenario",
           "Mot nuvarande plan"
         ],
-        "activeMonth": "Q3"
+        "activeMonth": "Jul",
+        "visualPreset": "forecast",
+        "variants": [
+          {
+            "question": "Vad händer med ARR, CAC payback och runway om churn minskar 1,5 procentenheter och säljkapaciteten ökar?",
+            "answer1": "ARR ökar snabbare från Q3 när retention förbättras och nyförsäljningen skalar med högre effektivitet.",
+            "answer2": "CAC payback förbättras med cirka två månader och runway stärks med omkring 1,3 månader jämfört med nuvarande plan.",
+            "metricValues": [
+              "9.4 mån",
+              "+1.3 mån"
+            ],
+            "metricHints": [
+              "Scenario",
+              "Mot nuvarande plan"
+            ],
+            "activeMonth": "Jul",
+            "visualPreset": "forecast"
+          },
+          {
+            "question": "Hur påverkas ARR och runway om vi höjer priset 4% på nya avtal men behåller nuvarande win-rate och säljkostnad?",
+            "answer1": "En selektiv prishöjning på nya avtal lyfter ARR-kvaliteten utan att belasta säljeffektiviteten, förutsatt att win-rate håller sig stabil.",
+            "answer2": "Runway förbättras då med cirka 0,9 månader tack vare högre bruttovärde per ny affär, även om effekten kommer gradvis över två kvartal.",
+            "metricValues": [
+              "10.1 mån",
+              "+0.9 mån"
+            ],
+            "metricHints": [
+              "Payback efter prishöjning",
+              "Mot nuvarande plan"
+            ],
+            "activeMonth": "Aug",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "Om expansion revenue ökar samtidigt som CAC stiger 10%, hur förändras payback och tillväxtprofil kommande två kvartal?",
+            "answer1": "Högre expansion revenue väger upp delar av CAC-ökningen, vilket gör att nettoeffekten på tillväxtprofilen fortfarande blir positiv under kommande två kvartal.",
+            "answer2": "Payback försvagas något till cirka 10,3 månader men runway stärks fortsatt med omkring 0,6 månader när expansionen börjar slå igenom i ARR.",
+            "metricValues": [
+              "10.3 mån",
+              "+0.6 mån"
+            ],
+            "metricHints": [
+              "Payback med högre CAC",
+              "Mot nuvarande plan"
+            ],
+            "activeMonth": "Okt",
+            "visualPreset": "compare"
+          }
+        ]
       },
       "impactHeadline": {
         "first": "Mätbara resultat.",
@@ -432,9 +576,9 @@
         "answer1": "Tre kunder står för 62% av marginalfallet, främst p.g.a. scope creep och låg debiteringsgrad.",
         "answer2": "En prisjustering på 5% förbättrar total bruttomarginal med cirka 1,1 pp och stärker cash med cirka 290 tkr över 90 dagar.",
         "metricLabels": [
-          "Margin impact",
-          "Cash impact",
-          "Top drivers"
+          "Marginaleffekt",
+          "Likviditetseffekt",
+          "Marginalprognos"
         ],
         "metricValues": [
           "+1,1 pp",
@@ -444,7 +588,55 @@
           "Prisjustering 5%",
           "Över 90 dagar"
         ],
-        "activeMonth": "Q3"
+        "activeMonth": "Jul",
+        "visualPreset": "compare",
+        "variants": [
+          {
+            "question": "Vilka tre kunder drar ner marginalen mest, och vad händer om vi justerar priserna 5% på dem?",
+            "answer1": "Tre kunder står för 62% av marginalfallet, främst på grund av scope creep och låg debiteringsgrad.",
+            "answer2": "En prisjustering på 5% förbättrar total bruttomarginal med cirka 1,1 procentenheter och stärker cash med cirka 290 tkr över 90 dagar.",
+            "metricValues": [
+              "+1,1 pp",
+              "+290 tkr"
+            ],
+            "metricHints": [
+              "Prisjustering 5%",
+              "Över 90 dagar"
+            ],
+            "activeMonth": "Jul",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "Hur påverkas projektmarginalen om vi höjer debiteringsgraden med 4 procentenheter i två team med låg beläggning?",
+            "answer1": "Om två team med låg beläggning höjer debiteringsgraden med fyra procentenheter förbättras projektmarginalen snabbt i uppdrag med svag lönsamhet.",
+            "answer2": "Effekten motsvarar cirka 0,8 procentenheters marginallyft och runt 210 tkr starkare cash över ett kvartal, utan att prisnivån mot kund behöver ändras.",
+            "metricValues": [
+              "+0,8 pp",
+              "+210 tkr"
+            ],
+            "metricHints": [
+              "Debiteringsgrad +4 pp",
+              "Över 90 dagar"
+            ],
+            "activeMonth": "Aug",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "Vilken effekt får det på EBIT om vi kortar ledtiden till fakturering med sju dagar och minskar scope creep i våra svagaste uppdrag?",
+            "answer1": "Kortare ledtid till fakturering förbättrar främst cash conversion, medan minskat scope creep ger tydligare effekt på EBIT i de svagaste projekten.",
+            "answer2": "Sammantaget förbättras marginalbilden med cirka 0,6 procentenheter och cash stärks med ungefär 180 tkr under följande kvartal.",
+            "metricValues": [
+              "+0,6 pp",
+              "+180 tkr"
+            ],
+            "metricHints": [
+              "Scope + fakturering",
+              "Över nästa kvartal"
+            ],
+            "activeMonth": "Okt",
+            "visualPreset": "forecast"
+          }
+        ]
       },
       "impactHeadline": {
         "first": "Mätbara resultat.",
@@ -537,9 +729,9 @@
         "answer1": "Ökat lager binder cirka 1,9 MSEK i cash under 60 dagar. Kampanjerna sänker bruttomarginal med cirka 1,4 pp men kan kompenseras med mix mot kategori A.",
         "answer2": "Rekommendation: fasa inköp i två steg och sätt marginalgolv per kampanj.",
         "metricLabels": [
-          "Cash impact",
-          "Margin delta",
-          "Runway delta"
+          "Likviditetseffekt",
+          "Marginaleffekt",
+          "Likviditetsprognos"
         ],
         "metricValues": [
           "-1,9 MSEK",
@@ -549,7 +741,55 @@
           "60 dagar",
           "Kampanjperiod"
         ],
-        "activeMonth": "Q4"
+        "activeMonth": "Okt",
+        "visualPreset": "forecast",
+        "variants": [
+          {
+            "question": "Hur påverkas cash om vi ökar lagernivån inför Q4 och kör 2 kampanjer med -15%?",
+            "answer1": "Ökat lager binder cirka 1,9 MSEK i cash under 60 dagar. Kampanjerna sänker bruttomarginal med cirka 1,4 procentenheter men kan kompenseras med mix mot kategori A.",
+            "answer2": "Rekommendation: fasa inköp i två steg och sätt marginalgolv per kampanj.",
+            "metricValues": [
+              "-1,9 MSEK",
+              "-1,4 pp"
+            ],
+            "metricHints": [
+              "60 dagar",
+              "Kampanjperiod"
+            ],
+            "activeMonth": "Okt",
+            "visualPreset": "forecast"
+          },
+          {
+            "question": "Vad händer med bruttomarginal och lagerbindning om vi tidigarelägger inköp inför Black Week men håller marknadsbudgeten oförändrad?",
+            "answer1": "Tidigarelagda inköp ökar lagerbindningen tidigare i kvartalet, men marginaleffekten blir mer kontrollerad när kampanjtrycket inte ökar samtidigt.",
+            "answer2": "Cash påverkas negativt i närtid, men bruttomarginalen håller bättre nivå än i ett scenario med både tung rabatt och högre marknadsspend.",
+            "metricValues": [
+              "-1,5 MSEK",
+              "-0,8 pp"
+            ],
+            "metricHints": [
+              "Tidigarelagt inköp",
+              "Inför Black Week"
+            ],
+            "activeMonth": "Nov",
+            "visualPreset": "forecast"
+          },
+          {
+            "question": "Om vi sänker kampanjrabatten men ökar spend i paid social, hur påverkas cash conversion och marginal genom Q4?",
+            "answer1": "Lägre rabattnivå skyddar marginalen bättre, men högre paid social-spend pressar cash conversion tidigare i kampanjperioden.",
+            "answer2": "Nettoeffekten blir vanligtvis mindre negativ för marginalen än en djup rabattkampanj, men kräver tydlig kontroll på ROAS för att vara försvarbar.",
+            "metricValues": [
+              "-1,1 MSEK",
+              "-0,6 pp"
+            ],
+            "metricHints": [
+              "Ökad spend i paid social",
+              "Genom Q4"
+            ],
+            "activeMonth": "Nov",
+            "visualPreset": "compare"
+          }
+        ]
       },
       "impactHeadline": {
         "first": "Mätbara resultat.",

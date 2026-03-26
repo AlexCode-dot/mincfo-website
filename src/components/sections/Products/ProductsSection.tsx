@@ -47,6 +47,8 @@ const ANALYSIS_METRIC_AUTOPLAY_DELAY_MS = 3600;
 const ANALYSIS_METRIC_AUTOPLAY_PAUSE_AFTER_MANUAL_MS = 6000;
 const COPILOT_SECTION_REVEAL_START = 0.68;
 const COPILOT_SECTION_REVEAL_END = -0.18;
+const COPILOT_SECTION_REVEAL_START_MOBILE = 0.82;
+const COPILOT_SECTION_REVEAL_END_MOBILE = -0.42;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -191,8 +193,13 @@ export default function AICopilot() {
       frame = 0;
       const rect = title.getBoundingClientRect();
       const viewportHeight = Math.max(window.innerHeight, 1);
-      const startLine = viewportHeight * COPILOT_SECTION_REVEAL_START;
-      const endLine = viewportHeight * COPILOT_SECTION_REVEAL_END;
+      const useMobileRevealWindow = window.innerWidth <= 720 || viewportHeight <= 820;
+      const startLine = viewportHeight * (
+        useMobileRevealWindow ? COPILOT_SECTION_REVEAL_START_MOBILE : COPILOT_SECTION_REVEAL_START
+      );
+      const endLine = viewportHeight * (
+        useMobileRevealWindow ? COPILOT_SECTION_REVEAL_END_MOBILE : COPILOT_SECTION_REVEAL_END
+      );
       const nextVisible = rect.top <= startLine && rect.bottom >= endLine;
       setVisible(nextVisible);
     };

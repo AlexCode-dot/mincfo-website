@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type TouchEvent } from "react";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./Customers.module.scss";
@@ -50,6 +50,8 @@ export default function Customers() {
   const { content } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
+  const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
   const lastCurveProgressRef = useRef(-1);
   const [visible, setVisible] = useState(false);
   const [curveProgress, setCurveProgress] = useState(0);
@@ -148,6 +150,33 @@ export default function Customers() {
     event.preventDefault();
     focusCard(index);
   };
+  const handleCardsTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0];
+    if (!touch) return;
+    touchStartXRef.current = touch.clientX;
+    touchStartYRef.current = touch.clientY;
+  };
+  const handleCardsTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    const startX = touchStartXRef.current;
+    const startY = touchStartYRef.current;
+    const touch = event.changedTouches[0];
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+
+    if (startX === null || startY === null || !touch) return;
+
+    const deltaX = touch.clientX - startX;
+    const deltaY = touch.clientY - startY;
+
+    if (Math.abs(deltaX) < 36 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+    if (deltaX < 0) {
+      goNext();
+      return;
+    }
+
+    goPrev();
+  };
   const tickerLogos = isReducedMotion ? trustedLogos : [...trustedLogos, ...trustedLogos];
 
   return (
@@ -178,7 +207,11 @@ export default function Customers() {
           <p>{content.customers.intro}</p>
         </header>
 
-        <div className={styles.cardsShell}>
+        <div
+          className={styles.cardsShell}
+          onTouchStart={handleCardsTouchStart}
+          onTouchEnd={handleCardsTouchEnd}
+        >
           {testimonials.map((item, index) => {
             let positionClass = styles.hiddenCard;
             if (index === activeIndex) positionClass = styles.centerCard;

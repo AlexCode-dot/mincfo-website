@@ -258,6 +258,14 @@
         "accent": false
       },
       {
+        "company": "Lawster",
+        "person": "Joel Wikman",
+        "role": "VD, Lawster",
+        "quote": "Jag vet alltid var vi står ekonomiskt. Inga överraskningar, inga frågetecken. Det gör det mycket enklare att fatta beslut.",
+        "avatarFile": "lawster-vd.png",
+        "accent": true
+      },
+      {
         "company": "Hälsa Hemma",
         "person": "Oskar Nordmark",
         "role": "Financial Controller, Hälsa Hemma",

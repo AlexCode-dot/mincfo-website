@@ -3274,6 +3274,245 @@
   gap: 4px;
 }
 
+.forecastStatGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px 16px 0;
+}
+
+.forecastStatCard {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(18, 28, 46, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(111, 129, 163, 0.16);
+  display: grid;
+  gap: 5px;
+}
+
+.forecastStatCard p,
+.forecastStatCard span {
+  margin: 0;
+  color: rgba(153, 172, 209, 0.84);
+  font-size: 0.72rem;
+}
+
+.forecastStatCard strong {
+  color: rgba(245, 249, 255, 0.99);
+  font-size: 1.14rem;
+  letter-spacing: -0.02em;
+}
+
+.forecastMonthGrid {
+  padding: 12px 16px 0;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.forecastMonth,
+.forecastMonthActive {
+  min-height: 34px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(24, 37, 63, 0.54);
+  color: rgba(184, 202, 233, 0.84);
+  font-size: 0.74rem;
+}
+
+.forecastMonthActive {
+  box-shadow: inset 0 0 0 2px rgba(109, 127, 250, 0.94);
+}
+
+.forecastPlotCard {
+  margin-top: 12px;
+  padding: 0 16px 10px;
+}
+
+.forecastGuide {
+  stroke: rgba(136, 154, 199, 0.38);
+  stroke-width: 1.4;
+  stroke-dasharray: 5 7;
+}
+
+.proposedLineSolid {
+  fill: none;
+  stroke: rgba(103, 122, 255, 0.98);
+  stroke-width: 3;
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
+.linesCardReady .proposedLineSolid {
+  opacity: 1;
+}
+
+.gaugeBoardBody {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.gaugeMetricBlock {
+  display: grid;
+  gap: 6px;
+}
+
+.gaugeMetricBlock p,
+.gaugeMetricBlock span {
+  margin: 0;
+  color: rgba(153, 172, 209, 0.84);
+  font-size: 0.8rem;
+}
+
+.gaugeMetricBlock strong {
+  color: rgba(245, 249, 255, 0.99);
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+}
+
+.gaugeWrap {
+  position: relative;
+  min-height: 188px;
+  display: grid;
+  place-items: end center;
+}
+
+.gaugeSvg {
+  width: 100%;
+  max-width: 280px;
+  overflow: visible;
+}
+
+.gaugeTrack,
+.gaugeArc {
+  fill: none;
+  stroke-width: 18;
+  stroke-linecap: round;
+}
+
+.gaugeTrack {
+  stroke: rgba(59, 76, 110, 0.52);
+}
+
+.gaugeArc {
+  stroke: rgba(62, 112, 255, 0.96);
+  filter: drop-shadow(0 0 14px rgba(62, 112, 255, 0.34));
+}
+
+.gaugeCenter {
+  position: absolute;
+  inset: auto 0 16px;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+.gaugeCenter span,
+.gaugeCenter small {
+  color: rgba(153, 172, 209, 0.84);
+}
+
+.gaugeCenter strong {
+  color: rgba(245, 249, 255, 0.99);
+  font-size: 2.1rem;
+  letter-spacing: -0.03em;
+}
+
+.ringBoardBody {
+  padding: 18px 16px 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: 18px;
+}
+
+.ringVisual {
+  position: relative;
+  width: 220px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.ringSvg {
+  width: 100%;
+  height: auto;
+}
+
+.ringTrack,
+.ringArcPrimary,
+.ringArcSecondary {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.ringTrack {
+  stroke: rgba(41, 52, 75, 0.78);
+  stroke-width: 16;
+}
+
+.ringArcPrimary {
+  stroke: rgba(166, 186, 255, 0.96);
+  stroke-width: 16;
+  transform: rotate(-88deg);
+  transform-origin: 110px 110px;
+}
+
+.ringArcSecondary {
+  stroke: rgba(87, 86, 240, 0.96);
+  stroke-width: 14;
+  transform: rotate(36deg);
+  transform-origin: 110px 110px;
+}
+
+.ringCenter {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.ringCenter span {
+  color: rgba(153, 172, 209, 0.84);
+  font-size: 0.8rem;
+}
+
+.ringCenter strong {
+  color: rgba(245, 249, 255, 0.99);
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+}
+
+.ringLegend {
+  display: grid;
+  gap: 14px;
+}
+
+.ringLegend div {
+  display: grid;
+  gap: 4px;
+}
+
+.ringLegend p,
+.ringLegend span {
+  margin: 0;
+  color: rgba(153, 172, 209, 0.84);
+  font-size: 0.78rem;
+}
+
+.ringLegend strong {
+  color: rgba(245, 249, 255, 0.99);
+  font-size: 1.08rem;
+  letter-spacing: -0.02em;
+}
+
 .monthButton,
 .monthActive {
   min-height: 24px;
@@ -3628,6 +3867,41 @@
     border-radius: 16px;
   }
 
+  .challengeCard,
+  .solutionCard {
+    min-height: 220px;
+    padding: 18px 16px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .challengeCard h3,
+  .solutionCard h3 {
+    margin-top: 18px;
+    font-size: clamp(1.12rem, 5.6vw, 1.42rem);
+    line-height: 1.18;
+    text-wrap: balance;
+  }
+
+  .challengeCard p,
+  .solutionCard p {
+    margin-top: 10px;
+    max-width: 28ch;
+    font-size: 0.96rem;
+    line-height: 1.52;
+    text-wrap: balance;
+  }
+
+  .iconNegative,
+  .iconPositive {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+  }
+
   .scenarioBoard {
     border-radius: 16px;
   }
@@ -3669,51 +3943,191 @@
   }
 
   .scenarioShellHead {
-    gap: 12px;
-    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 2px;
   }
 
   .scenarioShellCopilot p {
-    font-size: 1rem;
+    font-size: 0.92rem;
   }
 
   .scenarioResultRow {
     grid-template-columns: 1fr;
+    gap: 12px;
     align-items: start;
   }
 
+  .scenarioResultRow > * {
+    min-width: 0;
+  }
+
   .scenarioFlow {
-    min-height: 0;
+    min-height: 648px;
     grid-template-rows: auto;
+    gap: 14px;
   }
 
   .scenarioQuestion {
-    font-size: 1rem;
-    min-height: 82px;
+    padding: 13px 14px;
+    font-size: 0.94rem;
+    line-height: 1.45;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    min-width: 0;
   }
 
   .scenarioAnswer p {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
   }
 
   .scenarioNarrative {
-    min-height: 0;
+    min-height: 220px;
+    gap: 12px;
+    min-width: 0;
   }
 
   .scenarioAnswer {
-    min-height: 220px;
+    min-height: 156px;
+    padding: 12px;
+    gap: 12px;
+    grid-auto-rows: min-content;
+    min-width: 0;
+  }
+
+  .scenarioBoard {
+    min-height: 286px;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    min-width: 0;
   }
 
   .scenarioKpis {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .monthGrid {
     grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 3px;
   }
 
   .scenarioKpiCard strong {
-    font-size: 1.9rem;
+    font-size: 1.28rem;
+  }
+
+  .scenarioKpiCard {
+    padding: 12px;
+    gap: 4px;
+  }
+
+  .scenarioKpiCard p {
+    font-size: 0.72rem;
+  }
+
+  .scenarioKpiCard span {
+    font-size: 0.68rem;
+  }
+
+  .scenarioBoardHeader {
+    min-height: 42px;
+    padding: 0 12px;
+  }
+
+  .scenarioBoardHeader p {
+    font-size: 0.84rem;
+  }
+
+  .scenarioBoardHeader span {
+    font-size: 0.78rem;
+  }
+
+  .scenarioChartCard {
+    padding: 10px 12px 8px;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+  }
+
+  .scenarioTop {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .scenarioTop p {
+    font-size: 0.82rem;
+  }
+
+  .scenarioTop span {
+    font-size: 0.68rem;
+  }
+
+  .scenarioLegend {
+    margin-top: 8px;
+    gap: 8px;
+  }
+
+  .scenarioLegend span {
+    font-size: 0.66rem;
+  }
+
+  .scenarioChip {
+    margin-left: 0;
+  }
+
+  .linesCard {
+    min-height: 132px;
+    height: 132px;
+    margin-top: 8px;
+  }
+
+  .chartLoading {
+    height: 132px;
+    padding: 10px;
+  }
+
+  .monthButton,
+  .monthActive {
+    min-height: 22px;
+    font-size: 0.6rem;
+  }
+
+  .scenarioPrompt {
+    min-height: 64px;
+    height: 64px;
+    padding: 0 10px 0 12px;
+    gap: 8px;
+    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .scenarioPrompt span {
+    min-width: 0;
+    flex: 1 1 auto;
+    max-width: 100%;
+    font-size: 0.84rem;
+    min-height: 2.6em;
+    line-height: 1.3;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .scenarioPrompt button {
+    width: 34px;
+    height: 34px;
+  }
+
+  .scenarioDisclaimer {
+    font-size: 0.7rem;
   }
 
   .heroTickerTrack {
@@ -3742,6 +4156,58 @@
 
   .impactSection .impactGridFour {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 400px) {
+  .scenarioShellHead {
+    align-items: flex-start;
+    flex-direction: column;
+    min-height: 42px;
+  }
+
+  .scenarioQueryRow {
+    gap: 10px;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .scenarioQuestion {
+    min-height: 64px;
+    padding: 12px 13px;
+    font-size: 0.9rem;
+  }
+
+  .scenarioFlow {
+    min-height: 700px;
+  }
+
+  .scenarioNarrative {
+    min-height: 236px;
+  }
+
+  .scenarioAnswer {
+    min-height: 172px;
+  }
+
+  .scenarioBoard {
+    min-height: 332px;
+  }
+
+  .scenarioKpis {
+    grid-template-columns: 1fr;
+  }
+
+  .scenarioKpiCard strong {
+    font-size: 1.18rem;
+  }
+
+  .monthGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .scenarioPrompt span {
+    white-space: normal;
+    min-height: 2.8em;
   }
 }
 

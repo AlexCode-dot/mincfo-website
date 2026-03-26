@@ -1867,6 +1867,10 @@
     padding: 96px 0 80px;
   }
 
+  .container {
+    padding-inline: 8px;
+  }
+
   .curveCut {
     height: 150px;
   }
@@ -1949,10 +1953,13 @@
 
   .inputRow {
     margin-top: 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px;
     padding: 10px 10px 10px 14px;
     font-size: 0.82rem;
     align-items: center;
+    min-height: 60px;
   }
 
   .inputRow button {
@@ -1962,7 +1969,7 @@
   }
 
   .inputText {
-    min-height: 36px;
+    min-height: 2.7em;
     display: flex;
     align-items: center;
     line-height: 1.35;
@@ -2090,7 +2097,7 @@
   }
 
   .planPanel {
-    padding: 14px;
+    padding: 6px;
   }
 
   .planScenarioTabs {
@@ -2122,6 +2129,19 @@
 
   .planVisualStack {
     padding-bottom: 24px;
+  }
+
+  .planForecastShell {
+    padding: 32px 8px 8px;
+  }
+
+  .planRecon {
+    padding: 8px;
+    padding-bottom: 10px;
+  }
+
+  .planPanelHeader {
+    padding-inline: 2px;
   }
 
   .visualBrand {
@@ -2161,11 +2181,12 @@
   }
 
   .inputRow {
-    align-items: flex-start;
-    flex-wrap: wrap;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px;
     padding: 14px;
     font-size: 0.76rem;
+    align-items: center;
+    min-height: 64px;
   }
 }
 
@@ -2220,7 +2241,11 @@
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 360px) {
+  .container {
+    padding-inline: 6px;
+  }
+
   .panel {
     padding: 14px;
     padding-top: 34px;
@@ -2245,6 +2270,7 @@
   .inputRow {
     padding: 9px 9px 9px 12px;
     font-size: 0.76rem;
+    min-height: 58px;
   }
 
   .inputRow button {
@@ -2267,6 +2293,19 @@
 
   .planForecastStats {
     grid-template-columns: 1fr;
+  }
+
+  .planPanel {
+    padding: 4px;
+  }
+
+  .planForecastShell {
+    padding: 30px 6px 6px;
+  }
+
+  .planRecon {
+    padding: 7px;
+    padding-bottom: 9px;
   }
 
   .planForecastStat:first-child {
