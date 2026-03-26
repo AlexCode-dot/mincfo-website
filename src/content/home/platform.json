@@ -103,17 +103,17 @@
         "Tydlig visualisering av nyckeltal och lönsamhet",
         "Dela uppdaterade vyer med team och styrelse med ett klick"
       ],
-      "resultTitle": "Income Statement · 2025",
-      "currentLabel": "Current",
-      "previousLabel": "Previous",
+      "resultTitle": "Finansiell rapport · 2025",
+      "currentLabel": "Senaste",
+      "previousLabel": "Föregående",
       "currencyLabel": "SEK",
       "metricOptions": [
-        "Net Income",
+        "Net omsättning",
         "EBIT",
         "EBITDA",
-        "Gross Profit"
+        "Bruttovinst"
       ],
-      "compareLabel": "Compared to previous period",
+      "compareLabel": "Jämfört med fg. period",
       "trendAxisTicks": [
         "500K",
         "375K",
@@ -148,14 +148,14 @@
         "Tidigare signaler på risk och avvikelse",
         "Jämför segment, kunder och perioder"
       ],
-      "forecastTitle": "Forecast",
-      "liveLabel": "Live forecast",
+      "forecastTitle": "Prognos",
+      "liveLabel": "Live prognos",
       "reconciliationTitle": "",
       "reconciliationSubtext": "",
-      "actualPrefix": "Actual month",
+      "actualPrefix": "Aktuell månad",
       "forecastPrefix": "Forecast month",
-      "vsPrevious": "Vs previous month",
-      "annualVariance": "Annual variance vs baseline",
+      "vsPrevious": "Jämfört med föregående månad",
+      "annualVariance": "Årsavvikelse mot baslinje",
       "legend": "",
       "monthLabelsEn": [
         "Jan",
@@ -215,8 +215,8 @@
   "customers": {
     "pill": "KUNDCASE",
     "title": "Företag som använder MinCFOs plattform idag",
-    "intro": "Exempel på hur bolag använder MinCFO för bättre överblick, snabbare analys och starkare beslutsunderlag utan krävande manuella processer.",
-    "tickerLabel": "Betrodd av team som använder MinCFO som sin finansiella beslutsyta",
+    "intro": "Några av de företag som använder MinCFO för bättre överblick, snabbare analys och starkare beslutsunderlag utan krävande manuella processer.",
+    "tickerLabel": "Betrodd av 50+ företag som använder MinCFO som sin finansiella beslutsyta",
     "controlsAria": "Bläddra kundomdömen",
     "prevAria": "Föregående omdöme",
     "nextAria": "Nästa omdöme",

@@ -5,17 +5,9 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
   type ReactNode,
 } from "react";
-import {
-  MOTION_PREFERENCE_EXPLICIT_KEY,
-  isMotionPreference,
-  MOTION_PREFERENCE_KEY,
-  resolveMotionMode,
-  type MotionPreference,
-  type ResolvedMotionMode,
-} from "@/lib/motion";
+import { type MotionPreference, type ResolvedMotionMode } from "@/lib/motion";
 
 type MotionContextValue = {
   isReducedMotion: boolean;
@@ -27,41 +19,8 @@ type MotionContextValue = {
 const MotionContext = createContext<MotionContextValue | null>(null);
 
 export function MotionProvider({ children }: { children: ReactNode }) {
-  const [preference, setPreferenceState] = useState<MotionPreference>(() => {
-    if (typeof window === "undefined") return "full";
-    const explicit = window.localStorage.getItem(MOTION_PREFERENCE_EXPLICIT_KEY);
-    if (explicit !== "1") return "full";
-    const saved = window.localStorage.getItem(MOTION_PREFERENCE_KEY);
-    return isMotionPreference(saved) ? saved : "full";
-  });
-
-  useEffect(() => {
-    const onStorage = (event: StorageEvent) => {
-      if (
-        event.key !== MOTION_PREFERENCE_KEY &&
-        event.key !== MOTION_PREFERENCE_EXPLICIT_KEY
-      ) {
-        return;
-      }
-
-      const explicit = window.localStorage.getItem(MOTION_PREFERENCE_EXPLICIT_KEY);
-      if (explicit !== "1") {
-        setPreferenceState("full");
-        return;
-      }
-
-      const saved = window.localStorage.getItem(MOTION_PREFERENCE_KEY);
-      setPreferenceState(isMotionPreference(saved) ? saved : "full");
-    };
-
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
-
-  const resolvedMode = useMemo(
-    () => resolveMotionMode(preference),
-    [preference],
-  );
+  const preference: MotionPreference = "full";
+  const resolvedMode: ResolvedMotionMode = "full";
 
   useEffect(() => {
     const root = document.documentElement;
@@ -71,14 +30,10 @@ export function MotionProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<MotionContextValue>(
     () => ({
-      isReducedMotion: resolvedMode === "reduced",
+      isReducedMotion: false,
       preference,
       resolvedMode,
-      setPreference: (next: MotionPreference) => {
-        setPreferenceState(next);
-        window.localStorage.setItem(MOTION_PREFERENCE_EXPLICIT_KEY, "1");
-        window.localStorage.setItem(MOTION_PREFERENCE_KEY, next);
-      },
+      setPreference: () => {},
     }),
     [preference, resolvedMode],
   );

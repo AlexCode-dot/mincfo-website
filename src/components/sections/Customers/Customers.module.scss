@@ -672,14 +672,15 @@
   .tickerTrack {
     animation: none;
     transform: none;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    width: max-content;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
     padding: 6px 0;
   }
 
   .tickerViewport {
-    overflow-x: auto;
+    overflow: hidden;
     mask-image: none;
     -webkit-mask-image: none;
   }
