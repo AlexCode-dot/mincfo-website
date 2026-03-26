@@ -6,7 +6,7 @@
     "sakerhet": "Säkerhet",
     "hurDetFunkar": "Hur det funkar",
     "demoCta": "Boka demo",
-    "loginSignupLabel": "Logga in / Sign up",
+    "loginSignupLabel": "Logga in",
     "openSolutionsAria": "Öppna lösningsmeny",
     "openMenuAria": "Öppna meny",
     "groups": [
@@ -491,9 +491,8 @@
             "appearance": "Utseende"
           },
           "appearanceTitle": "Visningsläge",
-          "appearanceBody": "Växla mellan system, ljust eller mörkt läge.",
+          "appearanceBody": "Växla mellan ljust eller mörkt läge.",
           "modes": {
-            "system": "System",
             "light": "Ljust",
             "dark": "Mörkt"
           },

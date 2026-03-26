@@ -14,7 +14,7 @@ import { useMotion } from "@/components/system/MotionProvider";
 import HeroLineWavesBackground from "./HeroLineWavesBackground";
 import HeroOfferingShowcase from "./HeroOfferingShowcase";
 import HeroPartnerLinesBackground from "./HeroPartnerLinesBackground";
-import HeroParticleGlobe from "./HeroParticleGlobe";
+import HeroParticleGlobe, { prewarmHeroParticleGlobe } from "./HeroParticleGlobe";
 import styles from "./Hero.module.scss";
 
 const clamp = (value: number, min: number, max: number) =>
@@ -35,6 +35,14 @@ const HERO_END_BRAND_AUDIO_BARS = 52;
 const smoothstep = (edge0: number, edge1: number, value: number) => {
   const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
   return t * t * (3 - 2 * t);
+};
+
+type IdleWindow = Window & {
+  cancelIdleCallback?: (id: number) => void;
+  requestIdleCallback?: (
+    callback: IdleRequestCallback,
+    options?: IdleRequestOptions,
+  ) => number;
 };
 
 export default function Hero() {
@@ -91,6 +99,52 @@ export default function Hero() {
     allowPointer: false,
     videoInteractive: false,
   });
+
+  useEffect(() => {
+    if (offering === "partner") return;
+
+    const idleWindow = window as IdleWindow;
+    let idleId: number | null = null;
+    let timeoutId: number | null = null;
+    let armed = false;
+
+    const runPrewarm = () => {
+      prewarmHeroParticleGlobe();
+    };
+
+    const schedulePrewarm = () => {
+      if (armed) return;
+      armed = true;
+      if (typeof idleWindow.requestIdleCallback === "function") {
+        idleId = idleWindow.requestIdleCallback(runPrewarm, { timeout: 3000 });
+      } else {
+        timeoutId = window.setTimeout(runPrewarm, 1800);
+      }
+    };
+
+    const handleInteraction = () => {
+      window.removeEventListener("pointerdown", handleInteraction);
+      window.removeEventListener("keydown", handleInteraction);
+      window.removeEventListener("touchstart", handleInteraction);
+      schedulePrewarm();
+    };
+
+    window.addEventListener("pointerdown", handleInteraction, { passive: true });
+    window.addEventListener("keydown", handleInteraction);
+    window.addEventListener("touchstart", handleInteraction, { passive: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", handleInteraction);
+      window.removeEventListener("keydown", handleInteraction);
+      window.removeEventListener("touchstart", handleInteraction);
+      if (idleId !== null && typeof idleWindow.cancelIdleCallback === "function") {
+        idleWindow.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [offering]);
 
   useLayoutEffect(() => {
     const sectionNode = sectionRef.current;
@@ -632,9 +686,9 @@ export default function Hero() {
           {offering === "full-service" ? (
             <HeroLineWavesBackground />
           ) : offering === "partner" ? (
-            <HeroPartnerLinesBackground />
-          ) : (
             <HeroParticleGlobe />
+          ) : (
+            <HeroPartnerLinesBackground />
           )}
         </div>
       </div>

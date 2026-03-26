@@ -3786,8 +3786,23 @@
 
 @media (max-width: 760px) {
   .section {
-    margin-top: -64px;
-    padding-top: 108px;
+    margin-top: -48px;
+    padding-top: 88px;
+  }
+
+  .curveCut {
+    transform: scaleY(0.62);
+    transform-origin: top center;
+  }
+
+  .backgroundGrid {
+    opacity: 0.18;
+    background-size: 28px 28px;
+  }
+
+  .backgroundStack {
+    transform: scaleY(0.62);
+    transform-origin: top center;
   }
 
   .tabList {
@@ -3814,6 +3829,20 @@
     gap: 56px;
   }
 
+  .section[data-offer="partner"] .stepsFlow {
+    gap: 92px;
+  }
+
+  .section[data-offer="partner"] .stepText {
+    padding-top: 18px;
+    padding-bottom: 14px;
+  }
+
+  .section[data-offer="partner"] .stepRowFaasSystems .stepVisual,
+  .section[data-offer="partner"] .stepRowFaasRealtime .stepVisual {
+    margin-top: 12px;
+  }
+
   .stepRowInsights .stepVisual {
     min-height: 348px;
   }
@@ -3823,11 +3852,11 @@
   }
 
   .stepRowFaasRealtime .stepVisual {
-    min-height: 280px;
+    min-height: 392px;
   }
 
   .stepRowFaasSystems .stepVisual {
-    min-height: 248px;
+    min-height: 360px;
   }
 
   .connectMock {
@@ -3901,6 +3930,17 @@
     gap: 12px;
   }
 
+  .stepRowFaasSystems .stepMain {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    justify-items: center;
+  }
+
+  .stepRowFaasSystems .stepCopy {
+    justify-items: center;
+    text-align: center;
+  }
+
   .accountMiniScene {
     width: min(96%, 360px);
     min-height: 260px;
@@ -3920,11 +3960,11 @@
 
   .accountMock {
     position: absolute;
-    right: 8px;
+    left: 50%;
     top: 50%;
-    transform: translateY(-50%);
-    width: min(46%, 172px);
-    min-width: 0;
+    transform: translate(-50%, -50%);
+    width: min(72%, 220px);
+    min-width: 172px;
     min-height: 156px;
     gap: 5px;
   }
@@ -4104,6 +4144,16 @@
   .faasSystemsConnect {
     width: min(100%, 350px);
     min-height: 332px;
+  }
+
+  .partnerPortfolioMock {
+    width: min(100%, 350px);
+    height: 356px;
+    gap: 0;
+  }
+
+  .partnerPortfolioFooter {
+    display: none;
   }
 
   .faasSystemsMap path {

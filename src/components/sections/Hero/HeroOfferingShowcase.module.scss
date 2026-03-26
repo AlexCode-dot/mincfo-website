@@ -1,79 +1,87 @@
 .section {
   position: relative;
-  height: 252vh;
-  margin-top: -260px;
   z-index: 3;
-  pointer-events: none;
+  padding: 0 0 clamp(96px, 12vw, 160px);
 }
 
-.stickyFrame {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  display: grid;
-  place-items: center;
-  padding: 7vh 0 6vh;
-  pointer-events: none;
-}
-
+.handoffStage,
 .introStage,
 .showcase {
-  grid-area: 1 / 1;
   width: min(1120px, calc(100vw - (var(--container-pad) * 2)));
-  will-change: transform, opacity;
-  visibility: hidden;
+  margin-inline: auto;
 }
 
-.stageReady {
-  visibility: visible;
+.handoffStage {
+  position: relative;
+  min-height: 118svh;
 }
 
 .introStage {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  box-sizing: border-box;
   display: grid;
   place-items: center;
   justify-items: center;
-  pointer-events: none;
+  padding: clamp(40px, 6vw, 72px) 0;
   z-index: 3;
+  pointer-events: none;
 }
 
 .splitTitle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: inline-grid;
-  gap: 0;
+  position: relative;
+  display: grid;
+  gap: clamp(2px, 0.7vw, 8px);
   width: max-content;
   max-width: none;
   justify-items: center;
   text-align: center;
   z-index: 2;
+  pointer-events: none;
+}
+
+.splitTitleVisible .charWrap {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0);
 }
 
 .splitLine {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 0.24em;
+  row-gap: 0;
   width: auto;
   margin: 0;
-  text-wrap: nowrap;
+  text-wrap: balance;
   text-align: center;
   color: var(--text-primary);
-  font-size: clamp(2rem, 5.3vw, 4.9rem);
+  font-size: clamp(2.2rem, 5.3vw, 4.9rem);
   line-height: 0.92;
   letter-spacing: -0.08em;
   font-weight: 640;
   font-family: var(--font-geist-sans), "Geist", "Segoe UI", sans-serif;
-  will-change: transform, opacity;
+}
+
+.wordGroup {
+  display: inline-flex;
+  white-space: nowrap;
 }
 
 .charWrap {
   display: inline-block;
   white-space: pre;
+  opacity: 0;
+  transform: translate3d(0, 34px, 0);
+  filter: blur(5px);
   will-change: transform, opacity;
+  transition:
+    opacity 560ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 680ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 560ms ease;
+  transition-delay: var(--char-delay, 0ms);
 }
 
 .charInner {
@@ -82,48 +90,40 @@
   text-shadow: 0 8px 24px oklch(0.03 0.004 260 / 0.34);
 }
 
-.scrollHint {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(84px, 12vh, 120px);
-  transform: translateX(-50%);
-  z-index: 2;
-  display: inline-flex;
-  margin-top: 0;
-}
-
-.scrollMouse {
-  width: 22px;
-  height: 34px;
-  border-radius: 999px;
-  border: 1px solid oklch(0.86 0.014 258 / 0.2);
-  display: inline-flex;
-  justify-content: center;
-  padding-top: 5px;
-  background: oklch(0.16 0.012 262 / 0.36);
-  box-shadow:
-    inset 0 1px 0 oklch(0.98 0.006 260 / 0.08),
-    0 10px 20px oklch(0.03 0.004 260 / 0.26);
-}
-
-.scrollWheel {
-  width: 4px;
-  height: 8px;
-  border-radius: 999px;
-  background: oklch(0.96 0.01 260 / 0.78);
-  animation: scrollWheel 1.6s ease-in-out infinite;
-}
-
 .showcase {
   position: relative;
   z-index: 2;
-  pointer-events: none;
+  pointer-events: auto;
+  margin-top: clamp(-28svh, -18vw, -180px);
+  opacity:
+    calc(
+      (0.08 + var(--showcase-progress, 0) * 0.8 + var(--showcase-focus, 0) * 0.12)
+      * (1 - (var(--showcase-exit-progress, 0) * 0.92))
+    );
+  transform:
+    translate3d(
+      0,
+      calc(
+        ((1 - var(--showcase-progress, 0)) * (42px + (1 - var(--showcase-focus, 0)) * 12px))
+        + (var(--showcase-exit-progress, 0) * -88px)
+      ),
+      0
+    )
+    scale(calc(0.88 + var(--showcase-progress, 0) * 0.1 + var(--showcase-focus, 0) * 0.02));
+  filter:
+    blur(
+      calc(
+        ((1 - var(--showcase-progress, 0)) * (0.8px + (1 - var(--showcase-focus, 0)) * 0.6px))
+        + (var(--showcase-exit-progress, 0) * 0.8px)
+      )
+    );
+  transition: opacity 220ms linear, transform 220ms linear, filter 220ms linear;
+  will-change: transform, opacity, filter;
 }
 
 .panel {
   display: grid;
   gap: 36px;
-  pointer-events: auto;
 }
 
 .controlsHeader {
@@ -143,16 +143,8 @@
   line-height: 1.45;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0;
-  transform: translate3d(0, 10px, 0);
-  transition:
-    opacity 360ms ease,
-    transform 360ms ease;
-}
-
-.previewLabelVisible {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
+  transform: none;
 }
 
 .controls {
@@ -197,6 +189,7 @@
     border-color 180ms ease,
     box-shadow 180ms ease,
     opacity 180ms ease;
+  cursor: pointer;
 }
 
 .option > span:last-child {
@@ -279,6 +272,7 @@
     box-shadow 220ms ease,
     transform 220ms ease,
     opacity 220ms ease;
+  cursor: pointer;
 }
 
 .pagerDot:hover {
@@ -500,6 +494,7 @@
     background 180ms ease,
     box-shadow 180ms ease,
     filter 180ms ease;
+  cursor: pointer;
 }
 
 .inlineCta span {
@@ -611,6 +606,10 @@
   min-height: 0;
   height: 100%;
   grid-template-rows: 1fr;
+}
+
+.visualBodyPlatform {
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .visualBodyFullService {
@@ -799,12 +798,12 @@
 .evilCard {
   box-sizing: border-box;
   display: grid;
-  grid-template-rows: auto 248px;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-self: stretch;
   align-items: start;
   width: 100%;
-  height: 356px;
-  min-height: 356px;
-  max-height: 356px;
+  height: 100%;
+  min-height: 0;
   gap: 12px;
   padding: 14px 16px 16px;
   border-radius: 20px;
@@ -984,21 +983,25 @@
   font-weight: 600;
 }
 
-.evilLegendDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
+.evilLegendLine {
+  width: 18px;
+  height: 2px;
   flex: 0 0 auto;
+  border-radius: 999px;
 }
 
-.evilLegendDotActual {
+.evilLegendLineActual {
   background: #0e5bff;
-  box-shadow: 0 0 12px color-mix(in oklab, #0e5bff 68%, transparent);
+  box-shadow: 0 0 12px color-mix(in oklab, #0e5bff 56%, transparent);
 }
 
-.evilLegendDotForecast {
-  background: #2f7bff;
-  box-shadow: 0 0 12px color-mix(in oklab, #2f7bff 68%, transparent);
+.evilLegendLineForecast {
+  background: repeating-linear-gradient(
+    90deg,
+    #2f7bff 0 4px,
+    transparent 4px 7px
+  );
+  box-shadow: 0 0 12px color-mix(in oklab, #2f7bff 60%, transparent);
 }
 
 .evilTitleRow {
@@ -1047,6 +1050,7 @@
 .evilChartWrap {
   position: relative;
   height: 100%;
+  min-height: 0;
   margin-top: 0;
 }
 
@@ -2215,13 +2219,15 @@
 
 .partnerWorkspaceModes {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 136px));
   gap: 10px;
+  justify-content: start;
 }
 
 .partnerWorkspaceMode {
   display: grid;
   gap: 7px;
+  justify-items: start;
 }
 
 .partnerWorkspaceMode strong {
@@ -2232,17 +2238,14 @@
 }
 
 .partnerWorkspaceModePreview {
-  height: 68px;
+  width: 136px;
+  height: 62px;
   border-radius: 10px;
   padding: 7px;
   display: grid;
   grid-template-columns: 28% 1fr;
   gap: 7px;
   border: 1px solid rgba(89, 119, 168, 0.26);
-}
-
-.partnerWorkspaceModePreviewSystem {
-  background: linear-gradient(90deg, rgba(247, 247, 248, 0.98) 0 46%, rgba(28, 34, 44, 0.96) 46% 100%);
 }
 
 .partnerWorkspaceModePreviewLight {
@@ -2504,7 +2507,8 @@
 
 @media (max-width: 1080px) {
   .section {
-    height: 312vh;
+    padding-top: clamp(56px, 8vw, 96px);
+    padding-bottom: clamp(88px, 11vw, 140px);
   }
 
   .grid {
@@ -2517,7 +2521,19 @@
   }
 
   .partnerWorkspaceSummary {
-    display: none;
+    margin-top: 14px;
+    padding: 12px 14px 14px;
+    border-radius: 14px;
+  }
+
+  .partnerWorkspaceSummaryLabel {
+    margin-bottom: 5px;
+    font-size: 0.64rem;
+  }
+
+  .partnerWorkspaceSummary strong {
+    font-size: 0.88rem;
+    line-height: 1.28;
   }
 
   .copyCardPartner {
@@ -2558,35 +2574,48 @@
 }
 
 @media (max-width: 720px) {
-  .section {
-    height: 460vh;
-    margin-top: 0;
-    padding-bottom: 160px;
+  .showcase {
+    --showcase-mobile-visual-height: 540px;
   }
 
-  .stickyFrame {
-    position: sticky;
-    height: 100svh;
-    display: grid;
-    padding: 0;
+  .section {
+    padding-bottom: 104px;
   }
 
   .introStage {
     min-height: 100svh;
-    align-content: center;
+    padding: 28px 0;
   }
 
   .showcase {
     width: min(100%, calc(100vw - (var(--container-pad) * 2)));
+    opacity:
+      calc(
+        (0.12 + var(--showcase-progress, 0) * 0.8 + var(--showcase-focus, 0) * 0.08)
+        * (1 - (var(--showcase-exit-progress, 0) * 0.22))
+      );
+    transform:
+      translate3d(
+        0,
+        calc(
+          ((1 - var(--showcase-progress, 0)) * (24px + (1 - var(--showcase-focus, 0)) * 8px))
+          + (var(--showcase-exit-progress, 0) * -18px)
+        ),
+        0
+      )
+      scale(calc(0.94 + var(--showcase-progress, 0) * 0.06 + var(--showcase-focus, 0) * 0.01));
+    filter:
+      blur(
+        calc(
+          ((1 - var(--showcase-progress, 0)) * 0.45px)
+          + (var(--showcase-exit-progress, 0) * 0.12px)
+        )
+      );
   }
 
   .panel {
     gap: 20px;
     padding-top: 64px;
-  }
-
-  .scrollHint {
-    bottom: clamp(72px, 11vh, 96px);
   }
 
   .controls {
@@ -2608,8 +2637,7 @@
     padding: 0 10px;
   }
 
-  .previewLabel,
-  .currentPageStatus {
+  .previewLabel {
     text-align: center;
   }
 
@@ -2676,14 +2704,39 @@
     max-width: none;
   }
 
-  .copyCard,
-  .visualCard {
-    min-height: auto;
+  .splitTitle {
+    width: min(100%, 18rem);
+  }
+
+  .splitLine {
+    white-space: normal;
+    text-wrap: balance;
+    word-break: normal;
+    overflow-wrap: normal;
+    hyphens: none;
+    font-size: clamp(1.9rem, 9vw, 2.8rem);
+    line-height: 0.96;
+    letter-spacing: -0.06em;
+  }
+
+  .charWrap,
+  .charInner {
+    white-space: normal;
+  }
+
+  .copyCard {
+    min-height: 0;
     height: auto;
   }
 
+  .visualCard {
+    overflow: hidden;
+    min-height: var(--showcase-mobile-visual-height);
+    height: var(--showcase-mobile-visual-height);
+  }
+
   .visualContent {
-    min-height: 0;
+    min-height: 100%;
   }
 
   .copyCardPartner {
@@ -2808,24 +2861,347 @@
     gap: 10px;
     height: 180px;
   }
+
+  .runwayPanel {
+    gap: 8px;
+    padding-top: 0;
+  }
+
+  .runwayCashflowBlock,
+  .runwayDivider {
+    transform: none;
+  }
+
+  .runwayCashflowValue strong {
+    font-size: 1.14rem;
+  }
+
+  .runwayCashflowValue span,
+  .runwayDivider span,
+  .runwayGaugeCenter span {
+    font-size: 0.74rem;
+  }
+
+  .runwayGauge {
+    align-self: stretch;
+    align-items: end;
+  }
+
+  .runwayGaugeSvg {
+    width: min(100%, 288px);
+    transform: translateY(0);
+  }
+
+  .runwayGaugeCenter {
+    padding-top: 16px;
+  }
+
+  .runwayGaugeCenter strong {
+    font-size: 1.48rem;
+  }
+
+  .partnerWorkspaceCanvas {
+    min-height: 278px;
+    height: auto;
+    align-self: start;
+  }
+
+  .partnerWorkspaceShowcase {
+    grid-template-rows: auto;
+    align-content: start;
+    min-height: 0;
+    height: auto;
+  }
+
+  .partnerWorkspaceShell {
+    grid-template-columns: 78px minmax(0, 1fr);
+    border-radius: 16px;
+    min-height: 0;
+    height: auto;
+  }
+
+  .partnerWorkspaceSidebar {
+    padding: 11px 8px;
+    gap: 11px;
+  }
+
+  .partnerWorkspaceBrand {
+    gap: 5px;
+    font-size: 0.74rem;
+  }
+
+  .partnerWorkspaceBrandMark {
+    width: 12px;
+    height: 12px;
+  }
+
+  .partnerWorkspaceNav {
+    gap: 6px;
+  }
+
+  .partnerWorkspaceNavItem {
+    min-height: 22px;
+    padding: 0 6px;
+    border-radius: 6px;
+    font-size: 0.58rem;
+  }
+
+  .partnerWorkspaceMain {
+    padding: 10px 0 10px 10px;
+    gap: 10px;
+    min-height: 0;
+  }
+
+  .partnerWorkspaceIntro strong {
+    font-size: 0.8rem;
+  }
+
+  .partnerWorkspaceIntro span {
+    font-size: 0.58rem;
+    line-height: 1.3;
+  }
+
+  .partnerWorkspaceTable,
+  .partnerWorkspacePanel,
+  .partnerWorkspaceSettings {
+    border-radius: 12px 0 0 12px;
+    min-height: 0;
+  }
+
+  .partnerWorkspaceTableHead,
+  .partnerWorkspaceRow,
+  .partnerWorkspacePanelHead,
+  .partnerWorkspacePanelRow {
+    padding: 8px 10px;
+    gap: 6px;
+  }
+
+  .partnerWorkspaceTableHead,
+  .partnerWorkspaceRow {
+    grid-template-columns: minmax(0, 2.55fr) 70px 62px;
+    gap: 8px;
+  }
+
+  .partnerWorkspaceTableHead,
+  .partnerWorkspacePanelHead {
+    font-size: 0.5rem;
+  }
+
+  .partnerWorkspaceCompany,
+  .partnerWorkspaceUser {
+    gap: 6px;
+  }
+
+  .partnerWorkspaceAvatar,
+  .partnerWorkspaceUserAvatar {
+    width: 24px;
+    height: 24px;
+    font-size: 0.56rem;
+  }
+
+  .partnerWorkspaceCompanyMeta strong,
+  .partnerWorkspaceUserMeta strong {
+    font-size: 0.67rem;
+    white-space: normal;
+    line-height: 1.18;
+  }
+
+  .partnerWorkspaceCompanyMeta span,
+  .partnerWorkspaceUserMeta span,
+  .partnerWorkspacePlainValue {
+    font-size: 0.54rem;
+    line-height: 1.2;
+  }
+
+  .partnerWorkspaceCompanyMeta span {
+    display: none;
+  }
+
+  .partnerWorkspaceCell {
+    justify-self: end;
+  }
+
+  .partnerWorkspaceSource,
+  .partnerWorkspaceSuccess {
+    min-height: 20px;
+    padding: 0 7px;
+    font-size: 0.48rem;
+    border-radius: 999px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .partnerWorkspaceUsersTopbar {
+    padding-right: 10px;
+    gap: 8px;
+  }
+
+  .partnerWorkspaceUsersSearch {
+    min-width: 0;
+    flex: 1 1 auto;
+    padding: 0 9px;
+    font-size: 0.56rem;
+  }
+
+  .partnerWorkspaceUsersInvite {
+    padding: 0 9px;
+    font-size: 0.56rem;
+    white-space: nowrap;
+  }
+
+  .partnerWorkspaceUsersRoleWrap {
+    gap: 6px;
+  }
+
+  .partnerWorkspaceUsersToggle {
+    width: 30px;
+    height: 18px;
+  }
+
+  .partnerWorkspaceUsersToggleThumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .partnerWorkspaceUsersToggleActive .partnerWorkspaceUsersToggleThumb {
+    transform: translateX(12px);
+  }
+
+  .partnerWorkspaceUsersRowAction {
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+  }
+
+  .partnerWorkspaceSettingsTabs {
+    padding-right: 10px;
+    gap: 8px;
+  }
+
+  .partnerWorkspaceSettingsTab {
+    min-height: 22px;
+    padding: 0 8px;
+    font-size: 0.56rem;
+  }
+
+  .partnerWorkspaceSettingsSection {
+    padding: 10px;
+    gap: 8px;
+    border-radius: 10px 0 0 10px;
+  }
+
+  .partnerWorkspaceSettingMeta span,
+  .partnerWorkspaceSettingsInlineLabel {
+    font-size: 0.52rem;
+  }
+
+  .partnerWorkspaceSettingMeta strong {
+    font-size: 0.68rem;
+    line-height: 1.28;
+  }
+
+  .partnerWorkspaceModes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .partnerWorkspaceMode {
+    min-width: 0;
+  }
+
+  .partnerWorkspaceMode strong {
+    font-size: 0.56rem;
+  }
+
+  .partnerWorkspaceModePreview {
+    width: 100%;
+    height: 48px;
+    min-width: 0;
+    padding: 5px;
+    gap: 5px;
+    border-radius: 8px;
+  }
+
+  .partnerWorkspacePreviewSidebar,
+  .partnerWorkspacePreviewCanvas {
+    border-radius: 5px;
+  }
+
+  .partnerWorkspaceSettingsInlineHeader {
+    gap: 8px;
+  }
+
+  .partnerWorkspaceLanguage {
+    min-width: 0;
+    max-width: 100%;
+    min-height: 30px;
+    padding: 0 8px;
+    font-size: 0.56rem;
+  }
+
+  .partnerWorkspaceLanguageValue {
+    min-width: 0;
+    gap: 6px;
+  }
+
+  .partnerWorkspaceLanguageValue span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .partnerWorkspaceLanguageFlag {
+    width: 14px;
+    height: 14px;
+  }
 }
 
 @media (max-width: 520px) {
+  .showcase {
+    --showcase-mobile-visual-height: 500px;
+  }
+
   .section {
-    height: 520vh;
-    padding-bottom: 200px;
+    padding-bottom: 92px;
+  }
+
+  .runwayPanel {
+    gap: 6px;
+  }
+
+  .runwayCashflowValue strong {
+    font-size: 1.02rem;
+  }
+
+  .runwayCashflowValue span,
+  .runwayDivider span,
+  .runwayGaugeCenter span {
+    font-size: 0.68rem;
+  }
+
+  .runwayGaugeSvg {
+    width: min(100%, 248px);
+  }
+
+  .runwayGaugeCenter {
+    padding-top: 12px;
+  }
+
+  .runwayGaugeCenter strong {
+    font-size: 1.28rem;
+  }
+
+  .partnerWorkspaceCanvas {
+    min-height: 258px;
+  }
+
+  .partnerWorkspaceMain {
+    gap: 8px;
   }
 }
 
 @media (min-width: 721px) and (max-height: 860px) {
-  .section {
-    height: 246vh;
-  }
-
-  .stickyFrame {
-    padding: 5vh 0 4vh;
-  }
-
   .showcase {
     width: min(1020px, calc(100vw - (var(--container-pad) * 2)));
   }
@@ -2854,6 +3230,54 @@
 
   .copyCard h2 {
     font-size: clamp(1.34rem, 2.2vw, 2.14rem);
+  }
+
+  .copyCardPartner {
+    padding: 18px 20px 20px;
+  }
+
+  .copyCardPartner .copyContent {
+    gap: 12px;
+  }
+
+  .copyCardPartner .copyEyebrow {
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 0.64rem;
+    line-height: 1.16;
+  }
+
+  .copyCardPartner h2 {
+    max-width: 13.5ch;
+    font-size: clamp(1.28rem, 2vw, 1.82rem);
+    line-height: 0.98;
+  }
+
+  .copyCardPartner .copyBody {
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+
+  .copyCardPartner .copyBullets {
+    margin-top: 0;
+    gap: 10px;
+  }
+
+  .copyCardPartner .bullet {
+    gap: 9px;
+    font-size: 0.84rem;
+    line-height: 1.18;
+  }
+
+  .copyCardPartner .bullet svg {
+    margin-top: 2px;
+  }
+
+  .copyCardPartner .inlineCta {
+    min-height: 48px;
+    margin-top: 6px;
+    padding: 0 18px;
+    font-size: 0.88rem;
   }
 
   .copyBody {
@@ -2925,6 +3349,44 @@
     height: 160px;
   }
 
+  .runwayPanel {
+    gap: 8px;
+    padding-top: 2px;
+  }
+
+  .runwayCashflowBlock,
+  .runwayDivider {
+    transform: none;
+  }
+
+  .runwayCashflowValue strong {
+    font-size: 1.22rem;
+  }
+
+  .runwayCashflowValue span,
+  .runwayDivider span,
+  .runwayGaugeCenter span {
+    font-size: 0.76rem;
+  }
+
+  .runwayGauge {
+    align-self: stretch;
+    align-items: end;
+  }
+
+  .runwayGaugeSvg {
+    width: min(100%, 296px);
+    transform: translateY(0);
+  }
+
+  .runwayGaugeCenter {
+    padding-top: 18px;
+  }
+
+  .runwayGaugeCenter strong {
+    font-size: 1.56rem;
+  }
+
   .serviceHeroPanel {
     padding: 13px 15px 14px;
     gap: 4px;
@@ -2958,15 +3420,23 @@
   }
 
   .partnerWorkspaceSummary {
-    display: none;
+    margin-top: 10px;
+    padding: 10px 12px 12px;
+    border-radius: 12px;
+  }
+
+  .partnerWorkspaceSummaryLabel {
+    margin-bottom: 4px;
+    font-size: 0.6rem;
+  }
+
+  .partnerWorkspaceSummary strong {
+    font-size: 0.8rem;
+    line-height: 1.24;
   }
 }
 
 @media (min-width: 721px) and (max-height: 760px) {
-  .section {
-    height: 252vh;
-  }
-
   .copyCard,
   .visualCard {
     min-height: 430px;
@@ -2979,6 +3449,54 @@
 
   .copyCard h2 {
     font-size: clamp(1.2rem, 1.9vw, 1.8rem);
+  }
+
+  .copyCardPartner {
+    padding: 16px 18px 18px;
+  }
+
+  .copyCardPartner .copyContent {
+    gap: 10px;
+  }
+
+  .copyCardPartner .copyEyebrow {
+    min-height: 34px;
+    padding: 7px 11px;
+    font-size: 0.6rem;
+    line-height: 1.14;
+  }
+
+  .copyCardPartner h2 {
+    max-width: 13ch;
+    font-size: clamp(1.16rem, 1.75vw, 1.56rem);
+    line-height: 0.96;
+  }
+
+  .copyCardPartner .copyBody {
+    font-size: 0.8rem;
+    line-height: 1.32;
+  }
+
+  .copyCardPartner .copyBullets {
+    margin-top: 0;
+    gap: 8px;
+  }
+
+  .copyCardPartner .bullet {
+    gap: 8px;
+    font-size: 0.76rem;
+    line-height: 1.12;
+  }
+
+  .copyCardPartner .bullet svg {
+    margin-top: 1px;
+  }
+
+  .copyCardPartner .inlineCta {
+    min-height: 44px;
+    margin-top: 4px;
+    padding: 0 16px;
+    font-size: 0.82rem;
   }
 
   .copyBody,
@@ -3038,6 +3556,44 @@
     height: 146px;
   }
 
+  .runwayPanel {
+    gap: 6px;
+    padding-top: 0;
+  }
+
+  .runwayCashflowBlock,
+  .runwayDivider {
+    transform: none;
+  }
+
+  .runwayCashflowValue strong {
+    font-size: 1.08rem;
+  }
+
+  .runwayCashflowValue span,
+  .runwayDivider span,
+  .runwayGaugeCenter span {
+    font-size: 0.7rem;
+  }
+
+  .runwayGauge {
+    align-self: stretch;
+    align-items: end;
+  }
+
+  .runwayGaugeSvg {
+    width: min(100%, 264px);
+    transform: translateY(0);
+  }
+
+  .runwayGaugeCenter {
+    padding-top: 12px;
+  }
+
+  .runwayGaugeCenter strong {
+    font-size: 1.34rem;
+  }
+
   .serviceHeroPanel {
     padding: 11px 13px 12px;
     gap: 3px;
@@ -3071,7 +3627,19 @@
   }
 
   .partnerWorkspaceSummary {
-    display: none;
+    margin-top: 8px;
+    padding: 9px 10px 10px;
+    border-radius: 12px;
+  }
+
+  .partnerWorkspaceSummaryLabel {
+    margin-bottom: 4px;
+    font-size: 0.58rem;
+  }
+
+  .partnerWorkspaceSummary strong {
+    font-size: 0.74rem;
+    line-height: 1.22;
   }
 }
 
@@ -3079,34 +3647,13 @@
   height: auto;
 }
 
-:global(html[data-motion="reduced"]) .stickyFrame {
-  position: relative;
-  height: auto;
-  padding: 24px 0 0;
-}
-
 :global(html[data-motion="reduced"]) .introStage {
-  display: none;
+  display: grid;
 }
 
-:global(html[data-motion="reduced"]) .showcase {
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-@keyframes scrollWheel {
-  0% {
-    transform: translateY(0);
-    opacity: 0.9;
-  }
-
-  50% {
-    transform: translateY(9px);
-    opacity: 0.3;
-  }
-
-  100% {
-    transform: translateY(0);
-    opacity: 0.9;
-  }
+:global(html[data-motion="reduced"]) .charWrap {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
 }

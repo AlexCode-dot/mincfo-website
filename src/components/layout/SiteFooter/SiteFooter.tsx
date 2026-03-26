@@ -5,25 +5,18 @@ import Link from "next/link";
 import { useOptionalHomeOffering } from "@/components/home/HomeOfferingProvider";
 import ContactLink from "@/components/system/ContactLink";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
-import { useMotion } from "@/components/system/MotionProvider";
-import type { MotionPreference } from "@/lib/motion";
 import styles from "./SiteFooter.module.scss";
 
 export default function SiteFooter() {
   const homeOffering = useOptionalHomeOffering();
-  const { preference, setPreference } = useMotion();
   const showSolutions = homeOffering?.offering !== undefined
     ? homeOffering.offering === "platform"
     : true;
-  const motionModes: Array<{ key: MotionPreference; label: string }> = [
-    { key: "full", label: HOME_PAGE_TEXT.footer.motionFull },
-    { key: "reduced", label: HOME_PAGE_TEXT.footer.motionReduced },
-  ];
 
   return (
     <footer id="footer" className={styles.footer}>
       <div className={styles.container}>
-        <div className={styles.grid}>
+        <div className={`${styles.grid} ${!showSolutions ? styles.gridCompact : ""}`}>
           <div className={styles.brandCol}>
             <Link href="/" className={styles.brand} aria-label={HOME_PAGE_TEXT.footer.brandAria}>
               <svg className={styles.mark} viewBox="0 0 50 50" role="img" aria-hidden="true">
@@ -86,27 +79,11 @@ export default function SiteFooter() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={HOME_PAGE_TEXT.footer.linkedinAria}
-            className={styles.centerLink}
+            className={styles.endLink}
           >
             <Linkedin aria-hidden="true" className={styles.linkedinIcon} />
             {HOME_PAGE_TEXT.footer.linkedin}
           </a>
-          <div className={styles.motionControl} role="group" aria-label={HOME_PAGE_TEXT.footer.motionAria}>
-            <span className={styles.motionLabel}>{HOME_PAGE_TEXT.footer.motionLabel}</span>
-            <div className={styles.motionButtons}>
-              {motionModes.map((mode) => (
-                <button
-                  key={mode.key}
-                  type="button"
-                  className={`${styles.motionBtn} ${preference === mode.key ? styles.motionBtnActive : ""}`}
-                  onClick={() => setPreference(mode.key)}
-                  aria-pressed={preference === mode.key}
-                >
-                  {mode.label}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </footer>

@@ -10,15 +10,11 @@ import {
   FileText,
   Sparkles,
 } from "lucide-react";
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type MouseEvent,
-} from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import { usePathname } from "next/navigation";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
+import { getHomeRouteForOffering } from "@/lib/homeRoutes";
 import {
   ShowcaseGradientBarChart,
 } from "./HeroOfferingCharts";
@@ -33,39 +29,14 @@ const PARTNER_WORKSPACE_INITIAL_AUTOPLAY_DELAY_MS = 1600;
 const PARTNER_WORKSPACE_AUTOPLAY_DELAY_HOME_MS = 3600;
 const PARTNER_WORKSPACE_AUTOPLAY_DELAY_OTHER_MS = 2400;
 const PARTNER_WORKSPACE_AUTOPLAY_CLICK_DELAY_MS = 680;
+export const HERO_OFFERING_TITLE_ID = "hero-offering-title";
+const HERO_OFFERING_SHOWCASE_ID = "hero-offering-showcase";
+const HERO_OFFERING_RESTORE_KEY = "mincfo:restore-showcase";
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
-const formatTranslate3d = (x: number, y: number, scale?: number) => {
-  const snappedX = Math.round(x);
-  const snappedY = Math.round(y);
-
-  if (Math.abs(snappedX) < 1 && Math.abs(snappedY) < 1 && scale === undefined) {
-    return "none";
-  }
-
-  if (scale === undefined || Math.abs(scale - 1) < 0.001) {
-    return `translate3d(${snappedX}px, ${snappedY}px, 0)`;
-  }
-
-  return `translate3d(${snappedX}px, ${snappedY}px, 0) scale(${scale})`;
-};
-
 const smoothstep = (edge0: number, edge1: number, value: number) => {
   const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
   return t * t * (3 - 2 * t);
-};
-
-const getStaggeredProgress = (
-  progress: number,
-  start: number,
-  end: number,
-  index: number,
-  total: number,
-  spread = 0.16,
-) => {
-  if (total <= 1) return smoothstep(start, end, progress);
-  const offset = (index / (total - 1)) * spread;
-  return smoothstep(start + offset, end + offset, progress);
 };
 
 function MetricCardIcon({
@@ -497,15 +468,6 @@ function AgencyWorkspaceVisual() {
                   <div className={styles.partnerWorkspaceModes}>
                     <article className={styles.partnerWorkspaceMode}>
                       <div
-                        className={`${styles.partnerWorkspaceModePreview} ${styles.partnerWorkspaceModePreviewSystem}`}
-                      >
-                        <span className={styles.partnerWorkspacePreviewSidebar} />
-                        <span className={styles.partnerWorkspacePreviewCanvas} />
-                      </div>
-                      <strong>{workspace.settings.modes.system}</strong>
-                    </article>
-                    <article className={styles.partnerWorkspaceMode}>
-                      <div
                         className={`${styles.partnerWorkspaceModePreview} ${styles.partnerWorkspaceModePreviewLight}`}
                       >
                         <span className={styles.partnerWorkspacePreviewSidebar} />
@@ -563,168 +525,117 @@ function AgencyWorkspaceVisual() {
 export default function HeroOfferingShowcase() {
   const { offering, options, setOffering, shared } = useHomeOffering();
   const { isReducedMotion } = useMotion();
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const introStageRef = useRef<HTMLDivElement | null>(null);
-  const scrollHintRef = useRef<HTMLDivElement | null>(null);
+  const pathname = usePathname();
+  const handoffStageRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLDivElement | null>(null);
   const showcaseRef = useRef<HTMLDivElement | null>(null);
-  const optionSlotRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const copyCardRef = useRef<HTMLElement | null>(null);
-  const visualCardRef = useRef<HTMLDivElement | null>(null);
-  const charRefs = useRef<Array<HTMLSpanElement | null>>([]);
-  const positionedRef = useRef(false);
-  const previewLabelReadyRef = useRef(false);
-  const lastProgressRef = useRef(-1);
-  const lastEntranceProgressRef = useRef(-1);
+  const showcaseGridRef = useRef<HTMLDivElement | null>(null);
   const showcase = shared.offering.showcase;
   const introLines = showcase.introLines;
-  const [isPositioned, setIsPositioned] = useState(false);
-  const [previewLabelReady, setPreviewLabelReady] = useState(false);
-  const [introEntranceProgress, setIntroEntranceProgress] = useState(isReducedMotion ? 1 : 0);
+  const visual = showcase[offering];
+  const metricStats =
+    offering === "full-service" || offering === "partner" ? null : showcase[offering].stats;
+  const ActiveEyebrowIcon = OFFERING_ICONS[offering];
+  const [introVisible, setIntroVisible] = useState(isReducedMotion);
+  const [titleOpacity, setTitleOpacity] = useState(1);
+  const [titleScale, setTitleScale] = useState(1);
+  const [showcaseProgress, setShowcaseProgress] = useState(isReducedMotion ? 1 : 0);
+  const [showcaseFocus, setShowcaseFocus] = useState(isReducedMotion ? 1 : 0);
+  const [showcaseExitProgress, setShowcaseExitProgress] = useState(isReducedMotion ? 0 : 0);
 
   useEffect(() => {
-    let frame = 0;
+    if (typeof window === "undefined" || !pathname) return;
 
-    if (isReducedMotion) {
-      frame = window.requestAnimationFrame(() => {
-        setIntroEntranceProgress(1);
-      });
-      return () => {
-        if (frame) window.cancelAnimationFrame(frame);
-      };
-    }
+    const restoreTarget = window.sessionStorage.getItem(HERO_OFFERING_RESTORE_KEY);
+    if (restoreTarget !== pathname) return;
 
-    let startTime = 0;
-    const duration = 780;
-
-    const tick = (now: number) => {
-      if (!startTime) startTime = now;
-      const elapsed = now - startTime;
-      const progress = clamp(elapsed / duration, 0, 1);
-      const eased = 1 - (1 - progress) ** 3;
-      setIntroEntranceProgress(eased);
-      if (progress < 1) {
-        frame = window.requestAnimationFrame(tick);
-      }
+    const scrollToShowcase = () => {
+      const showcaseNode = showcaseRef.current;
+      if (!showcaseNode) return;
+      const scrollPaddingTop = Number.parseFloat(
+        window.getComputedStyle(document.documentElement).scrollPaddingTop,
+      ) || 0;
+      const targetY = showcaseNode.getBoundingClientRect().top + window.scrollY - scrollPaddingTop;
+      window.scrollTo({ top: Math.max(0, targetY), left: 0, behavior: "auto" });
+      window.sessionStorage.removeItem(HERO_OFFERING_RESTORE_KEY);
     };
 
-    frame = window.requestAnimationFrame(tick);
+    const firstFrame = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(scrollToShowcase);
+    });
 
     return () => {
-      if (frame) window.cancelAnimationFrame(frame);
+      window.cancelAnimationFrame(firstFrame);
     };
-  }, [isReducedMotion]);
+  }, [pathname]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (isReducedMotion) return;
+
     let frame = 0;
 
     const update = () => {
       frame = 0;
-      const section = sectionRef.current;
-      const introStage = introStageRef.current;
-      const scrollHint = scrollHintRef.current;
+      const handoffStage = handoffStageRef.current;
+      const titleNode = titleRef.current;
       const showcaseNode = showcaseRef.current;
-      const copyCard = copyCardRef.current;
-      const visualCard = visualCardRef.current;
-      if (!section || !introStage || !scrollHint || !showcaseNode || !copyCard || !visualCard) return;
+      const showcaseGridNode = showcaseGridRef.current;
+      if (!handoffStage) return;
 
-      const rect = section.getBoundingClientRect();
-      const scrollable = Math.max(rect.height - window.innerHeight, 1);
-      const holdSpan = 0.82;
-      const next = Math.round(clamp(-rect.top / (scrollable * holdSpan), 0, 1) / 0.01) * 0.01;
-      const entranceSnapshot = Math.round(introEntranceProgress * 1000) / 1000;
-      if (next === lastProgressRef.current && entranceSnapshot === lastEntranceProgressRef.current) return;
-      lastProgressRef.current = next;
-      lastEntranceProgressRef.current = entranceSnapshot;
+      const viewportHeight = window.innerHeight;
+      const useCompactViewport = window.innerWidth <= 720 || viewportHeight <= 820;
+      let nextOpacity = 1;
+      let nextScale = 1;
+      let nextIntroVisible = false;
 
-      const introScrollOpacity = isReducedMotion
-        ? 1
-        : next <= 0
-          ? 0
-          : next <= 0.08
-            ? smoothstep(0, 0.08, next)
-            : next <= 0.56
-              ? 1
-              : 1 - smoothstep(0.56, 0.9, next);
-      const introScrollShift = isReducedMotion
-        ? 0
-        : next <= 0.08
-          ? 22 - smoothstep(0, 0.08, next) * 22
-          : next <= 0.56
-            ? 0
-            : smoothstep(0.56, 0.9, next) * -18;
-      const introOpacity = isReducedMotion ? 1 : introScrollOpacity * introEntranceProgress;
-      const introShift = isReducedMotion ? 0 : introScrollShift + ((1 - introEntranceProgress) * 18);
-      const showcaseOpacity = isReducedMotion ? 1 : smoothstep(0.7, 0.92, next);
-      const showcaseTranslate = isReducedMotion ? 0 : 48 - showcaseOpacity * 48;
-      const controlsReveal = isReducedMotion ? 1 : smoothstep(0.74, 0.94, next);
-      const copyReveal = isReducedMotion ? 1 : smoothstep(0.78, 0.98, next);
-      const visualReveal = isReducedMotion ? 1 : smoothstep(0.82, 1, next);
-      const scrollHintReveal = isReducedMotion ? 0 : smoothstep(0.1, 0.18, next) * (1 - smoothstep(0.54, 0.72, next));
-
-      introStage.style.opacity = `${introOpacity}`;
-      introStage.style.transform = `translate3d(0, ${introShift}px, 0)`;
-      introStage.setAttribute("aria-hidden", introOpacity <= 0.02 ? "true" : "false");
-
-      scrollHint.style.opacity = `${scrollHintReveal}`;
-      showcaseNode.style.opacity = `${showcaseOpacity}`;
-      showcaseNode.style.transform = `translate3d(0, ${showcaseTranslate}px, 0)`;
-      if (!positionedRef.current) {
-        positionedRef.current = true;
-        setIsPositioned(true);
+      if (titleNode) {
+        const titleRect = titleNode.getBoundingClientRect();
+        const titleCenter = titleRect.top + (titleRect.height / 2);
+        const revealStart = viewportHeight * 0.58;
+        const revealEnd = viewportHeight * 0.14;
+        const fadeProgress = clamp(
+          (viewportHeight * 0.56 - titleCenter) / (viewportHeight * 0.48),
+          0,
+          1,
+        );
+        nextOpacity = 1 - smoothstep(0, 1, fadeProgress);
+        nextScale = 1 - (smoothstep(0, 1, fadeProgress) * 0.08);
+        nextIntroVisible = titleRect.top <= revealStart && titleRect.bottom >= revealEnd;
       }
 
-      const shouldShowPreviewLabel = isReducedMotion || showcaseOpacity >= 0.995;
-      if (previewLabelReadyRef.current !== shouldShowPreviewLabel) {
-        previewLabelReadyRef.current = shouldShowPreviewLabel;
-        setPreviewLabelReady(shouldShowPreviewLabel);
+      if (showcaseNode) {
+        const startCenter = viewportHeight * 1.06;
+        const endCenter = viewportHeight * 0.72;
+        const progressRange = Math.max(startCenter - endCenter, 1);
+        const focusCenter = viewportHeight * 0.78;
+        const focusRange = viewportHeight * 0.22;
+        const focusPlateau = viewportHeight * 0.12;
+        const showcaseRect = (showcaseGridNode ?? showcaseNode).getBoundingClientRect();
+        const showcaseAnchor = showcaseRect.top + Math.min(showcaseRect.height * 0.34, 180);
+        const nextProgress = clamp((startCenter - showcaseAnchor) / progressRange, 0, 1);
+        const focusDistance = Math.abs(showcaseAnchor - focusCenter);
+        const nextFocus = clamp(
+          1 - Math.max(focusDistance - focusPlateau, 0) / focusRange,
+          0,
+          1,
+        );
+        const showcaseCenter = showcaseRect.top + (showcaseRect.height / 2);
+        const exitStart = viewportHeight * (useCompactViewport ? 0.32 : 0.52);
+        const exitRange = viewportHeight * (useCompactViewport ? 0.56 : 0.42);
+        const exitProgress = clamp(
+          (exitStart - showcaseCenter) / exitRange,
+          0,
+          1,
+        );
+
+        setShowcaseProgress(nextProgress);
+        setShowcaseFocus(nextFocus);
+        setShowcaseExitProgress(smoothstep(0, 1, exitProgress));
       }
 
-      optionSlotRefs.current.forEach((node, index) => {
-        if (!node) return;
-        const optionReveal = isReducedMotion
-          ? 1
-          : getStaggeredProgress(controlsReveal, 0, 1, index, options.length, 0.22);
-        node.style.opacity = `${optionReveal}`;
-        node.style.transform = `translate3d(0, ${(1 - optionReveal) * 24}px, 0) scale(${0.96 + optionReveal * 0.04})`;
-      });
-
-      copyCard.style.opacity = `${copyReveal}`;
-      copyCard.style.transform = formatTranslate3d((1 - copyReveal) * -20, (1 - copyReveal) * 24);
-      visualCard.style.opacity = `${visualReveal}`;
-      visualCard.style.transform = formatTranslate3d(
-        (1 - visualReveal) * 22,
-        (1 - visualReveal) * 28,
-        0.97 + visualReveal * 0.03,
-      );
-
-      charRefs.current.forEach((node) => {
-        if (!node) return;
-        const lineIndex = Number(node.dataset.lineIndex ?? 0);
-        const charIndex = Number(node.dataset.charIndex ?? 0);
-        const total = Number(node.dataset.lineLength ?? 1);
-        const isSpace = node.dataset.space === "true";
-        const lineOffset = lineIndex * 0.03;
-        const charIn = getStaggeredProgress(
-          next,
-          0.04 + lineOffset,
-          0.16 + lineOffset,
-          charIndex,
-          total,
-          0.1,
-        );
-        const charOut = getStaggeredProgress(
-          next,
-          0.56,
-          0.86,
-          charIndex,
-          total,
-          0.08,
-        );
-        const charOpacity = isReducedMotion ? 1 : isSpace ? 1 : (charIn * (1 - charOut) * introEntranceProgress);
-        const charY = isReducedMotion ? 0 : isSpace ? 0 : ((1 - introEntranceProgress) * 18) + ((1 - charIn) * 42) - (charOut * 24);
-        node.style.opacity = `${charOpacity}`;
-        node.style.transform = `translate3d(0, ${charY}px, 0)`;
-      });
+      setIntroVisible(nextIntroVisible);
+      setTitleOpacity(nextOpacity);
+      setTitleScale(nextScale);
     };
 
     const scheduleUpdate = () => {
@@ -743,11 +654,7 @@ export default function HeroOfferingShowcase() {
       window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, [introEntranceProgress, isReducedMotion, options.length]);
-  const visual = showcase[offering];
-  const metricStats =
-    offering === "full-service" || offering === "partner" ? null : showcase[offering].stats;
-  const ActiveEyebrowIcon = OFFERING_ICONS[offering];
+  }, [isReducedMotion]);
 
 
   const handleCurrentPageCtaClick = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -777,98 +684,109 @@ export default function HeroOfferingShowcase() {
     window.scrollTo({ top: Math.max(0, targetY), left: 0, behavior: "smooth" });
   };
 
+  const handleOfferingChange = (nextOffering: (typeof options)[number]["id"]) => {
+    const targetRoute = getHomeRouteForOffering(nextOffering);
+
+    if (typeof window !== "undefined" && pathname && pathname !== targetRoute) {
+      window.sessionStorage.setItem(HERO_OFFERING_RESTORE_KEY, targetRoute);
+    }
+
+    setOffering(nextOffering);
+  };
+
   return (
-    <section
-      ref={sectionRef}
-      className={styles.section}
-      aria-label={showcase.sectionAriaLabel}
-    >
-      <div className={styles.stickyFrame}>
+    <section className={styles.section} aria-label={showcase.sectionAriaLabel}>
+      <div ref={handoffStageRef} className={styles.handoffStage}>
+        <div className={styles.introStage}>
         <div
-          ref={introStageRef}
-          className={`${styles.introStage} ${isPositioned ? styles.stageReady : ""}`}
+          ref={titleRef}
+          id={HERO_OFFERING_TITLE_ID}
+          className={`${styles.splitTitle} ${introVisible ? styles.splitTitleVisible : ""}`}
+          style={{
+            opacity: titleOpacity,
+            transform: `scale(${titleScale})`,
+          }}
+          aria-label={introLines.join(" ")}
+          role="heading"
+          aria-level={2}
         >
-          <div className={styles.splitTitle} aria-label={introLines.join(" ")} role="heading" aria-level={2}>
-            {introLines.map((line, lineIndex) => {
-              const lineChars = Array.from(line);
+          {introLines.map((line, lineIndex) => {
+            const words = line.split(" ");
+            let charOffset = 0;
+
+            return (
+              <p key={line} className={styles.splitLine}>
+                {words.map((word, wordIndex) => {
+                  const chars = Array.from(word);
+                  const startOffset = charOffset;
+                  charOffset += chars.length + 1;
+
+                  return (
+                    <span key={`${lineIndex}-${word}-${wordIndex}`} className={styles.wordGroup} aria-hidden="true">
+                      {chars.map((char, charIndex) => {
+                        const delay = lineIndex * 70 + (startOffset + charIndex) * 18;
+                        return (
+                          <span
+                            key={`${lineIndex}-${wordIndex}-${char}-${charIndex}`}
+                            className={styles.charWrap}
+                            style={{ "--char-delay": `${delay}ms` } as CSSProperties}
+                          >
+                            <span className={styles.charInner}>{char}</span>
+                          </span>
+                        );
+                      })}
+                    </span>
+                  );
+                })}
+              </p>
+            );
+          })}
+        </div>
+        </div>
+      </div>
+
+      <div
+        ref={showcaseRef}
+        id={HERO_OFFERING_SHOWCASE_ID}
+        className={styles.showcase}
+        style={{
+          "--showcase-progress": showcaseProgress.toFixed(3),
+          "--showcase-focus": showcaseFocus.toFixed(3),
+          "--showcase-exit-progress": showcaseExitProgress.toFixed(3),
+        } as CSSProperties}
+      >
+        <div className={styles.panel}>
+          <div className={styles.controlsHeader}>
+            <p className={styles.previewLabel}>
+              <span>{showcase.previewLabel}</span>
+            </p>
+          </div>
+
+          <div className={styles.controls} aria-label={showcase.tabListAriaLabel}>
+            {options.map((option) => {
+              const Icon = OFFERING_ICONS[option.id];
+              const active = offering === option.id;
 
               return (
-                <p key={line} className={styles.splitLine}>
-                  {lineChars.map((char, index) => (
-                    <span
-                      key={`${lineIndex}-${char}-${index}`}
-                      ref={(node) => {
-                        charRefs.current[lineIndex * 64 + index] = node;
-                      }}
-                      className={styles.charWrap}
-                      aria-hidden="true"
-                      data-line-index={lineIndex}
-                      data-char-index={index}
-                      data-line-length={lineChars.length}
-                      data-space={char === " " ? "true" : "false"}
-                    >
-                      <span className={styles.charInner}>{char === " " ? "\u00A0" : char}</span>
+                <div key={option.id} className={styles.optionSlot}>
+                  <button
+                    type="button"
+                    aria-pressed={active}
+                    className={`${styles.option} ${active ? styles.optionActive : ""}`}
+                    onClick={() => handleOfferingChange(option.id)}
+                  >
+                    <span className={styles.optionIcon}>
+                      <Icon size={18} aria-hidden="true" />
                     </span>
-                  ))}
-                </p>
+                    <span>{option.label}</span>
+                  </button>
+                </div>
               );
             })}
           </div>
 
-          <div
-            ref={scrollHintRef}
-            className={styles.scrollHint}
-            aria-hidden="true"
-          >
-            <span className={styles.scrollMouse}>
-              <span className={styles.scrollWheel} />
-            </span>
-          </div>
-        </div>
-
-        <div
-          ref={showcaseRef}
-          className={`${styles.showcase} ${isPositioned ? styles.stageReady : ""}`}
-        >
-          <div className={styles.panel}>
-            <div className={styles.controlsHeader}>
-              <p className={`${styles.previewLabel} ${previewLabelReady ? styles.previewLabelVisible : ""}`}>
-                <span>{showcase.previewLabel}</span>
-              </p>
-            </div>
-
-            <div className={styles.controls} aria-label={showcase.tabListAriaLabel}>
-              {options.map((option, index) => {
-                const Icon = OFFERING_ICONS[option.id];
-                const active = offering === option.id;
-
-                return (
-                  <div
-                    key={option.id}
-                    ref={(node) => {
-                      optionSlotRefs.current[index] = node;
-                    }}
-                    className={styles.optionSlot}
-                  >
-                    <button
-                      type="button"
-                      aria-pressed={active}
-                      className={`${styles.option} ${active ? styles.optionActive : ""}`}
-                      onClick={() => setOffering(option.id)}
-                    >
-                      <span className={styles.optionIcon}>
-                        <Icon size={18} aria-hidden="true" />
-                      </span>
-                      <span>{option.label}</span>
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className={styles.grid}>
+            <div ref={showcaseGridRef} className={styles.grid}>
               <article
-                ref={copyCardRef}
                 className={`${styles.copyCard} ${
                   offering === "partner" ? styles.copyCardPartner : ""
                 }`}
@@ -878,17 +796,7 @@ export default function HeroOfferingShowcase() {
                     <ActiveEyebrowIcon size={13} aria-hidden="true" />
                     <span>{visual.eyebrow}</span>
                   </span>
-                  <h2>
-                    {offering === "partner" ? (
-                      <>
-                        <span>Ökad proaktivitet</span>
-                        <br />
-                        <span>och skalbarhet</span>
-                      </>
-                    ) : (
-                      visual.title
-                    )}
-                  </h2>
+                  <h2>{visual.title}</h2>
                   <p className={styles.copyBody}>{visual.body}</p>
 
                   <div className={styles.copyBullets}>
@@ -915,11 +823,7 @@ export default function HeroOfferingShowcase() {
                 </div>
               </article>
 
-              <div
-                ref={visualCardRef}
-                className={styles.visualCard}
-                aria-hidden="true"
-              >
+              <div className={styles.visualCard} aria-hidden="true">
                 <div key={offering} className={styles.visualContent}>
                   <div className={styles.visualChrome}>
                     <span />
@@ -940,6 +844,8 @@ export default function HeroOfferingShowcase() {
 
                   <div
                     className={`${styles.visualBody} ${
+                      offering === "platform" ? styles.visualBodyPlatform : ""
+                    } ${
                       offering === "full-service" ? styles.visualBodyFullService : ""
                     }`}
                   >
@@ -971,21 +877,20 @@ export default function HeroOfferingShowcase() {
               </div>
             </div>
 
-            <div className={styles.showcasePager} aria-label={showcase.pagerAriaLabel}>
-              {options.map((option) => {
-                const isActive = option.id === offering;
-                return (
-                  <button
-                    key={option.id}
-                    type="button"
-                    className={`${styles.pagerDot} ${isActive ? styles.pagerDotActive : ""}`}
-                    aria-label={`Visa ${option.label}`}
-                    aria-pressed={isActive}
-                    onClick={() => setOffering(option.id)}
-                  />
-                );
-              })}
-            </div>
+          <div className={styles.showcasePager} aria-label={showcase.pagerAriaLabel}>
+            {options.map((option) => {
+              const isActive = option.id === offering;
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  className={`${styles.pagerDot} ${isActive ? styles.pagerDotActive : ""}`}
+                  aria-label={`Visa ${option.label}`}
+                  aria-pressed={isActive}
+                  onClick={() => handleOfferingChange(option.id)}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

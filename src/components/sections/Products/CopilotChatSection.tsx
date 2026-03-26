@@ -1,5 +1,5 @@
 import { Check, SendHorizontal } from "lucide-react";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ReactNode, RefObject } from "react";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import styles from "./CopilotChatSection.module.scss";
 
@@ -16,6 +16,7 @@ type CopilotExample = {
 type CopilotChatSectionProps = {
   anchorId?: string;
   className?: string;
+  titleRef?: RefObject<HTMLHeadingElement | null>;
   currentExample: CopilotExample;
   visible: boolean;
   showQuestionBubble: boolean;
@@ -31,6 +32,7 @@ type CopilotChatSectionProps = {
 type CopilotCopyProps = {
   className?: string;
   pillClassName?: string;
+  titleRef?: RefObject<HTMLHeadingElement | null>;
   title?: ReactNode;
   titleClassName?: string;
   textClassName?: string;
@@ -74,6 +76,7 @@ function MiniMincfoBrand() {
 export function CopilotCopy({
   className,
   pillClassName,
+  titleRef,
   title,
   titleClassName,
   textClassName,
@@ -86,7 +89,7 @@ export function CopilotCopy({
   return (
     <div className={`${styles.left} ${styles.aiLeft} ${visible ? styles.shown : ""} ${className ?? ""}`}>
       <span className={`${styles.pill} ${pillClassName ?? ""}`}>{content.aicopilot.leftPill}</span>
-      <h2 className={`${styles.title} ${titleClassName ?? ""}`}>{title ?? content.aicopilot.leftTitle}</h2>
+      <h2 ref={titleRef} className={`${styles.title} ${titleClassName ?? ""}`}>{title ?? content.aicopilot.leftTitle}</h2>
       <p className={`${styles.text} ${textClassName ?? ""}`}>{content.aicopilot.leftIntro}</p>
 
       <ul className={`${styles.list} ${listClassName ?? ""}`}>
@@ -217,6 +220,7 @@ export function CopilotVisual({
 export function CopilotChatSection({
   anchorId,
   className,
+  titleRef,
   currentExample,
   visible,
   showQuestionBubble,
@@ -234,7 +238,7 @@ export function CopilotChatSection({
       className={`${styles.container} ${className ?? ""}`}
       style={{ scrollMarginTop: "clamp(88px, 12vh, 140px)" } as CSSProperties}
     >
-      <CopilotCopy visible={visible} />
+      <CopilotCopy visible={visible} titleRef={titleRef} />
       <CopilotVisual
         currentExample={currentExample}
         visible={visible}

@@ -169,8 +169,23 @@
 
 @media (max-width: 640px) {
   .section {
-    margin-top: -60px;
-    padding: 156px 0 40px;
+    margin-top: -42px;
+    padding: 120px 0 36px;
+  }
+
+  .curveCut {
+    transform: scaleY(0.62);
+    transform-origin: top center;
+  }
+
+  .background::after {
+    background-size: 28px 28px, 28px 28px;
+    opacity: 0.16;
+  }
+
+  .background {
+    transform: scaleY(0.62);
+    transform-origin: top center;
   }
 
   .ctaPanel {

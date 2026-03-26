@@ -98,6 +98,7 @@
   display: grid;
   place-items: center;
   perspective: 1600px;
+  touch-action: pan-y;
 }
 
 .controls {
@@ -534,25 +535,27 @@
 
 @media (max-width: 760px) {
   .container {
-    padding-top: 72px;
+    padding-top: 48px;
   }
 
   .section {
-    padding: 98px 0 94px;
+    margin-top: -54px;
+    padding: 82px 0 88px;
   }
 
   .curveCut {
-    height: 150px;
+    transform: scaleY(0.62);
+    transform-origin: top center;
   }
 
   .cardsShell {
     margin-top: 34px;
     width: calc(100% + var(--container-pad) * 2);
     margin-left: calc(var(--container-pad) * -1);
-    min-height: 332px;
+    min-height: 430px;
     display: grid;
     place-items: center;
-    overflow: hidden;
+    overflow: visible;
     perspective: 1400px;
   }
 
@@ -561,7 +564,7 @@
   }
 
   .trustedTicker {
-    margin-top: 52px;
+    margin-top: 36px;
     padding: 0;
   }
 
@@ -587,6 +590,16 @@
     padding: 10px 0;
   }
 
+  .background::after {
+    opacity: 0.16;
+    background-size: auto, 24px 24px;
+  }
+
+  .background {
+    transform: scaleY(0.62);
+    transform-origin: top center;
+  }
+
   .tickerItem {
     padding: 0 4px;
   }
@@ -598,11 +611,12 @@
   .card {
     position: absolute;
     width: min(84vw, 350px);
-    min-height: 0;
+    min-height: 390px;
     padding: 20px;
     border-radius: 18px;
     opacity: 0;
     pointer-events: none;
+    grid-template-rows: auto 1fr auto;
   }
 
   .companyBrand {
@@ -631,11 +645,11 @@
   }
 
   .visible .leftCard {
-    transform: translate3d(-52%, 12px, -64px) rotate(-4deg) scale(0.9);
+    transform: translate3d(-44%, 12px, -64px) rotate(-4deg) scale(0.9);
   }
 
   .visible .rightCard {
-    transform: translate3d(52%, 12px, -64px) rotate(4deg) scale(0.9);
+    transform: translate3d(44%, 12px, -64px) rotate(4deg) scale(0.9);
   }
 
   .visible .hiddenCard {
