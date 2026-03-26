@@ -87,8 +87,8 @@
       },
       "full-service": {
         "eyebrow": "Helhetslösning",
-        "title": "Ekonomifunktionen som tjänst",
-        "body": "MinCFO tar fullt ansvar för rapportering, uppföljning och finansiell struktur.Ta nästa steg mot en state-of-the-art-ekonomifunktion!",
+        "title": "Ekonomifunktionen as-a-service",
+        "body": "MinCFO tar fullt ansvar för rapportering, uppföljning och finansiell struktur. Växla upp till en ekonomifunktion som ligger flera steg före!",
         "ctaLabel": "Gå till helhetslösningen",
         "ctaHref": "/full-service",
         "serviceVisual": {
@@ -96,8 +96,8 @@
           "chipDelivery": "Löpande uppföljning",
           "chipLeadership": "Rapport klar",
           "eyebrow": "Helhetslösning",
-          "title": "Vi sköter hela ekonomifunktionen",
-          "badge": "Med MinCFO",
+          "title": "Vi är hela din ekonomifunktion",
+          "badge": "Finance-as-a-service",
           "steps": [
             "Redovisning",
             "Rapportering",
@@ -105,15 +105,15 @@
             "Rådgivning"
           ],
           "summaryReportLabel": "Rapportering",
-          "summaryReportValue": "Tydligt underlag",
-          "summaryAlertsLabel": "Planering",
-          "summaryAlertsValue": "Bättre beslut framåt"
+          "summaryReportValue": "Pålitliga siffror i realtid",
+          "summaryAlertsLabel": "Prognostisering",
+          "summaryAlertsValue": "Precision i varje beslut"
         }
       },
       "partner": {
         "eyebrow": "För redovisningsbyråer och ekonomikonsulter",
         "title": "Ökad proaktivitet och skalbarhet",
-        "body": "Standardisera analys och dashboards över hela klientportföljen. Med en enhetlig modell onboardar ni nya bolag snabbare och säkrar en högkvalitativ leverans i varje uppdrag.",
+        "body": "Effektivisera rådgivning och klientkommunikation över hela klientportföljen. Med en enhetlig modell onboardar ni nya bolag snabbare och säkrar en högkvalitativ leverans i varje uppdrag.",
         "ctaLabel": "Gå till byråsidan",
         "ctaHref": "/partner",
         "signal": "Klientportfölj synkad",
@@ -164,7 +164,7 @@
         "title": "MinCFO för multi-client leverans",
         "body": "För byråer och Fractional CFOs som vill standardisera uppföljning, leverera bättre rådgivning och arbeta mer skalbart över flera klienter.",
         "bullets": [
-          "Onboarda nya klienter i en färdig modell – slipp tidskrävande speciallösningar.",
+          "Koppla på nya klienter i en färdig modell – slipp tidskrävande speciallösningar.",
           "Visualisera kundens framtid med AI-drivna dashboards och forecasts.",
           "Den självklara plattformen för byråer, advisors och Fractional CFOs."
         ],

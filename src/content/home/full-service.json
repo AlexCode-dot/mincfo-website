@@ -103,17 +103,17 @@
         "Likviditet och utfall följs i samma vy",
         "Strategiskt beslutsstöd utan operativ belastning"
       ],
-      "resultTitle": "Income Statement · 2025",
-      "currentLabel": "Current",
-      "previousLabel": "Previous",
+      "resultTitle": "Finansiell rapport · 2025",
+      "currentLabel": "Senaste",
+      "previousLabel": "Föregående",
       "currencyLabel": "SEK",
       "metricOptions": [
-        "Net Income",
+        "Net omsättning",
         "EBIT",
         "EBITDA",
-        "Gross Profit"
+        "Bruttovinst"
       ],
-      "compareLabel": "Compared to previous period",
+      "compareLabel": "Jämfört med fg. period",
       "trendAxisTicks": [
         "500K",
         "375K",
@@ -147,14 +147,14 @@
         "Tidiga signaler på risker i likviditeten",
         "Mindre intern belastning i rapportering och admin"
       ],
-      "forecastTitle": "Forecast",
-      "liveLabel": "Live forecast",
+      "forecastTitle": "Prognos",
+      "liveLabel": "Live prognos",
       "reconciliationTitle": "",
       "reconciliationSubtext": "",
-      "actualPrefix": "Actual month",
+      "actualPrefix": "Aktuell månad",
       "forecastPrefix": "Forecast month",
-      "vsPrevious": "Vs previous month",
-      "annualVariance": "Annual variance vs baseline",
+      "vsPrevious": "Jämfört med föregående månad",
+      "annualVariance": "Årsavvikelse mot baslinje",
       "legend": "",
       "monthLabelsEn": [
         "Jan",
@@ -215,7 +215,7 @@
     "pill": "KUNDCASE",
     "title": "Bolag som använder MinCFO som sin ekonomifunktion",
     "intro": "Här är exempel på team som använder MinCFO som helhetslösning för att slippa driva finance internt, men ändå ha full insyn i resultat, cashflow och avvikelser.",
-    "tickerLabel": "Betrodd av bolag som vill lägga ekonomi och uppföljning hos en extern partner",
+    "tickerLabel": "Betrodd av 50+ företag som lagt ut hela sin ekonomi till MinCFO",
     "controlsAria": "Bläddra kundomdömen",
     "prevAria": "Föregående omdöme",
     "nextAria": "Nästa omdöme",
