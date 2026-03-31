@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronRight, Lock, Maximize2, Minimize2, Play } from "lucide-react";
+import { ChevronRight, Lock, Maximize2, Minimize2, Play, PlayCircle } from "lucide-react";
+import { usePathname } from "next/navigation";
 import {
   useEffect,
   useLayoutEffect,
@@ -48,6 +49,7 @@ type IdleWindow = Window & {
 export default function Hero() {
   const { content, offering } = useHomeOffering();
   const { isReducedMotion } = useMotion();
+  const pathname = usePathname();
   const sectionRef = useRef<HTMLElement | null>(null);
   const topBackgroundLayerRef = useRef<HTMLDivElement | null>(null);
   const cardStageRef = useRef<HTMLDivElement | null>(null);
@@ -56,6 +58,7 @@ export default function Hero() {
   const cardWrapRef = useRef<HTMLDivElement | null>(null);
   const cardBodyRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const demoCenteringTimeoutsRef = useRef<number[]>([]);
   const playRequestedRef = useRef(false);
   const introTimeoutRef = useRef<number | null>(null);
   const revealTimeoutRef = useRef<number | null>(null);
@@ -331,6 +334,12 @@ export default function Hero() {
       }
       if (introProgressFrameRef.current) {
         window.cancelAnimationFrame(introProgressFrameRef.current);
+      }
+      if (demoCenteringTimeoutsRef.current.length > 0) {
+        for (const timeoutId of demoCenteringTimeoutsRef.current) {
+          window.clearTimeout(timeoutId);
+        }
+        demoCenteringTimeoutsRef.current = [];
       }
       if (mediaSourceRef.current) {
         mediaSourceRef.current.disconnect();
@@ -679,6 +688,50 @@ export default function Hero() {
     void handleToggleFullscreen();
   };
 
+  const centerDemoCard = (behavior: ScrollBehavior) => {
+    const cardStage = cardStageRef.current;
+    if (!cardStage) return;
+
+    const rect = cardStage.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const absoluteTop = rect.top + window.scrollY;
+    const centerOffset = Math.max(0, (viewportHeight - rect.height) / 2);
+    const upwardBias = Math.min(viewportHeight * 0.08, 72);
+    const centeredTop = absoluteTop - centerOffset - upwardBias;
+    const maxScrollTop = Math.max(
+      0,
+      document.documentElement.scrollHeight - viewportHeight,
+    );
+
+    window.scrollTo({
+      top: Math.min(Math.max(0, centeredTop), maxScrollTop),
+      left: 0,
+      behavior,
+    });
+  };
+
+  const handleScrollToDemo = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+
+    if (demoCenteringTimeoutsRef.current.length > 0) {
+      for (const timeoutId of demoCenteringTimeoutsRef.current) {
+        window.clearTimeout(timeoutId);
+      }
+      demoCenteringTimeoutsRef.current = [];
+    }
+
+    centerDemoCard("smooth");
+
+    const followUpDelays = [260, 560, 920];
+    demoCenteringTimeoutsRef.current = followUpDelays.map((delay) =>
+      window.setTimeout(() => {
+        centerDemoCard("smooth");
+      }, delay),
+    );
+  };
+
+  const contactReturnPath = pathname || "/";
+
   return (
     <section ref={sectionRef} id="hero" className={styles.hero}>
       <div className={styles.topBackground} aria-hidden="true">
@@ -716,14 +769,26 @@ export default function Hero() {
           </p>
 
           <div className={styles.ctaRow}>
-            <ContactLink className={styles.primaryCta} href="/contact" returnPath="/" returnSectionId="hero">
-              {content.hero.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
-            </ContactLink>
+            {offering === "platform" ? (
+              <>
+                <a className={styles.primaryCta} href="#hero-demo" onClick={handleScrollToDemo}>
+                  {content.hero.secondaryCta} <PlayCircle aria-hidden="true" className={styles.ctaIcon} />
+                </a>
+                <ContactLink className={styles.secondaryCta} href="/contact" returnPath={contactReturnPath} returnSectionId="hero">
+                  {content.hero.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+                </ContactLink>
+              </>
+            ) : (
+              <ContactLink className={styles.primaryCta} href="/contact" returnPath={contactReturnPath} returnSectionId="hero">
+                {content.hero.primaryCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+              </ContactLink>
+            )}
           </div>
         </div>
 
         <div
           ref={cardStageRef}
+          id="hero-demo"
           className={`${styles.cardStage} ${isHeroReady ? styles.cardStageReady : ""} ${isCardEntered || isReducedMotion ? styles.cardStageEntered : ""}`}
         >
           <div className={styles.cardWrap} ref={cardWrapRef}>

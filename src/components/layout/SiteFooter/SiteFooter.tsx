@@ -49,12 +49,11 @@ export default function SiteFooter() {
 
           <div className={styles.linkCol}>
             <h3>{HOME_PAGE_TEXT.footer.companyTitle}</h3>
-            <Link href="#customers">{HOME_PAGE_TEXT.footer.company[0]}</Link>
-            <Link href="#security">{HOME_PAGE_TEXT.footer.company[1]}</Link>
+            <Link href="#product">{HOME_PAGE_TEXT.footer.company[0]}</Link>
+            <Link href="#customers">{HOME_PAGE_TEXT.footer.company[1]}</Link>
             <ContactLink href="/karriar" returnPath="/" returnSectionId="footer">
               {HOME_PAGE_TEXT.footer.company[2]}
             </ContactLink>
-            <a href={`mailto:${HOME_PAGE_TEXT.footer.email}`}>{HOME_PAGE_TEXT.footer.email}</a>
           </div>
 
           <div className={styles.linkCol}>

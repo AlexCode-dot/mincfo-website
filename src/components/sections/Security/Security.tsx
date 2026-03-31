@@ -30,6 +30,14 @@ export default function Security() {
       id="security"
       className={`${styles.section} ${visible ? styles.visible : ""}`}
     >
+      <svg
+        className={styles.curveCut}
+        viewBox="0 0 1440 190"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path d="M0 104 C280 104 480 13 720 13 C960 13 1160 104 1440 104" />
+      </svg>
       <div className={styles.background} aria-hidden="true" />
 
       <div className={styles.container}>
