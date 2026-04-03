@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type TouchEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
 import styles from "./Customers.module.scss";
@@ -50,17 +50,26 @@ export default function Customers() {
   const { content } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
+  const svgPathRef = useRef<SVGPathElement | null>(null);
+  const backgroundRef = useRef<HTMLDivElement | null>(null);
+  const curveFrameRef = useRef(0);
   const touchStartXRef = useRef<number | null>(null);
   const touchStartYRef = useRef<number | null>(null);
   const lastCurveProgressRef = useRef(-1);
   const [visible, setVisible] = useState(false);
-  const [curveProgress, setCurveProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const testimonials: Testimonial[] = content.customers.testimonials.map((item) => ({ ...item }));
-  const trustedLogos = content.customers.trustedLogos.map((logo) => ({ ...logo }));
+  const testimonials = useMemo<Testimonial[]>(
+    () => content.customers.testimonials.map((item) => ({ ...item })),
+    [content],
+  );
+  const trustedLogos = useMemo(
+    () => content.customers.trustedLogos.map((logo) => ({ ...logo })),
+    [content],
+  );
   const cardAriaTemplate = content.customers.cardAriaLabelTemplate;
-  const trustedLogoByName = new Map<string, string>(
-    trustedLogos.map((logo) => [logo.name, logo.file]),
+  const trustedLogoByName = useMemo(
+    () => new Map<string, string>(trustedLogos.map((logo) => [logo.name, logo.file])),
+    [trustedLogos],
   );
 
   useEffect(() => {
@@ -79,33 +88,66 @@ export default function Customers() {
   }, []);
 
   useEffect(() => {
+    const applyCurve = (progress: number) => {
+      const sideY = 6;
+      const centerY = lerp(6, 86, progress);
+      const path = svgPathRef.current;
+      if (path) {
+        path.setAttribute("d", `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`);
+      }
+      const points: string[] = [];
+      for (let i = 0; i <= 18; i += 1) {
+        const t = i / 18;
+        const x = cubic(0, 280, 480, 720, t);
+        const y = cubic(sideY, sideY, centerY, centerY, t);
+        points.push(`${(x / 1440) * 100}% ${y}px`);
+      }
+      for (let i = 1; i <= 18; i += 1) {
+        const t = i / 18;
+        const x = cubic(720, 960, 1160, 1440, t);
+        const y = cubic(centerY, centerY, sideY, sideY, t);
+        points.push(`${(x / 1440) * 100}% ${y}px`);
+      }
+      const clip = `polygon(${points.join(", ")}, 100% 100%, 0% 100%)`;
+      const bg = backgroundRef.current;
+      if (bg) {
+        bg.style.clipPath = clip;
+        (bg.style as unknown as Record<string, string>).WebkitClipPath = clip;
+      }
+    };
+
     const updateCurve = () => {
+      curveFrameRef.current = 0;
       const section = sectionRef.current;
       if (!section) return;
       const rect = section.getBoundingClientRect();
       const viewport = window.innerHeight;
+      let progress: number;
       if (rect.top >= viewport) {
-        if (lastCurveProgressRef.current !== 0) {
-          lastCurveProgressRef.current = 0;
-          setCurveProgress(0);
-        }
+        progress = 0;
       } else {
         const start = viewport * 0.92;
         const end = viewport * 0.46;
-        const progress = Math.round(clamp((start - rect.top) / (start - end), 0, 1) * 120) / 120;
-        if (progress !== lastCurveProgressRef.current) {
-          lastCurveProgressRef.current = progress;
-          setCurveProgress(progress);
-        }
+        progress = Math.round(clamp((start - rect.top) / (start - end), 0, 1) * 120) / 120;
+      }
+      if (progress !== lastCurveProgressRef.current) {
+        lastCurveProgressRef.current = progress;
+        applyCurve(progress);
       }
     };
 
-    updateCurve();
-    window.addEventListener("scroll", updateCurve, { passive: true });
-    window.addEventListener("resize", updateCurve);
+    const scheduleCurve = () => {
+      if (curveFrameRef.current) return;
+      curveFrameRef.current = window.requestAnimationFrame(updateCurve);
+    };
+
+    scheduleCurve();
+    window.addEventListener("scroll", scheduleCurve, { passive: true });
+    window.addEventListener("resize", scheduleCurve);
     return () => {
-      window.removeEventListener("scroll", updateCurve);
-      window.removeEventListener("resize", updateCurve);
+      if (curveFrameRef.current) window.cancelAnimationFrame(curveFrameRef.current);
+      window.removeEventListener("scroll", scheduleCurve);
+      window.removeEventListener("resize", scheduleCurve);
     };
   }, []);
 
@@ -119,23 +161,6 @@ export default function Customers() {
 
   const prevIndex = (activeIndex - 1 + testimonials.length) % testimonials.length;
   const nextIndex = (activeIndex + 1) % testimonials.length;
-  const sideY = 6;
-  const centerY = lerp(6, 86, curveProgress);
-  const cutPath = `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`;
-  const curvePoints: string[] = [];
-  for (let i = 0; i <= 18; i += 1) {
-    const t = i / 18;
-    const x = cubic(0, 280, 480, 720, t);
-    const y = cubic(sideY, sideY, centerY, centerY, t);
-    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
-  }
-  for (let i = 1; i <= 18; i += 1) {
-    const t = i / 18;
-    const x = cubic(720, 960, 1160, 1440, t);
-    const y = cubic(centerY, centerY, sideY, sideY, t);
-    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
-  }
-  const cutClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0% 100%)`;
   const goPrev = () => {
     setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
@@ -191,13 +216,13 @@ export default function Customers() {
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d={cutPath} />
+        <path ref={svgPathRef} d="M0 6 C280 6 480 6 720 6 C960 6 1160 6 1440 6" />
       </svg>
 
       <div
+        ref={backgroundRef}
         className={styles.background}
         aria-hidden="true"
-        style={{ clipPath: cutClip, WebkitClipPath: cutClip } as CSSProperties}
       />
 
       <div className={styles.container}>

@@ -454,6 +454,7 @@ export default function AICopilot() {
       const section = sectionRef.current;
       if (section) {
         const rect = section.getBoundingClientRect();
+        if (rect.bottom < -200 || rect.top > window.innerHeight + 200) return;
         const viewportHeight = Math.max(window.innerHeight, 1);
         const scrollableDistance = Math.max(section.offsetHeight - viewportHeight, viewportHeight);
         const sectionProgress = clamp((-rect.top) / scrollableDistance, 0, 1);

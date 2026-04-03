@@ -276,3 +276,17 @@ export const CFO_FINANCE_CONTENT = getPageContent("CFO & Finance Team");
 export const SAAS_TECH_CONTENT = getPageContent("SaaS / Tech");
 export const KONSULT_TJANSTER_CONTENT = getPageContent("Konsult & Tjänster");
 export const EHANDEL_CONTENT = getPageContent("E-handel");
+
+// Async version that fetches from Sanity with JSON fallback
+export async function fetchSolutionContent(key: string): Promise<SolutionPageContent> {
+  try {
+    const { fetchSolutionPagesText } = await import("@/sanity/lib/fetchSolutionContent");
+    const data = await fetchSolutionPagesText();
+    const raw = data as RawSolutionPagesText;
+    const page = raw.pages.find((p) => p.key === key);
+    if (!page) return getPageContent(key);
+    return mapPage(page);
+  } catch {
+    return getPageContent(key);
+  }
+}

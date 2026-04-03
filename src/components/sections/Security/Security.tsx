@@ -2,10 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Database, Loader2, Lock } from "lucide-react";
+import { useOptionalHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import styles from "./Security.module.scss";
 
 export default function Security() {
+  const ctx = useOptionalHomeOffering();
+  const security = ctx?.shared.security ?? HOME_PAGE_TEXT.security;
   const sectionRef = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -42,9 +45,9 @@ export default function Security() {
 
       <div className={styles.container}>
         <header className={styles.header}>
-          <span className={styles.pill}>{HOME_PAGE_TEXT.security.pill}</span>
-          <h2>{HOME_PAGE_TEXT.security.title}</h2>
-          <p>{HOME_PAGE_TEXT.security.intro}</p>
+          <span className={styles.pill}>{security.pill}</span>
+          <h2>{security.title}</h2>
+          <p>{security.intro}</p>
         </header>
 
         <div className={styles.grid}>
@@ -72,8 +75,8 @@ export default function Security() {
               </svg>
               <Lock className={styles.visualIcon} size={24} aria-hidden="true" />
             </div>
-            <h3>{HOME_PAGE_TEXT.security.cards[0].title}</h3>
-            <p>{HOME_PAGE_TEXT.security.cards[0].body}</p>
+            <h3>{security.cards[0].title}</h3>
+            <p>{security.cards[0].body}</p>
           </article>
 
           <article className={styles.card}>
@@ -93,8 +96,8 @@ export default function Security() {
                 aria-hidden="true"
               />
             </div>
-            <h3>{HOME_PAGE_TEXT.security.cards[1].title}</h3>
-            <p>{HOME_PAGE_TEXT.security.cards[1].body}</p>
+            <h3>{security.cards[1].title}</h3>
+            <p>{security.cards[1].body}</p>
           </article>
 
           <article className={styles.card}>
@@ -139,8 +142,8 @@ export default function Security() {
                 />
               </svg>
             </div>
-            <h3>{HOME_PAGE_TEXT.security.cards[2].title}</h3>
-            <p>{HOME_PAGE_TEXT.security.cards[2].body}</p>
+            <h3>{security.cards[2].title}</h3>
+            <p>{security.cards[2].body}</p>
           </article>
         </div>
       </div>

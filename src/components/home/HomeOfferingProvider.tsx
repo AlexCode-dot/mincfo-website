@@ -14,6 +14,8 @@ import {
   HOME_PAGE_SHARED_TEXT,
   getHomePageText,
   type HomeOfferingMode,
+  type HomePageText,
+  type PreFetchedHomeContent,
 } from "@/content/homePageText";
 import { getHomeRouteForOffering, getOfferingFromPathname } from "@/lib/homeRoutes";
 
@@ -31,11 +33,10 @@ type HomeOfferingContextValue = {
 
 const HomeOfferingContext = createContext<HomeOfferingContextValue | null>(null);
 
-const OPTIONS = HOME_PAGE_SHARED_TEXT.offering.options as OfferingOption[];
-
 type HomeOfferingProviderProps = PropsWithChildren<{
   allowedOfferings?: readonly HomeOfferingMode[];
   initialOffering?: HomeOfferingMode;
+  prefetchedContent?: PreFetchedHomeContent;
   syncWithUrl?: boolean;
 }>;
 
@@ -59,6 +60,7 @@ export function HomeOfferingProvider({
   children,
   allowedOfferings = HOME_OFFERING_MODES,
   initialOffering,
+  prefetchedContent,
   syncWithUrl = true,
 }: HomeOfferingProviderProps) {
   const pathname = usePathname();
@@ -66,7 +68,11 @@ export function HomeOfferingProvider({
   const [localOffering, setOfferingState] = useState<HomeOfferingMode>(() =>
     resolveInitialOffering(allowedOfferings, initialOffering),
   );
+
+  const shared = (prefetchedContent?.shared ?? HOME_PAGE_SHARED_TEXT) as typeof HOME_PAGE_SHARED_TEXT;
+  const OPTIONS = shared.offering.options as OfferingOption[];
   const options = OPTIONS.filter((option) => allowedOfferings.includes(option.id));
+
   const pathnameOffering = pathname ? getOfferingFromPathname(pathname) : null;
   const offering = syncWithUrl
     ? (pathnameOffering && allowedOfferings.includes(pathnameOffering)
@@ -89,12 +95,17 @@ export function HomeOfferingProvider({
     }
   };
 
+  const getContent = (mode: HomeOfferingMode): HomePageText =>
+    prefetchedContent
+      ? (prefetchedContent.byMode[mode] as HomePageText)
+      : getHomePageText(mode);
+
   const value: HomeOfferingContextValue = {
-    content: getHomePageText(offering),
+    content: getContent(offering),
     offering,
     options,
     setOffering,
-    shared: HOME_PAGE_SHARED_TEXT,
+    shared,
   };
 
   return (

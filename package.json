@@ -8,17 +8,23 @@
     "start": "next start",
     "lint": "eslint",
     "content:export:gdocs": "node scripts/export-briefs-to-gdocs.mjs",
-    "content:import:gdocs": "node scripts/import-briefs-from-gdocs.mjs"
+    "content:import:gdocs": "node scripts/import-briefs-from-gdocs.mjs",
+    "content:seed:sanity": "node scripts/seed-sanity.mjs",
+    "content:validate:sanity": "node scripts/validate-sanity.mjs"
   },
   "dependencies": {
+    "@sanity/client": "^7.20.0",
+    "@sanity/vision": "^5.18.0",
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.542.0",
     "motion": "^12.37.0",
     "next": "16.1.6",
+    "next-sanity": "^12.2.1",
     "ogl": "^1.0.11",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "recharts": "^3.8.0",
+    "sanity": "^5.18.0",
     "three": "^0.183.0"
   },
   "devDependencies": {

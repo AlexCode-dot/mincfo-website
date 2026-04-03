@@ -581,6 +581,8 @@ export default function HeroOfferingShowcase() {
       const showcaseNode = showcaseRef.current;
       const showcaseGridNode = showcaseGridRef.current;
       if (!handoffStage) return;
+      const stageRect = handoffStage.getBoundingClientRect();
+      if (stageRect.bottom < -200 || stageRect.top > window.innerHeight + 200) return;
 
       const viewportHeight = window.innerHeight;
       const useCompactViewport = window.innerWidth <= 720 || viewportHeight <= 820;

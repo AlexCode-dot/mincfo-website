@@ -21,6 +21,7 @@ import {
   memo,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   useSyncExternalStore,
@@ -31,7 +32,6 @@ import { Bar, BarChart, Cell, ResponsiveContainer, XAxis } from "recharts";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import PartnerWorkspaceSettingsPanel from "@/components/home/PartnerWorkspaceSettingsPanel";
 import { useMotion } from "@/components/system/MotionProvider";
-import BeamBackgroundMain from "@/components/visual/BeamBackgroundMain/BeamBackgroundMain";
 import styles from "./HowItWorks.module.scss";
 
 type OfferKey = "platform" | "faas" | "partner";
@@ -124,6 +124,45 @@ function GradientBarShape(props: GradientBarShapeProps) {
 
 const APP_LOGIN_URL = process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
 const FAAS_ALERT_ROTATION_INTERVAL_MS = 3200;
+const FAAS_ALERT_POOL = [
+  "Personalkostnad ligger 1.7% over budget",
+  "Kundinbetalningar ligger 4 dagar efter plan",
+  "Bruttomarginalen ar 0.9 procentenheter under manadsplan",
+  "Likviditetsprognosen ar uppdaterad efter senaste leverantorsutbetalning",
+];
+const CURVE_PATH = "M0 108 C280 108 480 10 720 10 C960 10 1160 108 1440 108";
+const CURVE_CLIP = (() => {
+  const curvePoints: string[] = [];
+  for (let i = 0; i <= 18; i += 1) {
+    const t = i / 18;
+    const x =
+      (1 - t) ** 3 * 0 +
+      3 * (1 - t) ** 2 * t * 280 +
+      3 * (1 - t) * t ** 2 * 480 +
+      t ** 3 * 720;
+    const y =
+      (1 - t) ** 3 * 108 +
+      3 * (1 - t) ** 2 * t * 108 +
+      3 * (1 - t) * t ** 2 * 10 +
+      t ** 3 * 10;
+    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
+  }
+  for (let i = 1; i <= 18; i += 1) {
+    const t = i / 18;
+    const x =
+      (1 - t) ** 3 * 720 +
+      3 * (1 - t) ** 2 * t * 960 +
+      3 * (1 - t) * t ** 2 * 1160 +
+      t ** 3 * 1440;
+    const y =
+      (1 - t) ** 3 * 10 +
+      3 * (1 - t) ** 2 * t * 10 +
+      3 * (1 - t) * t ** 2 * 108 +
+      t ** 3 * 108;
+    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
+  }
+  return `polygon(${curvePoints.join(", ")}, 100% 100%, 0 100%)`;
+})();
 const getPartnerWorkspaceToggleState = (rows: PartnerWorkspaceRow[]) =>
   Object.fromEntries(rows.map((row) => [row.label, row.status === "Aktiv"]));
 const subscribeHydration = () => () => {};
@@ -369,9 +408,8 @@ export default function HowItWorks() {
   const { content, offering } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
+  const visibleRef = useRef(false);
   const accountSceneRef = useRef<HTMLDivElement | null>(null);
-  const accountBeamRefreshedRef = useRef(false);
-  const [accountBeamVersion, setAccountBeamVersion] = useState(0);
   const [signupEmail, setSignupEmail] = useState("");
   const [partnerWorkspaceView, setPartnerWorkspaceView] = useState<PartnerWorkspaceView>("home");
   const isClientReady = useSyncExternalStore(
@@ -380,7 +418,7 @@ export default function HowItWorks() {
     getHydratedServerSnapshot,
   );
 
-  const offers: Record<OfferKey, OfferModel> = {
+  const offers = useMemo<Record<OfferKey, OfferModel>>(() => ({
     platform: {
       key: "platform",
       isPrimary: true,
@@ -408,7 +446,7 @@ export default function HowItWorks() {
         icon: PARTNER_ICONS[index] ?? Sparkles,
       })),
     },
-  };
+  }), [content]);
 
   const activeOffer: OfferKey =
     offering === "full-service" ? "faas" : offering === "partner" ? "partner" : "platform";
@@ -423,19 +461,13 @@ export default function HowItWorks() {
   );
   const [faasAlertCycle, setFaasAlertCycle] = useState(0);
   const [faasBarsAnimatedOnce, setFaasBarsAnimatedOnce] = useState(false);
-  const faasAlertPool = [
-    "Personalkostnad ligger 1.7% over budget",
-    "Kundinbetalningar ligger 4 dagar efter plan",
-    "Bruttomarginalen ar 0.9 procentenheter under manadsplan",
-    "Likviditetsprognosen ar uppdaterad efter senaste leverantorsutbetalning",
-  ];
-  const faasVisibleAlerts = Array.from({ length: 2 }, (_, index) => {
-    const alertIndex = (faasAlertCycle * 2 + index) % faasAlertPool.length;
+  const faasVisibleAlerts = useMemo(() => Array.from({ length: 2 }, (_, index) => {
+    const alertIndex = (faasAlertCycle * 2 + index) % FAAS_ALERT_POOL.length;
     return {
       id: `${faasAlertCycle}-${alertIndex}`,
-      text: faasAlertPool[alertIndex],
+      text: FAAS_ALERT_POOL[alertIndex],
     };
-  });
+  }), [faasAlertCycle]);
 
   const handlePartnerWorkspaceNavClick = useCallback((nextView: PartnerWorkspaceView) => {
     setPartnerWorkspaceView(nextView);
@@ -454,6 +486,7 @@ export default function HowItWorks() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        visibleRef.current = entry.isIntersecting;
         section.classList.toggle(styles.visible, entry.isIntersecting);
       },
       { threshold: 0.08, rootMargin: "0px 0px -4% 0px" },
@@ -487,6 +520,7 @@ export default function HowItWorks() {
 
     const updateStepProgress = () => {
       frame = 0;
+      if (!visibleRef.current) return;
       const viewportHeight = window.innerHeight;
       const startCenter = viewportHeight * 1.12;
       const endCenter = viewportHeight * 0.34;
@@ -528,28 +562,25 @@ export default function HowItWorks() {
   }, [activeOffer, isReducedMotion]);
 
   useEffect(() => {
-    if (isReducedMotion) return undefined;
+    if (isReducedMotion || activeOffer !== "faas") return undefined;
 
     const interval = window.setInterval(() => {
+      if (!visibleRef.current) return;
       setFaasAlertCycle((current) => current + 1);
     }, FAAS_ALERT_ROTATION_INTERVAL_MS);
 
     return () => window.clearInterval(interval);
-  }, [isReducedMotion]);
+  }, [isReducedMotion, activeOffer]);
 
   useEffect(() => {
-    if (isReducedMotion) return undefined;
+    if (isReducedMotion || activeOffer !== "faas") return undefined;
 
     const timeout = window.setTimeout(() => {
       setFaasBarsAnimatedOnce(true);
     }, 1100);
 
     return () => window.clearTimeout(timeout);
-  }, [isReducedMotion]);
-
-  useEffect(() => {
-    accountBeamRefreshedRef.current = false;
-  }, [activeOffer]);
+  }, [isReducedMotion, activeOffer]);
 
   useEffect(() => {
     if (isReducedMotion || activeOffer !== "platform") return undefined;
@@ -560,12 +591,7 @@ export default function HowItWorks() {
     let frame = 0;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry?.isIntersecting || accountBeamRefreshedRef.current) return;
-
-        accountBeamRefreshedRef.current = true;
-        frame = window.requestAnimationFrame(() => {
-          setAccountBeamVersion((current) => current + 1);
-        });
+        if (!entry?.isIntersecting) return;
         observer.disconnect();
       },
       { threshold: 0.32 },
@@ -586,21 +612,8 @@ export default function HowItWorks() {
     window.location.href = APP_LOGIN_URL;
   };
 
-  const curvePath = "M0 108 C280 108 480 10 720 10 C960 10 1160 108 1440 108";
-  const curvePoints: string[] = [];
-  for (let i = 0; i <= 18; i += 1) {
-    const t = i / 18;
-    const x = cubic(0, 280, 480, 720, t);
-    const y = cubic(108, 108, 10, 10, t);
-    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
-  }
-  for (let i = 1; i <= 18; i += 1) {
-    const t = i / 18;
-    const x = cubic(720, 960, 1160, 1440, t);
-    const y = cubic(10, 10, 108, 108, t);
-    curvePoints.push(`${(x / 1440) * 100}% ${y}px`);
-  }
-  const curveClip = `polygon(${curvePoints.join(", ")}, 100% 100%, 0 100%)`;
+  const curvePath = CURVE_PATH;
+  const curveClip = CURVE_CLIP;
 
   return (
     <section
@@ -787,13 +800,7 @@ export default function HowItWorks() {
                     <div className={styles.visualSurface}>
                       {shouldRenderRichVisual && isCreateAccountStep ? (
                         <div ref={accountSceneRef} className={styles.accountMiniScene}>
-                          <div className={styles.accountMiniBackdrop} aria-hidden="true">
-                            <BeamBackgroundMain
-                              key={`account-beam-${accountBeamVersion}`}
-                              className={styles.accountMiniBeam}
-                              extendBottom={260}
-                            />
-                          </div>
+                          <div className={styles.accountMiniBackdrop} aria-hidden="true" />
                           <div className={styles.accountMiniBrand}>
                             <svg className={styles.accountMiniMark} viewBox="0 0 50 50" aria-hidden="true">
                               <g fill="currentColor">
