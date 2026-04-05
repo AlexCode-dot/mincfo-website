@@ -27,9 +27,9 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(66% 54% at 22% 22%, oklch(0.44 0.05 264 / 0.16), transparent 74%),
-    radial-gradient(72% 58% at 78% 78%, oklch(0.34 0.03 262 / 0.24), transparent 76%),
-    linear-gradient(180deg, oklch(0.16 0.018 262 / 0.98) 0%, oklch(0.14 0.016 262 / 0.97) 44%, oklch(0.15 0.017 262 / 0.99) 100%);
+    radial-gradient(66% 54% at 22% 22%, color-mix(in oklab, var(--accent-primary) 14%, transparent), transparent 74%),
+    radial-gradient(72% 58% at 78% 78%, color-mix(in oklab, var(--accent-primary) 10%, transparent), transparent 76%),
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 44%, oklch(0.095 0.008 262) 100%);
 }
 
 .background::after {
@@ -37,10 +37,10 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, oklch(0.74 0.03 260 / 0.06), transparent 36%),
+    linear-gradient(180deg, color-mix(in oklab, var(--accent-primary) 8%, transparent), transparent 36%),
     repeating-linear-gradient(
       90deg,
-      var(--chart-grid) 0 1px,
+      color-mix(in oklab, var(--accent-primary) 12%, transparent) 0 1px,
       transparent 1px 28px
     );
   opacity: 0.22;

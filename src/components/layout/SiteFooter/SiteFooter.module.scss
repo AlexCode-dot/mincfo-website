@@ -2,9 +2,9 @@
   position: relative;
   padding: clamp(54px, 7.2vh, 82px) 0 34px;
   background:
-    radial-gradient(52% 46% at 12% 0%, oklch(0.5 0.06 268 / 0.16), transparent 72%),
-    radial-gradient(46% 42% at 88% 0%, oklch(0.42 0.04 264 / 0.16), transparent 74%),
-    linear-gradient(180deg, oklch(0.15 0.016 262 / 0.99) 0%, oklch(0.13 0.015 262) 100%);
+    radial-gradient(52% 46% at 12% 0%, color-mix(in oklab, var(--accent-primary) 12%, transparent), transparent 72%),
+    radial-gradient(46% 42% at 88% 0%, color-mix(in oklab, var(--accent-primary) 10%, transparent), transparent 74%),
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.085 0.008 262) 100%);
   border-top: 1px solid var(--border-subtle);
 }
 
@@ -13,10 +13,10 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, oklch(0.74 0.03 260 / 0.06), transparent 36%),
+    linear-gradient(180deg, color-mix(in oklab, var(--accent-primary) 8%, transparent), transparent 36%),
     repeating-linear-gradient(
       90deg,
-      var(--chart-grid) 0 1px,
+      color-mix(in oklab, var(--accent-primary) 12%, transparent) 0 1px,
       transparent 1px 28px
     );
   opacity: 0.2;
