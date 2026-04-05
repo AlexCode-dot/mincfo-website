@@ -37,20 +37,9 @@
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(72% 60% at 50% 8%, color-mix(in oklab, var(--accent-primary) 14%, transparent), transparent 70%),
+    radial-gradient(72% 60% at 15% 8%, color-mix(in oklab, var(--accent-primary) 14%, transparent), transparent 70%),
     linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
   overflow: hidden;
-}
-
-.background::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(color-mix(in oklab, var(--accent-primary) 12%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklab, var(--accent-primary) 12%, transparent) 1px, transparent 1px);
-  background-size: 40px 40px, 40px 40px;
-  opacity: 0.16;
 }
 
 .ambientLayer {
@@ -70,19 +59,17 @@
 
 .ambientCopilot {
   background:
-    radial-gradient(60% 42% at 20% 14%, color-mix(in oklab, var(--accent-primary) 22%, transparent), transparent 70%),
+    radial-gradient(72% 60% at 15% 8%, color-mix(in oklab, var(--accent-primary) 14%, transparent), transparent 70%),
     linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
 }
 
 .ambientDashboard {
   background:
-    radial-gradient(60% 42% at 80% 44%, oklch(0.56 0.14 155 / 0.22), transparent 70%),
     linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
 }
 
 .ambientPlanning {
   background:
-    radial-gradient(60% 42% at 20% 74%, color-mix(in oklab, var(--accent-primary) 22%, transparent), transparent 70%),
     linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
 }
 
@@ -687,8 +674,7 @@
 
 .dashboardCut path {
   fill: transparent;
-  stroke: oklch(0.62 0.03 262 / 0.09);
-  stroke-width: 1.5;
+  stroke: none;
 }
 
 .dashboardBackground {
@@ -696,16 +682,20 @@
   inset: 0 0 -190px;
   z-index: 0;
   pointer-events: none;
-  background: transparent;
+  background:
+    radial-gradient(72% 60% at 85% 8%, oklch(0.56 0.14 155 / 0.14), transparent 70%),
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
 }
 
 .dashboardBackground::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
-  background-size: 8px 8px;
-  opacity: 0.05;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--accent-primary) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--accent-primary) 12%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px;
+  opacity: 0.16;
 }
 
 .dashboardPanel {
@@ -736,8 +726,7 @@
 
 .planCut path {
   fill: transparent;
-  stroke: oklch(0.58 0.03 262 / 0.12);
-  stroke-width: 1.6;
+  stroke: none;
 }
 
 .planBackground {
@@ -745,16 +734,20 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: transparent;
+  background:
+    radial-gradient(72% 60% at 15% 8%, color-mix(in oklab, var(--accent-primary) 14%, transparent), transparent 70%),
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
 }
 
 .planBackground::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
-  background-size: 8px 8px;
-  opacity: 0.06;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--accent-primary) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--accent-primary) 12%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px;
+  opacity: 0.16;
 }
 
 .planContainer {

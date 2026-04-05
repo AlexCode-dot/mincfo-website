@@ -10,6 +10,8 @@ type DashboardMetric = { id: AnalysisMetric; label: string; seriesK: number[] };
 type DashboardSectionProps = {
   className?: string;
   dashboardSectionRef: RefObject<HTMLDivElement | null>;
+  dashboardPathRef: RefObject<SVGPathElement | null>;
+  dashboardBackgroundRef: RefObject<HTMLDivElement | null>;
   waveHeight: number;
   dashboardCurvePath: string;
   dashboardCurveClip: string;
@@ -290,6 +292,8 @@ export function DashboardVisual({
 export function DashboardSection({
   className,
   dashboardSectionRef,
+  dashboardPathRef,
+  dashboardBackgroundRef,
   waveHeight,
   dashboardCurvePath,
   dashboardCurveClip,
@@ -330,10 +334,11 @@ export function DashboardSection({
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d={dashboardCurvePath} />
+        <path ref={dashboardPathRef} d={dashboardCurvePath} />
       </svg>
 
       <div
+        ref={dashboardBackgroundRef}
         className={styles.dashboardBackground}
         aria-hidden="true"
         style={

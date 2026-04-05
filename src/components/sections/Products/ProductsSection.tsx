@@ -100,6 +100,13 @@ export default function AICopilot() {
   const planSectionRef = useRef<HTMLDivElement | null>(null);
   const trendMetricMenuRef = useRef<HTMLDivElement | null>(null);
   const ambientStageIndexRef = useRef(0);
+  const dashboardPathRef = useRef<SVGPathElement | null>(null);
+  const dashboardBackgroundRef = useRef<HTMLDivElement | null>(null);
+  const planPathRef = useRef<SVGPathElement | null>(null);
+  const planBackgroundRef = useRef<HTMLDivElement | null>(null);
+  const curveAnimFrameRef = useRef(0);
+  const lastDashboardProgressRef = useRef(-1);
+  const lastPlanProgressRef = useRef(-1);
 
   const [curveScale, setCurveScale] = useState(1);
   const [visible, setVisible] = useState(false);
@@ -293,6 +300,88 @@ export default function AICopilot() {
 
     observer.observe(planSection);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const buildCurve = (sideY: number, centerY: number) => {
+      const path = `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`;
+      const points: string[] = [];
+      for (let i = 0; i <= 18; i += 1) {
+        const t = i / 18;
+        const x = (1 - t) ** 3 * 0 + 3 * (1 - t) ** 2 * t * 280 + 3 * (1 - t) * t ** 2 * 480 + t ** 3 * 720;
+        const y = (1 - t) ** 3 * sideY + 3 * (1 - t) ** 2 * t * sideY + 3 * (1 - t) * t ** 2 * centerY + t ** 3 * centerY;
+        points.push(`${(x / 1440) * 100}% ${y}px`);
+      }
+      for (let i = 1; i <= 18; i += 1) {
+        const t = i / 18;
+        const x = (1 - t) ** 3 * 720 + 3 * (1 - t) ** 2 * t * 960 + 3 * (1 - t) * t ** 2 * 1160 + t ** 3 * 1440;
+        const y = (1 - t) ** 3 * centerY + 3 * (1 - t) ** 2 * t * centerY + 3 * (1 - t) * t ** 2 * sideY + t ** 3 * sideY;
+        points.push(`${(x / 1440) * 100}% ${y}px`);
+      }
+      const clip = `polygon(${points.join(", ")}, 100% 100%, 0% 100%)`;
+      return { path, clip };
+    };
+
+    const updateCurves = () => {
+      curveAnimFrameRef.current = 0;
+      const viewport = window.innerHeight;
+
+      const dashboard = dashboardSectionRef.current;
+      if (dashboard) {
+        const rect = dashboard.getBoundingClientRect();
+        const start = viewport * 1.0;
+        const end = viewport * 0.42;
+        const progress = Math.min(1, Math.max(0, (start - rect.top) / (start - end)));
+        if (progress !== lastDashboardProgressRef.current) {
+          lastDashboardProgressRef.current = progress;
+          const sideY = 1 + (128 - 1) * progress;
+          const centerY = 1 + (16 - 1) * progress;
+          const { path, clip } = buildCurve(sideY, centerY);
+          if (dashboardPathRef.current) {
+            dashboardPathRef.current.setAttribute("d", path);
+          }
+          if (dashboardBackgroundRef.current) {
+            dashboardBackgroundRef.current.style.clipPath = clip;
+            (dashboardBackgroundRef.current.style as unknown as Record<string, string>).WebkitClipPath = clip;
+          }
+        }
+      }
+
+      const plan = planSectionRef.current;
+      if (plan) {
+        const rect = plan.getBoundingClientRect();
+        const start = viewport * 1.0;
+        const end = viewport * 0.42;
+        const progress = Math.min(1, Math.max(0, (start - rect.top) / (start - end)));
+        if (progress !== lastPlanProgressRef.current) {
+          lastPlanProgressRef.current = progress;
+          const sideY = 1 + (16 - 1) * progress;
+          const centerY = 1 + (128 - 1) * progress;
+          const { path, clip } = buildCurve(sideY, centerY);
+          if (planPathRef.current) {
+            planPathRef.current.setAttribute("d", path);
+          }
+          if (planBackgroundRef.current) {
+            planBackgroundRef.current.style.clipPath = clip;
+            (planBackgroundRef.current.style as unknown as Record<string, string>).WebkitClipPath = clip;
+          }
+        }
+      }
+    };
+
+    const scheduleCurves = () => {
+      if (curveAnimFrameRef.current) return;
+      curveAnimFrameRef.current = window.requestAnimationFrame(updateCurves);
+    };
+
+    scheduleCurves();
+    window.addEventListener("scroll", scheduleCurves, { passive: true });
+    window.addEventListener("resize", scheduleCurves);
+    return () => {
+      if (curveAnimFrameRef.current) window.cancelAnimationFrame(curveAnimFrameRef.current);
+      window.removeEventListener("scroll", scheduleCurves);
+      window.removeEventListener("resize", scheduleCurves);
+    };
   }, []);
 
   useEffect(() => {
@@ -1122,17 +1211,7 @@ export default function AICopilot() {
             WebkitClipPath: topCurveClip,
           } as CSSProperties
         }
-      >
-        <div
-          className={`${styles.ambientLayer} ${styles.ambientCopilot} ${ambientStageIndex === 0 ? styles.ambientLayerActive : ""}`}
-        />
-        <div
-          className={`${styles.ambientLayer} ${styles.ambientDashboard} ${ambientStageIndex === 0 ? styles.ambientLayerIncoming : ""} ${ambientStageIndex === 1 ? styles.ambientLayerActive : ""}`}
-        />
-        <div
-          className={`${styles.ambientLayer} ${styles.ambientPlanning} ${ambientStageIndex === 1 ? styles.ambientLayerIncoming : ""} ${ambientStageIndex === 2 ? styles.ambientLayerActive : ""}`}
-        />
-      </div>
+      />
       <div className={styles.mobileFlow}>
         <CopilotChatSection
           anchorId="produkt-copilot"
@@ -1151,6 +1230,8 @@ export default function AICopilot() {
 
         <DashboardSection
           dashboardSectionRef={dashboardSectionRef}
+          dashboardPathRef={dashboardPathRef}
+          dashboardBackgroundRef={dashboardBackgroundRef}
           waveHeight={waveHeight}
           dashboardCurvePath={dashboardCurvePath}
           dashboardCurveClip={dashboardCurveClip}
@@ -1183,6 +1264,8 @@ export default function AICopilot() {
 
         <PlanningSection
           planSectionRef={planSectionRef}
+          planPathRef={planPathRef}
+          planBackgroundRef={planBackgroundRef}
           waveHeight={waveHeight}
           planCurvePath={planCurvePath}
           planCurveClip={planCurveClip}
