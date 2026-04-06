@@ -872,8 +872,9 @@
     gap: 12px;
   }
 
-  .primaryCta {
-    width: min(100%, 320px);
+  .primaryCta,
+  .secondaryCta {
+    width: min(100%, 300px);
     justify-content: center;
   }
 

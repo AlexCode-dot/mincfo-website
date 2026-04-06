@@ -501,67 +501,6 @@ export default function HowItWorks() {
   }, []);
 
   useEffect(() => {
-    const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
-    const clampP = (v: number) => Math.min(Math.max(v, 0), 1);
-
-    const applyCurve = (progress: number) => {
-      const sideY = lerp(1, 108, progress);
-      const centerY = lerp(1, 10, progress);
-      const path = svgPathRef.current;
-      if (path) {
-        path.setAttribute("d", `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`);
-      }
-      const points: string[] = [];
-      for (let i = 0; i <= 18; i += 1) {
-        const t = i / 18;
-        const x = cubic(0, 280, 480, 720, t);
-        const y = cubic(sideY, sideY, centerY, centerY, t);
-        points.push(`${(x / 1440) * 100}% ${y}px`);
-      }
-      for (let i = 1; i <= 18; i += 1) {
-        const t = i / 18;
-        const x = cubic(720, 960, 1160, 1440, t);
-        const y = cubic(centerY, centerY, sideY, sideY, t);
-        points.push(`${(x / 1440) * 100}% ${y}px`);
-      }
-      const clipValue = `polygon(${points.join(", ")}, 100% 100%, 0 100%)`;
-      const bg = backgroundStackRef.current;
-      if (bg) {
-        bg.style.clipPath = clipValue;
-        (bg.style as unknown as Record<string, string>).WebkitClipPath = clipValue;
-      }
-    };
-
-    const updateCurve = () => {
-      curveFrameRef.current = 0;
-      const section = sectionRef.current;
-      if (!section) return;
-      const rect = section.getBoundingClientRect();
-      const start = window.innerHeight * 1.0;
-      const end = window.innerHeight * 0.42;
-      const progress = clampP((start - rect.top) / (start - end));
-      if (progress !== lastCurveRef.current) {
-        lastCurveRef.current = progress;
-        applyCurve(progress);
-      }
-    };
-
-    const scheduleCurve = () => {
-      if (curveFrameRef.current) return;
-      curveFrameRef.current = window.requestAnimationFrame(updateCurve);
-    };
-
-    scheduleCurve();
-    window.addEventListener("scroll", scheduleCurve, { passive: true });
-    window.addEventListener("resize", scheduleCurve);
-    return () => {
-      if (curveFrameRef.current) window.cancelAnimationFrame(curveFrameRef.current);
-      window.removeEventListener("scroll", scheduleCurve);
-      window.removeEventListener("resize", scheduleCurve);
-    };
-  }, []);
-
-  useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
@@ -575,6 +514,27 @@ export default function HowItWorks() {
         row.style.setProperty("--step-spine-progress", "1");
         row.classList.add(styles.stepRowVisible);
       });
+      // Apply curve at full progress for reduced motion
+      const sideY = 108;
+      const centerY = 10;
+      if (svgPathRef.current) {
+        svgPathRef.current.setAttribute("d", `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`);
+      }
+      const points: string[] = [];
+      for (let i = 0; i <= 18; i += 1) {
+        const t = i / 18;
+        points.push(`${(cubic(0, 280, 480, 720, t) / 1440) * 100}% ${cubic(sideY, sideY, centerY, centerY, t)}px`);
+      }
+      for (let i = 1; i <= 18; i += 1) {
+        const t = i / 18;
+        points.push(`${(cubic(720, 960, 1160, 1440, t) / 1440) * 100}% ${cubic(centerY, centerY, sideY, sideY, t)}px`);
+      }
+      const bg = backgroundStackRef.current;
+      if (bg) {
+        const clip = `polygon(${points.join(", ")}, 100% 100%, 0 100%)`;
+        bg.style.clipPath = clip;
+        (bg.style as unknown as Record<string, string>).WebkitClipPath = clip;
+      }
       return undefined;
     }
 
@@ -583,10 +543,43 @@ export default function HowItWorks() {
     );
     let frame = 0;
 
-    const updateStepProgress = () => {
+    const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
+
+    const update = () => {
       frame = 0;
-      if (!visibleRef.current) return;
       const viewportHeight = window.innerHeight;
+      const sectionRect = section.getBoundingClientRect();
+
+      // Curve animation
+      const curveStart = viewportHeight * 1.0;
+      const curveEnd = viewportHeight * 0.42;
+      const curveProgress = clamp((curveStart - sectionRect.top) / (curveStart - curveEnd), 0, 1);
+      if (curveProgress !== lastCurveRef.current) {
+        lastCurveRef.current = curveProgress;
+        const sideY = lerp(1, 108, curveProgress);
+        const centerY = lerp(1, 10, curveProgress);
+        if (svgPathRef.current) {
+          svgPathRef.current.setAttribute("d", `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`);
+        }
+        const points: string[] = [];
+        for (let i = 0; i <= 18; i += 1) {
+          const t = i / 18;
+          points.push(`${(cubic(0, 280, 480, 720, t) / 1440) * 100}% ${cubic(sideY, sideY, centerY, centerY, t)}px`);
+        }
+        for (let i = 1; i <= 18; i += 1) {
+          const t = i / 18;
+          points.push(`${(cubic(720, 960, 1160, 1440, t) / 1440) * 100}% ${cubic(centerY, centerY, sideY, sideY, t)}px`);
+        }
+        const bg = backgroundStackRef.current;
+        if (bg) {
+          const clip = `polygon(${points.join(", ")}, 100% 100%, 0 100%)`;
+          bg.style.clipPath = clip;
+          (bg.style as unknown as Record<string, string>).WebkitClipPath = clip;
+        }
+      }
+
+      // Step progress (skip if not visible)
+      if (!visibleRef.current) return;
       const startCenter = viewportHeight * 1.12;
       const endCenter = viewportHeight * 0.34;
       const progressRange = Math.max(startCenter - endCenter, 1);
@@ -594,13 +587,17 @@ export default function HowItWorks() {
       const focusRange = viewportHeight * 0.34;
       const focusPlateau = viewportHeight * 0.08;
 
-      rows.forEach((row) => {
+      const values = rows.map((row) => {
         const rect = row.getBoundingClientRect();
         const rowAnchor = rect.top + Math.min(rect.height * 0.34, 180);
         const progress = clamp((startCenter - rowAnchor) / progressRange, 0, 1);
         const focusDistance = Math.abs(rowAnchor - focusCenter);
         const focus = clamp(1 - Math.max(focusDistance - focusPlateau, 0) / focusRange, 0, 1);
+        return { progress, focus };
+      });
 
+      rows.forEach((row, i) => {
+        const { progress, focus } = values[i];
         row.style.setProperty("--step-progress", progress.toFixed(3));
         row.style.setProperty("--step-focus", focus.toFixed(3));
         row.style.setProperty("--step-spine-progress", progress.toFixed(3));
@@ -608,21 +605,19 @@ export default function HowItWorks() {
       });
     };
 
-    const scheduleUpdate = () => {
+    const schedule = () => {
       if (frame) return;
-      frame = window.requestAnimationFrame(updateStepProgress);
+      frame = window.requestAnimationFrame(update);
     };
 
-    scheduleUpdate();
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
 
     return () => {
-      if (frame) {
-        window.cancelAnimationFrame(frame);
-      }
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
     };
   }, [activeOffer, isReducedMotion]);
 
