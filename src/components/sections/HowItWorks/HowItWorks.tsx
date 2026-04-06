@@ -546,14 +546,11 @@ export default function HowItWorks() {
 
     const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 
-    const updateCurve = (viewportHeight: number, sectionRect: DOMRect) => {
-      const curveStart = viewportHeight * 1.0;
-      const curveEnd = viewportHeight * 0.42;
-      const curveProgress = clamp((curveStart - sectionRect.top) / (curveStart - curveEnd), 0, 1);
-      if (curveProgress === lastCurveRef.current) return;
-      lastCurveRef.current = curveProgress;
-      const sideY = lerp(1, 108, curveProgress);
-      const centerY = lerp(1, 10, curveProgress);
+    // Mobile: no scroll-driven animations at all
+    if (isMobile) {
+      // Static curve at full progress
+      const sideY = 108;
+      const centerY = 10;
       if (svgPathRef.current) {
         svgPathRef.current.setAttribute("d", `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`);
       }
@@ -572,57 +569,14 @@ export default function HowItWorks() {
         bg.style.clipPath = clip;
         (bg.style as unknown as Record<string, string>).WebkitClipPath = clip;
       }
-    };
 
-    const update = () => {
-      frame = 0;
-      const viewportHeight = window.innerHeight;
-      const sectionRect = section.getBoundingClientRect();
-
-      updateCurve(viewportHeight, sectionRect);
-
-      // Desktop only: per-frame step progress
-      if (!isMobile && visibleRef.current) {
-        const startCenter = viewportHeight * 1.12;
-        const endCenter = viewportHeight * 0.34;
-        const progressRange = Math.max(startCenter - endCenter, 1);
-        const focusCenter = viewportHeight * 0.58;
-        const focusRange = viewportHeight * 0.34;
-        const focusPlateau = viewportHeight * 0.08;
-
-        const values = rows.map((row) => {
-          const rect = row.getBoundingClientRect();
-          const rowAnchor = rect.top + Math.min(rect.height * 0.34, 180);
-          const progress = clamp((startCenter - rowAnchor) / progressRange, 0, 1);
-          const focusDistance = Math.abs(rowAnchor - focusCenter);
-          const focus = clamp(1 - Math.max(focusDistance - focusPlateau, 0) / focusRange, 0, 1);
-          return { progress, focus };
-        });
-
-        rows.forEach((row, i) => {
-          const { progress, focus } = values[i];
-          row.style.setProperty("--step-progress", progress.toFixed(3));
-          row.style.setProperty("--step-focus", focus.toFixed(3));
-          row.style.setProperty("--step-spine-progress", progress.toFixed(3));
-          row.classList.toggle(styles.stepRowVisible, progress > 0.02);
-        });
-      }
-    };
-
-    const schedule = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(update);
-    };
-
-    // Mobile: use IntersectionObserver for step visibility instead of per-frame
-    let stepObserver: IntersectionObserver | null = null;
-    if (isMobile) {
       rows.forEach((row) => {
         row.style.setProperty("--step-progress", "1");
         row.style.setProperty("--step-focus", "1");
         row.style.setProperty("--step-spine-progress", "1");
       });
-      stepObserver = new IntersectionObserver(
+
+      const stepObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             (entry.target as HTMLElement).classList.toggle(
@@ -633,8 +587,76 @@ export default function HowItWorks() {
         },
         { threshold: 0.12, rootMargin: "0px 0px -10% 0px" },
       );
-      rows.forEach((row) => stepObserver!.observe(row));
+      rows.forEach((row) => stepObserver.observe(row));
+
+      return () => stepObserver.disconnect();
     }
+
+    // Desktop: full scroll-driven animations
+    const update = () => {
+      frame = 0;
+      const viewportHeight = window.innerHeight;
+      const sectionRect = section.getBoundingClientRect();
+
+      // Curve animation
+      const curveStart = viewportHeight * 1.0;
+      const curveEnd = viewportHeight * 0.42;
+      const curveProgress = clamp((curveStart - sectionRect.top) / (curveStart - curveEnd), 0, 1);
+      if (curveProgress !== lastCurveRef.current) {
+        lastCurveRef.current = curveProgress;
+        const sideY = lerp(1, 108, curveProgress);
+        const centerY = lerp(1, 10, curveProgress);
+        if (svgPathRef.current) {
+          svgPathRef.current.setAttribute("d", `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`);
+        }
+        const points: string[] = [];
+        for (let i = 0; i <= 18; i += 1) {
+          const t = i / 18;
+          points.push(`${(cubic(0, 280, 480, 720, t) / 1440) * 100}% ${cubic(sideY, sideY, centerY, centerY, t)}px`);
+        }
+        for (let i = 1; i <= 18; i += 1) {
+          const t = i / 18;
+          points.push(`${(cubic(720, 960, 1160, 1440, t) / 1440) * 100}% ${cubic(centerY, centerY, sideY, sideY, t)}px`);
+        }
+        const bg = backgroundStackRef.current;
+        if (bg) {
+          const clip = `polygon(${points.join(", ")}, 100% 100%, 0 100%)`;
+          bg.style.clipPath = clip;
+          (bg.style as unknown as Record<string, string>).WebkitClipPath = clip;
+        }
+      }
+
+      // Step progress
+      if (!visibleRef.current) return;
+      const startCenter = viewportHeight * 1.12;
+      const endCenter = viewportHeight * 0.34;
+      const progressRange = Math.max(startCenter - endCenter, 1);
+      const focusCenter = viewportHeight * 0.58;
+      const focusRange = viewportHeight * 0.34;
+      const focusPlateau = viewportHeight * 0.08;
+
+      const values = rows.map((row) => {
+        const rect = row.getBoundingClientRect();
+        const rowAnchor = rect.top + Math.min(rect.height * 0.34, 180);
+        const progress = clamp((startCenter - rowAnchor) / progressRange, 0, 1);
+        const focusDistance = Math.abs(rowAnchor - focusCenter);
+        const focus = clamp(1 - Math.max(focusDistance - focusPlateau, 0) / focusRange, 0, 1);
+        return { progress, focus };
+      });
+
+      rows.forEach((row, i) => {
+        const { progress, focus } = values[i];
+        row.style.setProperty("--step-progress", progress.toFixed(3));
+        row.style.setProperty("--step-focus", focus.toFixed(3));
+        row.style.setProperty("--step-spine-progress", progress.toFixed(3));
+        row.classList.toggle(styles.stepRowVisible, progress > 0.02);
+      });
+    };
+
+    const schedule = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(update);
+    };
 
     schedule();
     window.addEventListener("scroll", schedule, { passive: true });
@@ -644,7 +666,6 @@ export default function HowItWorks() {
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
-      stepObserver?.disconnect();
     };
   }, [activeOffer, isReducedMotion]);
 
