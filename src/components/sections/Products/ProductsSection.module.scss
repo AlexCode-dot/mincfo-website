@@ -1578,13 +1578,13 @@
   .title {
     margin-top: 16px;
     max-width: 680px;
-    font-size: clamp(1.96rem, 3vw, 3.26rem);
+    font-size: clamp(2.1rem, 3.2vw, 3.26rem);
   }
 
   .text {
     margin-top: 14px;
     max-width: 600px;
-    font-size: 1rem;
+    font-size: 1.05rem;
     line-height: 1.48;
   }
 
@@ -1595,7 +1595,7 @@
 
   .list li {
     gap: 10px;
-    font-size: 0.94rem;
+    font-size: 1rem;
   }
 
   .list svg {
