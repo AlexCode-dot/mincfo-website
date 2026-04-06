@@ -6,10 +6,19 @@ import { useOptionalHomeOffering } from "@/components/home/HomeOfferingProvider"
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import styles from "./Security.module.scss";
 
+const cubic = (p0: number, p1: number, p2: number, p3: number, t: number) =>
+  (1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t ** 2 * p2 + t ** 3 * p3;
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
+
 export default function Security() {
   const ctx = useOptionalHomeOffering();
   const security = ctx?.shared.security ?? HOME_PAGE_TEXT.security;
   const sectionRef = useRef<HTMLElement | null>(null);
+  const svgPathRef = useRef<SVGPathElement | null>(null);
+  const backgroundRef = useRef<HTMLDivElement | null>(null);
+  const curveFrameRef = useRef(0);
+  const lastCurveRef = useRef(-1);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -27,6 +36,64 @@ export default function Security() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const applyCurve = (progress: number) => {
+      const sideY = lerp(1, 104, progress);
+      const centerY = lerp(1, 13, progress);
+      const path = svgPathRef.current;
+      if (path) {
+        path.setAttribute("d", `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`);
+      }
+      const points: string[] = [];
+      for (let i = 0; i <= 18; i += 1) {
+        const t = i / 18;
+        const x = cubic(0, 280, 480, 720, t);
+        const y = cubic(sideY, sideY, centerY, centerY, t);
+        points.push(`${(x / 1440) * 100}% ${y}px`);
+      }
+      for (let i = 1; i <= 18; i += 1) {
+        const t = i / 18;
+        const x = cubic(720, 960, 1160, 1440, t);
+        const y = cubic(centerY, centerY, sideY, sideY, t);
+        points.push(`${(x / 1440) * 100}% ${y}px`);
+      }
+      const clip = `polygon(${points.join(", ")}, 100% 100%, 0% 100%)`;
+      const bg = backgroundRef.current;
+      if (bg) {
+        bg.style.clipPath = clip;
+        (bg.style as unknown as Record<string, string>).WebkitClipPath = clip;
+      }
+    };
+
+    const updateCurve = () => {
+      curveFrameRef.current = 0;
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const start = window.innerHeight * 1.0;
+      const end = window.innerHeight * 0.42;
+      const progress = clamp((start - rect.top) / (start - end), 0, 1);
+      if (progress !== lastCurveRef.current) {
+        lastCurveRef.current = progress;
+        applyCurve(progress);
+      }
+    };
+
+    const scheduleCurve = () => {
+      if (curveFrameRef.current) return;
+      curveFrameRef.current = window.requestAnimationFrame(updateCurve);
+    };
+
+    scheduleCurve();
+    window.addEventListener("scroll", scheduleCurve, { passive: true });
+    window.addEventListener("resize", scheduleCurve);
+    return () => {
+      if (curveFrameRef.current) window.cancelAnimationFrame(curveFrameRef.current);
+      window.removeEventListener("scroll", scheduleCurve);
+      window.removeEventListener("resize", scheduleCurve);
+    };
+  }, []);
+
   return (
     <section
       ref={sectionRef}
@@ -39,9 +106,9 @@ export default function Security() {
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d="M0 104 C280 104 480 13 720 13 C960 13 1160 104 1440 104" />
+        <path ref={svgPathRef} d="M0 1 C280 1 480 1 720 1 C960 1 1160 1 1440 1" />
       </svg>
-      <div className={styles.background} aria-hidden="true" />
+      <div ref={backgroundRef} className={styles.background} aria-hidden="true" />
 
       <div className={styles.container}>
         <header className={styles.header}>

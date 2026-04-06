@@ -410,6 +410,10 @@ export default function HowItWorks() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const visibleRef = useRef(false);
   const accountSceneRef = useRef<HTMLDivElement | null>(null);
+  const svgPathRef = useRef<SVGPathElement | null>(null);
+  const backgroundStackRef = useRef<HTMLDivElement | null>(null);
+  const curveFrameRef = useRef(0);
+  const lastCurveRef = useRef(-1);
   const [signupEmail, setSignupEmail] = useState("");
   const [partnerWorkspaceView, setPartnerWorkspaceView] = useState<PartnerWorkspaceView>("home");
   const isClientReady = useSyncExternalStore(
@@ -494,6 +498,67 @@ export default function HowItWorks() {
 
     observer.observe(section);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
+    const clampP = (v: number) => Math.min(Math.max(v, 0), 1);
+
+    const applyCurve = (progress: number) => {
+      const sideY = lerp(1, 108, progress);
+      const centerY = lerp(1, 10, progress);
+      const path = svgPathRef.current;
+      if (path) {
+        path.setAttribute("d", `M0 ${sideY} C280 ${sideY} 480 ${centerY} 720 ${centerY} C960 ${centerY} 1160 ${sideY} 1440 ${sideY}`);
+      }
+      const points: string[] = [];
+      for (let i = 0; i <= 18; i += 1) {
+        const t = i / 18;
+        const x = cubic(0, 280, 480, 720, t);
+        const y = cubic(sideY, sideY, centerY, centerY, t);
+        points.push(`${(x / 1440) * 100}% ${y}px`);
+      }
+      for (let i = 1; i <= 18; i += 1) {
+        const t = i / 18;
+        const x = cubic(720, 960, 1160, 1440, t);
+        const y = cubic(centerY, centerY, sideY, sideY, t);
+        points.push(`${(x / 1440) * 100}% ${y}px`);
+      }
+      const clipValue = `polygon(${points.join(", ")}, 100% 100%, 0 100%)`;
+      const bg = backgroundStackRef.current;
+      if (bg) {
+        bg.style.clipPath = clipValue;
+        (bg.style as unknown as Record<string, string>).WebkitClipPath = clipValue;
+      }
+    };
+
+    const updateCurve = () => {
+      curveFrameRef.current = 0;
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const start = window.innerHeight * 1.0;
+      const end = window.innerHeight * 0.42;
+      const progress = clampP((start - rect.top) / (start - end));
+      if (progress !== lastCurveRef.current) {
+        lastCurveRef.current = progress;
+        applyCurve(progress);
+      }
+    };
+
+    const scheduleCurve = () => {
+      if (curveFrameRef.current) return;
+      curveFrameRef.current = window.requestAnimationFrame(updateCurve);
+    };
+
+    scheduleCurve();
+    window.addEventListener("scroll", scheduleCurve, { passive: true });
+    window.addEventListener("resize", scheduleCurve);
+    return () => {
+      if (curveFrameRef.current) window.cancelAnimationFrame(curveFrameRef.current);
+      window.removeEventListener("scroll", scheduleCurve);
+      window.removeEventListener("resize", scheduleCurve);
+    };
   }, []);
 
   useEffect(() => {
@@ -612,9 +677,6 @@ export default function HowItWorks() {
     window.location.href = APP_LOGIN_URL;
   };
 
-  const curvePath = CURVE_PATH;
-  const curveClip = CURVE_CLIP;
-
   return (
     <section
       ref={sectionRef}
@@ -628,12 +690,12 @@ export default function HowItWorks() {
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d={curvePath} />
+        <path ref={svgPathRef} d="M0 1 C280 1 480 1 720 1 C960 1 1160 1 1440 1" />
       </svg>
       <div
+        ref={backgroundStackRef}
         className={styles.backgroundStack}
         aria-hidden="true"
-        style={{ clipPath: curveClip, WebkitClipPath: curveClip } as CSSProperties}
       >
         <div className={styles.background} />
         <div className={styles.backgroundGrid} />
