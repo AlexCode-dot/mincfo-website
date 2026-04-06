@@ -18,9 +18,13 @@ type HomePageProps = {
 
 export default async function HomePage({ initialOffering }: HomePageProps) {
   const prefetchedContent = await fetchAllHomeContent();
+  const allowedOfferings: readonly HomeOfferingMode[] =
+    initialOffering === "partner"
+      ? ["partner"]
+      : ["platform", "full-service"];
 
   return (
-    <HomeOfferingProvider initialOffering={initialOffering} prefetchedContent={prefetchedContent}>
+    <HomeOfferingProvider initialOffering={initialOffering} allowedOfferings={allowedOfferings} prefetchedContent={prefetchedContent}>
       <Logo showOfferingSwitch />
       <FloatingNav />
       <Hero />

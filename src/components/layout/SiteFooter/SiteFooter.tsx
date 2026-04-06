@@ -50,7 +50,6 @@ export default function SiteFooter() {
 
           <div className={styles.linkCol}>
             <h3>{footer.companyTitle}</h3>
-            <Link href="#product">{footer.company[0]}</Link>
             <Link href="#customers">{footer.company[1]}</Link>
             <ContactLink href="/karriar" returnPath="/" returnSectionId="footer">
               {footer.company[2]}
