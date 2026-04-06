@@ -261,8 +261,7 @@
   transform:
     translate3d(0, calc((1 - var(--step-progress)) * (42px + (1 - var(--step-focus)) * 12px)), 0)
     scale(calc(0.88 + var(--step-progress) * 0.1 + var(--step-focus) * 0.02));
-  filter: blur(calc((1 - var(--step-progress)) * (0.8px + (1 - var(--step-focus)) * 0.6px)));
-  transition: opacity 220ms linear, transform 220ms linear, filter 220ms linear;
+  will-change: transform, opacity;
 }
 
 .stepMain {
@@ -663,8 +662,7 @@
   transform:
     translate3d(0, calc((1 - var(--step-progress)) * (64px + (1 - var(--step-focus)) * 16px)), 0)
     scale(calc(0.84 + var(--step-progress) * 0.14 + var(--step-focus) * 0.02));
-  filter: blur(calc((1 - var(--step-progress)) * (1px + (1 - var(--step-focus)) * 0.9px)));
-  transition: opacity 220ms linear, transform 220ms linear, filter 220ms linear;
+  will-change: transform, opacity;
   contain: layout;
 }
 
