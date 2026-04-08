@@ -30,8 +30,8 @@
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(72% 60% at 50% 8%, color-mix(in oklab, var(--ending-accent) 8%, transparent), transparent 70%),
-    linear-gradient(180deg, color-mix(in oklab, var(--bg-0) 94%, black) 0%, color-mix(in oklab, var(--bg-0) 98%, black) 50%, #020305 100%);
+    radial-gradient(72% 60% at 50% 8%, color-mix(in oklab, var(--ending-accent) 14%, transparent), transparent 70%),
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.08 0.007 262) 50%, #020305 100%);
 }
 
 .background::before {

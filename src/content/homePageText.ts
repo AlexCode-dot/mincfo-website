@@ -36,3 +36,8 @@ export const getHomePageText = (
 ): HomePageText => HOME_PAGE_TEXT_BY_MODE[mode];
 
 export const HOME_PAGE_TEXT = getHomePageText();
+
+export type PreFetchedHomeContent = {
+  shared: typeof sharedText;
+  byMode: Record<HomeOfferingMode, HomePageText>;
+};

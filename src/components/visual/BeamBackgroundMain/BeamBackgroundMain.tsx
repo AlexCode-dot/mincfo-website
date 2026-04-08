@@ -47,6 +47,7 @@ export default function BeamBackground({
   const particlesRef = useRef<Particle[]>([]);
   const sizeRef = useRef({ width: 0, height: 0, dpr: 1 });
   const runningRef = useRef(true);
+  const inViewportRef = useRef(true);
   const timeRef = useRef(0);
 
   useEffect(() => {
@@ -219,33 +220,60 @@ export default function BeamBackground({
       drawDots(timeRef.current);
     };
 
+    const shouldRun = () => runningRef.current && inViewportRef.current;
+
     const loop = () => {
       render();
-      if (!runningRef.current) return;
+      if (!shouldRun()) return;
       rafRef.current = window.requestAnimationFrame(loop);
+    };
+
+    const startLoop = () => {
+      if (rafRef.current) return;
+      if (!shouldRun()) return;
+      rafRef.current = window.requestAnimationFrame(loop);
+    };
+
+    const stopLoop = () => {
+      if (rafRef.current) {
+        window.cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
     };
 
     const handleVisibility = () => {
       runningRef.current = document.visibilityState === "visible";
-      if (!runningRef.current && rafRef.current) {
-        window.cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-      if (runningRef.current) {
-        rafRef.current = window.requestAnimationFrame(loop);
+      if (!shouldRun()) {
+        stopLoop();
+      } else {
+        startLoop();
       }
     };
 
-    const observer = new ResizeObserver(() => resize());
-    observer.observe(canvas.parentElement ?? canvas);
-    resize();
+    const resizeObserver = new ResizeObserver(() => resize());
+    resizeObserver.observe(canvas.parentElement ?? canvas);
 
+    const viewportObserver = new IntersectionObserver(
+      ([entry]) => {
+        inViewportRef.current = entry.isIntersecting;
+        if (!shouldRun()) {
+          stopLoop();
+        } else {
+          startLoop();
+        }
+      },
+      { threshold: 0.01 },
+    );
+    viewportObserver.observe(canvas.parentElement ?? canvas);
+
+    resize();
     rafRef.current = window.requestAnimationFrame(loop);
 
     document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
-      observer.disconnect();
+      resizeObserver.disconnect();
+      viewportObserver.disconnect();
       document.removeEventListener("visibilitychange", handleVisibility);
       if (rafRef.current) {
         window.cancelAnimationFrame(rafRef.current);

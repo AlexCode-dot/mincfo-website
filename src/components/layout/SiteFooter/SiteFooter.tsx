@@ -9,6 +9,7 @@ import styles from "./SiteFooter.module.scss";
 
 export default function SiteFooter() {
   const homeOffering = useOptionalHomeOffering();
+  const footer = homeOffering?.shared.footer ?? HOME_PAGE_TEXT.footer;
   const showSolutions = homeOffering?.offering !== undefined
     ? homeOffering.offering === "platform"
     : true;
@@ -18,7 +19,7 @@ export default function SiteFooter() {
       <div className={styles.container}>
         <div className={`${styles.grid} ${!showSolutions ? styles.gridCompact : ""}`}>
           <div className={styles.brandCol}>
-            <Link href="/" className={styles.brand} aria-label={HOME_PAGE_TEXT.footer.brandAria}>
+            <Link href="/" className={styles.brand} aria-label={footer.brandAria}>
               <svg className={styles.mark} viewBox="0 0 50 50" role="img" aria-hidden="true">
                 <g fill="currentColor">
                   <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
@@ -27,61 +28,61 @@ export default function SiteFooter() {
                   <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
                 </g>
               </svg>
-              <span>{HOME_PAGE_TEXT.footer.brandWord}</span>
+              <span>{footer.brandWord}</span>
             </Link>
             <p>
-              {HOME_PAGE_TEXT.footer.intro}
+              {footer.intro}
             </p>
             <ContactLink href="/karriar" className={styles.careersCta} returnPath="/" returnSectionId="footer">
-              {HOME_PAGE_TEXT.footer.careersCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
+              {footer.careersCta} <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
             </ContactLink>
           </div>
 
           {showSolutions ? (
             <div className={styles.linkCol}>
-              <h3>{HOME_PAGE_TEXT.footer.solutionsTitle}</h3>
-              <Link href="/losningar/ceo-founders">{HOME_PAGE_TEXT.footer.solutions[0]}</Link>
-              <Link href="/losningar/cfo-finance">{HOME_PAGE_TEXT.footer.solutions[1]}</Link>
-              <Link href="/losningar/saas-tech">{HOME_PAGE_TEXT.footer.solutions[2]}</Link>
-              <Link href="#how-it-works">{HOME_PAGE_TEXT.footer.solutions[3]}</Link>
+              <h3>{footer.solutionsTitle}</h3>
+              <Link href="/losningar/ceo-founders">{footer.solutions[0]}</Link>
+              <Link href="/losningar/cfo-finance">{footer.solutions[1]}</Link>
+              <Link href="/losningar/saas-tech">{footer.solutions[2]}</Link>
+              <Link href="#how-it-works">{footer.solutions[3]}</Link>
             </div>
           ) : null}
 
           <div className={styles.linkCol}>
-            <h3>{HOME_PAGE_TEXT.footer.companyTitle}</h3>
-            <Link href="#product">{HOME_PAGE_TEXT.footer.company[0]}</Link>
-            <Link href="#customers">{HOME_PAGE_TEXT.footer.company[1]}</Link>
+            <h3>{footer.companyTitle}</h3>
+            <Link href="#customers">{footer.company[1]}</Link>
             <ContactLink href="/karriar" returnPath="/" returnSectionId="footer">
-              {HOME_PAGE_TEXT.footer.company[2]}
+              {footer.company[2]}
             </ContactLink>
+            <Link href="/partner">{footer.company[3]}</Link>
           </div>
 
           <div className={styles.linkCol}>
-            <h3>{HOME_PAGE_TEXT.footer.officesTitle}</h3>
+            <h3>{footer.officesTitle}</h3>
             <p>
-              {HOME_PAGE_TEXT.footer.office1.split(" / ")[0]}
+              {footer.office1.split(" / ")[0]}
               <br />
-              {HOME_PAGE_TEXT.footer.office1.split(" / ")[1]}
+              {footer.office1.split(" / ")[1]}
             </p>
             <p>
-              {HOME_PAGE_TEXT.footer.office2.split(" / ")[0]}
+              {footer.office2.split(" / ")[0]}
               <br />
-              {HOME_PAGE_TEXT.footer.office2.split(" / ")[1]}
+              {footer.office2.split(" / ")[1]}
             </p>
           </div>
         </div>
 
         <div className={styles.bottom}>
-          <span className={styles.copy}>{HOME_PAGE_TEXT.footer.copyright}</span>
+          <span className={styles.copy}>{footer.copyright}</span>
           <a
             href="https://www.linkedin.com/company/mincfocom/"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={HOME_PAGE_TEXT.footer.linkedinAria}
+            aria-label={footer.linkedinAria}
             className={styles.endLink}
           >
             <Linkedin aria-hidden="true" className={styles.linkedinIcon} />
-            {HOME_PAGE_TEXT.footer.linkedin}
+            {footer.linkedin}
           </a>
         </div>
       </div>

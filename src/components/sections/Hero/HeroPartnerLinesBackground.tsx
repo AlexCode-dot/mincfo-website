@@ -308,19 +308,37 @@ export default function HeroPartnerLinesBackground() {
     resizeObserver?.observe(container);
 
     let frame = 0;
+    let inViewport = true;
+
     const renderLoop = () => {
-      if (!active) return;
+      if (!active || !inViewport) {
+        frame = 0;
+        return;
+      }
 
       uniforms.iTime.value = clock.getElapsedTime();
       renderer.render(scene, camera);
       frame = window.requestAnimationFrame(renderLoop);
     };
 
+    const viewportObserver = new IntersectionObserver(
+      ([entry]) => {
+        inViewport = entry.isIntersecting;
+        if (inViewport && !frame && active) {
+          clock.getDelta();
+          frame = window.requestAnimationFrame(renderLoop);
+        }
+      },
+      { threshold: 0.01 },
+    );
+    viewportObserver.observe(container);
+
     renderLoop();
 
     return () => {
       active = false;
-      window.cancelAnimationFrame(frame);
+      if (frame) window.cancelAnimationFrame(frame);
+      viewportObserver.disconnect();
       resizeObserver?.disconnect();
       geometry.dispose();
       material.dispose();

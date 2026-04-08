@@ -53,8 +53,17 @@ export default function FloatingNav() {
   }, [showSignupLabel]);
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 12);
+    let frame = 0;
+    let lastScrolled = false;
+    let lastSection: (typeof HOMEPAGE_SECTIONS)[number] = "hero";
+
+    const update = () => {
+      frame = 0;
+      const nextScrolled = window.scrollY > 12;
+      if (nextScrolled !== lastScrolled) {
+        lastScrolled = nextScrolled;
+        setScrolled(nextScrolled);
+      }
 
       const cursor = window.scrollY + window.innerHeight * 0.32;
       let current: (typeof HOMEPAGE_SECTIONS)[number] = "hero";
@@ -65,12 +74,23 @@ export default function FloatingNav() {
           current = id;
         }
       }
-      setActiveSection(current);
+      if (current !== lastSection) {
+        lastSection = current;
+        setActiveSection(current);
+      }
     };
 
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const scheduleUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate);
+    };
   }, []);
 
   useEffect(() => {

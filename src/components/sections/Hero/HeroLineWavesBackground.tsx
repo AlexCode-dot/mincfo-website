@@ -208,8 +208,13 @@ export default function HeroLineWavesBackground() {
     }
 
     let animationFrameId = 0;
+    let inViewport = true;
 
     function update(time: number) {
+      if (!inViewport) {
+        animationFrameId = 0;
+        return;
+      }
       animationFrameId = window.requestAnimationFrame(update);
       program.uniforms.uTime.value = time * 0.001;
 
@@ -226,10 +231,22 @@ export default function HeroLineWavesBackground() {
       renderer.render({ scene: mesh });
     }
 
+    const viewportObserver = new IntersectionObserver(
+      ([entry]) => {
+        inViewport = entry.isIntersecting;
+        if (inViewport && !animationFrameId) {
+          animationFrameId = window.requestAnimationFrame(update);
+        }
+      },
+      { threshold: 0.01 },
+    );
+    viewportObserver.observe(container);
+
     animationFrameId = window.requestAnimationFrame(update);
 
     return () => {
-      window.cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
+      viewportObserver.disconnect();
       window.removeEventListener("resize", resize);
       if (program.uniforms.uEnableMouse.value) {
         gl.canvas.removeEventListener("mousemove", handleMouseMove);

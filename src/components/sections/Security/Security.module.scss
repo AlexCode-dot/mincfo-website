@@ -34,31 +34,6 @@
   background:
     radial-gradient(72% 60% at 50% 92%, color-mix(in oklab, var(--security-accent) 14%, transparent), transparent 72%),
     radial-gradient(52% 42% at 50% 12%, color-mix(in oklab, var(--security-accent) 7%, transparent), transparent 78%);
-  clip-path: polygon(
-    0% 104px,
-    5.7% 101px,
-    11.1% 95px,
-    16.2% 84px,
-    21.2% 72px,
-    26% 59px,
-    30.8% 45px,
-    35.5% 33px,
-    40.3% 22px,
-    45.1% 16px,
-    50% 13px,
-    54.9% 16px,
-    59.7% 22px,
-    64.5% 33px,
-    69.2% 45px,
-    74% 59px,
-    78.8% 72px,
-    83.8% 84px,
-    88.9% 95px,
-    94.3% 101px,
-    100% 104px,
-    100% 100%,
-    0% 100%
-  );
 }
 
 .background::after {

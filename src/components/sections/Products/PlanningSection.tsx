@@ -6,6 +6,8 @@ import styles from "./PlanningSection.module.scss";
 type PlanningSectionProps = {
   className?: string;
   planSectionRef: RefObject<HTMLDivElement | null>;
+  planPathRef: RefObject<SVGPathElement | null>;
+  planBackgroundRef: RefObject<HTMLDivElement | null>;
   waveHeight: number;
   planCurvePath: string;
   planCurveClip: string;
@@ -229,6 +231,8 @@ export function PlanningVisual({
 export function PlanningSection({
   className,
   planSectionRef,
+  planPathRef,
+  planBackgroundRef,
   waveHeight,
   planCurvePath,
   planCurveClip,
@@ -259,10 +263,11 @@ export function PlanningSection({
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d={planCurvePath} />
+        <path ref={planPathRef} d={planCurvePath} />
       </svg>
 
       <div
+        ref={planBackgroundRef}
         className={styles.planBackground}
         aria-hidden="true"
         style={

@@ -4,6 +4,7 @@ import HomeOfferingSwitch from "@/components/home/HomeOfferingSwitch";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type MouseEvent } from "react";
+import { useOptionalHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { HOME_PAGE_TEXT } from "@/content/homePageText";
 import styles from "./Logo.module.scss";
 
@@ -12,6 +13,8 @@ type LogoProps = {
 };
 
 export default function Logo({ showOfferingSwitch = false }: LogoProps) {
+  const ctx = useOptionalHomeOffering();
+  const footer = ctx?.shared.footer ?? HOME_PAGE_TEXT.footer;
   const pathname = usePathname();
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -46,7 +49,7 @@ export default function Logo({ showOfferingSwitch = false }: LogoProps) {
       <Link
         className={styles.logo}
         href="/"
-        aria-label={HOME_PAGE_TEXT.footer.brandAria}
+        aria-label={footer.brandAria}
         onClick={handleClick}
       >
         <svg className={styles.mark} viewBox="0 0 50 50" role="img" aria-hidden="true">
@@ -57,7 +60,7 @@ export default function Logo({ showOfferingSwitch = false }: LogoProps) {
             <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
           </g>
         </svg>
-        <span className={styles.wordmark}>{HOME_PAGE_TEXT.footer.brandWord}</span>
+        <span className={styles.wordmark}>{footer.brandWord}</span>
       </Link>
       {showOfferingSwitch ? (
         <HomeOfferingSwitch variant="inline" className={styles.offeringSwitch} />

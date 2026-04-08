@@ -37,26 +37,9 @@
   pointer-events: none;
   z-index: 0;
   background:
-    linear-gradient(180deg, oklch(0.145 0.012 262 / 1) 0%, oklch(0.14 0.011 262 / 1) 50%, oklch(0.135 0.01 262 / 1) 100%);
+    radial-gradient(72% 60% at 15% 8%, color-mix(in oklab, var(--accent-primary) 14%, transparent), transparent 70%),
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
   overflow: hidden;
-}
-
-.background::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(60% 46% at 50% 16%, oklch(0.34 0.05 240 / 0.12), transparent 70%);
-  opacity: 0.52;
-}
-
-.background::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
-  background-size: 10px 10px;
-  opacity: 0.06;
 }
 
 .ambientLayer {
@@ -76,26 +59,18 @@
 
 .ambientCopilot {
   background:
-    radial-gradient(52% 40% at 72% 18%, oklch(0.56 0.18 270 / 0.24), transparent 52%),
-    radial-gradient(56% 46% at 18% 48%, oklch(0.42 0.12 226 / 0.18), transparent 58%),
-    linear-gradient(180deg, oklch(0.16 0.018 258 / 0.28) 0%, transparent 46%),
-    linear-gradient(180deg, oklch(0.145 0.014 258 / 1) 0%, oklch(0.131 0.013 252 / 1) 56%, oklch(0.122 0.012 246 / 1) 100%);
+    radial-gradient(72% 60% at 15% 8%, color-mix(in oklab, var(--accent-primary) 14%, transparent), transparent 70%),
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
 }
 
 .ambientDashboard {
   background:
-    radial-gradient(58% 46% at 68% 24%, oklch(0.74 0.16 182 / 0.24), transparent 54%),
-    radial-gradient(60% 50% at 24% 68%, oklch(0.46 0.12 196 / 0.18), transparent 58%),
-    linear-gradient(180deg, oklch(0.17 0.024 192 / 0.22) 0%, transparent 46%),
-    linear-gradient(180deg, oklch(0.14 0.022 198 / 1) 0%, oklch(0.124 0.02 192 / 1) 56%, oklch(0.116 0.018 188 / 1) 100%);
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
 }
 
 .ambientPlanning {
   background:
-    radial-gradient(60% 50% at 20% 36%, oklch(0.62 0.14 204 / 0.22), transparent 54%),
-    radial-gradient(52% 42% at 78% 20%, oklch(0.48 0.14 222 / 0.18), transparent 56%),
-    linear-gradient(180deg, oklch(0.16 0.024 214 / 0.22) 0%, transparent 46%),
-    linear-gradient(180deg, oklch(0.136 0.022 214 / 1) 0%, oklch(0.12 0.02 220 / 1) 54%, oklch(0.112 0.018 226 / 1) 100%);
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
 }
 
 .heroGlobeHandoff {
@@ -376,14 +351,7 @@
 }
 
 .glow {
-  position: absolute;
-  width: clamp(380px, 46vw, 620px);
-  height: clamp(340px, 42vw, 510px);
-  border-radius: 50%;
-  background: radial-gradient(circle, oklch(0.58 0.07 272 / 0.12) 0%, oklch(0.58 0.05 272 / 0.04) 50%, transparent 74%);
-  transform: translate(18%, -10%);
-  filter: blur(7px);
-  pointer-events: none;
+  display: none;
 }
 
 .panel {
@@ -393,22 +361,13 @@
   min-height: clamp(520px, 62vh, 680px);
   padding: 52px 30px 24px;
   border-radius: 26px;
-  background: linear-gradient(165deg, var(--surface-blue-0) 0%, var(--surface-blue-1) 100%);
+  background: linear-gradient(165deg, var(--surface-blue-0) 0%, var(--surface-blue-2) 100%);
   box-shadow:
-    0 30px 72px oklch(0.08 0.012 262 / 0.56),
-    inset 0 0 0 1px var(--border-subtle);
-  backdrop-filter: blur(10px);
-  transition: transform 420ms ease, box-shadow 420ms ease;
+    0 24px 48px oklch(0.04 0.008 262 / 0.5),
+    inset 0 0 0 1px oklch(0.6 0.03 262 / 0.14);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-.section:hover .panel {
-  transform: translateY(-4px);
-  box-shadow:
-    0 36px 82px oklch(0.08 0.012 262 / 0.58),
-    inset 0 0 0 1px oklch(0.74 0.04 262 / 0.2);
 }
 
 .header {
@@ -715,8 +674,7 @@
 
 .dashboardCut path {
   fill: transparent;
-  stroke: oklch(0.62 0.03 262 / 0.09);
-  stroke-width: 1.5;
+  stroke: none;
 }
 
 .dashboardBackground {
@@ -724,16 +682,20 @@
   inset: 0 0 -190px;
   z-index: 0;
   pointer-events: none;
-  background: transparent;
+  background:
+    radial-gradient(72% 60% at 85% 8%, oklch(0.56 0.14 155 / 0.14), transparent 70%),
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
 }
 
 .dashboardBackground::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
-  background-size: 8px 8px;
-  opacity: 0.05;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--accent-primary) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--accent-primary) 12%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px;
+  opacity: 0.16;
 }
 
 .dashboardPanel {
@@ -764,8 +726,7 @@
 
 .planCut path {
   fill: transparent;
-  stroke: oklch(0.58 0.03 262 / 0.12);
-  stroke-width: 1.6;
+  stroke: none;
 }
 
 .planBackground {
@@ -773,16 +734,20 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: transparent;
+  background:
+    radial-gradient(72% 60% at 15% 8%, oklch(0.5 0.16 300 / 0.14), transparent 70%),
+    linear-gradient(180deg, oklch(0.1 0.009 262) 0%, oklch(0.09 0.008 262) 54%, oklch(0.085 0.007 262) 100%);
 }
 
 .planBackground::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(var(--ambient-dot) 1px, transparent 1px);
-  background-size: 8px 8px;
-  opacity: 0.06;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--accent-primary) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--accent-primary) 12%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px;
+  opacity: 0.16;
 }
 
 .planContainer {
@@ -1613,13 +1578,13 @@
   .title {
     margin-top: 16px;
     max-width: 680px;
-    font-size: clamp(1.96rem, 3vw, 3.26rem);
+    font-size: clamp(2.1rem, 3.2vw, 3.26rem);
   }
 
   .text {
     margin-top: 14px;
     max-width: 600px;
-    font-size: 1rem;
+    font-size: 1.05rem;
     line-height: 1.48;
   }
 
@@ -1630,7 +1595,7 @@
 
   .list li {
     gap: 10px;
-    font-size: 0.94rem;
+    font-size: 1rem;
   }
 
   .list svg {

@@ -10,14 +10,21 @@ import AICopilot from "@/components/sections/Products/ProductsSection";
 import Security from "@/components/sections/Security/Security";
 import Solutions from "@/components/sections/Solutions/Solutions";
 import type { HomeOfferingMode } from "@/content/homePageText";
+import { fetchAllHomeContent } from "@/sanity/lib/fetchHomeContent";
 
 type HomePageProps = {
   initialOffering: HomeOfferingMode;
 };
 
-export default function HomePage({ initialOffering }: HomePageProps) {
+export default async function HomePage({ initialOffering }: HomePageProps) {
+  const prefetchedContent = await fetchAllHomeContent();
+  const allowedOfferings: readonly HomeOfferingMode[] =
+    initialOffering === "partner"
+      ? ["partner"]
+      : ["platform", "full-service"];
+
   return (
-    <HomeOfferingProvider initialOffering={initialOffering}>
+    <HomeOfferingProvider initialOffering={initialOffering} allowedOfferings={allowedOfferings} prefetchedContent={prefetchedContent}>
       <Logo showOfferingSwitch />
       <FloatingNav />
       <Hero />
