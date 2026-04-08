@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import ContactReturnRestore from "@/components/system/ContactReturnRestore";
 import { MotionProvider } from "@/components/system/MotionProvider";
 import { HOME_PAGE_SHARED_TEXT } from "@/content/homePageText";
+import { SanityLive } from "@/sanity/lib/live";
 import "@/styles/globals.scss";
 
 const geistSans = Geist({
@@ -58,6 +59,7 @@ export default function RootLayout({
         <MotionProvider>
           <ContactReturnRestore />
           {children}
+          <SanityLive />
         </MotionProvider>
       </body>
     </html>

@@ -1,4 +1,5 @@
-import { sanityClient } from "@/sanity/client";
+import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/lib/live";
 import { SITE_SETTINGS_QUERY, VARIANT_QUERY } from "./queries";
 import sharedJson from "@/content/home/shared.json";
 import platformJson from "@/content/home/platform.json";
@@ -500,18 +501,22 @@ function staticFallback() {
 // ── Main fetch function ──
 
 export async function fetchAllHomeContent() {
-  if (!sanityClient) {
+  if (!client) {
     return staticFallback();
   }
 
   try {
-    const [sanitySettings, sanityPlatform, sanityFullService, sanityPartner] =
-      await Promise.all([
-        sanityClient.fetch(SITE_SETTINGS_QUERY),
-        sanityClient.fetch(VARIANT_QUERY, { mode: "platform" }),
-        sanityClient.fetch(VARIANT_QUERY, { mode: "full-service" }),
-        sanityClient.fetch(VARIANT_QUERY, { mode: "partner" }),
-      ]);
+    const [
+      { data: sanitySettings },
+      { data: sanityPlatform },
+      { data: sanityFullService },
+      { data: sanityPartner },
+    ] = await Promise.all([
+      sanityFetch({ query: SITE_SETTINGS_QUERY }),
+      sanityFetch({ query: VARIANT_QUERY, params: { mode: "platform" } }),
+      sanityFetch({ query: VARIANT_QUERY, params: { mode: "full-service" } }),
+      sanityFetch({ query: VARIANT_QUERY, params: { mode: "partner" } }),
+    ]);
 
     const sanityVariants: Record<HomeOfferingMode, AnyObject | null> = {
       platform: sanityPlatform,

@@ -1,4 +1,5 @@
-import { sanityClient } from "@/sanity/client";
+import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/lib/live";
 import solutionPagesText from "@/content/solutionPagesText.json";
 
 type AnyObject = Record<string, unknown>;
@@ -116,7 +117,7 @@ function mapSanityToRawPage(
 }
 
 export async function fetchSolutionPagesText() {
-  if (!sanityClient) {
+  if (!client) {
     return solutionPagesText;
   }
 
@@ -124,11 +125,11 @@ export async function fetchSolutionPagesText() {
     const raw = solutionPagesText as { shared: AnyObject; pages: AnyObject[] };
 
     const sanityDocs = await Promise.all(
-      raw.pages.map((page) => {
+      raw.pages.map(async (page) => {
         const id = SOLUTION_IDS[page.key as string];
-        return id
-          ? sanityClient!.fetch(SOLUTION_PAGE_QUERY, { id })
-          : Promise.resolve(null);
+        if (!id) return null;
+        const { data } = await sanityFetch({ query: SOLUTION_PAGE_QUERY, params: { id } });
+        return data;
       }),
     );
 

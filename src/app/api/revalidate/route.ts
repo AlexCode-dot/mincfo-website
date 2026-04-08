@@ -1,23 +1,24 @@
-import { revalidatePath } from "next/cache";
-import { NextResponse, type NextRequest } from "next/server";
+import { revalidateTag } from "next/cache";
+import { type NextRequest, NextResponse } from "next/server";
+import { parseBody } from "next-sanity/webhook";
 
-export async function POST(request: NextRequest) {
-  const secret = request.nextUrl.searchParams.get("secret");
+export async function POST(req: NextRequest) {
+  try {
+    const { isValidSignature, body } = await parseBody<{ _type: string }>(
+      req,
+      process.env.SANITY_REVALIDATE_SECRET,
+      true,
+    );
 
-  if (secret !== process.env.SANITY_REVALIDATE_SECRET) {
-    return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
+    if (!isValidSignature) {
+      return NextResponse.json({ message: "Invalid signature" }, { status: 401 });
+    }
+
+    // Revalidate the sync tags used by sanityFetch
+    revalidateTag("sanity", "default");
+
+    return NextResponse.json({ revalidated: true, type: body?._type });
+  } catch (err) {
+    return new Response((err as Error).message, { status: 500 });
   }
-
-  revalidatePath("/", "page");
-  revalidatePath("/plattform", "page");
-  revalidatePath("/full-service", "page");
-  revalidatePath("/partner", "page");
-  revalidatePath("/losningar", "page");
-  revalidatePath("/losningar/ceo-founders", "page");
-  revalidatePath("/losningar/cfo-finance", "page");
-  revalidatePath("/losningar/saas-tech", "page");
-  revalidatePath("/losningar/konsult-tjanster", "page");
-  revalidatePath("/losningar/ehandel", "page");
-
-  return NextResponse.json({ revalidated: true, now: Date.now() });
 }
