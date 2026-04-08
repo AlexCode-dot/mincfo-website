@@ -1,4 +1,5 @@
-import { sanityClient } from "@/sanity/client";
+import { unstable_cache } from "next/cache";
+import { sanityClient, SANITY_TAG } from "@/sanity/client";
 import solutionPagesText from "@/content/solutionPagesText.json";
 
 type AnyObject = Record<string, unknown>;
@@ -115,7 +116,7 @@ function mapSanityToRawPage(
   return result;
 }
 
-export async function fetchSolutionPagesText() {
+async function _fetchSolutionPagesText() {
   if (!sanityClient) {
     return solutionPagesText;
   }
@@ -142,3 +143,9 @@ export async function fetchSolutionPagesText() {
     return solutionPagesText;
   }
 }
+
+export const fetchSolutionPagesText = unstable_cache(
+  _fetchSolutionPagesText,
+  ["sanity-solution-content"],
+  { tags: [SANITY_TAG] },
+);
