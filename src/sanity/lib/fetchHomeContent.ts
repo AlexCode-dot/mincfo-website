@@ -1,5 +1,4 @@
-import { unstable_cache } from "next/cache";
-import { sanityClient, SANITY_TAG } from "@/sanity/client";
+import { sanityClient } from "@/sanity/client";
 import { SITE_SETTINGS_QUERY, VARIANT_QUERY } from "./queries";
 import sharedJson from "@/content/home/shared.json";
 import platformJson from "@/content/home/platform.json";
@@ -498,9 +497,9 @@ function staticFallback() {
   };
 }
 
-// ── Main fetch function (internal) ──
+// ── Main fetch function ──
 
-async function _fetchAllHomeContent() {
+export async function fetchAllHomeContent() {
   if (!sanityClient) {
     return staticFallback();
   }
@@ -548,10 +547,3 @@ async function _fetchAllHomeContent() {
     return staticFallback();
   }
 }
-
-// Wrap with Next.js cache so revalidateTag("sanity-content") invalidates it
-export const fetchAllHomeContent = unstable_cache(
-  _fetchAllHomeContent,
-  ["sanity-home-content"],
-  { tags: [SANITY_TAG] },
-);

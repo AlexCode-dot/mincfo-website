@@ -3,7 +3,6 @@ import SolutionPageTemplate from "../_shared/SolutionPageTemplate";
 import { fetchSolutionContent } from "../_shared/solutionPageContent";
 import { EHANDEL_META, getSolutionMetadata } from "../_shared/solutionMetadata";
 
-export const revalidate = 3600;
 export const metadata: Metadata = getSolutionMetadata(EHANDEL_META);
 
 export default async function EhandelPage() {
