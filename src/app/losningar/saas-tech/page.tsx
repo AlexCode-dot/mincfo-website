@@ -3,6 +3,7 @@ import SolutionPageTemplate from "../_shared/SolutionPageTemplate";
 import { fetchSolutionContent } from "../_shared/solutionPageContent";
 import { getSolutionMetadata, SAAS_TECH_META } from "../_shared/solutionMetadata";
 
+export const revalidate = 3600;
 export const metadata: Metadata = getSolutionMetadata(SAAS_TECH_META);
 
 export default async function SaasTechPage() {
