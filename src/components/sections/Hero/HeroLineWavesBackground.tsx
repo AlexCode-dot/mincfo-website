@@ -133,9 +133,12 @@ void main() {
 }
 `;
 
-export default function HeroLineWavesBackground() {
+export default function HeroLineWavesBackground({ paused = false }: { paused?: boolean }) {
   const { isReducedMotion } = useMotion();
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const resumeRef = useRef<(() => void) | null>(null);
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
 
   useEffect(() => {
     if (!containerRef.current || isReducedMotion) return;
@@ -211,7 +214,7 @@ export default function HeroLineWavesBackground() {
     let inViewport = true;
 
     function update(time: number) {
-      if (!inViewport) {
+      if (!inViewport || pausedRef.current) {
         animationFrameId = 0;
         return;
       }
@@ -231,20 +234,28 @@ export default function HeroLineWavesBackground() {
       renderer.render({ scene: mesh });
     }
 
+    function resume() {
+      if (!animationFrameId && inViewport && !pausedRef.current) {
+        animationFrameId = window.requestAnimationFrame(update);
+      }
+    }
+
     const viewportObserver = new IntersectionObserver(
       ([entry]) => {
         inViewport = entry.isIntersecting;
-        if (inViewport && !animationFrameId) {
-          animationFrameId = window.requestAnimationFrame(update);
-        }
+        resume();
       },
       { threshold: 0.01 },
     );
     viewportObserver.observe(container);
 
+    // Expose resume so the paused-effect can kick-start the loop
+    resumeRef.current = resume;
+
     animationFrameId = window.requestAnimationFrame(update);
 
     return () => {
+      resumeRef.current = null;
       if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
       viewportObserver.disconnect();
       window.removeEventListener("resize", resize);
@@ -258,6 +269,11 @@ export default function HeroLineWavesBackground() {
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [isReducedMotion]);
+
+  // Restart the render loop when unpaused
+  useEffect(() => {
+    if (!paused) resumeRef.current?.();
+  }, [paused]);
 
   return (
     <div className={styles.wrapper} aria-hidden="true">

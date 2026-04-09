@@ -13,7 +13,6 @@ import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import ContactLink from "@/components/system/ContactLink";
 import { useMotion } from "@/components/system/MotionProvider";
 
-import HeroLineWavesBackground from "./HeroLineWavesBackground";
 import HeroOfferingShowcase from "./HeroOfferingShowcase";
 import HeroPartnerLinesBackground from "./HeroPartnerLinesBackground";
 import styles from "./Hero.module.scss";
@@ -36,6 +35,12 @@ const HERO_END_BRAND_AUDIO_BARS = 52;
 const smoothstep = (edge0: number, edge1: number, value: number) => {
   const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
   return t * t * (3 - 2 * t);
+};
+
+const HERO_BG_COLORS: Record<string, string[]> = {
+  platform: ["#3836cf", "#433dff", "#5a4fff", "#6a5cff"],
+  "full-service": ["#6b21cf", "#7c3aed", "#8b5cf6", "#a78bfa"],
+  partner: ["#0d7377", "#0ea5a9", "#2dd4bf", "#5eead4"],
 };
 
 export default function Hero() {
@@ -683,11 +688,7 @@ export default function Hero() {
     <section ref={sectionRef} id="hero" className={styles.hero}>
       <div className={styles.topBackground} aria-hidden="true">
         <div ref={topBackgroundLayerRef} className={styles.topBackgroundLayer}>
-          {offering === "full-service" ? (
-            <HeroLineWavesBackground />
-          ) : (
-            <HeroPartnerLinesBackground />
-          )}
+          <HeroPartnerLinesBackground colors={HERO_BG_COLORS[offering]} />
         </div>
       </div>
 
