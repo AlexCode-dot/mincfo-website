@@ -7,6 +7,7 @@ import HomeOfferingSwitch from "@/components/home/HomeOfferingSwitch";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import ContactLink from "@/components/system/ContactLink";
 import { useMotion } from "@/components/system/MotionProvider";
+import SignupModal from "@/components/system/SignupModal";
 import { getOfferingFromPathname } from "@/lib/homeRoutes";
 import styles from "./FloatingNav.module.scss";
 
@@ -27,7 +28,7 @@ const getPageTop = (element: HTMLElement) =>
   element.getBoundingClientRect().top + window.scrollY;
 
 export default function FloatingNav() {
-  const { content, offering } = useHomeOffering();
+  const { content, offering, shared } = useHomeOffering();
   const { isReducedMotion } = useMotion();
   const pathname = usePathname();
   const solutionGroups = content.navigation.groups;
@@ -44,6 +45,7 @@ export default function FloatingNav() {
   const [loginInVisible, setLoginInVisible] = useState(false);
   const [incomingSignupLabel, setIncomingSignupLabel] = useState<boolean | null>(null);
   const [loginIconPulse, setLoginIconPulse] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
   const navRef = useRef<HTMLElement | null>(null);
   const scrollRafRef = useRef<number | null>(null);
   const activeSignupRef = useRef(showSignupLabel);
@@ -397,6 +399,13 @@ export default function FloatingNav() {
           >
             {content.navigation.sakerhet}
           </a>
+          <button
+            type="button"
+            className={`${styles.link} ${styles.desktopOnly}`}
+            onClick={() => setShowSignup(true)}
+          >
+            {content.navigation.signupCta}
+          </button>
           <ContactLink
             href={demoHref}
             returnPath={currentPath}
@@ -518,6 +527,14 @@ export default function FloatingNav() {
             {navDemoCta}
           </ContactLink>
 
+          <button
+            type="button"
+            className={styles.mobileCta}
+            onClick={() => { closeMobileMenu(); setShowSignup(true); }}
+          >
+            {content.navigation.signupCta}
+          </button>
+
           <a
             href={APP_LOGIN_URL}
             className={styles.mobileCtaSecondary}
@@ -575,6 +592,7 @@ export default function FloatingNav() {
           )}
         </span>
       </a>
+      <SignupModal open={showSignup} onClose={() => setShowSignup(false)} content={shared.signup} />
     </div>
   );
 }

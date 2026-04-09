@@ -42,29 +42,29 @@
         ],
         "bars": [
           {
+            "height": "92%",
             "label": "Nu",
-            "value": "11.4",
-            "height": "92%"
+            "value": "11.4"
           },
           {
+            "height": "82%",
             "label": "Okt",
-            "value": "10.2",
-            "height": "82%"
+            "value": "10.2"
           },
           {
+            "height": "71%",
             "label": "Nov",
-            "value": "8.9",
-            "height": "71%"
+            "value": "8.9"
           },
           {
+            "height": "59%",
             "label": "Dec",
-            "value": "7.4",
-            "height": "59%"
+            "value": "7.4"
           },
           {
+            "height": "48%",
             "label": "Jan",
-            "value": "6.0",
-            "height": "48%"
+            "value": "6.0"
           }
         ]
       },
@@ -81,14 +81,14 @@
         ],
         "bars": [
           {
+            "height": "78%",
             "label": "Fasta",
-            "value": "62%",
-            "height": "78%"
+            "value": "62%"
           },
           {
+            "height": "48%",
             "label": "Rörliga",
-            "value": "38%",
-            "height": "48%"
+            "value": "38%"
           }
         ]
       }
@@ -210,6 +210,12 @@
         "title": "E-handel",
         "text": "Få kontroll på marginal, lager och likviditet när kampanjer och inköp påverkar utfallet dag för dag.",
         "icon": "cart"
+      },
+      {
+        "href": "/partner",
+        "title": "Redovisningsbyråer",
+        "text": "Skala er rådgivning med automatiserade insikter, proaktiva råd och en byråportal som samlar alla klienter.",
+        "icon": "handshake"
       }
     ]
   },

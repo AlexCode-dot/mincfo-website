@@ -12,6 +12,7 @@ import {
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import ContactLink from "@/components/system/ContactLink";
 import { useMotion } from "@/components/system/MotionProvider";
+
 import HeroLineWavesBackground from "./HeroLineWavesBackground";
 import HeroOfferingShowcase from "./HeroOfferingShowcase";
 import HeroPartnerLinesBackground from "./HeroPartnerLinesBackground";
@@ -84,6 +85,8 @@ export default function Hero() {
   );
   const [isAudioReactiveReady, setIsAudioReactiveReady] = useState(false);
   const [useFullVideo, setUseFullVideo] = useState(false);
+
+
   const stateRef = useRef({
     progress: 0,
     mouseX: 0,
@@ -124,11 +127,8 @@ export default function Hero() {
       const mouseRotateX = state.hovering ? -state.mouseY * 1.25 : 0;
       const mouseRotateY = state.hovering ? state.mouseX * 0.65 : 0;
       const travelY = state.reduceMotion ? 0 : cardProgress * 400;
-      const backgroundShiftY = state.reduceMotion ? 0 : state.progress * 28;
-
-      if (topBackgroundLayer) {
-        topBackgroundLayer.style.transform = `translate3d(0, ${backgroundShiftY}px, 0)`;
-      }
+      // Background is position:sticky and stays fixed — no scroll-linked transform
+      // to avoid jank/lag.
 
       if (state.videoInteractive) {
         if (cardStage) {

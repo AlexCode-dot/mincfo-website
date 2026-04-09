@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import ContactReturnRestore from "@/components/system/ContactReturnRestore";
 import { MotionProvider } from "@/components/system/MotionProvider";
 import { HOME_PAGE_SHARED_TEXT } from "@/content/homePageText";
@@ -60,6 +61,7 @@ export default function RootLayout({
           <ContactReturnRestore />
           {children}
           <SanityLive />
+          <Analytics />
         </MotionProvider>
       </body>
     </html>
