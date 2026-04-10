@@ -39,7 +39,6 @@ type PartnerWorkspaceView = "home" | "users" | "settings";
 type PartnerWorkspaceRow = {
   detail: string;
   label: string;
-  meta: string;
   status: string;
   tag: string;
 };
@@ -313,7 +312,7 @@ const PartnerWorkspaceMock = memo(function PartnerWorkspaceMock({
                 {screen.rows.map((row) => (
                   <article key={`${view}-${row.label}`} className={styles.partnerUsersRow}>
                     <div className={styles.partnerWorkspaceCompany}>
-                      <span className={styles.partnerWorkspaceAvatar}>{row.meta}</span>
+                      <span className={styles.partnerWorkspaceAvatar}>{row.label.charAt(0)}</span>
                       <div className={styles.partnerWorkspaceCompanyMeta}>
                         <strong>{row.label}</strong>
                         <span>{row.detail}</span>
@@ -361,7 +360,7 @@ const PartnerWorkspaceMock = memo(function PartnerWorkspaceMock({
               {screen.rows.map((row) => (
                 <article key={`${view}-${row.label}`} className={styles.partnerWorkspaceRow}>
                   <div className={styles.partnerWorkspaceCompany}>
-                    <span className={styles.partnerWorkspaceAvatar}>{row.meta}</span>
+                    <span className={styles.partnerWorkspaceAvatar}>{row.label.charAt(0)}</span>
                     <div className={styles.partnerWorkspaceCompanyMeta}>
                       <strong>{row.label}</strong>
                       <span>{row.detail}</span>

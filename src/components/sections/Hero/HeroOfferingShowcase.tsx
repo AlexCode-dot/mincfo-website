@@ -370,7 +370,7 @@ function AgencyWorkspaceVisual() {
                 {homeRows.map((row) => (
                   <div key={row.label} className={styles.partnerWorkspaceRow}>
                     <div className={styles.partnerWorkspaceCompany}>
-                      <div className={styles.partnerWorkspaceAvatar}>{row.meta}</div>
+                      <div className={styles.partnerWorkspaceAvatar}>{row.label.charAt(0)}</div>
                       <div className={styles.partnerWorkspaceCompanyMeta}>
                         <strong>{row.label}</strong>
                         <span>{row.detail}</span>
@@ -407,7 +407,7 @@ function AgencyWorkspaceVisual() {
                 {userRows.map((row) => (
                   <div key={row.label} className={styles.partnerWorkspacePanelRow}>
                     <div className={styles.partnerWorkspaceUser}>
-                      <div className={styles.partnerWorkspaceUserAvatar}>{row.meta}</div>
+                      <div className={styles.partnerWorkspaceUserAvatar}>{row.label.charAt(0)}</div>
                       <div className={styles.partnerWorkspaceUserMeta}>
                         <strong>{row.label}</strong>
                         <span>{row.detail}</span>
