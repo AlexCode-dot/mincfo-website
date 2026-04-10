@@ -40,13 +40,15 @@ export default function SignupModal({ open, onClose, content: t }: SignupModalPr
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!open) return;
+
+    const preventScroll = (e: Event) => e.preventDefault();
+    document.addEventListener("wheel", preventScroll, { passive: false });
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+
     return () => {
-      document.body.style.overflow = "";
+      document.removeEventListener("wheel", preventScroll);
+      document.removeEventListener("touchmove", preventScroll);
     };
   }, [open]);
 

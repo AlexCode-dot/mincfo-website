@@ -33,7 +33,10 @@ export default function HomeOfferingSwitch({
           type="button"
           aria-pressed={offering === option.id}
           className={`${styles.option} ${offering === option.id ? styles.optionActive : ""}`}
-          onClick={() => setOffering(option.id)}
+          onClick={() => {
+            setOffering(option.id);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
         >
           {option.label}
         </button>

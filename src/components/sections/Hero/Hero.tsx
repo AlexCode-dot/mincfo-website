@@ -167,11 +167,9 @@ export default function Hero() {
       if (intro) {
         const introLift = state.reduceMotion ? 0 : introProgress * 310;
         const introScale = state.reduceMotion ? 1 : 1 - introProgress * 0.14;
-        const introBlur = state.reduceMotion ? 0 : smoothstep(0.24, 1, introProgress) * 7;
         const introOpacity = Math.pow(1 - introProgress, 2.55);
         intro.style.transform = `translate3d(0, -${introLift}px, 0) scale(${introScale})`;
         intro.style.opacity = `${introOpacity}`;
-        intro.style.filter = `blur(${introBlur}px)`;
       }
 
       cardWrap.style.transform = `translate3d(0, -${travelY}px, 0)`;

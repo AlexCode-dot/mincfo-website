@@ -71,7 +71,14 @@ export function HomeOfferingProvider({
   prefetchedContent,
   syncWithUrl = true,
 }: HomeOfferingProviderProps) {
-  const pathname = useSyncExternalStore(subscribeToPathname, getPathname, () => "/");
+  const serverPathname = getHomeRouteForOffering(
+    resolveInitialOffering(allowedOfferings, initialOffering),
+  );
+  const pathname = useSyncExternalStore(
+    subscribeToPathname,
+    getPathname,
+    () => serverPathname,
+  );
   const [localOffering, setOfferingState] = useState<HomeOfferingMode>(() =>
     resolveInitialOffering(allowedOfferings, initialOffering),
   );

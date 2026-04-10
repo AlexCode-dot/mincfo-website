@@ -49,7 +49,7 @@
   },
   "signup": {
     "title": "Skapa konto",
-    "subtitle": "Fyll i dina uppgifter så skapar vi ett konto åt dig med en kostnadsfri testperiod. Vi skickar en inbjudan till din e-post så snart vi kan.",
+    "subtitle": "Fyll i dina uppgifter så skapar vi ett konto åt dig. Vi skickar en inbjudan till din e-post så snart vi kan.",
     "companyLabel": "Företagsnamn",
     "companyPlaceholder": "Företagsnamn",
     "orgNrLabel": "Organisationsnummer",
@@ -60,7 +60,7 @@
     "emailPlaceholder": "namn@företag.se",
     "phoneLabel": "Telefon",
     "phonePlaceholder": "07X-XXX XX XX",
-    "phoneOptional": "(valfritt)",
+    "phoneOptional": "",
     "consent": "Jag godkänner {villkoren} och att MinCFO lagrar mina uppgifter för att hantera mitt konto.",
     "consentLinkText": "villkoren",
     "consentLinkHref": "/terms",

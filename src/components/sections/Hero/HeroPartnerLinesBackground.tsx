@@ -245,14 +245,16 @@ export default function HeroPartnerLinesBackground({
     camera.position.z = 1;
 
     const renderer = new WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(1);
     renderer.setClearColor(0x000000, 0);
     const canvas = renderer.domElement;
     canvas.style.width = "100%";
     canvas.style.height = "100%";
     canvas.style.pointerEvents = "none";
     canvas.style.opacity = "0";
-    canvas.style.transition = "opacity 0.6s ease";
+    canvas.style.transform = "translateZ(0)";
+    canvas.style.willChange = "opacity";
+    canvas.style.transition = "opacity 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)";
     container.appendChild(canvas);
 
     const uniforms = {
@@ -324,12 +326,13 @@ export default function HeroPartnerLinesBackground({
 
     let frame = 0;
     let inViewport = true;
+    let tabVisible = document.visibilityState === "visible";
     let revealed = false;
 
     const COLOR_LERP_SPEED = 0.04;
 
     const renderLoop = () => {
-      if (!active || !inViewport) {
+      if (!active || !inViewport || !tabVisible) {
         frame = 0;
         return;
       }
@@ -355,7 +358,7 @@ export default function HeroPartnerLinesBackground({
     const viewportObserver = new IntersectionObserver(
       ([entry]) => {
         inViewport = entry.isIntersecting;
-        if (inViewport && !frame && active) {
+        if (inViewport && !frame && active && tabVisible) {
           clock.getDelta();
           frame = window.requestAnimationFrame(renderLoop);
         }
@@ -364,11 +367,21 @@ export default function HeroPartnerLinesBackground({
     );
     viewportObserver.observe(container);
 
+    const handleVisibilityChange = () => {
+      tabVisible = document.visibilityState === "visible";
+      if (tabVisible && !frame && active && inViewport) {
+        clock.getDelta();
+        frame = window.requestAnimationFrame(renderLoop);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     renderLoop();
 
     return () => {
       active = false;
       if (frame) window.cancelAnimationFrame(frame);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       viewportObserver.disconnect();
       resizeObserver?.disconnect();
       geometry.dispose();

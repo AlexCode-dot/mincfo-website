@@ -15,6 +15,9 @@
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
+  transform: translateZ(0);
+  contain: layout paint;
 }
 
 .topBackgroundLayer {

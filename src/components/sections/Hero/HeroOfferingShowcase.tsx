@@ -530,12 +530,7 @@ export default function HeroOfferingShowcase() {
   const introLines = showcase.introLines;
   const visual = showcase[offering];
   const ActiveEyebrowIcon = OFFERING_ICONS[offering];
-  const [introVisible, setIntroVisible] = useState(isReducedMotion);
-  const [titleOpacity, setTitleOpacity] = useState(1);
-  const [titleScale, setTitleScale] = useState(1);
-  const [showcaseProgress, setShowcaseProgress] = useState(isReducedMotion ? 1 : 0);
-  const [showcaseFocus, setShowcaseFocus] = useState(isReducedMotion ? 1 : 0);
-  const [showcaseExitProgress, setShowcaseExitProgress] = useState(isReducedMotion ? 0 : 0);
+  const introVisibleRef = useRef(isReducedMotion);
 
   useEffect(() => {
     if (isReducedMotion) return;
@@ -598,14 +593,23 @@ export default function HeroOfferingShowcase() {
           1,
         );
 
-        setShowcaseProgress(nextProgress);
-        setShowcaseFocus(nextFocus);
-        setShowcaseExitProgress(smoothstep(0, 1, exitProgress));
+        const showcaseStyle = showcaseNode.style;
+        showcaseStyle.setProperty("--showcase-progress", nextProgress.toFixed(3));
+        showcaseStyle.setProperty("--showcase-focus", nextFocus.toFixed(3));
+        showcaseStyle.setProperty("--showcase-exit-progress", smoothstep(0, 1, exitProgress).toFixed(3));
       }
 
-      setIntroVisible(nextIntroVisible);
-      setTitleOpacity(nextOpacity);
-      setTitleScale(nextScale);
+      if (titleNode) {
+        titleNode.style.opacity = String(nextOpacity);
+        titleNode.style.transform = `scale(${nextScale})`;
+      }
+
+      if (introVisibleRef.current !== nextIntroVisible) {
+        introVisibleRef.current = nextIntroVisible;
+        if (titleNode) {
+          titleNode.classList.toggle(styles.splitTitleVisible, nextIntroVisible);
+        }
+      }
     };
 
     const scheduleUpdate = () => {
@@ -665,11 +669,7 @@ export default function HeroOfferingShowcase() {
         <div
           ref={titleRef}
           id={HERO_OFFERING_TITLE_ID}
-          className={`${styles.splitTitle} ${introVisible ? styles.splitTitleVisible : ""}`}
-          style={{
-            opacity: titleOpacity,
-            transform: `scale(${titleScale})`,
-          }}
+          className={`${styles.splitTitle} ${isReducedMotion ? styles.splitTitleVisible : ""}`}
           aria-label={introLines.join(" ")}
           role="heading"
           aria-level={2}
@@ -714,9 +714,9 @@ export default function HeroOfferingShowcase() {
         id={HERO_OFFERING_SHOWCASE_ID}
         className={styles.showcase}
         style={{
-          "--showcase-progress": showcaseProgress.toFixed(3),
-          "--showcase-focus": showcaseFocus.toFixed(3),
-          "--showcase-exit-progress": showcaseExitProgress.toFixed(3),
+          "--showcase-progress": isReducedMotion ? "1" : "0",
+          "--showcase-focus": isReducedMotion ? "1" : "0",
+          "--showcase-exit-progress": "0",
         } as CSSProperties}
       >
         <div className={styles.panel}>
