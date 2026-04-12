@@ -6,7 +6,7 @@ import styles from "./HomeOfferingSwitch.module.scss";
 type HomeOfferingSwitchProps = {
   className?: string;
   compact?: boolean;
-  variant?: "pill" | "inline";
+  variant?: "pill" | "inline" | "drawer";
 };
 
 export default function HomeOfferingSwitch({
@@ -24,7 +24,7 @@ export default function HomeOfferingSwitch({
     <div
       className={`${styles.switch} ${compact ? styles.compact : ""} ${
         variant === "inline" ? styles.inline : ""
-      } ${className}`.trim()}
+      } ${variant === "drawer" ? styles.drawer : ""} ${className}`.trim()}
       aria-label={shared.offering.ariaLabel}
     >
       {options.map((option) => (
