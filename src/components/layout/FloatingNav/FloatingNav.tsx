@@ -62,6 +62,7 @@ export default function FloatingNav() {
   };
   const moreRef = useRef<HTMLDivElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
+  const mobileDrawerRef = useRef<HTMLElement | null>(null);
   const scrollRafRef = useRef<number | null>(null);
   const activeSignupRef = useRef(showSignupLabel);
 
@@ -158,6 +159,7 @@ export default function FloatingNav() {
         setMoreOpen(false);
       }
       if (!nav || nav.contains(target)) return;
+      if (mobileDrawerRef.current && mobileDrawerRef.current.contains(target)) return;
       setSolutionsOpen(false);
       setMobileMenuOpen(false);
       setMobileSolutionsOpen(false);
@@ -488,6 +490,7 @@ export default function FloatingNav() {
       />
 
       <aside
+        ref={mobileDrawerRef}
         id="mobile-nav-panel"
         className={`${styles.mobileDrawer} ${mobileMenuOpen ? styles.mobileDrawerOpen : ""}`}
         aria-hidden={mobileMenuOpen ? "false" : "true"}
