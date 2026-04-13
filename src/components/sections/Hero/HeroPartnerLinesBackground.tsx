@@ -218,9 +218,21 @@ const hexToVec3 = (hex: string) => {
   return new Vector3(r / 255, g / 255, b / 255);
 };
 
-export default function HeroPartnerLinesBackground() {
+const DEFAULT_COLORS = ["#3836cf", "#433dff", "#5a4fff", "#6a5cff"];
+
+export default function HeroPartnerLinesBackground({
+  colors = DEFAULT_COLORS,
+}: {
+  colors?: string[];
+}) {
   const { isReducedMotion } = useMotion();
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const targetColorsRef = useRef<Vector3[]>(colors.map((h) => hexToVec3(h)));
+
+  // Update target colors when prop changes
+  useEffect(() => {
+    targetColorsRef.current = colors.map((h) => hexToVec3(h));
+  }, [colors]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -233,12 +245,17 @@ export default function HeroPartnerLinesBackground() {
     camera.position.z = 1;
 
     const renderer = new WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(1);
     renderer.setClearColor(0x000000, 0);
-    renderer.domElement.style.width = "100%";
-    renderer.domElement.style.height = "100%";
-    renderer.domElement.style.pointerEvents = "none";
-    container.appendChild(renderer.domElement);
+    const canvas = renderer.domElement;
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.pointerEvents = "none";
+    canvas.style.opacity = "0";
+    canvas.style.transform = "translateZ(0)";
+    canvas.style.willChange = "opacity";
+    canvas.style.transition = "opacity 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)";
+    container.appendChild(canvas);
 
     const uniforms = {
       iTime: { value: 0 },
@@ -270,7 +287,7 @@ export default function HeroPartnerLinesBackground() {
       lineGradientCount: { value: 4 },
     };
 
-    ["#3836cf", "#433dff", "#5a4fff", "#6a5cff"].forEach((hex, index) => {
+    colors.forEach((hex, index) => {
       uniforms.lineGradient.value[index].copy(hexToVec3(hex));
     });
 
@@ -309,22 +326,39 @@ export default function HeroPartnerLinesBackground() {
 
     let frame = 0;
     let inViewport = true;
+    let tabVisible = document.visibilityState === "visible";
+    let revealed = false;
+
+    const COLOR_LERP_SPEED = 0.04;
 
     const renderLoop = () => {
-      if (!active || !inViewport) {
+      if (!active || !inViewport || !tabVisible) {
         frame = 0;
         return;
       }
 
       uniforms.iTime.value = clock.getElapsedTime();
+
+      // Smoothly lerp gradient colors toward target
+      const targets = targetColorsRef.current;
+      for (let i = 0; i < targets.length && i < MAX_GRADIENT_STOPS; i++) {
+        uniforms.lineGradient.value[i].lerp(targets[i], COLOR_LERP_SPEED);
+      }
+
       renderer.render(scene, camera);
+
+      if (!revealed) {
+        revealed = true;
+        canvas.style.opacity = "1";
+      }
+
       frame = window.requestAnimationFrame(renderLoop);
     };
 
     const viewportObserver = new IntersectionObserver(
       ([entry]) => {
         inViewport = entry.isIntersecting;
-        if (inViewport && !frame && active) {
+        if (inViewport && !frame && active && tabVisible) {
           clock.getDelta();
           frame = window.requestAnimationFrame(renderLoop);
         }
@@ -333,11 +367,21 @@ export default function HeroPartnerLinesBackground() {
     );
     viewportObserver.observe(container);
 
+    const handleVisibilityChange = () => {
+      tabVisible = document.visibilityState === "visible";
+      if (tabVisible && !frame && active && inViewport) {
+        clock.getDelta();
+        frame = window.requestAnimationFrame(renderLoop);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     renderLoop();
 
     return () => {
       active = false;
       if (frame) window.cancelAnimationFrame(frame);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       viewportObserver.disconnect();
       resizeObserver?.disconnect();
       geometry.dispose();

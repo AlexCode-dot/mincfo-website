@@ -230,20 +230,51 @@ function mapSettingsFromSanity(
   }
 
   // Navigation
-  if (sanity.navDemoCta || sanity.navLoginLabel) {
+  if (sanity.navDemoCta || sanity.navLoginLabel || sanity.signupNavCta || sanity.navProdukt) {
     overlay.navigation = {
+      produkt: sanity.navProdukt,
+      losningar: sanity.navLosningar,
+      kundcase: sanity.navKundcase,
+      sakerhet: sanity.navSakerhet,
+      hurDetFunkar: sanity.navHurDetFunkar,
       demoCta: sanity.navDemoCta,
       loginSignupLabel: sanity.navLoginLabel,
+      signupCta: sanity.signupNavCta,
+      openSolutionsAria: sanity.navOpenSolutionsAria,
+      openMenuAria: sanity.navOpenMenuAria,
+      loginChooser: {
+        title: sanity.loginChooserTitle,
+        subtitle: sanity.loginChooserSubtitle,
+        loginLabel: sanity.loginChooserLoginLabel,
+        loginSublabel: sanity.loginChooserLoginSublabel,
+        signupLabel: sanity.loginChooserSignupLabel,
+        signupSublabel: sanity.loginChooserSignupSublabel,
+        closeAria: sanity.loginChooserCloseAria,
+      },
+    };
+  }
+
+  // Signup form
+  if (sanity.signupTitle || sanity.signupSubtitle) {
+    overlay.signup = {
+      title: sanity.signupTitle,
+      subtitle: sanity.signupSubtitle,
+      companyLabel: sanity.signupCompanyLabel,
+      orgNrLabel: sanity.signupOrgNrLabel,
+      nameLabel: sanity.signupNameLabel,
+      emailLabel: sanity.signupEmailLabel,
+      phoneLabel: sanity.signupPhoneLabel,
+      consent: sanity.signupConsent,
+      consentLinkText: sanity.signupConsentLinkText,
+      submitLabel: sanity.signupSubmitLabel,
+      successTitle: sanity.signupSuccessTitle,
+      successText: sanity.signupSuccessText,
     };
   }
 
   // Offering
-  if (sanity.offeringEyebrow || sanity.offeringTitle) {
-    const offeringOverlay: AnyObject = {
-      eyebrow: sanity.offeringEyebrow,
-      title: sanity.offeringTitle,
-      intro: sanity.offeringIntro,
-    };
+  if (Array.isArray(sanity.offeringOptions)) {
+    const offeringOverlay: AnyObject = {};
 
     if (Array.isArray(sanity.offeringOptions)) {
       const jsonOptions = sharedJson.offering.options;

@@ -12,7 +12,7 @@ import {
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import ContactLink from "@/components/system/ContactLink";
 import { useMotion } from "@/components/system/MotionProvider";
-import HeroLineWavesBackground from "./HeroLineWavesBackground";
+
 import HeroOfferingShowcase from "./HeroOfferingShowcase";
 import HeroPartnerLinesBackground from "./HeroPartnerLinesBackground";
 import styles from "./Hero.module.scss";
@@ -35,6 +35,12 @@ const HERO_END_BRAND_AUDIO_BARS = 52;
 const smoothstep = (edge0: number, edge1: number, value: number) => {
   const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
   return t * t * (3 - 2 * t);
+};
+
+const HERO_BG_COLORS: Record<string, string[]> = {
+  platform: ["#3836cf", "#433dff", "#5a4fff", "#6a5cff"],
+  "full-service": ["#6b21cf", "#7c3aed", "#8b5cf6", "#a78bfa"],
+  partner: ["#0d7377", "#0ea5a9", "#2dd4bf", "#5eead4"],
 };
 
 export default function Hero() {
@@ -84,6 +90,8 @@ export default function Hero() {
   );
   const [isAudioReactiveReady, setIsAudioReactiveReady] = useState(false);
   const [useFullVideo, setUseFullVideo] = useState(false);
+
+
   const stateRef = useRef({
     progress: 0,
     mouseX: 0,
@@ -124,11 +132,8 @@ export default function Hero() {
       const mouseRotateX = state.hovering ? -state.mouseY * 1.25 : 0;
       const mouseRotateY = state.hovering ? state.mouseX * 0.65 : 0;
       const travelY = state.reduceMotion ? 0 : cardProgress * 400;
-      const backgroundShiftY = state.reduceMotion ? 0 : state.progress * 28;
-
-      if (topBackgroundLayer) {
-        topBackgroundLayer.style.transform = `translate3d(0, ${backgroundShiftY}px, 0)`;
-      }
+      // Background is position:sticky and stays fixed — no scroll-linked transform
+      // to avoid jank/lag.
 
       if (state.videoInteractive) {
         if (cardStage) {
@@ -162,11 +167,9 @@ export default function Hero() {
       if (intro) {
         const introLift = state.reduceMotion ? 0 : introProgress * 310;
         const introScale = state.reduceMotion ? 1 : 1 - introProgress * 0.14;
-        const introBlur = state.reduceMotion ? 0 : smoothstep(0.24, 1, introProgress) * 7;
         const introOpacity = Math.pow(1 - introProgress, 2.55);
         intro.style.transform = `translate3d(0, -${introLift}px, 0) scale(${introScale})`;
         intro.style.opacity = `${introOpacity}`;
-        intro.style.filter = `blur(${introBlur}px)`;
       }
 
       cardWrap.style.transform = `translate3d(0, -${travelY}px, 0)`;
@@ -683,11 +686,7 @@ export default function Hero() {
     <section ref={sectionRef} id="hero" className={styles.hero}>
       <div className={styles.topBackground} aria-hidden="true">
         <div ref={topBackgroundLayerRef} className={styles.topBackgroundLayer}>
-          {offering === "full-service" ? (
-            <HeroLineWavesBackground />
-          ) : (
-            <HeroPartnerLinesBackground />
-          )}
+          <HeroPartnerLinesBackground colors={HERO_BG_COLORS[offering]} />
         </div>
       </div>
 

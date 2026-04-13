@@ -7,8 +7,18 @@
     "hurDetFunkar": "Hur det funkar",
     "demoCta": "Boka demo",
     "loginSignupLabel": "Logga in",
+    "signupCta": "Skapa konto",
     "openSolutionsAria": "Öppna lösningsmeny",
     "openMenuAria": "Öppna meny",
+    "loginChooser": {
+      "title": "Välkommen",
+      "subtitle": "Har du redan ett konto hos oss?",
+      "loginLabel": "Logga in",
+      "loginSublabel": "Jag är redan kund",
+      "signupLabel": "Skapa konto",
+      "signupSublabel": "Jag är ny här",
+      "closeAria": "Stäng"
+    },
     "groups": [
       {
         "title": "Efter roll",
@@ -20,6 +30,10 @@
           {
             "href": "/losningar/cfo-finance",
             "label": "CFO & Finance Team"
+          },
+          {
+            "href": "/partner",
+            "label": "Redovisningsbyråer"
           }
         ]
       },
@@ -41,6 +55,28 @@
         ]
       }
     ]
+  },
+  "signup": {
+    "title": "Skapa konto",
+    "subtitle": "Fyll i dina uppgifter så skapar vi ett konto åt dig. Vi skickar en inbjudan till din e-post så snart vi kan.",
+    "companyLabel": "Företagsnamn",
+    "companyPlaceholder": "Företagsnamn",
+    "orgNrLabel": "Organisationsnummer",
+    "orgNrPlaceholder": "XXXXXX-XXXX",
+    "nameLabel": "Kontaktperson",
+    "namePlaceholder": "Förnamn Efternamn",
+    "emailLabel": "E-post",
+    "emailPlaceholder": "namn@företag.se",
+    "phoneLabel": "Telefon",
+    "phonePlaceholder": "07X-XXX XX XX",
+    "phoneOptional": "",
+    "consent": "Jag godkänner {villkoren} och att MinCFO lagrar mina uppgifter för att hantera mitt konto.",
+    "consentLinkText": "villkoren",
+    "consentLinkHref": "/terms",
+    "submitLabel": "Skapa konto",
+    "successTitle": "Tack!",
+    "successText": "Vi skickar en inbjudan till din e-post så snart vi kan.",
+    "successClose": "Stäng"
   },
   "siteMeta": {
     "title": "MinCFO",
@@ -382,32 +418,28 @@
           "actionLabel": "Öppna",
           "rows": [
             {
-              "label": "Nordvale Growth AB",
               "detail": "556812-1042",
-              "meta": "N",
-              "tag": "Fortnox",
-              "status": "Mar 26"
+              "label": "Nordvale Growth AB",
+              "status": "Mar 26",
+              "tag": "Fortnox"
             },
             {
-              "label": "Studio Ledger AB",
               "detail": "559104-2281",
-              "meta": "S",
-              "tag": "Fortnox",
-              "status": "Apr 02"
+              "label": "Studio Ledger AB",
+              "status": "Apr 02",
+              "tag": "Fortnox"
             },
             {
-              "label": "Retail Peak Sverige AB",
               "detail": "559221-7814",
-              "meta": "R",
-              "tag": "Fortnox",
-              "status": "Apr 05"
+              "label": "Retail Peak Sverige AB",
+              "status": "Apr 05",
+              "tag": "Fortnox"
             },
             {
-              "label": "Ardent Ops AB",
               "detail": "559881-2041",
-              "meta": "A",
-              "tag": "Fortnox",
-              "status": "Apr 11"
+              "label": "Ardent Ops AB",
+              "status": "Apr 11",
+              "tag": "Fortnox"
             }
           ]
         },
@@ -422,32 +454,28 @@
           "actionLabel": "Hantera",
           "rows": [
             {
-              "label": "Anna Berg",
               "detail": "anna@byran.se",
-              "meta": "A",
-              "tag": "Admin",
-              "status": "Aktiv"
+              "label": "Anna Berg",
+              "status": "Aktiv",
+              "tag": "Admin"
             },
             {
-              "label": "Johan Lind",
               "detail": "johan@byran.se",
-              "meta": "J",
-              "tag": "Advisor",
-              "status": "Aktiv"
+              "label": "Johan Lind",
+              "status": "Aktiv",
+              "tag": "Advisor"
             },
             {
-              "label": "Sara Ek",
               "detail": "sara@byran.se",
-              "meta": "S",
-              "tag": "Viewer",
-              "status": "Inbjuden"
+              "label": "Sara Ek",
+              "status": "Inbjuden",
+              "tag": "Viewer"
             },
             {
-              "label": "Mikael Roos",
               "detail": "mikael@byran.se",
-              "meta": "M",
-              "tag": "Viewer",
-              "status": "Inbjuden"
+              "label": "Mikael Roos",
+              "status": "Inbjuden",
+              "tag": "Viewer"
             }
           ],
           "searchPlaceholder": "Sök användare...",
@@ -465,25 +493,22 @@
           "actionLabel": "Ändra",
           "rows": [
             {
-              "label": "Rapportstruktur",
               "detail": "Standardmall för klientrapportering",
-              "meta": "R",
-              "tag": "Aktiv",
-              "status": "Redo"
+              "label": "Rapportstruktur",
+              "status": "Redo",
+              "tag": "Aktiv"
             },
             {
-              "label": "KPI-mall",
               "detail": "Runway, marginal och cashflow som standard",
-              "meta": "K",
-              "tag": "Aktiv",
-              "status": "Redo"
+              "label": "KPI-mall",
+              "status": "Redo",
+              "tag": "Aktiv"
             },
             {
-              "label": "Behörigheter",
               "detail": "Rollbaserad åtkomst per klientbolag",
-              "meta": "B",
-              "tag": "Policy",
-              "status": "Uppdaterad"
+              "label": "Behörigheter",
+              "status": "Uppdaterad",
+              "tag": "Policy"
             }
           ],
           "tabs": {
@@ -519,16 +544,16 @@
     "intro": "Vi hanterar känslig finansiell data med högsta krav på säkerhet, integritet och efterlevnad.",
     "cards": [
       {
-        "title": "Dataskydd & integritet",
-        "body": "MinCFO hanterar all kunddata konfidentiellt och i enlighet med gällande dataskyddslagstiftning. Åtkomst är strikt begränsad och loggas kontinuerligt."
+        "body": "MinCFO hanterar all kunddata konfidentiellt och i enlighet med gällande dataskyddslagstiftning. Åtkomst är strikt begränsad och loggas kontinuerligt.",
+        "title": "Dataskydd & integritet"
       },
       {
-        "title": "Säker infrastruktur",
-        "body": "Systemen är byggda med moderna säkerhetsprinciper och skyddas genom kryptering, övervakning och regelbundna säkerhetskontroller."
+        "body": "Systemen är byggda med moderna säkerhetsprinciper och skyddas genom kryptering, övervakning och regelbundna säkerhetskontroller.",
+        "title": "Säker infrastruktur"
       },
       {
-        "title": "EU & GDPR-efterlevnad",
-        "body": "All behandling av person- och företagsdata sker i enlighet med GDPR. Data hanteras inom EU och enligt tydliga personuppgiftsbiträdesavtal."
+        "body": "All behandling av person- och företagsdata sker i enlighet med GDPR. Data hanteras inom EU och enligt tydliga personuppgiftsbiträdesavtal.",
+        "title": "EU & GDPR-efterlevnad"
       }
     ]
   },

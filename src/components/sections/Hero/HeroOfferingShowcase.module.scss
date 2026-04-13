@@ -110,15 +110,8 @@
       0
     )
     scale(calc(0.88 + var(--showcase-progress, 0) * 0.1 + var(--showcase-focus, 0) * 0.02));
-  filter:
-    blur(
-      calc(
-        ((1 - var(--showcase-progress, 0)) * (0.8px + (1 - var(--showcase-focus, 0)) * 0.6px))
-        + (var(--showcase-exit-progress, 0) * 0.8px)
-      )
-    );
-  transition: opacity 220ms linear, transform 220ms linear, filter 220ms linear;
-  will-change: transform, opacity, filter;
+  transition: opacity 220ms linear, transform 220ms linear;
+  will-change: transform, opacity;
 }
 
 .panel {
@@ -161,7 +154,6 @@
 .optionSlot {
   position: relative;
   display: block;
-  will-change: transform, opacity;
 }
 
 .option {
@@ -724,19 +716,16 @@
   0% {
     opacity: 0;
     transform: translate3d(-8px, 10px, 0) scale(0.992);
-    filter: blur(3px);
   }
 
   65% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-    filter: blur(0);
   }
 
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -744,19 +733,16 @@
   0% {
     opacity: 0;
     transform: translate3d(10px, 10px, 0) scale(0.994);
-    filter: blur(3px);
   }
 
   60% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-    filter: blur(0);
   }
 
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -764,13 +750,11 @@
   0% {
     opacity: 0;
     transform: translate3d(0, 8px, 0);
-    filter: blur(2px);
   }
 
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0);
-    filter: blur(0);
   }
 }
 

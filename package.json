@@ -10,11 +10,13 @@
     "content:export:gdocs": "node scripts/export-briefs-to-gdocs.mjs",
     "content:import:gdocs": "node scripts/import-briefs-from-gdocs.mjs",
     "content:seed:sanity": "node scripts/seed-sanity.mjs",
+    "content:pull:sanity": "node scripts/pull-sanity.mjs",
     "content:validate:sanity": "node scripts/validate-sanity.mjs"
   },
   "dependencies": {
     "@sanity/client": "^7.20.0",
     "@sanity/vision": "^5.18.0",
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.542.0",
     "motion": "^12.37.0",

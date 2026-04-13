@@ -148,13 +148,10 @@
     rotate(var(--card-enter-rotate))
     scale(0.84);
   transform-origin: 50% 50%;
-  will-change: transform, opacity;
   transition:
     opacity 720ms ease,
-    transform 860ms cubic-bezier(0.16, 0.88, 0.24, 1),
-    border-color 200ms ease,
-    box-shadow 200ms ease,
-    background 200ms ease;
+    transform 860ms cubic-bezier(0.16, 0.88, 0.24, 1);
+  pointer-events: none;
 }
 
 .card:nth-child(1) {
@@ -187,32 +184,43 @@
   --card-enter-rotate: 3.5deg;
 }
 
+.card:nth-child(6) {
+  --card-enter-x: -360px;
+  --card-enter-y: -156px;
+  --card-enter-rotate: 5deg;
+}
+
 .cardsVisible .card {
   opacity: 1;
   transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  pointer-events: auto;
 }
 
 .cardsVisible .card:nth-child(1) {
-  transition-delay: 40ms, 40ms, 0ms, 0ms, 0ms;
+  transition-delay: 40ms, 40ms;
 }
 
 .cardsVisible .card:nth-child(2) {
-  transition-delay: 100ms, 100ms, 0ms, 0ms, 0ms;
+  transition-delay: 100ms, 100ms;
 }
 
 .cardsVisible .card:nth-child(3) {
-  transition-delay: 160ms, 160ms, 0ms, 0ms, 0ms;
+  transition-delay: 160ms, 160ms;
 }
 
 .cardsVisible .card:nth-child(4) {
-  transition-delay: 220ms, 220ms, 0ms, 0ms, 0ms;
+  transition-delay: 220ms, 220ms;
 }
 
 .cardsVisible .card:nth-child(5) {
-  transition-delay: 280ms, 280ms, 0ms, 0ms, 0ms;
+  transition-delay: 280ms, 280ms;
 }
 
-.card:hover {
+.cardsVisible .card:nth-child(6) {
+  transition-delay: 340ms, 340ms;
+}
+
+.cardsVisible .card:hover {
   transform: translateY(-2px);
   box-shadow:
     inset 0 0 0 1px oklch(0.7 0.04 272 / 0.24),
@@ -220,6 +228,11 @@
     0 0 10px oklch(0.6 0.05 270 / 0.08),
     0 14px 24px oklch(0.09 0.014 262 / 0.4);
   background: linear-gradient(180deg, oklch(0.21 0.02 262 / 0.96), oklch(0.19 0.02 262 / 0.98));
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    background 200ms ease;
+  transition-delay: 0ms;
 }
 
 .cardTracer {

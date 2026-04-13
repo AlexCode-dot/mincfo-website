@@ -2,12 +2,12 @@
 
 import {
   createContext,
-  startTransition,
+  useCallback,
   useContext,
   useState,
+  useSyncExternalStore,
   type PropsWithChildren,
 } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import {
   DEFAULT_HOME_OFFERING_MODE,
   HOME_OFFERING_MODES,
@@ -56,6 +56,14 @@ const resolveInitialOffering = (
   return getFallbackOffering(allowedOfferings);
 };
 
+const getPathname = () =>
+  typeof window !== "undefined" ? window.location.pathname : "/";
+
+const subscribeToPathname = (cb: () => void) => {
+  window.addEventListener("popstate", cb);
+  return () => window.removeEventListener("popstate", cb);
+};
+
 export function HomeOfferingProvider({
   children,
   allowedOfferings = HOME_OFFERING_MODES,
@@ -63,8 +71,14 @@ export function HomeOfferingProvider({
   prefetchedContent,
   syncWithUrl = true,
 }: HomeOfferingProviderProps) {
-  const pathname = usePathname();
-  const router = useRouter();
+  const serverPathname = getHomeRouteForOffering(
+    resolveInitialOffering(allowedOfferings, initialOffering),
+  );
+  const pathname = useSyncExternalStore(
+    subscribeToPathname,
+    getPathname,
+    () => serverPathname,
+  );
   const [localOffering, setOfferingState] = useState<HomeOfferingMode>(() =>
     resolveInitialOffering(allowedOfferings, initialOffering),
   );
@@ -80,20 +94,18 @@ export function HomeOfferingProvider({
         : resolveInitialOffering(allowedOfferings, initialOffering))
     : localOffering;
 
-  const setOffering = (next: HomeOfferingMode) => {
+  const setOffering = useCallback((next: HomeOfferingMode) => {
     if (!allowedOfferings.includes(next)) return;
 
-    startTransition(() => {
-      setOfferingState(next);
-    });
+    setOfferingState(next);
 
     if (typeof window === "undefined" || !syncWithUrl) return;
 
     const targetRoute = getHomeRouteForOffering(next);
-    if (pathname !== targetRoute) {
-      router.replace(targetRoute, { scroll: false });
+    if (window.location.pathname !== targetRoute) {
+      window.history.replaceState(null, "", targetRoute);
     }
-  };
+  }, [allowedOfferings, syncWithUrl]);
 
   const getContent = (mode: HomeOfferingMode): HomePageText =>
     prefetchedContent

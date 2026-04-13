@@ -11,10 +11,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
-import { usePathname } from "next/navigation";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import { useMotion } from "@/components/system/MotionProvider";
-import { getHomeRouteForOffering } from "@/lib/homeRoutes";
 import {
   ShowcaseGradientBarChart,
 } from "./HeroOfferingCharts";
@@ -31,7 +29,6 @@ const PARTNER_WORKSPACE_AUTOPLAY_DELAY_OTHER_MS = 2400;
 const PARTNER_WORKSPACE_AUTOPLAY_CLICK_DELAY_MS = 680;
 export const HERO_OFFERING_TITLE_ID = "hero-offering-title";
 const HERO_OFFERING_SHOWCASE_ID = "hero-offering-showcase";
-const HERO_OFFERING_RESTORE_KEY = "mincfo:restore-showcase";
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 const smoothstep = (edge0: number, edge1: number, value: number) => {
@@ -373,7 +370,7 @@ function AgencyWorkspaceVisual() {
                 {homeRows.map((row) => (
                   <div key={row.label} className={styles.partnerWorkspaceRow}>
                     <div className={styles.partnerWorkspaceCompany}>
-                      <div className={styles.partnerWorkspaceAvatar}>{row.meta}</div>
+                      <div className={styles.partnerWorkspaceAvatar}>{row.label.charAt(0)}</div>
                       <div className={styles.partnerWorkspaceCompanyMeta}>
                         <strong>{row.label}</strong>
                         <span>{row.detail}</span>
@@ -410,7 +407,7 @@ function AgencyWorkspaceVisual() {
                 {userRows.map((row) => (
                   <div key={row.label} className={styles.partnerWorkspacePanelRow}>
                     <div className={styles.partnerWorkspaceUser}>
-                      <div className={styles.partnerWorkspaceUserAvatar}>{row.meta}</div>
+                      <div className={styles.partnerWorkspaceUserAvatar}>{row.label.charAt(0)}</div>
                       <div className={styles.partnerWorkspaceUserMeta}>
                         <strong>{row.label}</strong>
                         <span>{row.detail}</span>
@@ -525,7 +522,6 @@ function AgencyWorkspaceVisual() {
 export default function HeroOfferingShowcase() {
   const { offering, options, setOffering, shared } = useHomeOffering();
   const { isReducedMotion } = useMotion();
-  const pathname = usePathname();
   const handoffStageRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLDivElement | null>(null);
   const showcaseRef = useRef<HTMLDivElement | null>(null);
@@ -533,41 +529,8 @@ export default function HeroOfferingShowcase() {
   const showcase = shared.offering.showcase;
   const introLines = showcase.introLines;
   const visual = showcase[offering];
-  const metricStats =
-    offering === "full-service" || offering === "partner" ? null : showcase[offering].stats;
   const ActiveEyebrowIcon = OFFERING_ICONS[offering];
-  const [introVisible, setIntroVisible] = useState(isReducedMotion);
-  const [titleOpacity, setTitleOpacity] = useState(1);
-  const [titleScale, setTitleScale] = useState(1);
-  const [showcaseProgress, setShowcaseProgress] = useState(isReducedMotion ? 1 : 0);
-  const [showcaseFocus, setShowcaseFocus] = useState(isReducedMotion ? 1 : 0);
-  const [showcaseExitProgress, setShowcaseExitProgress] = useState(isReducedMotion ? 0 : 0);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !pathname) return;
-
-    const restoreTarget = window.sessionStorage.getItem(HERO_OFFERING_RESTORE_KEY);
-    if (restoreTarget !== pathname) return;
-
-    const scrollToShowcase = () => {
-      const showcaseNode = showcaseRef.current;
-      if (!showcaseNode) return;
-      const scrollPaddingTop = Number.parseFloat(
-        window.getComputedStyle(document.documentElement).scrollPaddingTop,
-      ) || 0;
-      const targetY = showcaseNode.getBoundingClientRect().top + window.scrollY - scrollPaddingTop;
-      window.scrollTo({ top: Math.max(0, targetY), left: 0, behavior: "auto" });
-      window.sessionStorage.removeItem(HERO_OFFERING_RESTORE_KEY);
-    };
-
-    const firstFrame = window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(scrollToShowcase);
-    });
-
-    return () => {
-      window.cancelAnimationFrame(firstFrame);
-    };
-  }, [pathname]);
+  const introVisibleRef = useRef(isReducedMotion);
 
   useEffect(() => {
     if (isReducedMotion) return;
@@ -630,14 +593,23 @@ export default function HeroOfferingShowcase() {
           1,
         );
 
-        setShowcaseProgress(nextProgress);
-        setShowcaseFocus(nextFocus);
-        setShowcaseExitProgress(smoothstep(0, 1, exitProgress));
+        const showcaseStyle = showcaseNode.style;
+        showcaseStyle.setProperty("--showcase-progress", nextProgress.toFixed(3));
+        showcaseStyle.setProperty("--showcase-focus", nextFocus.toFixed(3));
+        showcaseStyle.setProperty("--showcase-exit-progress", smoothstep(0, 1, exitProgress).toFixed(3));
       }
 
-      setIntroVisible(nextIntroVisible);
-      setTitleOpacity(nextOpacity);
-      setTitleScale(nextScale);
+      if (titleNode) {
+        titleNode.style.opacity = String(nextOpacity);
+        titleNode.style.transform = `scale(${nextScale})`;
+      }
+
+      if (introVisibleRef.current !== nextIntroVisible) {
+        introVisibleRef.current = nextIntroVisible;
+        if (titleNode) {
+          titleNode.classList.toggle(styles.splitTitleVisible, nextIntroVisible);
+        }
+      }
     };
 
     const scheduleUpdate = () => {
@@ -687,12 +659,6 @@ export default function HeroOfferingShowcase() {
   };
 
   const handleOfferingChange = (nextOffering: (typeof options)[number]["id"]) => {
-    const targetRoute = getHomeRouteForOffering(nextOffering);
-
-    if (typeof window !== "undefined" && pathname && pathname !== targetRoute) {
-      window.sessionStorage.setItem(HERO_OFFERING_RESTORE_KEY, targetRoute);
-    }
-
     setOffering(nextOffering);
   };
 
@@ -703,11 +669,7 @@ export default function HeroOfferingShowcase() {
         <div
           ref={titleRef}
           id={HERO_OFFERING_TITLE_ID}
-          className={`${styles.splitTitle} ${introVisible ? styles.splitTitleVisible : ""}`}
-          style={{
-            opacity: titleOpacity,
-            transform: `scale(${titleScale})`,
-          }}
+          className={`${styles.splitTitle} ${isReducedMotion ? styles.splitTitleVisible : ""}`}
           aria-label={introLines.join(" ")}
           role="heading"
           aria-level={2}
@@ -752,9 +714,9 @@ export default function HeroOfferingShowcase() {
         id={HERO_OFFERING_SHOWCASE_ID}
         className={styles.showcase}
         style={{
-          "--showcase-progress": showcaseProgress.toFixed(3),
-          "--showcase-focus": showcaseFocus.toFixed(3),
-          "--showcase-exit-progress": showcaseExitProgress.toFixed(3),
+          "--showcase-progress": isReducedMotion ? "1" : "0",
+          "--showcase-focus": isReducedMotion ? "1" : "0",
+          "--showcase-exit-progress": "0",
         } as CSSProperties}
       >
         <div className={styles.panel}>
@@ -826,56 +788,68 @@ export default function HeroOfferingShowcase() {
               </article>
 
               <div className={styles.visualCard} aria-hidden="true">
-                <div key={offering} className={styles.visualContent}>
-                  <div className={styles.visualChrome}>
-                    <span />
-                    <span />
-                    <span />
-                    <div className={styles.visualBrand}>
-                      <svg viewBox="0 0 50 50" aria-hidden="true">
-                        <g fill="currentColor">
-                          <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
-                          <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
-                          <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
-                          <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
-                        </g>
-                      </svg>
-                      <span>MinCFO</span>
-                    </div>
-                  </div>
+                {options.map((option) => {
+                  const isActive = offering === option.id;
+                  const stats =
+                    option.id === "full-service" || option.id === "partner"
+                      ? null
+                      : showcase[option.id].stats;
 
-                  <div
-                    className={`${styles.visualBody} ${
-                      offering === "platform" ? styles.visualBodyPlatform : ""
-                    } ${
-                      offering === "full-service" ? styles.visualBodyFullService : ""
-                    }`}
-                  >
-                    {metricStats && (
-                      <div className={styles.metricGrid}>
-                        {metricStats.map((item) => (
-                          <div key={item.label} className={styles.metricCard}>
-                            <span>{item.label}</span>
-                            <strong className={styles.metricValueRow}>
-                              <MetricCardIcon label={item.label} value={item.value} />
-                              <span>{item.value}</span>
-                            </strong>
-                          </div>
-                        ))}
+                  return (
+                    <div
+                      key={option.id}
+                      className={styles.visualContent}
+                      style={{
+                        display: isActive ? undefined : "none",
+                      }}
+                    >
+                      <div className={styles.visualChrome}>
+                        <span />
+                        <span />
+                        <span />
+                        <div className={styles.visualBrand}>
+                          <svg viewBox="0 0 50 50" aria-hidden="true">
+                            <g fill="currentColor">
+                              <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
+                              <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
+                              <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
+                              <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
+                            </g>
+                          </svg>
+                          <span>MinCFO</span>
+                        </div>
                       </div>
-                    )}
 
-                    {offering === "platform" && (
-                      <ShowcaseGradientBarChart />
-                    )}
-                    {offering === "full-service" && (
-                      <FullServiceVisual content={showcase["full-service"].serviceVisual} />
-                    )}
-                    {offering === "partner" && (
-                      <AgencyWorkspaceVisual />
-                    )}
-                  </div>
-                </div>
+                      <div
+                        className={`${styles.visualBody} ${
+                          option.id === "platform" ? styles.visualBodyPlatform : ""
+                        } ${
+                          option.id === "full-service" ? styles.visualBodyFullService : ""
+                        }`}
+                      >
+                        {stats && (
+                          <div className={styles.metricGrid}>
+                            {stats.map((item) => (
+                              <div key={item.label} className={styles.metricCard}>
+                                <span>{item.label}</span>
+                                <strong className={styles.metricValueRow}>
+                                  <MetricCardIcon label={item.label} value={item.value} />
+                                  <span>{item.value}</span>
+                                </strong>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {option.id === "platform" && <ShowcaseGradientBarChart />}
+                        {option.id === "full-service" && (
+                          <FullServiceVisual content={showcase["full-service"].serviceVisual} />
+                        )}
+                        {option.id === "partner" && <AgencyWorkspaceVisual />}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 

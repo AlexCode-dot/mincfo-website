@@ -61,11 +61,22 @@ async function seed() {
     _type: "siteSettings",
     siteTitle: sharedJson.siteMeta.title,
     siteDescription: sharedJson.siteMeta.description,
+    navProdukt: sharedJson.navigation.produkt,
+    navLosningar: sharedJson.navigation.losningar,
+    navKundcase: sharedJson.navigation.kundcase,
+    navSakerhet: sharedJson.navigation.sakerhet,
+    navHurDetFunkar: sharedJson.navigation.hurDetFunkar,
     navDemoCta: sharedJson.navigation.demoCta,
     navLoginLabel: sharedJson.navigation.loginSignupLabel,
-    offeringEyebrow: sharedJson.offering.eyebrow,
-    offeringTitle: sharedJson.offering.title,
-    offeringIntro: sharedJson.offering.intro,
+    navOpenSolutionsAria: sharedJson.navigation.openSolutionsAria,
+    navOpenMenuAria: sharedJson.navigation.openMenuAria,
+    loginChooserTitle: sharedJson.navigation.loginChooser.title,
+    loginChooserSubtitle: sharedJson.navigation.loginChooser.subtitle,
+    loginChooserLoginLabel: sharedJson.navigation.loginChooser.loginLabel,
+    loginChooserLoginSublabel: sharedJson.navigation.loginChooser.loginSublabel,
+    loginChooserSignupLabel: sharedJson.navigation.loginChooser.signupLabel,
+    loginChooserSignupSublabel: sharedJson.navigation.loginChooser.signupSublabel,
+    loginChooserCloseAria: sharedJson.navigation.loginChooser.closeAria,
     offeringOptions: sharedJson.offering.options.map((o, i) => ({
       _key: `option-${i}`,
       label: o.label,
@@ -83,6 +94,21 @@ async function seed() {
       title: c.title,
       body: c.body,
     })),
+    // Signup form
+    signupNavCta: sharedJson.navigation.signupCta,
+    signupTitle: sharedJson.signup.title,
+    signupSubtitle: sharedJson.signup.subtitle,
+    signupCompanyLabel: sharedJson.signup.companyLabel,
+    signupOrgNrLabel: sharedJson.signup.orgNrLabel,
+    signupNameLabel: sharedJson.signup.nameLabel,
+    signupEmailLabel: sharedJson.signup.emailLabel,
+    signupPhoneLabel: sharedJson.signup.phoneLabel,
+    signupConsent: sharedJson.signup.consent,
+    signupConsentLinkText: sharedJson.signup.consentLinkText,
+    signupSubmitLabel: sharedJson.signup.submitLabel,
+    signupSuccessTitle: sharedJson.signup.successTitle,
+    signupSuccessText: sharedJson.signup.successText,
+
     footerIntro: sharedJson.footer.intro,
     footerCareersCta: sharedJson.footer.careersCta,
     footerEmail: sharedJson.footer.email,
@@ -100,8 +126,6 @@ async function seed() {
 
     // Showcase: Platform
     showcasePlatform: {
-      signal: sharedJson.offering.showcase.platform.signal,
-      chartLabel: sharedJson.offering.showcase.platform.chartLabel,
       stats: sharedJson.offering.showcase.platform.stats.map((s, i) => ({
         _key: `stat-${i}`,
         label: s.label,
@@ -111,9 +135,6 @@ async function seed() {
 
     // Showcase: Full-service
     showcaseFullService: {
-      chipOwnership: sharedJson.offering.showcase["full-service"].serviceVisual.chipOwnership,
-      chipDelivery: sharedJson.offering.showcase["full-service"].serviceVisual.chipDelivery,
-      chipLeadership: sharedJson.offering.showcase["full-service"].serviceVisual.chipLeadership,
       eyebrow: sharedJson.offering.showcase["full-service"].serviceVisual.eyebrow,
       title: sharedJson.offering.showcase["full-service"].serviceVisual.title,
       badge: sharedJson.offering.showcase["full-service"].serviceVisual.badge,
@@ -258,37 +279,6 @@ async function seed() {
       summaryStatSecondary: sharedJson.howItWorks.ui.partnerWorkspace.summary.statSecondary,
     },
 
-    // Scenario UI (from solution pages)
-    scenarioUi: {
-      typingStatus: solutionPagesJson.shared.scenarioUi.typingStatus,
-      analyzingStatus: solutionPagesJson.shared.scenarioUi.analyzingStatus,
-      readyStatus: solutionPagesJson.shared.scenarioUi.readyStatus,
-      copilotLabel: solutionPagesJson.shared.scenarioUi.copilotLabel,
-      copilotResponseLabel: solutionPagesJson.shared.scenarioUi.copilotResponseLabel,
-      metaLoadingLabel: solutionPagesJson.shared.scenarioUi.metaLoadingLabel,
-      metaReadyLabel: solutionPagesJson.shared.scenarioUi.metaReadyLabel,
-      boardTitle: solutionPagesJson.shared.scenarioUi.boardTitle,
-      boardBadge: solutionPagesJson.shared.scenarioUi.boardBadge,
-      chartComparisonLabel: solutionPagesJson.shared.scenarioUi.chartComparisonLabel,
-      legendBase: solutionPagesJson.shared.scenarioUi.legendBase,
-      legendScenario: solutionPagesJson.shared.scenarioUi.legendScenario,
-      startLabel: solutionPagesJson.shared.scenarioUi.startLabel,
-      waitingLabel: solutionPagesJson.shared.scenarioUi.waitingLabel,
-      disclaimer: solutionPagesJson.shared.scenarioUi.disclaimer,
-    },
-
-    // Solution shared CTAs
-    solutionSharedCtas: {
-      heroPrimaryCta: solutionPagesJson.shared.heroPrimaryCta,
-      heroSecondaryCta: solutionPagesJson.shared.heroSecondaryCta,
-      helpsOverline: solutionPagesJson.shared.helpsOverline,
-      impactTag: solutionPagesJson.shared.impactTag,
-      closingOverline: solutionPagesJson.shared.closingOverline,
-      closingAccent: solutionPagesJson.shared.closingAccent,
-      closingCta: solutionPagesJson.shared.closingCta,
-      indexTitle: solutionPagesJson.shared.indexPage.title,
-      indexDescription: solutionPagesJson.shared.indexPage.description,
-    },
   });
 
   console.log("  siteSettings done.");
