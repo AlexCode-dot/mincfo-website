@@ -7,12 +7,14 @@ type HomeOfferingSwitchProps = {
   className?: string;
   compact?: boolean;
   variant?: "pill" | "inline" | "drawer";
+  onSelect?: () => void;
 };
 
 export default function HomeOfferingSwitch({
   className = "",
   compact = false,
   variant = "pill",
+  onSelect,
 }: HomeOfferingSwitchProps) {
   const { offering, options, setOffering, shared } = useHomeOffering();
 
@@ -36,6 +38,7 @@ export default function HomeOfferingSwitch({
           onClick={() => {
             setOffering(option.id);
             window.scrollTo({ top: 0, behavior: "smooth" });
+            onSelect?.();
           }}
         >
           {option.label}

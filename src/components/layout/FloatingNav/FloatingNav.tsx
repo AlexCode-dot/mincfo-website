@@ -500,7 +500,11 @@ export default function FloatingNav() {
         </header>
 
         <div className={styles.mobileDrawerBody}>
-          <HomeOfferingSwitch variant="drawer" className={styles.mobileOfferingSwitch} />
+          <HomeOfferingSwitch
+            variant="drawer"
+            className={styles.mobileOfferingSwitch}
+            onSelect={closeMobileMenu}
+          />
 
           <nav className={styles.mobileNav}>
             <a
