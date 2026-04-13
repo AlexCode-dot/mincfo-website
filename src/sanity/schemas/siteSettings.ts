@@ -109,6 +109,55 @@ export default defineType({
       fieldset: "navigation",
       group: "content",
     }),
+    defineField({
+      name: "loginChooserTitle",
+      title: "Logga in-val: rubrik",
+      type: "string",
+      fieldset: "navigation",
+      group: "content",
+    }),
+    defineField({
+      name: "loginChooserSubtitle",
+      title: "Logga in-val: underrubrik",
+      type: "string",
+      fieldset: "navigation",
+      group: "content",
+    }),
+    defineField({
+      name: "loginChooserLoginLabel",
+      title: "Logga in-val: Logga in-knapp",
+      type: "string",
+      fieldset: "navigation",
+      group: "content",
+    }),
+    defineField({
+      name: "loginChooserLoginSublabel",
+      title: "Logga in-val: Logga in-beskrivning",
+      type: "string",
+      fieldset: "navigation",
+      group: "content",
+    }),
+    defineField({
+      name: "loginChooserSignupLabel",
+      title: "Logga in-val: Skapa konto-knapp",
+      type: "string",
+      fieldset: "navigation",
+      group: "content",
+    }),
+    defineField({
+      name: "loginChooserSignupSublabel",
+      title: "Logga in-val: Skapa konto-beskrivning",
+      type: "string",
+      fieldset: "navigation",
+      group: "content",
+    }),
+    defineField({
+      name: "loginChooserCloseAria",
+      title: "Logga in-val: Stäng (aria)",
+      type: "string",
+      fieldset: "navigation",
+      group: "content",
+    }),
 
     // ── Offering switcher ──
     defineField({

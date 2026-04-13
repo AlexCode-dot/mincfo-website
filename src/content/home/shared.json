@@ -10,6 +10,15 @@
     "signupCta": "Skapa konto",
     "openSolutionsAria": "Öppna lösningsmeny",
     "openMenuAria": "Öppna meny",
+    "loginChooser": {
+      "title": "Välkommen",
+      "subtitle": "Har du redan ett konto hos oss?",
+      "loginLabel": "Logga in",
+      "loginSublabel": "Jag är redan kund",
+      "signupLabel": "Skapa konto",
+      "signupSublabel": "Jag är ny här",
+      "closeAria": "Stäng"
+    },
     "groups": [
       {
         "title": "Efter roll",

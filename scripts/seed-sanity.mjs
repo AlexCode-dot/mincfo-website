@@ -70,6 +70,13 @@ async function seed() {
     navLoginLabel: sharedJson.navigation.loginSignupLabel,
     navOpenSolutionsAria: sharedJson.navigation.openSolutionsAria,
     navOpenMenuAria: sharedJson.navigation.openMenuAria,
+    loginChooserTitle: sharedJson.navigation.loginChooser.title,
+    loginChooserSubtitle: sharedJson.navigation.loginChooser.subtitle,
+    loginChooserLoginLabel: sharedJson.navigation.loginChooser.loginLabel,
+    loginChooserLoginSublabel: sharedJson.navigation.loginChooser.loginSublabel,
+    loginChooserSignupLabel: sharedJson.navigation.loginChooser.signupLabel,
+    loginChooserSignupSublabel: sharedJson.navigation.loginChooser.signupSublabel,
+    loginChooserCloseAria: sharedJson.navigation.loginChooser.closeAria,
     offeringOptions: sharedJson.offering.options.map((o, i) => ({
       _key: `option-${i}`,
       label: o.label,

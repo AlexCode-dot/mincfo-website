@@ -129,6 +129,13 @@ async function pull() {
   apply(shared, "navigation.signupCta", settings.signupNavCta);
   apply(shared, "navigation.openSolutionsAria", settings.navOpenSolutionsAria);
   apply(shared, "navigation.openMenuAria", settings.navOpenMenuAria);
+  apply(shared, "navigation.loginChooser.title", settings.loginChooserTitle);
+  apply(shared, "navigation.loginChooser.subtitle", settings.loginChooserSubtitle);
+  apply(shared, "navigation.loginChooser.loginLabel", settings.loginChooserLoginLabel);
+  apply(shared, "navigation.loginChooser.loginSublabel", settings.loginChooserLoginSublabel);
+  apply(shared, "navigation.loginChooser.signupLabel", settings.loginChooserSignupLabel);
+  apply(shared, "navigation.loginChooser.signupSublabel", settings.loginChooserSignupSublabel);
+  apply(shared, "navigation.loginChooser.closeAria", settings.loginChooserCloseAria);
 
   // Offering options
   if (Array.isArray(settings.offeringOptions)) {

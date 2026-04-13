@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from
 import HomeOfferingSwitch from "@/components/home/HomeOfferingSwitch";
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import ContactLink from "@/components/system/ContactLink";
+import LoginChooserModal from "@/components/system/LoginChooserModal";
 import { useMotion } from "@/components/system/MotionProvider";
 import SignupModal from "@/components/system/SignupModal";
 import { getOfferingFromPathname } from "@/lib/homeRoutes";
@@ -32,7 +33,6 @@ export default function FloatingNav() {
   const { isReducedMotion } = useMotion();
   const pathname = usePathname();
   const solutionGroups = content.navigation.groups;
-  const showSolutions = offering === "platform";
   const currentPath = pathname || "/";
   const isHomeOfferingRoute = getOfferingFromPathname(currentPath) !== null;
   const [scrolled, setScrolled] = useState(false);
@@ -45,8 +45,21 @@ export default function FloatingNav() {
   const [loginInVisible, setLoginInVisible] = useState(false);
   const [incomingSignupLabel, setIncomingSignupLabel] = useState<boolean | null>(null);
   const [loginIconPulse, setLoginIconPulse] = useState(false);
-  const [showSignup, setShowSignup] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [showLoginChooser, setShowLoginChooser] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+
+  const openLoginChooser = () => setShowLoginChooser(true);
+  const handleChooserLogin = () => {
+    setShowLoginChooser(false);
+    if (typeof window !== "undefined") {
+      window.location.href = APP_LOGIN_URL;
+    }
+  };
+  const handleChooserSignup = () => {
+    setShowLoginChooser(false);
+    setShowSignup(true);
+  };
   const moreRef = useRef<HTMLDivElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
   const scrollRafRef = useRef<number | null>(null);
@@ -184,6 +197,8 @@ export default function FloatingNav() {
     isHomeOfferingRoute
       ? (currentPath === "/" ? `#${id}` : `${currentPath}#${id}`)
       : `/#${id}`;
+  const losningarHref =
+    offering === "platform" ? sectionHref("losningar") : "/#losningar";
   const demoHref = "/contact";
   const legacyLoginLabel = (content.navigation as unknown as { kontaktaOss?: string }).kontaktaOss;
   const loginSignupLabel =
@@ -342,49 +357,50 @@ export default function FloatingNav() {
           >
             {content.navigation.produkt}
           </a>
-          {showSolutions ? (
-            <div className={styles.menuWrap}>
-              <a
-                href={sectionHref("losningar")}
-                className={`${styles.link} ${isActive("losningar") || isSolutionsPage ? styles.linkActive : ""}`}
-                aria-current={isSolutionsPage ? "page" : undefined}
-                onClick={(event) => handleSectionAnchorClick(event, sectionHref("losningar"))}
-              >
-                {content.navigation.losningar}
-              </a>
-              <button
-                type="button"
-                className={`${styles.menuToggle} ${solutionsOpen ? styles.menuToggleOpen : ""}`}
-                aria-expanded={solutionsOpen}
-                aria-haspopup="true"
-                aria-label={content.navigation.openSolutionsAria}
-                onClick={() => setSolutionsOpen((previous) => !previous)}
-              >
-                <span className={`${styles.chevron} ${solutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
-                  ▾
-                </span>
-              </button>
-              <div className={`${styles.mega} ${solutionsOpen ? styles.megaOpen : ""}`} role="menu">
-                {solutionGroups.map((group) => (
-                  <div key={group.title} className={styles.menuGroup}>
-                    <p>{group.title}</p>
-                    <div className={styles.menuItems}>
-                      {group.items.map((item) => (
-                        <a
-                          key={item.href}
-                          href={item.href}
-                          className={`${styles.menuItem} ${isSolutionItemActive(item.href) ? styles.menuItemActive : ""}`}
-                          aria-current={isSolutionItemActive(item.href) ? "page" : undefined}
-                        >
-                          {item.label}
-                        </a>
-                      ))}
-                    </div>
+          <div className={styles.menuWrap}>
+            <a
+              href={losningarHref}
+              className={`${styles.link} ${isActive("losningar") || isSolutionsPage ? styles.linkActive : ""}`}
+              aria-current={isSolutionsPage ? "page" : undefined}
+              onClick={(event) => {
+                handleSectionAnchorClick(event, losningarHref);
+                setSolutionsOpen(true);
+              }}
+            >
+              {content.navigation.losningar}
+            </a>
+            <button
+              type="button"
+              className={`${styles.menuToggle} ${solutionsOpen ? styles.menuToggleOpen : ""}`}
+              aria-expanded={solutionsOpen}
+              aria-haspopup="true"
+              aria-label={content.navigation.openSolutionsAria}
+              onClick={() => setSolutionsOpen((previous) => !previous)}
+            >
+              <span className={`${styles.chevron} ${solutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
+                ▾
+              </span>
+            </button>
+            <div className={`${styles.mega} ${solutionsOpen ? styles.megaOpen : ""}`} role="menu">
+              {solutionGroups.map((group) => (
+                <div key={group.title} className={styles.menuGroup}>
+                  <p>{group.title}</p>
+                  <div className={styles.menuItems}>
+                    {group.items.map((item) => (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        className={`${styles.menuItem} ${isSolutionItemActive(item.href) ? styles.menuItemActive : ""}`}
+                        aria-current={isSolutionItemActive(item.href) ? "page" : undefined}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          ) : null}
+          </div>
           <a
             href={sectionHref("customers")}
             className={`${styles.link} ${styles.desktopOnly} ${isActive("customers") ? styles.linkActive : ""}`}
@@ -399,20 +415,6 @@ export default function FloatingNav() {
           >
             {content.navigation.hurDetFunkar}
           </a>
-          <a
-            href={sectionHref("security")}
-            className={`${styles.link} ${styles.desktopOnly} ${isActive("security") ? styles.linkActive : ""}`}
-            onClick={(event) => handleSectionAnchorClick(event, sectionHref("security"))}
-          >
-            {content.navigation.sakerhet}
-          </a>
-          <button
-            type="button"
-            className={`${styles.link} ${styles.wideOnly}`}
-            onClick={() => setShowSignup(true)}
-          >
-            {content.navigation.signupCta}
-          </button>
           <ContactLink
             href={demoHref}
             returnPath={currentPath}
@@ -442,18 +444,11 @@ export default function FloatingNav() {
                 className={styles.moreItem}
                 onClick={() => {
                   setMoreOpen(false);
-                  setShowSignup(true);
+                  openLoginChooser();
                 }}
               >
-                {content.navigation.signupCta}
-              </button>
-              <a
-                href={APP_LOGIN_URL}
-                className={styles.moreItem}
-                onClick={() => setMoreOpen(false)}
-              >
                 {loginSignupLabel}
-              </a>
+              </button>
               <ContactLink
                 href={demoHref}
                 returnPath={currentPath}
@@ -513,48 +508,44 @@ export default function FloatingNav() {
               {content.navigation.produkt}
             </a>
 
-            {showSolutions ? (
-              <>
-                <button
-                  type="button"
-                  className={`${styles.mobileLink} ${styles.mobileLinkExpand} ${mobileSolutionsOpen ? styles.mobileLinkExpandOpen : ""} ${
-                    isSolutionsPage ? styles.mobileLinkActive : ""
-                  }`}
-                  onClick={() => setMobileSolutionsOpen((previous) => !previous)}
-                  aria-expanded={mobileSolutionsOpen ? "true" : "false"}
-                  aria-controls="mobile-solutions-list"
-                >
-                  {content.navigation.losningar}
-                  <span className={`${styles.chevron} ${mobileSolutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
-                    ▾
-                  </span>
-                </button>
+            <button
+              type="button"
+              className={`${styles.mobileLink} ${styles.mobileLinkExpand} ${mobileSolutionsOpen ? styles.mobileLinkExpandOpen : ""} ${
+                isSolutionsPage ? styles.mobileLinkActive : ""
+              }`}
+              onClick={() => setMobileSolutionsOpen((previous) => !previous)}
+              aria-expanded={mobileSolutionsOpen ? "true" : "false"}
+              aria-controls="mobile-solutions-list"
+            >
+              {content.navigation.losningar}
+              <span className={`${styles.chevron} ${mobileSolutionsOpen ? styles.chevronOpen : ""}`} aria-hidden="true">
+                ▾
+              </span>
+            </button>
 
-                <div
-                  id="mobile-solutions-list"
-                  className={`${styles.mobileSolutions} ${mobileSolutionsOpen ? styles.mobileSolutionsOpen : ""}`}
-                >
-                  {solutionGroups.map((group) => (
-                    <div key={group.title} className={styles.mobileGroup}>
-                      <p>{group.title}</p>
-                      <div className={styles.mobileItems}>
-                        {group.items.map((item) => (
-                          <a
-                            key={item.href}
-                            href={item.href}
-                            className={`${styles.mobileItem} ${isSolutionItemActive(item.href) ? styles.mobileItemActive : ""}`}
-                            onClick={closeMobileMenu}
-                            aria-current={isSolutionItemActive(item.href) ? "page" : undefined}
-                          >
-                            {item.label}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+            <div
+              id="mobile-solutions-list"
+              className={`${styles.mobileSolutions} ${mobileSolutionsOpen ? styles.mobileSolutionsOpen : ""}`}
+            >
+              {solutionGroups.map((group) => (
+                <div key={group.title} className={styles.mobileGroup}>
+                  <p>{group.title}</p>
+                  <div className={styles.mobileItems}>
+                    {group.items.map((item) => (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        className={`${styles.mobileItem} ${isSolutionItemActive(item.href) ? styles.mobileItemActive : ""}`}
+                        onClick={closeMobileMenu}
+                        aria-current={isSolutionItemActive(item.href) ? "page" : undefined}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </>
-            ) : null}
+              ))}
+            </div>
 
             <a
               href={sectionHref("customers")}
@@ -570,30 +561,19 @@ export default function FloatingNav() {
             >
               {content.navigation.hurDetFunkar}
             </a>
-            <a
-              href={sectionHref("security")}
-              onClick={(event) => handleSectionAnchorClick(event, sectionHref("security"), closeMobileMenu)}
-              className={`${styles.mobileLink} ${isActive("security") ? styles.mobileLinkActive : ""}`}
-            >
-              {content.navigation.sakerhet}
-            </a>
           </nav>
         </div>
 
         <footer className={styles.mobileDrawerFooter}>
-          <a
-            href={APP_LOGIN_URL}
-            className={styles.mobileCtaGhost}
-            onClick={closeMobileMenu}
-          >
-            {loginSignupLabel}
-          </a>
           <button
             type="button"
-            className={styles.mobileCtaSecondary}
-            onClick={() => { closeMobileMenu(); setShowSignup(true); }}
+            className={styles.mobileCtaGhost}
+            onClick={() => {
+              closeMobileMenu();
+              openLoginChooser();
+            }}
           >
-            {content.navigation.signupCta}
+            {loginSignupLabel}
           </button>
           <ContactLink
             href={demoHref}
@@ -606,7 +586,12 @@ export default function FloatingNav() {
           </ContactLink>
         </footer>
       </aside>
-      <a href={APP_LOGIN_URL} className={styles.loginFloat} aria-label={loginSignupLabel}>
+      <button
+        type="button"
+        onClick={openLoginChooser}
+        className={styles.loginFloat}
+        aria-label={loginSignupLabel}
+      >
         <span
           className={`${styles.loginIconWrap} ${loginSecondaryLabel && loginIconPulse ? styles.loginIconWrapPulse : ""}`}
           style={{ "--login-pulse-duration": `${pulseDurationMs}ms` } as CSSProperties}
@@ -653,8 +638,19 @@ export default function FloatingNav() {
             </span>
           )}
         </span>
-      </a>
-      <SignupModal open={showSignup} onClose={() => setShowSignup(false)} content={shared.signup} />
+      </button>
+      <LoginChooserModal
+        open={showLoginChooser}
+        onClose={() => setShowLoginChooser(false)}
+        onLogin={handleChooserLogin}
+        onSignup={handleChooserSignup}
+        content={shared.navigation.loginChooser}
+      />
+      <SignupModal
+        open={showSignup}
+        onClose={() => setShowSignup(false)}
+        content={shared.signup}
+      />
     </div>
   );
 }

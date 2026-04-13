@@ -242,6 +242,15 @@ function mapSettingsFromSanity(
       signupCta: sanity.signupNavCta,
       openSolutionsAria: sanity.navOpenSolutionsAria,
       openMenuAria: sanity.navOpenMenuAria,
+      loginChooser: {
+        title: sanity.loginChooserTitle,
+        subtitle: sanity.loginChooserSubtitle,
+        loginLabel: sanity.loginChooserLoginLabel,
+        loginSublabel: sanity.loginChooserLoginSublabel,
+        signupLabel: sanity.loginChooserSignupLabel,
+        signupSublabel: sanity.loginChooserSignupSublabel,
+        closeAria: sanity.loginChooserCloseAria,
+      },
     };
   }
 
