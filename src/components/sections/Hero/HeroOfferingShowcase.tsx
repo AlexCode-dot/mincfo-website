@@ -789,20 +789,14 @@ export default function HeroOfferingShowcase() {
 
               <div className={styles.visualCard} aria-hidden="true">
                 {options.map((option) => {
-                  const isActive = offering === option.id;
+                  if (offering !== option.id) return null;
                   const stats =
                     option.id === "full-service" || option.id === "partner"
                       ? null
                       : showcase[option.id].stats;
 
                   return (
-                    <div
-                      key={option.id}
-                      className={styles.visualContent}
-                      style={{
-                        display: isActive ? undefined : "none",
-                      }}
-                    >
+                    <div key={option.id} className={styles.visualContent}>
                       <div className={styles.visualChrome}>
                         <span />
                         <span />
