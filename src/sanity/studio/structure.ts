@@ -50,6 +50,16 @@ export const structure = (S: StructureBuilder) =>
         ),
       S.divider(),
 
+      // ── Jobbannonser ──
+      S.listItem()
+        .title("Jobbannonser")
+        .child(
+          S.documentTypeList("jobPost")
+            .title("Jobbannonser")
+            .defaultOrdering([{ field: "order", direction: "asc" }]),
+        ),
+      S.divider(),
+
       // ── Gemensamt ──
       S.listItem()
         .title("Gemensamt (nav, footer, säkerhet)")

@@ -37,6 +37,9 @@ const partnerJson = JSON.parse(
 const solutionPagesJson = JSON.parse(
   readFileSync(resolve(__dirname, "../src/content/solutionPagesText.json"), "utf-8"),
 );
+const jobPostsJson = JSON.parse(
+  readFileSync(resolve(__dirname, "../src/content/jobPosts.json"), "utf-8"),
+);
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -494,6 +497,40 @@ async function seed() {
       })),
       closingHeadline: page.closingHeadline,
       closingText: page.closingText,
+    });
+
+    console.log(`  ${docId} done.`);
+  }
+
+  // ── Seed job posts ──
+  for (const post of jobPostsJson.posts ?? []) {
+    const docId = `jobPost-${post.slug}`;
+    console.log(`Seeding ${docId}...`);
+
+    await client.createOrReplace({
+      _id: docId,
+      _type: "jobPost",
+      title: post.title,
+      slug: { _type: "slug", current: post.slug },
+      openForApplications: post.openForApplications !== false,
+      order: typeof post.order === "number" ? post.order : 100,
+      location: post.location,
+      employmentType: post.employmentType,
+      start: post.start,
+      compensation: post.compensation,
+      eyebrow: post.eyebrow,
+      tagline: post.tagline,
+      shortDescription: post.shortDescription,
+      intro: post.intro,
+      sections: (post.sections ?? []).map((s, i) => ({
+        _key: `section-${i}`,
+        _type: "jobSection",
+        heading: s.heading,
+        body: s.body || undefined,
+        bullets: Array.isArray(s.bullets) && s.bullets.length > 0 ? s.bullets : undefined,
+      })),
+      closingHeading: post.closingHeading,
+      closingBody: post.closingBody,
     });
 
     console.log(`  ${docId} done.`);
