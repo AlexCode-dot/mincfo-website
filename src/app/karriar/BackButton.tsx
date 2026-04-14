@@ -5,10 +5,24 @@ import { useRouter } from "next/navigation";
 import { clearContactReturnLocation, readContactReturnLocation } from "@/components/system/contactReturn";
 import styles from "./page.module.scss";
 
-export default function BackButton() {
+interface BackButtonProps {
+  href?: string;
+}
+
+export default function BackButton({ href }: BackButtonProps = {}) {
   const router = useRouter();
 
   const handleBack = () => {
+    if (href) {
+      clearContactReturnLocation();
+      if (window.history.length > 1) {
+        router.back();
+        return;
+      }
+      router.push(href);
+      return;
+    }
+
     const returnTarget = readContactReturnLocation();
     if (returnTarget) {
       window.location.href = returnTarget.path;

@@ -22,7 +22,7 @@
 }
 
 .shell {
-  width: min(980px, 100%);
+  width: min(1240px, 100%);
   margin: 0 auto;
 }
 
@@ -118,6 +118,128 @@
   color: rgb(215 219 235 / 0.72);
   font-size: 1.05rem;
   line-height: 1.65;
+}
+
+.jobList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.jobCard {
+  flex: 0 0 calc((100% - 2 * 1.25rem) / 3);
+  max-width: calc((100% - 2 * 1.25rem) / 3);
+}
+
+@media (max-width: 1040px) {
+  .jobCard {
+    flex-basis: calc((100% - 1.25rem) / 2);
+    max-width: calc((100% - 1.25rem) / 2);
+  }
+}
+
+@media (max-width: 680px) {
+  .jobCard {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}
+
+.jobCard {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 20px;
+  background: rgb(14 18 34 / 0.6);
+  border: 1px solid rgb(143 158 255 / 0.12);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease;
+}
+
+.jobCard:hover {
+  transform: translateY(-2px);
+  border-color: rgb(143 158 255 / 0.3);
+  background: rgb(17 22 42 / 0.75);
+}
+
+.jobCardInner {
+  flex: 1;
+  padding: clamp(26px, 3.2vw, 34px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.75rem;
+  min-height: 280px;
+}
+
+.jobCardTop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.jobCardBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(143 158 255 / 0.1);
+}
+
+.jobEyebrow {
+  display: inline-flex;
+  align-self: flex-start;
+  color: rgb(170 185 255 / 0.78);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.jobTitle {
+  margin: 0;
+  color: rgb(245 247 255 / 0.98);
+  font-size: clamp(1.35rem, 2.4vw, 1.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+  font-weight: 640;
+}
+
+.jobDescription {
+  margin: 0;
+  color: rgb(195 202 225 / 0.72);
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+.jobMeta {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: rgb(165 175 205 / 0.7);
+  font-size: 0.85rem;
+}
+
+.jobCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgb(180 195 255 / 0.95);
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition: gap 200ms ease;
+}
+
+.jobCard:hover .jobCta {
+  gap: 0.6rem;
 }
 
 .card {

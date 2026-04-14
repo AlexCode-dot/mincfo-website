@@ -1,0 +1,258 @@
+{
+  "posts": [
+    {
+      "slug": "fullstack-developer-intern",
+      "title": "Fullstack Developer Intern – 6 månader",
+      "eyebrow": "Utveckling",
+      "tagline": "Vill du spendera ditt nästa halvår med att bygga digitala lösningar som faktiskt gör skillnad?",
+      "shortDescription": "Bygg nästa generations plattform för ekonomistyrning tillsammans med vårt produktteam. 6 månaders praktik.",
+      "location": "Göteborg / Hybrid / Distans",
+      "employmentType": "Praktik – heltid eller deltid",
+      "start": "Enligt överenskommelse",
+      "compensation": "Obetald meritpraktik",
+      "openForApplications": true,
+      "order": 10,
+      "intro": "MinCFO söker nu en passionerad Fullstack-utvecklare där du får vara med och utveckla nästa generations plattform för ekonomistyrning. Som Fullstack Intern på MinCFO blir du en del av vårt produktteam. Vi tror på learn by doing. Du kommer att arbeta med både frontend och backend för att skapa sömlösa, användarvänliga funktioner som förenklar vardagen för entreprenörer.\n\nRollen är en internship på 6 månader (heltid eller deltid enligt överenskommelse) och en obetald meritpraktik – skräddarsydd för dig som vill bygga ett starkt CV och få praktisk erfarenhet parallellt med eller efter din utbildning.",
+      "sections": [
+        {
+          "heading": "Vad du kommer att arbeta med",
+          "body": "",
+          "bullets": [
+            "Utveckla och underhålla webbapplikationer i hela stacken.",
+            "Implementera nya funktioner i nära samarbete med våra ekonomer, kunder och övriga utvecklarteamet.",
+            "Skriva ren, testbar och skalbar kod – mycket tillsammans med AI-agenter.",
+            "Vara med och påverka tekniska beslut och arkitekturval.",
+            "Integrera externa API:er och optimera databasflöden."
+          ]
+        },
+        {
+          "heading": "Vem vi söker",
+          "body": "Vi söker dig som studerar eller har studerat systemvetenskap, datateknik eller motsvarande på YH/universitet och som brinner för att bygga produkter från grunden. Vi tror att du:",
+          "bullets": [
+            "Har goda kunskaper i moderna ramverk (t.ex. React, Vue eller Angular) och backend-språk (t.ex. Node.js, Python eller C#).",
+            "Har en god förståelse för databaser (SQL eller NoSQL).",
+            "Älskar att lösa komplexa problem och är inte rädd för att testa nya teknologier.",
+            "Är en lagspelare som trivs i en agil miljö med snabba iterationer.",
+            "Har ett öga för UI/UX – du bryr dig om hur användaren upplever det du bygger.",
+            "Har ett intresse för att förstå hur fintech-produkter funkar och tar produktägarskap för ditt arbete."
+          ]
+        },
+        {
+          "heading": "Varför MinCFO?",
+          "body": "",
+          "bullets": [
+            "Riktigt ansvar: Du får arbeta på riktiga projekt som går live, inte bara övningsuppgifter.",
+            "Mentorskap: Jobba tillsammans med erfarna utvecklare och entreprenörer som stöttar din utveckling.",
+            "Flexibilitet: Möjlighet att jobba på distans eller från vårt kontor i Göteborg.",
+            "Startup-kultur: En miljö med korta beslutsvägar, högt i tak och en härlig gemenskap."
+          ]
+        }
+      ],
+      "closingHeading": "Ansökan",
+      "closingBody": "Är du redo att utvecklas tillsammans med oss? Skicka ditt CV och gärna en länk till GitHub eller projektportfölj. Vi går igenom ansökningar löpande!"
+    },
+    {
+      "slug": "junior-redovisnings-intern",
+      "title": "Junior Redovisnings-Intern",
+      "eyebrow": "Ekonomi",
+      "tagline": "Är du student eller nyutexaminerad och vill lära dig redovisning på riktigt i en modern, digital miljö?",
+      "shortDescription": "Lär dig redovisning från grunden tillsammans med erfarna konsulter i en modern, digital ekonomifirma.",
+      "location": "Göteborg / Hybrid / Distans",
+      "employmentType": "Praktik – deltid eller heltid",
+      "start": "Enligt överenskommelse",
+      "compensation": "Obetald meritpraktik",
+      "openForApplications": true,
+      "order": 20,
+      "intro": "MinCFO söker nu en junior Intern som vill växa med oss och våra kunder. MinCFO är inte en traditionell redovisningsbyrå. Vi är en entreprenörsdriven partner för tillväxtbolag. Vi bygger framtidens ekonomifunktion genom digitalisering, smarta processer och rådgivning som gör verklig skillnad. Hos oss får du vara där det händer, i en miljö präglad av energi och innovation. Vi har ett egenutvecklat verktyg som med hjälp av AI analyserar våra kunders data.",
+      "sections": [
+        {
+          "heading": "Rollen i korthet",
+          "body": "Som Redovisnings-Intern får du chansen att lära dig hantverket från grunden i en digital miljö. Du stöttar våra erfarna konsulter i det dagliga arbetet och får successivt mer ansvar i takt med att du blir varm i kläderna.",
+          "bullets": []
+        },
+        {
+          "heading": "Vad du kommer att göra hos oss",
+          "body": "Du får en bred introduktion till livet på en modern ekonomifirma:",
+          "bullets": [
+            "Assistera vid löpande bokföring och månadsavstämningar.",
+            "Hjälpa till med kundernas löneprocesser och rapportering.",
+            "Hantera digitala flöden och effektivisera processer i system som t.ex. Fortnox.",
+            "Förbereda underlag för bokslut och ekonomisk analys.",
+            "Stötta teamet i administrativa uppgifter som rör kundernas tillväxtresa."
+          ]
+        },
+        {
+          "heading": "Vem är du?",
+          "body": "Vi söker dig som går på Handelshögskolan vid Göteborgs Universitet och har ett genuint intresse för redovisning och företagande. Vi tror att du:",
+          "bullets": [
+            "Har en god teoretisk (och gärna praktisk) grund inom redovisning.",
+            "Är snabblärd när det kommer till digitala verktyg och system.",
+            "Är noggrann, strukturerad och tar ansvar för dina uppgifter.",
+            "Trivs i en entreprenöriell miljö med högt i tak där du snabbt får ta mycket ansvar."
+          ]
+        },
+        {
+          "heading": "Varför MinCFO?",
+          "body": "",
+          "bullets": [
+            "Brant lärandekurva: Du får lära dig de senaste systemen och de smartaste processerna i branschen.",
+            "Flexibilitet: Vi har stor förståelse för tentaperioder och föreläsningar.",
+            "Karriärmöjligheter: Vi växer snabbt – för rätt person finns goda chanser till anställning efter avslutade studier eller praktik.",
+            "Gemenskap: Du blir en del av ett tight team i centrala Göteborg. Vi kör pingis, har månatliga aktiviteter, after works och har alltid frukt och gratis läskeblask på kylning."
+          ]
+        }
+      ],
+      "closingHeading": "Ansökan",
+      "closingBody": "Vill du bygga din grund som framtidens redovisningskonsult hos oss? Skicka in ditt CV. Vi intervjuar löpande!"
+    },
+    {
+      "slug": "lia-seo-content",
+      "title": "LIA SEO & Content – Marketing Assistant",
+      "eyebrow": "Marknad",
+      "tagline": "Forma MinCFO:s digitala närvaro! Praktik inom SEO & Content.",
+      "shortDescription": "SEO, content och sociala medier – bygg MinCFO:s digitala avtryck och lär dig hur varumärken byggs.",
+      "location": "Göteborg / Hybrid / Distans",
+      "employmentType": "LIA / Praktik – deltid eller heltid",
+      "start": "Omgående / Enligt överenskommelse",
+      "compensation": "Obetald meritpraktik",
+      "openForApplications": true,
+      "order": 30,
+      "intro": "Är du en vass skribent som vill lära dig hur man bygger ett varumärke digitalt? MinCFO söker nu praktikant med fokus på SEO-optimering, content och sociala medier.\n\nI rollen som Marketing Assistant får du ett stort kreativt ansvar. Du hjälper oss att nå ut med vår expertis genom att skapa innehåll som både sökmotorer, AI och människor älskar. Du arbetar med att optimera vår hemsida och ser till att MinCFO syns där våra framtida kunder finns.",
+      "sections": [
+        {
+          "heading": "Dina huvudsakliga uppgifter",
+          "body": "",
+          "bullets": [
+            "SEO-optimering: Analysera sökord och optimera innehåll på vår hemsida.",
+            "Content: Skriva engagerande blogginlägg och artiklar samt passande bilder / visuellt content (med hjälp av AI).",
+            "Sociala medier: Ansvara för våra inlägg på LinkedIn för att stärka vårt varumärke.",
+            "Webb: Hantera och uppdatera innehåll på vår hemsida."
+          ]
+        },
+        {
+          "heading": "Om dig",
+          "body": "Vi tror att du studerar digital marknadsföring, kommunikation eller journalistik. Du letar efter en plats för din LIA-praktik, ett sommarjobb eller ett meriterande extrajobb parallellt med eller efter studierna.",
+          "bullets": [
+            "Du skriver obehindrat på svenska och engelska.",
+            "Du är nyfiken på SEO och hur digital marknadsföring driver affärer.",
+            "Du är självgående och trivs med att ta egna initiativ.",
+            "Du är noggrann i text."
+          ]
+        },
+        {
+          "heading": "Varför MinCFO?",
+          "body": "MinCFO är ett modernt och snabbväxande bolag i centrala Göteborg. Vi är ett engagerat team som sitter i ljusa lokaler tillsammans med andra startups – där pingispauser, after works och positiv energi är en självklarhet. Här är beslutsvägarna korta och du får påverka verksamheten från dag ett.",
+          "bullets": []
+        }
+      ],
+      "closingHeading": "Ansökan",
+      "closingBody": "Skicka in ditt CV och en kort text om varför just du ska ha rollen. Vi går igenom ansökningar löpande!"
+    },
+    {
+      "slug": "lia-saljare",
+      "title": "LIA Säljare – B2B-försäljning",
+      "eyebrow": "Sälj",
+      "tagline": "Vill du lära dig B2B-försäljning på riktigt? Praktik/extrajobb hos MinCFO.",
+      "shortDescription": "Kickstarta din säljkarriär nära grundarna och lär dig hur B2B-relationer byggs från första kontakt.",
+      "location": "Göteborg / Distans",
+      "employmentType": "LIA / Praktik – deltid eller heltid",
+      "start": "Omgående / Enligt överenskommelse",
+      "compensation": "Obetald meritpraktik",
+      "openForApplications": true,
+      "order": 40,
+      "intro": "Vill du arbeta i ett entreprenörsdrivet företag som förändrar ekonomitjänster? MinCFO söker nu drivna personer som vill kickstarta sin karriär inom sälj och affärsutveckling.\n\nSom säljare hos MinCFO är du vår röst utåt. Du arbetar nära grundarna med att identifiera och kontakta potentiella kunder (leads) för att boka in möten. Du kommer att arbeta med både telefon och mail som verktyg och lära dig hur man bygger förtroende i komplexa B2B-relationer från första kontakt.",
+      "sections": [
+        {
+          "heading": "Dina huvudsakliga uppgifter",
+          "body": "",
+          "bullets": [
+            "Identifiera och prospektera spännande tillväxtbolag.",
+            "Bearbeta leads via kalla samtal och personliga mail.",
+            "Boka in möten för våra rådgivare / VD som tar möte nr 2.",
+            "Bidra till att utveckla våra säljprocesser och pitchar."
+          ]
+        },
+        {
+          "heading": "Om dig",
+          "body": "Vi söker dig som studerar försäljning, ekonomi eller marknadsföring och vill ha praktisk erfarenhet vid sidan av studierna, eller under din LIA-period.",
+          "bullets": [
+            "Du är orädd, kommunikativ och älskar att bygga relationer.",
+            "Du trivs i en dynamisk miljö där idéer snabbt blir verklighet.",
+            "Du är flytande i svenska och engelska i både tal och skrift.",
+            "Du är initiativtagande och kommer med idéer kring hur vi kan nå ut till fler, bättre och effektivare.",
+            "Det är meriterande om du har erfarenhet av service eller försäljning sedan tidigare. Extra meriterande med telefonförsäljning."
+          ]
+        },
+        {
+          "heading": "Varför MinCFO?",
+          "body": "MinCFO är ett modernt och snabbväxande bolag i centrala Göteborg. Vi är ett engagerat team som sitter i ljusa lokaler tillsammans med andra startups – där pingispauser, after works och positiv energi är en självklarhet. Här är beslutsvägarna korta och du får påverka verksamheten från dag ett.",
+          "bullets": []
+        }
+      ],
+      "closingHeading": "Ansökan",
+      "closingBody": "Skicka din ansökan direkt via formuläret nedan. Urval sker löpande."
+    },
+    {
+      "slug": "senior-ekonomikonsult",
+      "title": "Senior Ekonomikonsult – Från Payroll till Closing",
+      "eyebrow": "Ekonomi",
+      "tagline": "Vi söker dig som vill ta en central roll i ett tillväxtbolag som bygger framtidens ekonomifunktion.",
+      "shortDescription": "Nyckelroll i ett växande tillväxtbolag – kombinera operativt arbete med analys och rådgivning.",
+      "location": "Göteborg",
+      "employmentType": "Heltid",
+      "start": "Enligt överenskommelse",
+      "compensation": "Enligt överenskommelse",
+      "openForApplications": true,
+      "order": 50,
+      "intro": "MinCFO är en entreprenörsdriven ekonomifirma i snabb tillväxt. Vi hjälper entreprenörer och tillväxtbolag med redovisning, lönehantering, ekonomistyrning och affärsrådgivning – alltid med fokus på digitalisering, smarta processer och verklig nytta för kunden. Hos oss får du vara med och forma framtidens ekonomifunktion och bygga en stabil grund för våra kunders tillväxt.\n\nVi är i en expansiv fas där vi växer både organiskt och genom förvärv, och söker nu dig som vill ta en central roll i vårt team.",
+      "sections": [
+        {
+          "heading": "Rollen i korthet",
+          "body": "Hos oss blir du en nyckelperson och en trygg partner för våra kunder. Du får ett brett ansvar där du kombinerar operativt arbete med analys och rådgivning. Du kommer både att driva leveranser självständigt och vara ett bollplank för kollegor i teamet.",
+          "bullets": []
+        },
+        {
+          "heading": "Vad du kommer att göra hos oss",
+          "body": "",
+          "bullets": [
+            "Sköta löpande bokföring samt månads- och årsbokslut.",
+            "Utveckla och kvalitetssäkra rapportering.",
+            "Driva förbättringar och utveckla bolagets processer.",
+            "Stötta kunderna i deras ekonomiska uppföljning och rapportering.",
+            "Analysera kundernas lönsamhet och bidra med rådgivning.",
+            "Vara intern kunskapsbärare och bollplank i teamet."
+          ]
+        },
+        {
+          "heading": "Vem vi tror att du är",
+          "body": "Du är trygg i din kompetens, gillar ansvar och trivs i en entreprenöriell miljö där det händer mycket. Du har erfarenhet av både redovisning och lön, och du trivs i en varierad vardag med olika typer av kunder.",
+          "bullets": []
+        },
+        {
+          "heading": "Framgångsfaktorer",
+          "body": "",
+          "bullets": [
+            "Minst 2 års erfarenhet av redovisning, gärna från byrå.",
+            "Vana av att självständigt driva redovisning och bokslut.",
+            "Djup förståelse för redovisningsflödet och gärna erfarenhet av ekonomistyrning.",
+            "God systemvana (bland annat i Fortnox).",
+            "Förmåga att bygga förtroende i kundrelationer och coacha kollegor.",
+            "Extra plus om du drivit egen byrå eller ansvarat för en redovisningsavdelning."
+          ]
+        },
+        {
+          "heading": "Varför MinCFO?",
+          "body": "",
+          "bullets": [
+            "Möjlighet att få en nyckelroll i ett tillväxtbolag där du har stort inflytande på både kunder och bolagets utveckling.",
+            "En entreprenöriell miljö där din erfarenhet och drivkraft värderas högt.",
+            "En härlig kontorsmiljö tillsammans med andra startup-bolag i centrala Göteborg – pingis, gratis läskeblask, after works och en social stämning utöver det vanliga.",
+            "Ett tight team som kombinerar hög prestation med energi, framåtanda och mycket skratt."
+          ]
+        }
+      ],
+      "closingHeading": "Ansökan",
+      "closingBody": "Låter det här som din nästa utmaning? Skicka in din ansökan och var med och bygg framtidens ekonomifunktion tillsammans med oss!"
+    }
+  ]
+}
