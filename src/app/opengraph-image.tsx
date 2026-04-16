@@ -8,11 +8,5 @@ export const size = {
 export const contentType = "image/png";
 
 export default function OpenGraphImage() {
-  return createOgImage({
-    title: "Realtidsdashboards, prognoser och AI för moderna ekonomiteam",
-    description:
-      "MinCFO kombinerar automation, dashboards i realtid och en AI-copilot i en modern ekonomiplattform.",
-    eyebrow: "MinCFO",
-    theme: "home",
-  });
+  return createOgImage();
 }

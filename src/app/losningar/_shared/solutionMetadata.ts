@@ -66,7 +66,7 @@ export function getSolutionMetadata(meta: SolutionMeta): Metadata {
 }
 
 export function createSolutionOgImage(meta: SolutionMeta) {
-  return createOgImage(meta);
+  return createOgImage({ theme: meta.theme });
 }
 
 export const solutionOgRuntime = OG_IMAGE_RUNTIME;

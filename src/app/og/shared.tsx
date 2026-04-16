@@ -89,11 +89,8 @@ export function buildPageMetadata({ title, description, path }: OgConfig): Metad
 }
 
 export function createOgImage({
-  title,
-  description,
-  eyebrow = "MinCFO",
   theme = "home",
-}: Omit<OgConfig, "path">) {
+}: Partial<Omit<OgConfig, "path">> = {}) {
   const style = THEME_STYLES[theme];
 
   return new ImageResponse(
@@ -103,8 +100,8 @@ export function createOgImage({
           width: "100%",
           height: "100%",
           display: "flex",
-          position: "relative",
-          overflow: "hidden",
+          alignItems: "center",
+          justifyContent: "center",
           background: style.background,
           color: "white",
           fontFamily: "sans-serif",
@@ -112,155 +109,22 @@ export function createOgImage({
       >
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-            opacity: 0.12,
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            left: -40,
-            top: -64,
-            width: 420,
-            height: 420,
-            borderRadius: 9999,
-            background: style.glow,
-            filter: "blur(12px)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            right: -120,
-            bottom: -140,
-            width: 460,
-            height: 460,
-            borderRadius: 9999,
-            background: style.glow,
-            filter: "blur(18px)",
-            opacity: 0.9,
-          }}
-        />
-        <div
-          style={{
             display: "flex",
-            width: "100%",
-            padding: "72px 80px",
-            justifyContent: "space-between",
-            alignItems: "stretch",
+            alignItems: "center",
+            gap: 24,
           }}
         >
+          <svg width="72" height="72" viewBox="0 0 32 32" fill="none">
+            <path d={logoPath} fill="white" />
+          </svg>
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              width: 760,
-              zIndex: 1,
+              fontSize: 72,
+              fontWeight: 700,
+              letterSpacing: "-0.04em",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 18,
-              }}
-            >
-              <svg width="42" height="42" viewBox="0 0 32 32" fill="none">
-                <path d={logoPath} fill="white" />
-              </svg>
-              <div
-                style={{
-                  display: "flex",
-                  fontSize: 40,
-                  fontWeight: 700,
-                  letterSpacing: "-0.05em",
-                }}
-              >
-                MinCFO
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 18,
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  width: "fit-content",
-                  padding: "12px 20px",
-                  borderRadius: 9999,
-                  background: "rgba(14, 18, 40, 0.38)",
-                  border: "1px solid rgba(255,255,255,0.14)",
-                  fontSize: 22,
-                  color: "rgba(255,255,255,0.78)",
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {eyebrow}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  fontSize: 70,
-                  lineHeight: 1.02,
-                  fontWeight: 750,
-                  letterSpacing: "-0.06em",
-                  maxWidth: 760,
-                }}
-              >
-                {title}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  fontSize: 29,
-                  lineHeight: 1.35,
-                  color: "rgba(255,255,255,0.84)",
-                  maxWidth: 700,
-                }}
-              >
-                {description}
-              </div>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 260,
-              zIndex: 1,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                width: 232,
-                height: 232,
-                borderRadius: 38,
-                alignItems: "center",
-                justifyContent: "center",
-                background: style.panel,
-                border: "1px solid rgba(255,255,255,0.18)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.16), 0 20px 80px rgba(10, 8, 28, 0.28)",
-              }}
-            >
-              <svg width="124" height="124" viewBox="0 0 32 32" fill="none">
-                <path d={logoPath} fill="white" />
-              </svg>
-            </div>
+            MinCFO
           </div>
         </div>
       </div>
