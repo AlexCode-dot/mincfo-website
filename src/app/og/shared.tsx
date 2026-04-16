@@ -11,8 +11,8 @@ type OgConfig = {
   theme?: OgTheme;
 };
 
-const logoPath =
-  "M0 0h13.474v15.36C6.032 15.36 0 9.328 0 1.886V0Zm0 16.64h13.474V32C6.032 32 0 25.968 0 18.526V16.64Zm16.596 0H32v1.218a8.702 8.702 0 0 1-17.404 0V16.64Zm0-16.64H32v1.218a8.702 8.702 0 0 1-17.404 0V0Z";
+const geistFontUrl =
+  "https://fonts.gstatic.com/s/geist/v4/gyBhhwUxId8gMGYQMKR3pzfaWI_RHOQ4nQ.ttf";
 
 const THEME_STYLES: Record<OgTheme, { background: string; glow: string; panel: string }> = {
   home: {
@@ -88,10 +88,12 @@ export function buildPageMetadata({ title, description, path }: OgConfig): Metad
   };
 }
 
-export function createOgImage({
+export async function createOgImage({
   theme = "home",
 }: Partial<Omit<OgConfig, "path">> = {}) {
   const style = THEME_STYLES[theme];
+
+  const fontData = await fetch(geistFontUrl).then((res) => res.arrayBuffer());
 
   return new ImageResponse(
     (
@@ -104,24 +106,27 @@ export function createOgImage({
           justifyContent: "center",
           background: style.background,
           color: "white",
-          fontFamily: "sans-serif",
+          fontFamily: "Geist",
         }}
       >
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 40,
+            gap: 24,
           }}
         >
-          <svg width="140" height="140" viewBox="0 0 32 32" fill="none">
-            <path d={logoPath} fill="white" />
+          <svg width="100" height="100" viewBox="0 0 50 50" fill="none">
+            <path d="M0 0H24V24A24 24 0 0 1 0 0Z" fill="white" />
+            <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" fill="white" />
+            <path d="M0 26H24V50A24 24 0 0 1 0 26Z" fill="white" />
+            <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" fill="white" />
           </svg>
           <div
             style={{
               fontSize: 128,
-              fontWeight: 700,
-              letterSpacing: "-0.04em",
+              fontWeight: 800,
+              letterSpacing: "-0.045em",
             }}
           >
             MinCFO
@@ -129,6 +134,16 @@ export function createOgImage({
         </div>
       </div>
     ),
-    OG_IMAGE_SIZE,
+    {
+      ...OG_IMAGE_SIZE,
+      fonts: [
+        {
+          name: "Geist",
+          data: fontData,
+          style: "normal",
+          weight: 800,
+        },
+      ],
+    },
   );
 }
