@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     title: HOME_PAGE_SHARED_TEXT.siteMeta.title,
     description: HOME_PAGE_SHARED_TEXT.siteMeta.description,
     type: "website",
+    url: "/",
+    siteName: "MinCFO",
+    locale: "sv_SE",
     images: [
       {
         url: "/opengraph-image",
@@ -55,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="sv">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MotionProvider>
           <ContactReturnRestore />
