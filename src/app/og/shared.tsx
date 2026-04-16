@@ -111,15 +111,15 @@ export function createOgImage({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 24,
+            gap: 40,
           }}
         >
-          <svg width="72" height="72" viewBox="0 0 32 32" fill="none">
+          <svg width="140" height="140" viewBox="0 0 32 32" fill="none">
             <path d={logoPath} fill="white" />
           </svg>
           <div
             style={{
-              fontSize: 72,
+              fontSize: 128,
               fontWeight: 700,
               letterSpacing: "-0.04em",
             }}
