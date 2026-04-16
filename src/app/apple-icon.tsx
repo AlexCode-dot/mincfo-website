@@ -7,9 +7,6 @@ export const size = {
 
 export const contentType = "image/png";
 
-const logoPath =
-  "M0 0h13.474v15.36C6.032 15.36 0 9.328 0 1.886V0Zm0 16.64h13.474V32C6.032 32 0 25.968 0 18.526V16.64Zm16.596 0H32v1.218a8.702 8.702 0 0 1-17.404 0V16.64Zm0-16.64H32v1.218a8.702 8.702 0 0 1-17.404 0V0Z";
-
 export default function AppleIcon() {
   return new ImageResponse(
     (
@@ -20,24 +17,16 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#ffffff",
+          background:
+            "linear-gradient(145deg, #1a1e44 0%, #3f39ff 60%, #6d34ff 100%)",
         }}
       >
-        <div
-          style={{
-            width: 128,
-            height: 128,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 36,
-            background: "linear-gradient(180deg, #111833 0%, #0a1022 100%)",
-          }}
-        >
-          <svg width="72" height="72" viewBox="0 0 32 32" fill="none">
-            <path d={logoPath} fill="#4C3DFF" />
-          </svg>
-        </div>
+        <svg width="100" height="100" viewBox="0 0 50 50" fill="none">
+          <path d="M0 0H24V24A24 24 0 0 1 0 0Z" fill="white" />
+          <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" fill="white" />
+          <path d="M0 26H24V50A24 24 0 0 1 0 26Z" fill="white" />
+          <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" fill="white" />
+        </svg>
       </div>
     ),
     size,
