@@ -124,6 +124,7 @@ async function pull() {
   apply(shared, "navigation.kundcase", settings.navKundcase);
   apply(shared, "navigation.sakerhet", settings.navSakerhet);
   apply(shared, "navigation.hurDetFunkar", settings.navHurDetFunkar);
+  apply(shared, "navigation.blogg", settings.navBlogg);
   apply(shared, "navigation.demoCta", settings.navDemoCta);
   apply(shared, "navigation.loginSignupLabel", settings.navLoginLabel);
   apply(shared, "navigation.signupCta", settings.signupNavCta);
@@ -174,6 +175,15 @@ async function pull() {
   apply(shared, "signup.submitLabel", settings.signupSubmitLabel);
   apply(shared, "signup.successTitle", settings.signupSuccessTitle);
   apply(shared, "signup.successText", settings.signupSuccessText);
+
+  // Blog page text
+  apply(shared, "blog.title", settings.blogTitle);
+  apply(shared, "blog.subtitle", settings.blogSubtitle);
+  apply(shared, "blog.sidebarHeading", settings.blogSidebarHeading);
+  apply(shared, "blog.gridHeading", settings.blogGridHeading);
+  apply(shared, "blog.emptyTitle", settings.blogEmptyTitle);
+  apply(shared, "blog.emptyBody", settings.blogEmptyBody);
+  apply(shared, "blog.backToListLabel", settings.blogBackToListLabel);
 
   // Footer
   apply(shared, "footer.intro", settings.footerIntro);
