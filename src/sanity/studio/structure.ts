@@ -58,6 +58,15 @@ export const structure = (S: StructureBuilder) =>
             .title("Jobbannonser")
             .defaultOrdering([{ field: "order", direction: "asc" }]),
         ),
+
+      // ── Blogg ──
+      S.listItem()
+        .title("Blogg")
+        .child(
+          S.documentTypeList("blogPost")
+            .title("Blogginlägg")
+            .defaultOrdering([{ field: "publishedAt", direction: "desc" }]),
+        ),
       S.divider(),
 
       // ── Gemensamt ──

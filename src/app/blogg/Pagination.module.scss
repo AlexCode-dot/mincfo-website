@@ -1,0 +1,122 @@
+.pagination {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  margin: 4rem 0 0;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgb(143 158 255 / 0.12);
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgb(143 158 255 / 0.2);
+  background: rgb(15 20 40 / 0.55);
+  color: rgb(220 228 250 / 0.88);
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.arrow:hover {
+  background: rgb(20 27 53 / 0.85);
+  border-color: rgb(143 158 255 / 0.36);
+  transform: translateY(-1px);
+}
+
+.pagination > .arrow:first-child {
+  justify-self: flex-start;
+}
+
+.pagination > .arrow:last-child,
+.pagination > .arrow.arrowDisabled:last-child {
+  justify-self: flex-end;
+}
+
+.arrowDisabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.pages {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 0.6rem;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: rgb(200 210 235 / 0.78);
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.page:disabled,
+.arrow:disabled {
+  cursor: default;
+}
+
+.page:hover {
+  background: rgb(20 27 53 / 0.65);
+  color: rgb(245 247 255 / 0.96);
+}
+
+.pageActive {
+  background: var(--accent-primary);
+  color: rgb(252 253 255 / 0.99);
+  cursor: default;
+  pointer-events: none;
+}
+
+.ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  color: rgb(165 175 205 / 0.6);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .pagination {
+    gap: 0.5rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+  }
+
+  .arrow {
+    width: 36px;
+    height: 36px;
+  }
+
+  .page {
+    min-width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+    padding: 0 0.5rem;
+  }
+}

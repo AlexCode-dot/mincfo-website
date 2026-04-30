@@ -18,6 +18,7 @@ export default defineType({
     { name: "howItWorks", title: "Hur det funkar", options: { collapsible: true } },
     { name: "security", title: "Säkerhet", options: { collapsible: true } },
     { name: "signup", title: "Registreringsformulär", options: { collapsible: true } },
+    { name: "blog", title: "Blogg-sida (text)", options: { collapsible: true } },
     { name: "footer", title: "Sidfot", options: { collapsible: true } },
 
     // Visual group fields are object types — they collapse on their own, no fieldsets needed
@@ -77,6 +78,13 @@ export default defineType({
     defineField({
       name: "navHurDetFunkar",
       title: "Hur det funkar-länktext",
+      type: "string",
+      fieldset: "navigation",
+      group: "content",
+    }),
+    defineField({
+      name: "navBlogg",
+      title: "Blogg-länktext",
       type: "string",
       fieldset: "navigation",
       group: "content",
@@ -328,6 +336,65 @@ export default defineType({
       type: "text",
       rows: 2,
       fieldset: "signup",
+      group: "content",
+    }),
+
+    // ── Blog page text ──
+    defineField({
+      name: "blogTitle",
+      title: "Rubrik",
+      type: "string",
+      description: 'Stora rubriken högst upp på /blogg. T.ex. "Insikter från MinCFO".',
+      fieldset: "blog",
+      group: "content",
+    }),
+    defineField({
+      name: "blogSubtitle",
+      title: "Underrubrik",
+      type: "text",
+      rows: 2,
+      description: "Visas under rubriken och används även som SEO-beskrivning för bloggen.",
+      fieldset: "blog",
+      group: "content",
+    }),
+    defineField({
+      name: "blogSidebarHeading",
+      title: "Sidebar-rubrik",
+      type: "string",
+      description: 'Rubrik över listan med senaste inläggen. T.ex. "Senaste inläggen".',
+      fieldset: "blog",
+      group: "content",
+    }),
+    defineField({
+      name: "blogGridHeading",
+      title: "Grid-rubrik",
+      type: "string",
+      description: 'Rubrik över de mindre korten under hero. T.ex. "Mer från oss".',
+      fieldset: "blog",
+      group: "content",
+    }),
+    defineField({
+      name: "blogEmptyTitle",
+      title: "Tomt-läge: rubrik",
+      type: "string",
+      description: "Visas när inga blogginlägg är publicerade ännu.",
+      fieldset: "blog",
+      group: "content",
+    }),
+    defineField({
+      name: "blogEmptyBody",
+      title: "Tomt-läge: text",
+      type: "text",
+      rows: 2,
+      fieldset: "blog",
+      group: "content",
+    }),
+    defineField({
+      name: "blogBackToListLabel",
+      title: 'Länktext "tillbaka till alla inlägg"',
+      type: "string",
+      description: "Visas längst ned på varje enskilt blogginlägg.",
+      fieldset: "blog",
       group: "content",
     }),
 

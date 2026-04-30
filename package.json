@@ -10,11 +10,16 @@
     "content:export:gdocs": "node scripts/export-briefs-to-gdocs.mjs",
     "content:import:gdocs": "node scripts/import-briefs-from-gdocs.mjs",
     "content:seed:sanity": "node scripts/seed-sanity.mjs",
+    "content:clean:blog": "node scripts/clean-blog.mjs",
+    "content:fake:blog:with-images": "node scripts/clean-blog.mjs && node scripts/seed-blog-test.mjs",
+    "content:fake:blog:no-images": "node scripts/clean-blog.mjs && SEED_BLOG_NO_IMAGES=1 node scripts/seed-blog-test.mjs",
     "content:pull:sanity": "node scripts/pull-sanity.mjs",
     "content:validate:sanity": "node scripts/validate-sanity.mjs"
   },
   "dependencies": {
+    "@portabletext/react": "^6.0.3",
     "@sanity/client": "^7.20.0",
+    "@sanity/image-url": "^2.1.1",
     "@sanity/vision": "^5.18.0",
     "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.34.0",

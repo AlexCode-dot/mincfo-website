@@ -10,6 +10,8 @@ import styles from "./SiteFooter.module.scss";
 export default function SiteFooter() {
   const homeOffering = useOptionalHomeOffering();
   const footer = homeOffering?.shared.footer ?? HOME_PAGE_TEXT.footer;
+  const bloggLabel =
+    homeOffering?.shared.navigation.blogg ?? HOME_PAGE_TEXT.navigation.blogg ?? "Blogg";
   const showSolutions = homeOffering?.offering !== undefined
     ? homeOffering.offering === "platform"
     : true;
@@ -51,6 +53,7 @@ export default function SiteFooter() {
           <div className={styles.linkCol}>
             <h3>{footer.companyTitle}</h3>
             <Link href="#customers">{footer.company[1]}</Link>
+            <Link href="/blogg">{bloggLabel}</Link>
             <ContactLink href="/karriar" returnPath="/" returnSectionId="footer">
               {footer.company[2]}
             </ContactLink>

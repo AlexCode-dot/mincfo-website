@@ -5,6 +5,7 @@
     "kundcase": "Kundcase",
     "sakerhet": "Säkerhet",
     "hurDetFunkar": "Hur det funkar",
+    "blogg": "Blogg",
     "demoCta": "Boka demo",
     "loginSignupLabel": "Logga in",
     "signupCta": "Skapa konto",
@@ -587,5 +588,14 @@
     "motionNowPrefix": "Now:",
     "motionFull": "Full",
     "motionReduced": "Reduced"
+  },
+  "blog": {
+    "title": "Insikter från MinCFO",
+    "subtitle": "Skarpa perspektiv på ekonomistyrning, AI och hur moderna bolag bygger sin finansfunktion.",
+    "sidebarHeading": "Senaste inläggen",
+    "gridHeading": "Mer från oss",
+    "emptyTitle": "Inga inlägg ännu",
+    "emptyBody": "Vi laddar artiklar – håll utkik framöver.",
+    "backToListLabel": "Tillbaka till alla inlägg"
   }
 }

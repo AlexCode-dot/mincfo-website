@@ -69,6 +69,7 @@ async function seed() {
     navKundcase: sharedJson.navigation.kundcase,
     navSakerhet: sharedJson.navigation.sakerhet,
     navHurDetFunkar: sharedJson.navigation.hurDetFunkar,
+    navBlogg: sharedJson.navigation.blogg,
     navDemoCta: sharedJson.navigation.demoCta,
     navLoginLabel: sharedJson.navigation.loginSignupLabel,
     navOpenSolutionsAria: sharedJson.navigation.openSolutionsAria,

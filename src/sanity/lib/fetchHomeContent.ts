@@ -237,6 +237,7 @@ function mapSettingsFromSanity(
       kundcase: sanity.navKundcase,
       sakerhet: sanity.navSakerhet,
       hurDetFunkar: sanity.navHurDetFunkar,
+      blogg: sanity.navBlogg,
       demoCta: sanity.navDemoCta,
       loginSignupLabel: sanity.navLoginLabel,
       signupCta: sanity.signupNavCta,
@@ -271,6 +272,17 @@ function mapSettingsFromSanity(
       successText: sanity.signupSuccessText,
     };
   }
+
+  // Blog (always set; deepMerge skips undefined so partial overrides work)
+  overlay.blog = {
+    title: sanity.blogTitle,
+    subtitle: sanity.blogSubtitle,
+    sidebarHeading: sanity.blogSidebarHeading,
+    gridHeading: sanity.blogGridHeading,
+    emptyTitle: sanity.blogEmptyTitle,
+    emptyBody: sanity.blogEmptyBody,
+    backToListLabel: sanity.blogBackToListLabel,
+  };
 
   // Offering
   if (Array.isArray(sanity.offeringOptions)) {
@@ -581,5 +593,26 @@ export async function fetchAllHomeContent() {
   } catch (error) {
     console.error("Failed to fetch from Sanity, using JSON fallback:", error);
     return staticFallback();
+  }
+}
+
+/**
+ * Lightweight helper for server components that only need the shared
+ * (non-variant) content — e.g. /blogg, /karriar. Skips the home-variant
+ * fetches so we make a single round-trip to Sanity.
+ */
+export async function fetchSharedContent(): Promise<typeof sharedJson> {
+  if (!client) return sharedJson;
+
+  try {
+    const { data: sanitySettings } = await sanityFetch({ query: SITE_SETTINGS_QUERY });
+    const overlay = mapSettingsFromSanity(sanitySettings);
+    return deepMerge(sharedJson, overlay);
+  } catch (error) {
+    console.error(
+      "Failed to fetch shared content from Sanity, using JSON fallback:",
+      error,
+    );
+    return sharedJson;
   }
 }
