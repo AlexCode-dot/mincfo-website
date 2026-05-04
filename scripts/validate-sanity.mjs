@@ -231,6 +231,7 @@ async function validate() {
 
     // offeringOptions[]
     const expectedOptions = sharedJson.offering.options.map((o) => ({
+      id: o.id,
       label: o.label,
       title: o.title,
       body: o.body,
@@ -238,6 +239,7 @@ async function validate() {
       cta: o.cta,
     }));
     compareArrayField(ssLabel, "offeringOptions", ss.offeringOptions, expectedOptions, [
+      "id",
       "label",
       "title",
       "body",

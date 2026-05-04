@@ -85,7 +85,9 @@ export function HomeOfferingProvider({
 
   const shared = (prefetchedContent?.shared ?? HOME_PAGE_SHARED_TEXT) as typeof HOME_PAGE_SHARED_TEXT;
   const OPTIONS = shared.offering.options as OfferingOption[];
-  const options = OPTIONS.filter((option) => allowedOfferings.includes(option.id));
+  const options = allowedOfferings
+    .map((offering) => OPTIONS.find((option) => option.id === offering))
+    .filter((option): option is OfferingOption => Boolean(option));
 
   const pathnameOffering = pathname ? getOfferingFromPathname(pathname) : null;
   const offering = syncWithUrl

@@ -140,9 +140,13 @@ async function pull() {
 
   // Offering options
   if (Array.isArray(settings.offeringOptions)) {
-    for (let i = 0; i < settings.offeringOptions.length && i < shared.offering.options.length; i++) {
-      const s = settings.offeringOptions[i];
+    for (let i = 0; i < shared.offering.options.length; i++) {
       const target = shared.offering.options[i];
+      const s =
+        settings.offeringOptions.find((option) => option.id === target.id) ??
+        settings.offeringOptions.find((option) => option.label === target.label) ??
+        settings.offeringOptions[i];
+      if (!s) continue;
       if (s.label) target.label = s.label;
       if (s.title) target.title = s.title;
       if (s.body) target.body = s.body;

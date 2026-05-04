@@ -41,7 +41,7 @@ export default defineType({
       name: "mode",
       title: "Variant",
       type: "string",
-      options: { list: ["platform", "full-service", "partner"] },
+      options: { list: ["full-service", "platform", "partner"] },
       validation: (r) => r.required(),
       readOnly: true,
     }),

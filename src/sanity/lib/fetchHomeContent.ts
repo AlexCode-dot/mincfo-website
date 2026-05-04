@@ -290,9 +290,13 @@ function mapSettingsFromSanity(
 
     if (Array.isArray(sanity.offeringOptions)) {
       const jsonOptions = sharedJson.offering.options;
+      const sanityOptions = sanity.offeringOptions as AnyObject[];
       offeringOverlay.options = jsonOptions.map(
         (jsonOpt: (typeof jsonOptions)[number], i: number) => {
-          const sanityOpt = (sanity.offeringOptions as AnyObject[])?.[i];
+          const sanityOpt =
+            sanityOptions.find((option) => option.id === jsonOpt.id) ??
+            sanityOptions.find((option) => option.label === jsonOpt.label) ??
+            sanityOptions[i];
           if (!sanityOpt) return jsonOpt;
           return {
             ...jsonOpt,
@@ -454,7 +458,7 @@ function mapHowItWorksFromVariants(
   const offers: AnyObject = {};
   const sectionIntroByOffer: AnyObject = {};
 
-  for (const mode of ["platform", "full-service", "partner"] as HomeOfferingMode[]) {
+  for (const mode of ["full-service", "platform", "partner"] as HomeOfferingMode[]) {
     const sanity = variants[mode];
     const offerKey = MODE_TO_OFFER_KEY[mode];
 
@@ -484,7 +488,7 @@ function mapShowcaseFromVariants(
 ): AnyObject {
   const showcase: AnyObject = {};
 
-  for (const mode of ["platform", "full-service", "partner"] as HomeOfferingMode[]) {
+  for (const mode of ["full-service", "platform", "partner"] as HomeOfferingMode[]) {
     const sanity = variants[mode];
     if (sanity?.showcaseEyebrow || sanity?.showcaseTitle || sanity?.showcaseVisual) {
       const entry: AnyObject = {

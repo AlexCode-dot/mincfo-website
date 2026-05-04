@@ -83,6 +83,7 @@ async function seed() {
     loginChooserCloseAria: sharedJson.navigation.loginChooser.closeAria,
     offeringOptions: sharedJson.offering.options.map((o, i) => ({
       _key: `option-${i}`,
+      id: o.id,
       label: o.label,
       title: o.title,
       body: o.body,

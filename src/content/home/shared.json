@@ -127,7 +127,7 @@
         "title": "Ekonomifunktionen as-a-service",
         "body": "MinCFO tar fullt ansvar för rapportering, uppföljning och finansiell struktur. Växla upp till en ekonomifunktion som ligger flera steg före!",
         "ctaLabel": "Gå till helhetslösningen",
-        "ctaHref": "/full-service",
+        "ctaHref": "/",
         "serviceVisual": {
           "chipOwnership": "Fakturor och bokföring",
           "chipDelivery": "Löpande uppföljning",
@@ -172,18 +172,6 @@
     },
     "options": [
       {
-        "id": "platform",
-        "label": "Plattform",
-        "title": "MinCFO plattform",
-        "body": "För bolag som redan hanterar ekonomi internt eller via partner och vill ha AI, dashboards och forecasting i ett modernt system.",
-        "bullets": [
-          "AI-copilot och dashboards i realtid",
-          "Forecasting, scenarier och beslutsstöd",
-          "Passar team med fungerande ekonomihantering som är redo att växla upp"
-        ],
-        "cta": "Visa plattform"
-      },
-      {
         "id": "full-service",
         "label": "Helhetslösning",
         "title": "MinCFO som outsourcad ekonomifunktion",
@@ -194,6 +182,18 @@
           "Passar team som vill lägga fokus på verksamheten"
         ],
         "cta": "Visa helhetslösning"
+      },
+      {
+        "id": "platform",
+        "label": "Plattform",
+        "title": "MinCFO plattform",
+        "body": "För bolag som redan hanterar ekonomi internt eller via partner och vill ha AI, dashboards och forecasting i ett modernt system.",
+        "bullets": [
+          "AI-copilot och dashboards i realtid",
+          "Forecasting, scenarier och beslutsstöd",
+          "Passar team med fungerande ekonomihantering som är redo att växla upp"
+        ],
+        "cta": "Visa plattform"
       },
       {
         "id": "partner",

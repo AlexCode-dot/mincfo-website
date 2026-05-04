@@ -176,6 +176,13 @@ export default defineType({
         {
           type: "object",
           fields: [
+            {
+              name: "id",
+              title: "ID",
+              type: "string",
+              options: { list: ["full-service", "platform", "partner"] },
+              readOnly: true,
+            },
             { name: "label", title: "Etikett", type: "string" },
             { name: "title", title: "Rubrik", type: "string" },
             { name: "body", title: "Beskrivning", type: "text", rows: 2 },
