@@ -12,6 +12,7 @@ import {
 import { useHomeOffering } from "@/components/home/HomeOfferingProvider";
 import ContactLink from "@/components/system/ContactLink";
 import { useMotion } from "@/components/system/MotionProvider";
+import { DEFAULT_HOME_OFFERING_MODE } from "@/content/homePageText";
 
 import HeroOfferingShowcase from "./HeroOfferingShowcase";
 import HeroPartnerLinesBackground from "./HeroPartnerLinesBackground";
@@ -37,9 +38,18 @@ const smoothstep = (edge0: number, edge1: number, value: number) => {
   return t * t * (3 - 2 * t);
 };
 
+const HERO_BG_DEFAULT_COLORS = ["#3836cf", "#433dff", "#5a4fff", "#6a5cff"];
+const HERO_BG_SECONDARY_COLORS = ["#6b21cf", "#7c3aed", "#8b5cf6", "#a78bfa"];
+
 const HERO_BG_COLORS: Record<string, string[]> = {
-  platform: ["#3836cf", "#433dff", "#5a4fff", "#6a5cff"],
-  "full-service": ["#6b21cf", "#7c3aed", "#8b5cf6", "#a78bfa"],
+  platform:
+    DEFAULT_HOME_OFFERING_MODE === "platform"
+      ? HERO_BG_DEFAULT_COLORS
+      : HERO_BG_SECONDARY_COLORS,
+  "full-service":
+    DEFAULT_HOME_OFFERING_MODE === "full-service"
+      ? HERO_BG_DEFAULT_COLORS
+      : HERO_BG_SECONDARY_COLORS,
   partner: ["#0d7377", "#0ea5a9", "#2dd4bf", "#5eead4"],
 };
 
