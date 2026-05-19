@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MinCFO demo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
+<style>
+  html,body { margin:0; padding:0; height:100%; background:transparent; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .demo-wrap { background: #d6d0c8; width:100%; height:100%; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .scene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.7s ease; pointer-events: none; }
+  .scene.active { opacity: 1; }
+  .chat-box { background: #fdfaf6; border-radius: 20px; padding: 24px 24px 16px; width: 55%; box-shadow: 0 2px 32px rgba(0,0,0,0.10); }
+  .chat-text { font-family: Georgia, serif; font-size: clamp(14px, 2.2vw, 20px); color: #181513; min-height: 2.4em; }
+  .cursor { display: inline-block; width: 2px; height: 1.1em; background: #181513; vertical-align: middle; margin-left: 2px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .chat-icons { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; border-top: 1px solid #ece9e3; padding-top: 12px; }
+  .icon-row { display: flex; gap: 14px; }
+  .icon-btn { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #999; font-size: 16px; }
+  .send-btn { width: 36px; height: 36px; border-radius: 10px; background: #181513; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .flow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 70%; position: relative; }
+  .flow-card { background: #fdfaf6; border-radius: 14px; padding: 16px; }
+  .flow-card-title { display: flex; align-items: center; gap: 8px; font-size: clamp(10px, 1.4vw, 13px); font-weight: 500; color: #181513; margin-bottom: 10px; }
+  .flow-line { height: 8px; border-radius: 4px; background: #e8e4df; margin: 5px 0; }
+  .flow-line.short { width: 55%; }
+  .connector-svg { position: absolute; inset: 0; pointer-events: none; }
+  .compare-card { background: #fdfaf6; border-radius: 16px; padding: 28px; width: 60%; }
+  .compare-header { display: grid; grid-template-columns: 1fr 1fr; font-size: clamp(11px, 1.6vw, 15px); font-weight: 500; color: #181513; margin-bottom: 14px; }
+  .compare-row { display: grid; grid-template-columns: 1fr 1fr; padding: 9px 0; border-top: 1px solid #ece9e3; gap: 8px; }
+  .pill { height: 10px; border-radius: 5px; background: #c8eab0; }
+  .pill-sm { width: 28%; }
+  .pill-lg { width: 75%; }
+  .pill-md { width: 60%; }
+  .pill-xl { width: 85%; }
+  .pill-pair { display: flex; gap: 6px; align-items: center; }
+  .progress-bar { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.2); transition: background 0.3s, width 0.3s; }
+  .dot.active { background: #181513; width: 18px; }
+</style>
+</head>
+<body>
+<h2 class="sr-only">Animerad produktdemo för MinCFO – visar AI-chat, bokföringsflöde och månadsöversikt</h2>
+
+<div class="demo-wrap">
+  <div class="scene active" id="s1">
+    <div class="chat-box">
+      <div class="chat-text" id="chat-text"><span class="cursor"></span></div>
+      <div class="chat-icons">
+        <div class="icon-row">
+          <div class="icon-btn"><i class="ti ti-paperclip" aria-hidden="true"></i></div>
+          <div class="icon-btn"><i class="ti ti-wavesaw-tool" aria-hidden="true"></i></div>
+          <div class="icon-btn"><i class="ti ti-sparkles" aria-hidden="true"></i></div>
+        </div>
+        <div class="send-btn"><i class="ti ti-arrow-up" aria-hidden="true"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scene" id="s2">
+    <div class="flow-grid" id="flow-grid">
+      <div class="flow-card" style="opacity:0;transition:opacity 0.5s 0.1s" id="fc1">
+        <div class="flow-card-title"><i class="ti ti-currency-dollar" aria-hidden="true"></i> Kontoutdrag</div>
+        <div class="flow-line"></div>
+        <div class="flow-line"></div>
+        <div class="flow-line short"></div>
+        <div class="flow-line"></div>
+        <div class="flow-line short"></div>
+      </div>
+      <div class="flow-card" style="opacity:0;transition:opacity 0.5s 0.4s" id="fc2">
+        <div class="flow-card-title"><i class="ti ti-currency-dollar" aria-hidden="true"></i> Huvudbok</div>
+        <div class="flow-line"></div>
+        <div class="flow-line"></div>
+        <div class="flow-line short"></div>
+        <div class="flow-line"></div>
+        <div class="flow-line short"></div>
+      </div>
+      <div class="flow-card" style="opacity:0;transition:opacity 0.5s 0.7s" id="fc3">
+        <div class="flow-card-title"><i class="ti ti-currency-dollar" aria-hidden="true"></i> Kontoutdrag</div>
+        <div class="flow-line"></div>
+        <div class="flow-line short"></div>
+        <div class="flow-line"></div>
+        <div class="flow-line short"></div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-card" style="opacity:0;transition:opacity 0.5s 1s" id="fc4">
+        <div class="flow-card-title"><i class="ti ti-currency-dollar" aria-hidden="true"></i> Huvudbok</div>
+        <div class="flow-line"></div>
+        <div class="flow-line short"></div>
+        <div class="flow-line"></div>
+        <div class="flow-line short"></div>
+        <div class="flow-line"></div>
+      </div>
+      <svg class="connector-svg" id="conn-svg" viewBox="0 0 400 300" preserveAspectRatio="none">
+        <path id="conn-path1" d="M200,80 C200,80 200,150 200,150" stroke="white" stroke-width="2.5" fill="none" opacity="0" stroke-linecap="round"/>
+        <path id="conn-path2" d="M200,150 C200,150 200,220 200,220" stroke="white" stroke-width="2.5" fill="none" opacity="0" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="scene" id="s3">
+    <div class="compare-card">
+      <div class="compare-header">
+        <span>Denna månad</span>
+        <span>Förra månaden</span>
+      </div>
+      <div class="compare-row cr1" style="opacity:0;transition:opacity 0.4s 0.1s">
+        <div class="pill-pair"><div class="pill pill-sm"></div><div class="pill pill-lg"></div></div>
+        <div class="pill-pair"><div class="pill pill-sm"></div><div class="pill pill-xl"></div></div>
+      </div>
+      <div class="compare-row cr2" style="opacity:0;transition:opacity 0.4s 0.35s">
+        <div class="pill-pair"><div class="pill pill-sm"></div><div class="pill pill-md"></div></div>
+        <div class="pill-pair"><div class="pill pill-sm"></div><div class="pill pill-lg"></div></div>
+      </div>
+      <div class="compare-row cr3" style="opacity:0;transition:opacity 0.4s 0.6s">
+        <div class="pill-pair"><div class="pill pill-sm"></div><div class="pill pill-lg"></div></div>
+        <div class="pill-pair"><div class="pill pill-sm"></div><div class="pill pill-md"></div></div>
+      </div>
+      <div class="compare-row cr4" style="opacity:0;transition:opacity 0.4s 0.85s">
+        <div class="pill-pair"><div class="pill pill-sm"></div><div class="pill pill-md"></div></div>
+        <div class="pill-pair"><div class="pill pill-sm"></div><div class="pill pill-xl"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="dot active" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+  </div>
+</div>
+
+<script>
+const prompts = [
+  "Stäm av mina balansräkningskonton",
+  "Varför ökade de fasta kostnaderna?",
+  "Visa avvikelser från budget i april"
+];
+let scene = 0;
+let charIdx = 0;
+let typingTimer = null;
+let sceneTimer = null;
+
+const scenes = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3')];
+const dots = [document.getElementById('d0'), document.getElementById('d1'), document.getElementById('d2')];
+const chatEl = document.getElementById('chat-text');
+
+function setScene(n) {
+  scenes.forEach((s,i) => s.classList.toggle('active', i === n));
+  dots.forEach((d,i) => d.classList.toggle('active', i === n));
+}
+
+function typePrompt(idx) {
+  clearTimeout(typingTimer);
+  const text = prompts[idx % prompts.length];
+  charIdx = 0;
+  chatEl.innerHTML = '<span class="cursor"></span>';
+  function step() {
+    if (charIdx <= text.length) {
+      chatEl.innerHTML = text.substring(0, charIdx) + '<span class="cursor"></span>';
+      charIdx++;
+      typingTimer = setTimeout(step, 48);
+    }
+  }
+  step();
+}
+
+function showFlowCards() {
+  ['fc1','fc2','fc3','fc4'].forEach(id => {
+    document.getElementById(id).style.opacity = '1';
+  });
+  setTimeout(() => {
+    document.getElementById('conn-path1').style.opacity = '1';
+    document.getElementById('conn-path2').style.opacity = '1';
+  }, 1200);
+}
+
+function hideFlowCards() {
+  ['fc1','fc2','fc3','fc4'].forEach(id => {
+    document.getElementById(id).style.opacity = '0';
+  });
+  document.getElementById('conn-path1').style.opacity = '0';
+  document.getElementById('conn-path2').style.opacity = '0';
+}
+
+function showCompareRows() {
+  ['cr1','cr2','cr3','cr4'].forEach(cls => {
+    document.querySelectorAll('.'+cls).forEach(el => el.style.opacity = '1');
+  });
+}
+
+function hideCompareRows() {
+  ['cr1','cr2','cr3','cr4'].forEach(cls => {
+    document.querySelectorAll('.'+cls).forEach(el => el.style.opacity = '0');
+  });
+}
+
+let promptIdx = 0;
+function runCycle() {
+  clearTimeout(sceneTimer);
+  scene = 0;
+  setScene(0);
+  typePrompt(promptIdx);
+  promptIdx++;
+
+  sceneTimer = setTimeout(() => {
+    scene = 1;
+    setScene(1);
+    hideFlowCards();
+    setTimeout(showFlowCards, 100);
+
+    sceneTimer = setTimeout(() => {
+      scene = 2;
+      setScene(2);
+      hideCompareRows();
+      setTimeout(showCompareRows, 100);
+
+      sceneTimer = setTimeout(() => {
+        runCycle();
+      }, 3500);
+    }, 3500);
+  }, 4200);
+}
+
+runCycle();
+</script>
+</body>
+</html>
