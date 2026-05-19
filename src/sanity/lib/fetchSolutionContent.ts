@@ -1,6 +1,16 @@
 import { client } from "@/sanity/client";
 import { sanityFetch } from "@/sanity/lib/live";
 import solutionPagesText from "@/content/solutionPagesText.json";
+import solutionPagesTextEn from "@/content/solutionPagesText.en.json";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/locale";
+
+const SOLUTION_JSON_BY_LOCALE: Record<Locale, typeof solutionPagesText> = {
+  sv: solutionPagesText,
+  en: solutionPagesTextEn as typeof solutionPagesText,
+};
+
+const solutionDocId = (baseId: string, locale: Locale) =>
+  locale === "sv" ? baseId : `${baseId}-${locale}`;
 
 type AnyObject = Record<string, unknown>;
 
@@ -116,19 +126,25 @@ function mapSanityToRawPage(
   return result;
 }
 
-export async function fetchSolutionPagesText() {
+export async function fetchSolutionPagesText(locale: Locale = DEFAULT_LOCALE) {
+  const jsonSource =
+    SOLUTION_JSON_BY_LOCALE[locale] ?? SOLUTION_JSON_BY_LOCALE[DEFAULT_LOCALE];
+
   if (!client) {
-    return solutionPagesText;
+    return jsonSource;
   }
 
   try {
-    const raw = solutionPagesText as { shared: AnyObject; pages: AnyObject[] };
+    const raw = jsonSource as { shared: AnyObject; pages: AnyObject[] };
 
     const sanityDocs = await Promise.all(
       raw.pages.map(async (page) => {
-        const id = SOLUTION_IDS[page.key as string];
-        if (!id) return null;
-        const { data } = await sanityFetch({ query: SOLUTION_PAGE_QUERY, params: { id } });
+        const baseId = SOLUTION_IDS[page.key as string];
+        if (!baseId) return null;
+        const { data } = await sanityFetch({
+          query: SOLUTION_PAGE_QUERY,
+          params: { id: solutionDocId(baseId, locale) },
+        });
         return data;
       }),
     );
@@ -140,6 +156,6 @@ export async function fetchSolutionPagesText() {
     return { shared: raw.shared, pages: mergedPages };
   } catch (error) {
     console.error("Failed to fetch solution pages from Sanity:", error);
-    return solutionPagesText;
+    return jsonSource;
   }
 }

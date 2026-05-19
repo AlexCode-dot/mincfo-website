@@ -1,16 +1,36 @@
 import { client } from "@/sanity/client";
 import { sanityFetch } from "@/sanity/lib/live";
-import { SITE_SETTINGS_QUERY, VARIANT_QUERY } from "./queries";
-import sharedJson from "@/content/home/shared.json";
-import platformJson from "@/content/home/platform.json";
-import fullServiceJson from "@/content/home/full-service.json";
-import partnerJson from "@/content/home/partner.json";
+import { SITE_SETTINGS_QUERY, VARIANT_QUERY, siteSettingsId } from "./queries";
+import sharedJsonSv from "@/content/home/shared.json";
+import platformJsonSv from "@/content/home/platform.json";
+import fullServiceJsonSv from "@/content/home/full-service.json";
+import partnerJsonSv from "@/content/home/partner.json";
+import sharedJsonEn from "@/content/home/shared.en.json";
+import platformJsonEn from "@/content/home/platform.en.json";
+import fullServiceJsonEn from "@/content/home/full-service.en.json";
+import partnerJsonEn from "@/content/home/partner.en.json";
 import type { HomeOfferingMode } from "@/content/homePageText";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/locale";
 
-const VARIANT_JSON: Record<HomeOfferingMode, typeof platformJson> = {
-  platform: platformJson,
-  "full-service": fullServiceJson,
-  partner: partnerJson,
+type SharedJson = typeof sharedJsonSv;
+type VariantJson = typeof platformJsonSv;
+
+const SHARED_JSON_BY_LOCALE: Record<Locale, SharedJson> = {
+  sv: sharedJsonSv,
+  en: sharedJsonEn as SharedJson,
+};
+
+const VARIANT_JSON_BY_LOCALE: Record<Locale, Record<HomeOfferingMode, VariantJson>> = {
+  sv: {
+    platform: platformJsonSv,
+    "full-service": fullServiceJsonSv,
+    partner: partnerJsonSv,
+  },
+  en: {
+    platform: platformJsonEn as VariantJson,
+    "full-service": fullServiceJsonEn as VariantJson,
+    partner: partnerJsonEn as VariantJson,
+  },
 };
 
 // Maps from the mode key used in the code to the key used in shared.json howItWorks.offers
@@ -54,8 +74,8 @@ function deepMerge<T extends AnyObject>(base: T, override: AnyObject | null | un
 
 function mapVariantFromSanity(
   sanity: AnyObject | null,
-  jsonFallback: typeof platformJson,
-): typeof platformJson {
+  jsonFallback: VariantJson,
+): VariantJson {
   if (!sanity) return jsonFallback;
 
   const overlay: AnyObject = {};
@@ -216,6 +236,7 @@ function mapVariantFromSanity(
 
 function mapSettingsFromSanity(
   sanity: AnyObject | null,
+  sharedJson: SharedJson,
 ): AnyObject {
   if (!sanity) return {};
 
@@ -534,23 +555,28 @@ function mapShowcaseFromVariants(
 
 // ── Static JSON fallback ──
 
-function staticFallback() {
+function staticFallback(locale: Locale) {
+  const sharedJson = SHARED_JSON_BY_LOCALE[locale] ?? SHARED_JSON_BY_LOCALE[DEFAULT_LOCALE];
+  const variantJson = VARIANT_JSON_BY_LOCALE[locale] ?? VARIANT_JSON_BY_LOCALE[DEFAULT_LOCALE];
   return {
     shared: sharedJson,
     byMode: {
-      platform: { ...sharedJson, ...platformJson },
-      "full-service": { ...sharedJson, ...fullServiceJson },
-      partner: { ...sharedJson, ...partnerJson },
+      platform: { ...sharedJson, ...variantJson.platform },
+      "full-service": { ...sharedJson, ...variantJson["full-service"] },
+      partner: { ...sharedJson, ...variantJson.partner },
     },
   };
 }
 
 // ── Main fetch function ──
 
-export async function fetchAllHomeContent() {
+export async function fetchAllHomeContent(locale: Locale = DEFAULT_LOCALE) {
   if (!client) {
-    return staticFallback();
+    return staticFallback(locale);
   }
+
+  const sharedJson = SHARED_JSON_BY_LOCALE[locale] ?? SHARED_JSON_BY_LOCALE[DEFAULT_LOCALE];
+  const variantJson = VARIANT_JSON_BY_LOCALE[locale] ?? VARIANT_JSON_BY_LOCALE[DEFAULT_LOCALE];
 
   try {
     const [
@@ -559,10 +585,10 @@ export async function fetchAllHomeContent() {
       { data: sanityFullService },
       { data: sanityPartner },
     ] = await Promise.all([
-      sanityFetch({ query: SITE_SETTINGS_QUERY }),
-      sanityFetch({ query: VARIANT_QUERY, params: { mode: "platform" } }),
-      sanityFetch({ query: VARIANT_QUERY, params: { mode: "full-service" } }),
-      sanityFetch({ query: VARIANT_QUERY, params: { mode: "partner" } }),
+      sanityFetch({ query: SITE_SETTINGS_QUERY, params: { settingsId: siteSettingsId(locale) } }),
+      sanityFetch({ query: VARIANT_QUERY, params: { mode: "platform", locale } }),
+      sanityFetch({ query: VARIANT_QUERY, params: { mode: "full-service", locale } }),
+      sanityFetch({ query: VARIANT_QUERY, params: { mode: "partner", locale } }),
     ]);
 
     const sanityVariants: Record<HomeOfferingMode, AnyObject | null> = {
@@ -572,7 +598,7 @@ export async function fetchAllHomeContent() {
     };
 
     // Build shared overlay from siteSettings + cross-variant howItWorks/showcase
-    const settingsOverlay = mapSettingsFromSanity(sanitySettings);
+    const settingsOverlay = mapSettingsFromSanity(sanitySettings, sharedJson);
     const howItWorksOverlay = mapHowItWorksFromVariants(sanityVariants);
     const showcaseOverlay = mapShowcaseFromVariants(sanityVariants);
 
@@ -582,9 +608,9 @@ export async function fetchAllHomeContent() {
     );
 
     // Build per-variant content
-    const platform = mapVariantFromSanity(sanityPlatform, platformJson);
-    const fullService = mapVariantFromSanity(sanityFullService, fullServiceJson);
-    const partner = mapVariantFromSanity(sanityPartner, partnerJson);
+    const platform = mapVariantFromSanity(sanityPlatform, variantJson.platform);
+    const fullService = mapVariantFromSanity(sanityFullService, variantJson["full-service"]);
+    const partner = mapVariantFromSanity(sanityPartner, variantJson.partner);
 
     return {
       shared,
@@ -596,7 +622,7 @@ export async function fetchAllHomeContent() {
     };
   } catch (error) {
     console.error("Failed to fetch from Sanity, using JSON fallback:", error);
-    return staticFallback();
+    return staticFallback(locale);
   }
 }
 
@@ -605,12 +631,18 @@ export async function fetchAllHomeContent() {
  * (non-variant) content — e.g. /blogg, /karriar. Skips the home-variant
  * fetches so we make a single round-trip to Sanity.
  */
-export async function fetchSharedContent(): Promise<typeof sharedJson> {
+export async function fetchSharedContent(
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<SharedJson> {
+  const sharedJson = SHARED_JSON_BY_LOCALE[locale] ?? SHARED_JSON_BY_LOCALE[DEFAULT_LOCALE];
   if (!client) return sharedJson;
 
   try {
-    const { data: sanitySettings } = await sanityFetch({ query: SITE_SETTINGS_QUERY });
-    const overlay = mapSettingsFromSanity(sanitySettings);
+    const { data: sanitySettings } = await sanityFetch({
+      query: SITE_SETTINGS_QUERY,
+      params: { settingsId: siteSettingsId(locale) },
+    });
+    const overlay = mapSettingsFromSanity(sanitySettings, sharedJson);
     return deepMerge(sharedJson, overlay);
   } catch (error) {
     console.error(

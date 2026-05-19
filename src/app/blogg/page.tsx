@@ -8,6 +8,8 @@ import {
   type BlogPost,
 } from "@/sanity/lib/fetchBlogPosts";
 import { fetchSharedContent } from "@/sanity/lib/fetchHomeContent";
+import { getLocale } from "@/i18n/server";
+import type { Locale } from "@/i18n/locale";
 import { urlForImage } from "@/sanity/lib/imageUrl";
 import BackButton from "./BackButton";
 import BlogGrid from "./BlogGrid";
@@ -19,7 +21,7 @@ const SITE_URL =
 const PLACEHOLDER_SRC = "/blog/blog-placeholder-image.png";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const shared = await fetchSharedContent();
+  const shared = await fetchSharedContent(await getLocale());
   const title = shared.blog.title;
   const description = shared.blog.subtitle;
 
@@ -48,22 +50,26 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const SV_DATE = new Intl.DateTimeFormat("sv-SE", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
+const DATE_LOCALE: Record<Locale, string> = { sv: "sv-SE", en: "en-US" };
 
-const SV_DATE_SHORT = new Intl.DateTimeFormat("sv-SE", {
-  month: "short",
-  day: "numeric",
-});
+function dateFmt(locale: Locale, short: boolean) {
+  return new Intl.DateTimeFormat(
+    DATE_LOCALE[locale],
+    short
+      ? { month: "short", day: "numeric" }
+      : { year: "numeric", month: "long", day: "numeric" },
+  );
+}
 
-function formatDate(value: string | undefined, short = false): string {
+function formatDate(
+  value: string | undefined,
+  locale: Locale,
+  short = false,
+): string {
   if (!value) return "";
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return "";
-  return (short ? SV_DATE_SHORT : SV_DATE).format(d);
+  return dateFmt(locale, short).format(d);
 }
 
 function coverUrl(post: BlogPost, width: number, height: number): string | null {
@@ -73,9 +79,14 @@ function coverUrl(post: BlogPost, width: number, height: number): string | null 
   return builder.width(width).height(height).fit("crop").auto("format").url();
 }
 
-function metaLine(post: BlogPost, opts: { short?: boolean } = {}): string {
-  const parts = [formatDate(post.publishedAt, opts.short)];
-  if (post.readingTime) parts.push(`${post.readingTime} min`);
+function metaLine(
+  post: BlogPost,
+  locale: Locale,
+  readingTimeLabel: string,
+  opts: { short?: boolean } = {},
+): string {
+  const parts = [formatDate(post.publishedAt, locale, opts.short)];
+  if (post.readingTime) parts.push(`${post.readingTime} ${readingTimeLabel}`);
   return parts.filter(Boolean).join(" · ");
 }
 
@@ -104,11 +115,13 @@ export default async function BlogIndexPage({
   searchParams: Promise<{ preview?: string }>;
 }) {
   const { preview } = await searchParams;
+  const locale = await getLocale();
   const [allPosts, shared] = await Promise.all([
-    fetchBlogPosts(),
-    fetchSharedContent(),
+    fetchBlogPosts(locale),
+    fetchSharedContent(locale),
   ]);
   const blog = shared.blog;
+  const ui = shared.ui;
   const previewLimit = preview ? Math.max(0, Number.parseInt(preview, 10)) : NaN;
   const posts = Number.isFinite(previewLimit) ? allPosts.slice(0, previewLimit) : allPosts;
   const { hero, rest } = pickHero(posts);
@@ -119,7 +132,7 @@ export default async function BlogIndexPage({
     <div className={styles.page}>
       <div className={styles.topRail}>
         <div className={styles.backWrap}>
-          <BackButton />
+          <BackButton label={ui.back} />
         </div>
 
         <Link href="/" className={styles.logo} aria-label="MinCFO">
@@ -138,7 +151,7 @@ export default async function BlogIndexPage({
       <main className={styles.main}>
         <div className={styles.shell}>
           <header className={styles.intro}>
-            <p className={styles.eyebrow}>Blogg</p>
+            <p className={styles.eyebrow}>{ui.blogEyebrow}</p>
             <h1 className={styles.title}>{blog.title}</h1>
             <p className={styles.subtitle}>{blog.subtitle}</p>
           </header>
@@ -153,7 +166,7 @@ export default async function BlogIndexPage({
               {/* ── Split hero: featured (large) + sidebar of latest 4 ── */}
               <section
                 className={`${styles.hero} ${sidebar.length === 0 ? styles.heroSolo : ""}`}
-                aria-label="Senaste inlägg"
+                aria-label={ui.blogLatestAria}
               >
                 <Link
                   href={`/blogg/${hero.slug}`}
@@ -190,12 +203,12 @@ export default async function BlogIndexPage({
                       <span className={styles.featuredBadge}>{hero.eyebrow}</span>
                     )}
                     <h2 className={styles.featuredTitle}>{hero.title}</h2>
-                    <span className={styles.featuredMeta}>{metaLine(hero)}</span>
+                    <span className={styles.featuredMeta}>{metaLine(hero, locale, ui.readingTimeShort)}</span>
                   </div>
                 </Link>
 
                 {sidebar.length > 0 && (
-                  <aside className={styles.sidebar} aria-label="Fler inlägg">
+                  <aside className={styles.sidebar} aria-label={ui.blogMoreAria}>
                     <h2 className={styles.sidebarHeading}>{blog.sidebarHeading}</h2>
                     <ol className={styles.sidebarList}>
                       {sidebar.map((post) => (
@@ -226,7 +239,7 @@ export default async function BlogIndexPage({
                             <div className={styles.sidebarBody}>
                               <h3 className={styles.sidebarTitle}>{post.title}</h3>
                               <span className={styles.sidebarMeta}>
-                                {metaLine(post, { short: true })}
+                                {metaLine(post, locale, ui.readingTimeShort, { short: true })}
                               </span>
                             </div>
                           </Link>
@@ -238,7 +251,18 @@ export default async function BlogIndexPage({
               </section>
 
               {/* ── 3-col grid below hero (paginated client-side, hero stays put) ── */}
-              <BlogGrid posts={gridPosts} heading={blog.gridHeading} />
+              <BlogGrid
+                posts={gridPosts}
+                heading={blog.gridHeading}
+                locale={locale}
+                readingTimeLabel={ui.readingTimeShort}
+                paginationLabels={{
+                  nav: ui.paginationAria,
+                  prev: ui.paginationPrev,
+                  next: ui.paginationNext,
+                  page: ui.paginationPage,
+                }}
+              />
             </>
           )}
         </div>

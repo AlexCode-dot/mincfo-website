@@ -464,13 +464,16 @@ export default function HowItWorks() {
   );
   const [faasAlertCycle, setFaasAlertCycle] = useState(0);
   const [faasBarsAnimatedOnce, setFaasBarsAnimatedOnce] = useState(false);
+  const faasAlertPool =
+    (content.howItWorks.ui.faasRealtime as { alertPool?: string[] }).alertPool ??
+    FAAS_ALERT_POOL;
   const faasVisibleAlerts = useMemo(() => Array.from({ length: 2 }, (_, index) => {
-    const alertIndex = (faasAlertCycle * 2 + index) % FAAS_ALERT_POOL.length;
+    const alertIndex = (faasAlertCycle * 2 + index) % faasAlertPool.length;
     return {
       id: `${faasAlertCycle}-${alertIndex}`,
-      text: FAAS_ALERT_POOL[alertIndex],
+      text: faasAlertPool[alertIndex],
     };
-  }), [faasAlertCycle]);
+  }), [faasAlertCycle, faasAlertPool]);
 
   const handlePartnerWorkspaceNavClick = useCallback((nextView: PartnerWorkspaceView) => {
     setPartnerWorkspaceView(nextView);
@@ -1108,7 +1111,7 @@ export default function HowItWorks() {
                           <div className={styles.faasRealtimeStats}>
                             <div className={styles.faasRealtimeStat}>
                               <span className={styles.faasRealtimeStatLabel}>{content.howItWorks.ui.faasRealtime.cashflowLabel}</span>
-                              <strong>+{faasRealtimeCashflowK[faasRealtimeLatestActualIndex]} tkr</strong>
+                              <strong>+{faasRealtimeCashflowK[faasRealtimeLatestActualIndex]} {content.howItWorks.ui.faasRealtime.cashflowUnit ?? "tkr"}</strong>
                             </div>
                             <div className={styles.faasRealtimeStat}>
                               <span className={styles.faasRealtimeStatLabel}>{content.howItWorks.ui.faasRealtime.runwayLabel}</span>
@@ -1126,13 +1129,13 @@ export default function HowItWorks() {
                             <div className={styles.faasRealtimeChartHeader}>
                               <div className={styles.faasRealtimeChartHeading}>
                                 <div className={styles.faasRealtimeChartTitleRow}>
-                                  <span className={styles.faasRealtimeChartTitle}>Netto kassaflöde</span>
+                                  <span className={styles.faasRealtimeChartTitle}>{content.howItWorks.ui.faasRealtime.chartTitle ?? "Netto kassaflöde"}</span>
                                   <span className={styles.faasRealtimeTrendBadge}>
                                     <TrendingUp aria-hidden="true" size={12} />
                                     <span>+6.8%</span>
                                   </span>
                                 </div>
-                                <p className={styles.faasRealtimeChartDescription}>Jan-Aug utfall • Sep-Dec prognos</p>
+                                <p className={styles.faasRealtimeChartDescription}>{content.howItWorks.ui.faasRealtime.chartDescription ?? "Jan-Aug utfall • Sep-Dec prognos"}</p>
                               </div>
                             </div>
 

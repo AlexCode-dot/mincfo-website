@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import type { BlogPost } from "@/sanity/lib/fetchBlogPosts";
+import type { Locale } from "@/i18n/locale";
 import BlogGridCard from "./BlogGridCard";
-import Pagination from "./Pagination";
+import Pagination, { type PaginationLabels } from "./Pagination";
 import styles from "./page.module.scss";
 
 const POSTS_PER_PAGE = 3;
@@ -11,6 +12,9 @@ const POSTS_PER_PAGE = 3;
 interface BlogGridProps {
   posts: BlogPost[];
   heading: string;
+  locale: Locale;
+  readingTimeLabel: string;
+  paginationLabels: PaginationLabels;
 }
 
 /**
@@ -18,7 +22,13 @@ interface BlogGridProps {
  * grid swaps when the user clicks a page. We deliberately do not scroll —
  * the user keeps their position so the swap feels in-place.
  */
-export default function BlogGrid({ posts, heading }: BlogGridProps) {
+export default function BlogGrid({
+  posts,
+  heading,
+  locale,
+  readingTimeLabel,
+  paginationLabels,
+}: BlogGridProps) {
   const [page, setPage] = useState(1);
 
   if (posts.length === 0) return null;
@@ -39,13 +49,19 @@ export default function BlogGrid({ posts, heading }: BlogGridProps) {
       </header>
       <div className={styles.grid}>
         {visible.map((post) => (
-          <BlogGridCard key={post.slug} post={post} />
+          <BlogGridCard
+            key={post.slug}
+            post={post}
+            locale={locale}
+            readingTimeLabel={readingTimeLabel}
+          />
         ))}
       </div>
       <Pagination
         currentPage={page}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+        labels={paginationLabels}
       />
     </section>
   );

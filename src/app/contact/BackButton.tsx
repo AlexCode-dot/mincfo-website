@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { clearContactReturnLocation, readContactReturnLocation } from "@/components/system/contactReturn";
 import styles from "./page.module.scss";
 
-export default function BackButton() {
+export default function BackButton({ label = "Tillbaka" }: { label?: string } = {}) {
   const router = useRouter();
 
   const handleBack = () => {
@@ -27,7 +27,7 @@ export default function BackButton() {
   return (
     <button type="button" className={styles.backButton} onClick={handleBack}>
       <ArrowLeft size={16} aria-hidden="true" />
-      Tillbaka
+      {label}
     </button>
   );
 }

@@ -3,10 +3,18 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import styles from "./Pagination.module.scss";
 
+export interface PaginationLabels {
+  nav: string;
+  prev: string;
+  next: string;
+  page: string;
+}
+
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  labels: PaginationLabels;
 }
 
 /**
@@ -34,6 +42,7 @@ export default function Pagination({
   currentPage,
   totalPages,
   onPageChange,
+  labels,
 }: PaginationProps) {
   if (totalPages <= 1) return null;
 
@@ -42,13 +51,13 @@ export default function Pagination({
   const hasNext = currentPage < totalPages;
 
   return (
-    <nav className={styles.pagination} aria-label="Paginering">
+    <nav className={styles.pagination} aria-label={labels.nav}>
       <button
         type="button"
         onClick={() => hasPrev && onPageChange(currentPage - 1)}
         disabled={!hasPrev}
         className={`${styles.arrow} ${!hasPrev ? styles.arrowDisabled : ""}`}
-        aria-label="Föregående sida"
+        aria-label={labels.prev}
       >
         <ArrowLeft size={16} aria-hidden="true" />
       </button>
@@ -67,7 +76,7 @@ export default function Pagination({
               disabled={item === currentPage}
               className={`${styles.page} ${item === currentPage ? styles.pageActive : ""}`}
               aria-current={item === currentPage ? "page" : undefined}
-              aria-label={`Sida ${item}`}
+              aria-label={`${labels.page} ${item}`}
             >
               {item}
             </button>
@@ -80,7 +89,7 @@ export default function Pagination({
         onClick={() => hasNext && onPageChange(currentPage + 1)}
         disabled={!hasNext}
         className={`${styles.arrow} ${!hasNext ? styles.arrowDisabled : ""}`}
-        aria-label="Nästa sida"
+        aria-label={labels.next}
       >
         <ArrowRight size={16} aria-hidden="true" />
       </button>

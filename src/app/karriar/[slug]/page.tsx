@@ -5,6 +5,8 @@ import { MapPin, Clock, CalendarDays, Wallet } from "lucide-react";
 import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
 import { fetchJobPostBySlug } from "@/sanity/lib/fetchJobPosts";
 import jobPostsJson from "@/content/jobPosts.json";
+import { getSharedText } from "@/content/homePageText";
+import { getLocale } from "@/i18n/server";
 import BackButton from "../BackButton";
 import ApplicationForm from "./ApplicationForm";
 import styles from "./page.module.scss";
@@ -20,10 +22,11 @@ export function generateStaticParams(): PageParams[] {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await fetchJobPostBySlug(slug);
+  const locale = await getLocale();
+  const post = await fetchJobPostBySlug(slug, locale);
   if (!post) {
     return {
-      title: "Jobb | MinCFO",
+      title: getSharedText(locale).ui.jobFallbackMetaTitle,
     };
   }
   return {
@@ -34,7 +37,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function JobPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = await fetchJobPostBySlug(slug);
+  const locale = await getLocale();
+  const ui = getSharedText(locale).ui;
+  const post = await fetchJobPostBySlug(slug, locale);
 
   if (!post || !post.openForApplications) {
     notFound();
@@ -50,7 +55,7 @@ export default async function JobPostPage({ params }: PageProps) {
   if (post.start) {
     meta.push({
       icon: <CalendarDays size={15} aria-hidden="true" />,
-      label: `Start: ${post.start}`,
+      label: `${ui.jobStartPrefix} ${post.start}`,
     });
   }
   if (post.compensation) {
@@ -64,7 +69,7 @@ export default async function JobPostPage({ params }: PageProps) {
     <div className={styles.page}>
       <div className={styles.topRail}>
         <div className={styles.backWrap}>
-          <BackButton href="/karriar" />
+          <BackButton href="/karriar" label={ui.back} />
         </div>
 
         <Link href="/" className={styles.logo} aria-label="MinCFO">
@@ -88,7 +93,7 @@ export default async function JobPostPage({ params }: PageProps) {
             {post.tagline && <p className={styles.tagline}>{post.tagline}</p>}
 
             {meta.length > 0 && (
-              <ul className={styles.metaList} aria-label="Nyckelinformation">
+              <ul className={styles.metaList} aria-label={ui.jobKeyInfoAria}>
                 {meta.map((m, i) => (
                   <li key={i} className={styles.metaItem}>
                     {m.icon}
@@ -146,7 +151,7 @@ export default async function JobPostPage({ params }: PageProps) {
 
           <section id="ansok" className={styles.formSection}>
             <div className={styles.formFrame}>
-              <ApplicationForm jobSlug={post.slug} jobTitle={post.title} />
+              <ApplicationForm jobSlug={post.slug} jobTitle={post.title} t={ui.applicationForm} />
             </div>
           </section>
         </article>

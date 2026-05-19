@@ -1,0 +1,342 @@
+{
+  "hero": {
+    "tagline": "Finance-as-a-Service",
+    "titleLine1": "Your complete finance function",
+    "titleLine2": "- track it live in MinCFO",
+    "body": "Let MinCFO take full ownership of accounting, reporting and follow-up. You get a fully outsourced finance department where we combine operational delivery with proactive advisory in one and the same platform.",
+    "primaryCta": "Level up to a complete finance function",
+    "secondaryCta": "See how it works",
+    "address": "app.mincfo.com/dashboard",
+    "playAriaLabel": "Play demo video",
+    "enterFullscreenAriaLabel": "Enter fullscreen demo",
+    "exitFullscreenAriaLabel": "Exit fullscreen demo",
+    "videoAriaLabel": "Demo video of MinCFO dashboard",
+    "videoFallback": "Your browser cannot play the video."
+  },
+  "aicopilot": {
+    "leftPill": "What you get in the full-service solution",
+    "leftTitle": "A finance-as-a-service solution, not just a tool",
+    "leftIntro": "MinCFO takes responsibility for the ongoing finance work together with you. You get reporting, structure, follow-up and proactive advisory, and the platform becomes your shared single source of truth where you follow up in real time.",
+    "leftBullets": [
+      "We run the finance flow end-to-end",
+      "You get real-time visibility into KPIs, cash flow and deviations",
+      "Personal controller/CFO on demand on top of the platform"
+    ],
+    "panelTitle": "AI Copilot",
+    "loadingAria": "AI is analyzing data",
+    "statusSending": "Sending question...",
+    "statusAnalyzing": "AI is analyzing data...",
+    "inputPlaceholder": "Ask AI about finance, forecasts or the next action",
+    "sendAria": "Send question",
+    "examples": [
+      {
+        "question": "What does our runway look like based on Q3?",
+        "answer": "At the current burn rate you have about 11.4 months of runway. The biggest impact is SaaS costs and recruitment in November.",
+        "chartTitle": "Runway forecast",
+        "chartUnit": "Months",
+        "yTicks": [
+          "12",
+          "10",
+          "8",
+          "6"
+        ],
+        "bars": [
+          {
+            "height": "92%",
+            "label": "Now",
+            "value": "11.4"
+          },
+          {
+            "height": "82%",
+            "label": "Oct",
+            "value": "10.2"
+          },
+          {
+            "height": "71%",
+            "label": "Nov",
+            "value": "8.9"
+          },
+          {
+            "height": "59%",
+            "label": "Dec",
+            "value": "7.4"
+          },
+          {
+            "height": "48%",
+            "label": "Jan",
+            "value": "6.0"
+          }
+        ]
+      },
+      {
+        "question": "How much of our costs are fixed vs variable?",
+        "answer": "The cost base is roughly 62% fixed costs and 38% variable. The variable costs are driven mainly by marketing and transaction fees.",
+        "chartTitle": "Cost breakdown",
+        "chartUnit": "Share %",
+        "yTicks": [
+          "80",
+          "60",
+          "40",
+          "20"
+        ],
+        "bars": [
+          {
+            "height": "78%",
+            "label": "Fixed",
+            "value": "62%"
+          },
+          {
+            "height": "48%",
+            "label": "Variable",
+            "value": "38%"
+          }
+        ]
+      }
+    ],
+    "dashboard": {
+      "previewAria": "Dashboard Preview",
+      "metricMenuAria": "Choose metric",
+      "pill": "Dashboard",
+      "title": "You see everything in real time, without running the work yourself",
+      "intro": "MinCFO handles reporting and follow-up in the background. You get a clear dashboard to track results, liquidity and key metrics without chasing source data or building reports yourself.",
+      "kpiBullets": [
+        "Reports and KPIs are updated continuously by MinCFO",
+        "Liquidity and outcome tracked in the same view",
+        "Strategic decision support without operational load"
+      ],
+      "resultTitle": "Financial report · 2025",
+      "currentLabel": "Latest",
+      "previousLabel": "Previous",
+      "currencyLabel": "SEK",
+      "metricOptions": [
+        "Net revenue",
+        "EBIT",
+        "EBITDA",
+        "Gross profit"
+      ],
+      "compareLabel": "Compared to prev. period",
+      "trendAxisTicks": [
+        "500K",
+        "375K",
+        "250K",
+        "125K",
+        "0"
+      ],
+      "monthLabelsSv": [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ]
+    },
+    "planning": {
+      "panelAria": "Planning and benchmarking",
+      "pill": "Planning & Comparison",
+      "title": "Forecasts and scenarios as part of the delivery",
+      "intro": "You avoid building the budget and forecast process internally. MinCFO helps you set structure, follow up on deviations and give recommendations on next steps.",
+      "bullets": [
+        "Forecast and follow-up in one shared view",
+        "Scenario analysis for hiring, costs and revenue",
+        "Early signals of liquidity risks",
+        "Less internal load in reporting and admin"
+      ],
+      "forecastTitle": "Forecast",
+      "liveLabel": "Live forecast",
+      "reconciliationTitle": "",
+      "reconciliationSubtext": "",
+      "actualPrefix": "Current month",
+      "forecastPrefix": "Forecast month",
+      "vsPrevious": "Compared to the previous month",
+      "annualVariance": "Annual variance vs baseline",
+      "legend": "",
+      "monthLabelsEn": [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
+      "monthAriaPrefix": "Show budget for"
+    }
+  },
+  "solutions": {
+    "pill": "Solutions",
+    "title": "For companies that want MinCFO to take care of finance",
+    "intro": "A complete setup for teams that want to hand over the operational work and instead focus on growth. We run the entire finance flow proactively while you follow the situation, KPIs and deviations in real time",
+    "cardCta": "See solution",
+    "cards": [
+      {
+        "href": "/losningar/ceo-founders",
+        "title": "CEO & Founders",
+        "text": "For leadership teams that want control and decision-making support without building a full in-house finance function.",
+        "icon": "rocket"
+      },
+      {
+        "href": "/losningar/cfo-finance",
+        "title": "CFO & Finance Team",
+        "text": "Hand over the operational responsibility to experts who see around corners. With our full-service solution you get full control and proactive decision support.",
+        "icon": "briefcase"
+      },
+      {
+        "href": "/losningar/saas-tech",
+        "title": "SaaS / Tech",
+        "text": "For growth companies that want a partner who drives financial control forward. We handle follow-up and structure so your team can put all its energy into building the business.",
+        "icon": "cpu"
+      },
+      {
+        "href": "/losningar/konsult-tjanster",
+        "title": "Consulting & Services",
+        "text": "For service companies that want control over cash flow and reporting without burdening their own organization. We build and run your finance structure so you get a world-class finance setup.",
+        "icon": "building"
+      },
+      {
+        "href": "/losningar/ehandel",
+        "title": "E-commerce",
+        "text": "For e-commerce companies that want to outsource finance without losing grip on margins. We run the day-to-day handling while you follow inventory, liquidity and profitability in real time",
+        "icon": "cart"
+      }
+    ]
+  },
+  "customers": {
+    "pill": "CUSTOMERS",
+    "title": "Companies using MinCFO as their finance function",
+    "intro": "Here are examples of teams that use MinCFO as a full-service solution to avoid running finance internally, while still having full visibility into results, cash flow and deviations.",
+    "tickerLabel": "Trusted by 50+ companies that have outsourced their entire finance function to MinCFO",
+    "controlsAria": "Browse customer reviews",
+    "prevAria": "Previous review",
+    "nextAria": "Next review",
+    "trustedAria": "Customers who trust us",
+    "cardAriaLabelTemplate": "Show review from {person} at {company}",
+    "testimonials": [
+      {
+        "company": "Growbit",
+        "person": "Max Norén & Conrad Brown-Bolin",
+        "role": "Co-founders, Growbit",
+        "quote": "With MinCFO we get a clear picture of revenue per customer and service, can deep-dive into monthly costs per supplier and forecast with AI that continuously updates the numbers based on actual outcomes.",
+        "avatarFiles": [
+          "Screenshot 2026-03-18 at 15.21.41.png",
+          "Screenshot 2026-03-18 at 15.21.51.png"
+        ],
+        "accent": true
+      },
+      {
+        "company": "Hey Sid",
+        "person": "Rikard Jonsson",
+        "role": "CEO, Hey Sid",
+        "quote": "We outsourced the entire finance function to MinCFO and got more time for our core business. Even though we no longer do the work ourselves, our understanding of finance is better than ever",
+        "avatarFile": "logo-rikard.avif",
+        "accent": false
+      },
+      {
+        "company": "Showcase",
+        "person": "Aviv Fahri",
+        "role": "CEO, Showcase",
+        "quote": "MinCFO takes responsibility for follow-up and delivery, not just visualization. They are proactive, find improvement actions and give concrete advice before we've even had time to ask. We got full control without spending the time internally.",
+        "avatarFile": "logo-aviv.avif",
+        "accent": true
+      },
+      {
+        "company": "Sweden ballistics",
+        "person": "Joakim Sjöholm",
+        "role": "CEO, Swebal AB",
+        "quote": "With MinCFO we don't have to spend valuable time on reporting, financial analysis and administration. Instead we can focus fully on our core business and the planning of a new factory.",
+        "avatarFile": "logo-joakim.avif",
+        "accent": false
+      },
+      {
+        "company": "Lawster",
+        "person": "Joel Wikman",
+        "role": "CEO, Lawster",
+        "quote": "I always know where we stand financially. No surprises, no question marks. That makes it much easier to make decisions.",
+        "avatarFile": "lawster-vd.png",
+        "accent": true
+      },
+      {
+        "company": "Hälsa Hemma",
+        "person": "Oskar Nordmark",
+        "role": "Financial Controller, Hälsa Hemma",
+        "quote": "MinCFO is an important support in our growth. With over 100 payrolls in a fast-moving business we need structure and reliability — which we get every month. They take the administrative load off and deliver fast, accurate answers, so we can focus on the business..",
+        "avatarFile": "logo-oskar.avif",
+        "accent": true
+      }
+    ],
+    "trustedLogos": [
+      {
+        "name": "Growbit",
+        "file": "logo-growbit.svg"
+      },
+      {
+        "name": "BAM",
+        "file": "logo-bam.avif"
+      },
+      {
+        "name": "Eloize",
+        "file": "logo-eloize.avif"
+      },
+      {
+        "name": "Fler",
+        "file": "logo-fler.avif"
+      },
+      {
+        "name": "Hälsa Hemma",
+        "file": "logo-hälsa.avif"
+      },
+      {
+        "name": "Lawster",
+        "file": "logo-lawster.avif"
+      },
+      {
+        "name": "Qsid",
+        "file": "logo-qsid.avif"
+      },
+      {
+        "name": "Realforce",
+        "file": "logo-realforce.avif"
+      },
+      {
+        "name": "Rossoneri",
+        "file": "logo-rossoneri.avif"
+      },
+      {
+        "name": "Runway",
+        "file": "logo-runway.webp"
+      },
+      {
+        "name": "Showcase",
+        "file": "logo-showcase.avif"
+      },
+      {
+        "name": "SweBal",
+        "file": "logo-swebal.avif"
+      },
+      {
+        "name": "Safetly",
+        "file": "logo-safetly.svg"
+      },
+      {
+        "name": "Azeea",
+        "file": "logo-azeea.svg"
+      }
+    ]
+  },
+  "ending": {
+    "title": "Discover the power of MinCFO - See how MinCFO works in practice",
+    "body": "Book a call and see how we take full ownership of your finance and reporting, while you follow every key metric and forecast in real time directly in the platform.",
+    "primaryCta": "Book a time for a call"
+  }
+}

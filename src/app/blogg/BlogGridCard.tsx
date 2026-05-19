@@ -3,26 +3,27 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { BlogPost } from "@/sanity/lib/fetchBlogPosts";
 import { urlForImage } from "@/sanity/lib/imageUrl";
+import type { Locale } from "@/i18n/locale";
 import styles from "./page.module.scss";
 
 const PLACEHOLDER_SRC = "/blog/blog-placeholder-image.png";
 
-const SV_DATE = new Intl.DateTimeFormat("sv-SE", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
+const DATE_LOCALE: Record<Locale, string> = { sv: "sv-SE", en: "en-US" };
 
-function formatDate(value: string | undefined): string {
+function formatDate(value: string | undefined, locale: Locale): string {
   if (!value) return "";
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return "";
-  return SV_DATE.format(d);
+  return new Intl.DateTimeFormat(DATE_LOCALE[locale], {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(d);
 }
 
-function metaLine(post: BlogPost): string {
-  const parts = [formatDate(post.publishedAt)];
-  if (post.readingTime) parts.push(`${post.readingTime} min`);
+function metaLine(post: BlogPost, locale: Locale, readingTimeLabel: string): string {
+  const parts = [formatDate(post.publishedAt, locale)];
+  if (post.readingTime) parts.push(`${post.readingTime} ${readingTimeLabel}`);
   return parts.filter(Boolean).join(" · ");
 }
 
@@ -47,7 +48,15 @@ function BrandLogo({ className }: { className?: string }) {
   );
 }
 
-export default function BlogGridCard({ post }: { post: BlogPost }) {
+export default function BlogGridCard({
+  post,
+  locale,
+  readingTimeLabel,
+}: {
+  post: BlogPost;
+  locale: Locale;
+  readingTimeLabel: string;
+}) {
   return (
     <Link href={`/blogg/${post.slug}`} className={styles.card}>
       <div className={styles.cardCover}>
@@ -79,7 +88,7 @@ export default function BlogGridCard({ post }: { post: BlogPost }) {
           {post.excerpt && <p className={styles.cardExcerpt}>{post.excerpt}</p>}
         </div>
         <div className={styles.cardBottom}>
-          <span className={styles.cardMeta}>{metaLine(post)}</span>
+          <span className={styles.cardMeta}>{metaLine(post, locale, readingTimeLabel)}</span>
           <span className={styles.cardCta} aria-hidden="true">
             <ArrowRight size={14} />
           </span>

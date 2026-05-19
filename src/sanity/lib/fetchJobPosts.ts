@@ -2,6 +2,13 @@ import { client } from "@/sanity/client";
 import { sanityFetch } from "@/sanity/lib/live";
 import { ALL_JOB_POSTS_QUERY } from "./queries";
 import jobPostsJson from "@/content/jobPosts.json";
+import jobPostsJsonEn from "@/content/jobPosts.en.json";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/locale";
+
+const JOB_JSON_BY_LOCALE: Record<Locale, typeof jobPostsJson> = {
+  sv: jobPostsJson,
+  en: jobPostsJsonEn as typeof jobPostsJson,
+};
 
 export type JobPostSection = {
   heading: string;
@@ -76,35 +83,46 @@ function sortPosts(posts: JobPost[]): JobPost[] {
   });
 }
 
-function fallbackPosts(): JobPost[] {
-  const raw = (jobPostsJson as { posts: AnyObject[] }).posts ?? [];
+function fallbackPosts(locale: Locale): JobPost[] {
+  const source = JOB_JSON_BY_LOCALE[locale] ?? JOB_JSON_BY_LOCALE[DEFAULT_LOCALE];
+  const raw = (source as { posts: AnyObject[] }).posts ?? [];
   return sortPosts(raw.map((p) => normalizePost(p)));
 }
 
-export async function fetchJobPosts(): Promise<JobPost[]> {
+export async function fetchJobPosts(
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<JobPost[]> {
   if (!client) {
-    return fallbackPosts();
+    return fallbackPosts(locale);
   }
 
   try {
-    const { data } = await sanityFetch({ query: ALL_JOB_POSTS_QUERY });
+    const { data } = await sanityFetch({
+      query: ALL_JOB_POSTS_QUERY,
+      params: { locale },
+    });
     const list = Array.isArray(data) ? (data as AnyObject[]) : [];
     if (list.length === 0) {
-      return fallbackPosts();
+      return fallbackPosts(locale);
     }
     return sortPosts(list.map(normalizePost));
   } catch (error) {
     console.error("Failed to fetch job posts from Sanity, using JSON fallback:", error);
-    return fallbackPosts();
+    return fallbackPosts(locale);
   }
 }
 
-export async function fetchPublishedJobPosts(): Promise<JobPost[]> {
-  const posts = await fetchJobPosts();
+export async function fetchPublishedJobPosts(
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<JobPost[]> {
+  const posts = await fetchJobPosts(locale);
   return posts.filter((p) => p.openForApplications && p.slug);
 }
 
-export async function fetchJobPostBySlug(slug: string): Promise<JobPost | null> {
-  const posts = await fetchJobPosts();
+export async function fetchJobPostBySlug(
+  slug: string,
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<JobPost | null> {
+  const posts = await fetchJobPosts(locale);
   return posts.find((p) => p.slug === slug) ?? null;
 }

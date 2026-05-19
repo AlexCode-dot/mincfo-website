@@ -3,23 +3,30 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
 import { fetchPublishedJobPosts } from "@/sanity/lib/fetchJobPosts";
+import { getSharedText } from "@/content/homePageText";
+import { getLocale } from "@/i18n/server";
 import BackButton from "./BackButton";
 import styles from "./page.module.scss";
 
-export const metadata: Metadata = {
-  title: "Karriär | MinCFO",
-  description:
-    "Bli en del av MinCFO. Se våra lediga tjänster och praktikplatser och skicka in din ansökan direkt på sajten.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const careers = getSharedText(await getLocale()).ui.careers;
+  return {
+    title: careers.metaTitle,
+    description: careers.metaDescription,
+  };
+}
 
 export default async function KarriarPage() {
-  const posts = await fetchPublishedJobPosts();
+  const locale = await getLocale();
+  const ui = getSharedText(locale).ui;
+  const careers = ui.careers;
+  const posts = await fetchPublishedJobPosts(locale);
 
   return (
     <div className={styles.page}>
       <div className={styles.topRail}>
         <div className={styles.backWrap}>
-          <BackButton />
+          <BackButton label={ui.back} />
         </div>
 
         <Link href="/" className={styles.logo} aria-label="MinCFO">
@@ -38,28 +45,26 @@ export default async function KarriarPage() {
       <main className={styles.main}>
         <div className={styles.shell}>
           <header className={styles.hero}>
-            <p className={styles.eyebrow}>Karriär</p>
+            <p className={styles.eyebrow}>{careers.eyebrow}</p>
             {posts.length > 0 ? (
               <>
-                <h1 className={styles.title}>Var med och bygg framtidens ekonomifunktion</h1>
+                <h1 className={styles.title}>{careers.openTitle}</h1>
                 <p className={styles.subtitle}>
-                  Vi söker drivna människor som vill växa tillsammans med oss och våra kunder.
-                  Här är rollerna vi rekryterar till just nu.
+                  {careers.openSubtitle}
                 </p>
               </>
             ) : (
               <>
-                <h1 className={styles.title}>Vi har inga lediga tjänster ute just nu</h1>
+                <h1 className={styles.title}>{careers.closedTitle}</h1>
                 <p className={styles.subtitle}>
-                  Just nu rekryterar vi inte aktivt, men vi är alltid intresserade av att komma i
-                  kontakt med skarpa personer som tror på det vi bygger på MinCFO.
+                  {careers.closedSubtitle}
                 </p>
               </>
             )}
           </header>
 
           {posts.length > 0 ? (
-            <section className={styles.jobList} aria-label="Lediga tjänster">
+            <section className={styles.jobList} aria-label={careers.listAria}>
               {posts.map((post) => (
                 <Link
                   key={post.slug}
@@ -85,7 +90,7 @@ export default async function KarriarPage() {
                         </ul>
                       )}
                       <span className={styles.jobCta}>
-                        Läs mer
+                        {careers.readMore}
                         <ArrowRight size={15} aria-hidden="true" />
                       </span>
                     </div>
@@ -97,20 +102,18 @@ export default async function KarriarPage() {
             <section className={styles.card}>
               <div className={styles.frame}>
                 <div className={styles.panel}>
-                  <h2 className={styles.cardTitle}>Vill du ändå höra av dig?</h2>
+                  <h2 className={styles.cardTitle}>{careers.spontaneousTitle}</h2>
                   <p className={styles.cardBody}>
-                    Om du tror att du skulle kunna passa hos oss får du gärna skicka en kort
-                    presentation till{" "}
+                    {careers.spontaneousBodyPre}
                     <a href="mailto:victor@mincfo.com" className={styles.inlineLink}>
                       victor@mincfo.com
                     </a>
-                    . Berätta gärna vem du är, vad du är bra på och varför MinCFO känns relevant
-                    för dig.
+                    {careers.spontaneousBodyPost}
                   </p>
 
                   <div className={styles.actions}>
                     <a href="mailto:victor@mincfo.com" className={styles.primaryCta}>
-                      Skicka spontanansökan
+                      {careers.spontaneousCta}
                     </a>
                   </div>
                 </div>

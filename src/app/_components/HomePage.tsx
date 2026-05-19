@@ -11,13 +11,15 @@ import Security from "@/components/sections/Security/Security";
 import Solutions from "@/components/sections/Solutions/Solutions";
 import { PUBLIC_HOME_OFFERING_MODES, type HomeOfferingMode } from "@/content/homePageText";
 import { fetchAllHomeContent } from "@/sanity/lib/fetchHomeContent";
+import { getLocale } from "@/i18n/server";
 
 type HomePageProps = {
   initialOffering: HomeOfferingMode;
 };
 
 export default async function HomePage({ initialOffering }: HomePageProps) {
-  const prefetchedContent = await fetchAllHomeContent();
+  const locale = await getLocale();
+  const prefetchedContent = await fetchAllHomeContent(locale);
   const allowedOfferings: readonly HomeOfferingMode[] =
     initialOffering === "partner"
       ? ["partner"]

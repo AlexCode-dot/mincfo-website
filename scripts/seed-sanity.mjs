@@ -34,12 +34,66 @@ const fullServiceJson = JSON.parse(
 const partnerJson = JSON.parse(
   readFileSync(resolve(__dirname, "../src/content/home/partner.json"), "utf-8"),
 );
+const sharedJsonEn = JSON.parse(
+  readFileSync(resolve(__dirname, "../src/content/home/shared.en.json"), "utf-8"),
+);
+const platformJsonEn = JSON.parse(
+  readFileSync(resolve(__dirname, "../src/content/home/platform.en.json"), "utf-8"),
+);
+const fullServiceJsonEn = JSON.parse(
+  readFileSync(resolve(__dirname, "../src/content/home/full-service.en.json"), "utf-8"),
+);
+const partnerJsonEn = JSON.parse(
+  readFileSync(resolve(__dirname, "../src/content/home/partner.en.json"), "utf-8"),
+);
+
+// Each locale seeds its own siteSettings + homeVariant docs.
+// Swedish keeps the legacy ids; other locales get a suffix + a `locale` field.
+const LOCALE_SEEDS = [
+  {
+    locale: "sv",
+    settingsId: "siteSettings",
+    variantSuffix: "",
+    shared: sharedJson,
+    variantJson: {
+      platform: platformJson,
+      "full-service": fullServiceJson,
+      partner: partnerJson,
+    },
+  },
+  {
+    locale: "en",
+    settingsId: "siteSettings.en",
+    variantSuffix: "-en",
+    shared: sharedJsonEn,
+    variantJson: {
+      platform: platformJsonEn,
+      "full-service": fullServiceJsonEn,
+      partner: partnerJsonEn,
+    },
+  },
+];
+
 const solutionPagesJson = JSON.parse(
   readFileSync(resolve(__dirname, "../src/content/solutionPagesText.json"), "utf-8"),
 );
+const solutionPagesJsonEn = JSON.parse(
+  readFileSync(resolve(__dirname, "../src/content/solutionPagesText.en.json"), "utf-8"),
+);
+const SOLUTION_LOCALE_SEEDS = [
+  { locale: "sv", suffix: "", src: solutionPagesJson },
+  { locale: "en", suffix: "-en", src: solutionPagesJsonEn },
+];
 const jobPostsJson = JSON.parse(
   readFileSync(resolve(__dirname, "../src/content/jobPosts.json"), "utf-8"),
 );
+const jobPostsJsonEn = JSON.parse(
+  readFileSync(resolve(__dirname, "../src/content/jobPosts.en.json"), "utf-8"),
+);
+const JOB_LOCALE_SEEDS = [
+  { locale: "sv", suffix: "", src: jobPostsJson },
+  { locale: "en", suffix: "-en", src: jobPostsJsonEn },
+];
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -56,12 +110,8 @@ if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || !process.env.SANITY_API_WRITE_
   process.exit(1);
 }
 
-async function seed() {
-  console.log("Seeding siteSettings...");
-
-  await client.createOrReplace({
-    _id: "siteSettings",
-    _type: "siteSettings",
+function buildSiteSettings(sharedJson) {
+  return {
     siteTitle: sharedJson.siteMeta.title,
     siteDescription: sharedJson.siteMeta.description,
     navProdukt: sharedJson.navigation.produkt,
@@ -284,32 +334,21 @@ async function seed() {
       summaryStatSecondary: sharedJson.howItWorks.ui.partnerWorkspace.summary.statSecondary,
     },
 
-  });
-
-  console.log("  siteSettings done.");
-
-  // Mode-to-offerKey mapping for howItWorks
-  const modeToOfferKey = {
-    platform: "platform",
-    "full-service": "faas",
-    partner: "partner",
   };
+}
 
-  const variants = [
-    { mode: "platform", json: platformJson },
-    { mode: "full-service", json: fullServiceJson },
-    { mode: "partner", json: partnerJson },
-  ];
+const MODE_TO_OFFER_KEY = {
+  platform: "platform",
+  "full-service": "faas",
+  partner: "partner",
+};
 
-  for (const { mode, json } of variants) {
-    console.log(`Seeding homeVariant-${mode}...`);
+function buildVariant(mode, json, sharedJson) {
+  const offerKey = MODE_TO_OFFER_KEY[mode];
+  const howItWorksOffer = sharedJson.howItWorks.offers[offerKey];
+  const showcaseData = sharedJson.offering.showcase[mode];
 
-    const offerKey = modeToOfferKey[mode];
-    const howItWorksOffer = sharedJson.howItWorks.offers[offerKey];
-    const showcaseData = sharedJson.offering.showcase[mode];
-
-    await client.createOrReplace({
-      _id: `homeVariant-${mode}`,
+  return {
       _type: "homeVariantContent",
       mode,
 
@@ -429,9 +468,30 @@ async function seed() {
 
       // Showcase visual (mode-specific)
       // Showcase visuals are in siteSettings, not per-variant
-    });
+  };
+}
 
-    console.log(`  homeVariant-${mode} done.`);
+async function seed() {
+  for (const { locale, settingsId, variantSuffix, shared, variantJson } of LOCALE_SEEDS) {
+    console.log(`Seeding siteSettings (${locale})...`);
+    await client.createOrReplace({
+      _id: settingsId,
+      _type: "siteSettings",
+      locale,
+      ...buildSiteSettings(shared),
+    });
+    console.log(`  siteSettings (${locale}) done.`);
+
+    for (const mode of ["platform", "full-service", "partner"]) {
+      const docId = `homeVariant-${mode}${variantSuffix}`;
+      console.log(`Seeding ${docId}...`);
+      await client.createOrReplace({
+        _id: docId,
+        locale,
+        ...buildVariant(mode, variantJson[mode], shared),
+      });
+      console.log(`  ${docId} done.`);
+    }
   }
 
   // ── Seed solution pages ──
@@ -443,9 +503,11 @@ async function seed() {
     "E-handel": "solution-ehandel",
   };
 
-  for (const page of solutionPagesJson.pages) {
-    const docId = solutionIdMap[page.key];
-    if (!docId) continue;
+  for (const { locale, suffix, src } of SOLUTION_LOCALE_SEEDS) {
+  for (const page of src.pages) {
+    const baseId = solutionIdMap[page.key];
+    if (!baseId) continue;
+    const docId = `${baseId}${suffix}`;
 
     console.log(`Seeding ${docId}...`);
 
@@ -454,6 +516,7 @@ async function seed() {
     await client.createOrReplace({
       _id: docId,
       _type: "solutionPage",
+      locale,
       key: page.key,
       eyebrow: page.eyebrow,
       heroHeadlineFirst: page.heroHeadline.first,
@@ -503,15 +566,18 @@ async function seed() {
 
     console.log(`  ${docId} done.`);
   }
+  }
 
   // ── Seed job posts ──
-  for (const post of jobPostsJson.posts ?? []) {
-    const docId = `jobPost-${post.slug}`;
+  for (const { locale, suffix, src } of JOB_LOCALE_SEEDS) {
+  for (const post of src.posts ?? []) {
+    const docId = `jobPost-${post.slug}${suffix}`;
     console.log(`Seeding ${docId}...`);
 
     await client.createOrReplace({
       _id: docId,
       _type: "jobPost",
+      locale,
       title: post.title,
       slug: { _type: "slug", current: post.slug },
       openForApplications: post.openForApplications !== false,
@@ -536,6 +602,7 @@ async function seed() {
     });
 
     console.log(`  ${docId} done.`);
+  }
   }
 
   console.log("\nSanity seeded successfully!");

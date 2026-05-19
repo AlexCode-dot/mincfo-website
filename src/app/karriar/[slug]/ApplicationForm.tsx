@@ -2,17 +2,21 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { Paperclip } from "lucide-react";
+import type { HOME_PAGE_SHARED_TEXT } from "@/content/homePageText";
 import styles from "./ApplicationForm.module.scss";
 
 const MAX_CV_BYTES = 15 * 1024 * 1024;
 const MAX_MOTIVATION = 500;
 
+type ApplicationFormText = typeof HOME_PAGE_SHARED_TEXT.ui.applicationForm;
+
 interface ApplicationFormProps {
   jobSlug: string;
   jobTitle: string;
+  t: ApplicationFormText;
 }
 
-export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormProps) {
+export default function ApplicationForm({ jobSlug, jobTitle, t }: ApplicationFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [cvName, setCvName] = useState<string | null>(null);
   const [motivation, setMotivation] = useState("");
@@ -32,12 +36,12 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
 
     const cv = fd.get("cv");
     if (!(cv instanceof File) || cv.size === 0) {
-      setError("Välj en CV-fil (PDF).");
+      setError(t.cvRequired);
       setLoading(false);
       return;
     }
     if (cv.size > MAX_CV_BYTES) {
-      setError("CV:t får vara max 15 MB.");
+      setError(t.cvTooLarge);
       setLoading(false);
       return;
     }
@@ -52,7 +56,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(json.error || "Något gick fel. Försök igen.");
+        setError(json.error || t.genericError);
       } else {
         setSubmitted(true);
         form.reset();
@@ -60,7 +64,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
         setMotivation("");
       }
     } catch {
-      setError("Kunde inte nå servern. Kontrollera din anslutning och försök igen.");
+      setError(t.networkError);
     } finally {
       setLoading(false);
     }
@@ -81,9 +85,9 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
             />
           </svg>
         </div>
-        <h3 className={styles.successTitle}>Tack för din ansökan!</h3>
+        <h3 className={styles.successTitle}>{t.successTitle}</h3>
         <p className={styles.successText}>
-          Vi har tagit emot din ansökan och hör av oss så snart vi har gått igenom den.
+          {t.successText}
         </p>
       </div>
     );
@@ -92,11 +96,10 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
   return (
     <>
     <header className={styles.formHeader}>
-      <p className={styles.formEyebrow}>Ansökan</p>
-      <h2 className={styles.formTitle}>Skicka in din ansökan</h2>
+      <p className={styles.formEyebrow}>{t.eyebrow}</p>
+      <h2 className={styles.formTitle}>{t.title}</h2>
       <p className={styles.formSubtitle}>
-        Bifoga ditt CV och berätta i max 500 tecken varför just du ska ha rollen.
-        Din ansökan skickas direkt till Victor på MinCFO.
+        {t.subtitle}
       </p>
     </header>
     <form ref={formRef} className={styles.form} onSubmit={handleSubmit}>
@@ -112,7 +115,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
       <div className={styles.row}>
         <div className={styles.field}>
           <label className={styles.label} htmlFor="apply-name">
-            Namn
+            {t.nameLabel}
           </label>
           <input
             className={styles.input}
@@ -120,7 +123,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
             name="name"
             type="text"
             required
-            placeholder="För- och efternamn"
+            placeholder={t.namePlaceholder}
             maxLength={200}
             autoComplete="name"
           />
@@ -128,7 +131,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor="apply-email">
-            E-post
+            {t.emailLabel}
           </label>
           <input
             className={styles.input}
@@ -136,7 +139,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
             name="email"
             type="email"
             required
-            placeholder="din@email.se"
+            placeholder={t.emailPlaceholder}
             maxLength={200}
             autoComplete="email"
           />
@@ -145,14 +148,14 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="apply-phone">
-          Telefon
+          {t.phoneLabel}
         </label>
         <input
           className={styles.input}
           id="apply-phone"
           name="phone"
           type="tel"
-          placeholder="+46 70 123 45 67"
+          placeholder={t.phonePlaceholder}
           maxLength={30}
           autoComplete="tel"
         />
@@ -160,9 +163,9 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="apply-motivation">
-          Varför ska just du ha rollen?{" "}
+          {t.motivationLabel}{" "}
           <span className={styles.charCount}>
-            {motivationRemaining} tecken kvar
+            {motivationRemaining} {t.charsRemaining}
           </span>
         </label>
         <textarea
@@ -172,7 +175,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
           required
           rows={5}
           maxLength={MAX_MOTIVATION}
-          placeholder="Berätta kort vad du tar med dig och varför du passar."
+          placeholder={t.motivationPlaceholder}
           value={motivation}
           onChange={(e) => setMotivation(e.target.value)}
         />
@@ -180,12 +183,12 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="apply-cv">
-          CV (PDF, max 15 MB)
+          {t.cvLabel}
         </label>
         <label htmlFor="apply-cv" className={styles.fileInput}>
           <Paperclip size={16} aria-hidden="true" />
           <span className={styles.fileLabel}>
-            {cvName ?? "Välj fil..."}
+            {cvName ?? t.cvChoose}
           </span>
         </label>
         <input
@@ -205,12 +208,11 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
       {error && <p className={styles.error}>{error}</p>}
 
       <button className={styles.submit} type="submit" disabled={loading}>
-        {loading ? <span className={styles.spinner} /> : "Skicka ansökan"}
+        {loading ? <span className={styles.spinner} /> : t.submit}
       </button>
 
       <p className={styles.fineprint}>
-        Genom att skicka in samtycker du till att MinCFO hanterar din ansökan för
-        rekryteringsändamål.
+        {t.fineprint}
       </p>
     </form>
     </>

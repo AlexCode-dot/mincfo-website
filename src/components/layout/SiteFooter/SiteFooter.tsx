@@ -4,14 +4,18 @@ import { ChevronRight, Linkedin } from "lucide-react";
 import Link from "next/link";
 import { useOptionalHomeOffering } from "@/components/home/HomeOfferingProvider";
 import ContactLink from "@/components/system/ContactLink";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
+import { getSharedText } from "@/content/homePageText";
+import { DEFAULT_LOCALE } from "@/i18n/locale";
+import { useOptionalLocale } from "@/i18n/LocaleProvider";
 import styles from "./SiteFooter.module.scss";
 
 export default function SiteFooter() {
   const homeOffering = useOptionalHomeOffering();
-  const footer = homeOffering?.shared.footer ?? HOME_PAGE_TEXT.footer;
+  const locale = useOptionalLocale()?.locale ?? DEFAULT_LOCALE;
+  const localeShared = getSharedText(locale);
+  const footer = homeOffering?.shared.footer ?? localeShared.footer;
   const bloggLabel =
-    homeOffering?.shared.navigation.blogg ?? HOME_PAGE_TEXT.navigation.blogg ?? "Blogg";
+    homeOffering?.shared.navigation.blogg ?? localeShared.navigation.blogg ?? "Blogg";
   const showSolutions = homeOffering?.offering !== undefined
     ? homeOffering.offering === "platform"
     : true;

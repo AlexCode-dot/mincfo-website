@@ -7,6 +7,7 @@ import {
   ALL_BLOG_POST_SLUGS_QUERY,
   BLOG_POST_BY_SLUG_QUERY,
 } from "./queries";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/locale";
 
 export type BlogCoverImage = SanityImageSource & {
   alt?: string;
@@ -63,12 +64,29 @@ function normalizePost(raw: AnyObject): BlogPost {
   };
 }
 
-export async function fetchBlogPosts(): Promise<BlogPost[]> {
+export async function fetchBlogPosts(
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<BlogPost[]> {
   if (!client) return [];
 
   try {
-    const { data } = await sanityFetch({ query: ALL_BLOG_POSTS_QUERY });
-    const list = Array.isArray(data) ? (data as AnyObject[]) : [];
+    const { data } = await sanityFetch({
+      query: ALL_BLOG_POSTS_QUERY,
+      params: { locale },
+    });
+    let list = Array.isArray(data) ? (data as AnyObject[]) : [];
+
+    // Locale fallback: if there are no posts authored for this locale yet,
+    // show the default-locale posts so the blog is never empty. Once
+    // localized posts are created in Studio they take precedence.
+    if (list.length === 0 && locale !== DEFAULT_LOCALE) {
+      const { data: fallbackData } = await sanityFetch({
+        query: ALL_BLOG_POSTS_QUERY,
+        params: { locale: DEFAULT_LOCALE },
+      });
+      list = Array.isArray(fallbackData) ? (fallbackData as AnyObject[]) : [];
+    }
+
     return list.map(normalizePost).filter((p) => p.slug);
   } catch (error) {
     console.error("Failed to fetch blog posts from Sanity:", error);
@@ -76,13 +94,16 @@ export async function fetchBlogPosts(): Promise<BlogPost[]> {
   }
 }
 
-export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+export async function fetchBlogPostBySlug(
+  slug: string,
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<BlogPost | null> {
   if (!client) return null;
 
   try {
     const { data } = await sanityFetch({
       query: BLOG_POST_BY_SLUG_QUERY,
-      params: { slug },
+      params: { slug, locale },
     });
     if (!data) return null;
     const post = normalizePost(data as AnyObject);

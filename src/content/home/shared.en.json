@@ -1,0 +1,674 @@
+{
+  "navigation": {
+    "produkt": "Product",
+    "losningar": "Solutions",
+    "kundcase": "Customers",
+    "sakerhet": "Security",
+    "hurDetFunkar": "How it works",
+    "blogg": "Blog",
+    "demoCta": "Book a demo",
+    "loginSignupLabel": "Log in",
+    "signupCta": "Create account",
+    "openSolutionsAria": "Open solutions menu",
+    "openMenuAria": "Open menu",
+    "loginChooser": {
+      "title": "Welcome",
+      "subtitle": "Already have an account with us?",
+      "loginLabel": "Log in",
+      "loginSublabel": "I'm already a customer",
+      "signupLabel": "Create account",
+      "signupSublabel": "I'm new here",
+      "closeAria": "Close"
+    },
+    "groups": [
+      {
+        "title": "By role",
+        "items": [
+          {
+            "href": "/losningar/ceo-founders",
+            "label": "Founders & CEO"
+          },
+          {
+            "href": "/losningar/cfo-finance",
+            "label": "CFO & Finance Team"
+          },
+          {
+            "href": "/partner",
+            "label": "Accounting firms"
+          }
+        ]
+      },
+      {
+        "title": "By industry",
+        "items": [
+          {
+            "href": "/losningar/saas-tech",
+            "label": "SaaS / Tech"
+          },
+          {
+            "href": "/losningar/konsult-tjanster",
+            "label": "Consulting & Services"
+          },
+          {
+            "href": "/losningar/ehandel",
+            "label": "E-commerce"
+          }
+        ]
+      }
+    ]
+  },
+  "signup": {
+    "title": "Create account",
+    "subtitle": "Fill in your details and we'll set up an account for you. We'll send an invitation to your email as soon as we can.",
+    "companyLabel": "Company name",
+    "companyPlaceholder": "Company name",
+    "orgNrLabel": "Company registration number",
+    "orgNrPlaceholder": "XXXXXX-XXXX",
+    "nameLabel": "Contact person",
+    "namePlaceholder": "First name Last name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "name@company.com",
+    "phoneLabel": "Phone",
+    "phonePlaceholder": "07X-XXX XX XX",
+    "phoneOptional": "",
+    "consent": "I accept {the terms} and that MinCFO stores my information to manage my account.",
+    "consentLinkText": "the terms",
+    "consentLinkHref": "/terms",
+    "submitLabel": "Create account",
+    "successTitle": "Thank you!",
+    "successText": "We'll send an invitation to your email as soon as we can.",
+    "successClose": "Close"
+  },
+  "siteMeta": {
+    "title": "MinCFO",
+    "description": "MinCFO combines automation, real-time dashboards and an AI copilot for modern teams."
+  },
+  "offering": {
+    "eyebrow": "Choose your setup",
+    "title": "Three ways to work with MinCFO",
+    "intro": "Start with the setup that fits your company today. Switch modes to see how the offering, customer examples and CTA change.",
+    "ariaLabel": "Choose offering",
+    "showcase": {
+      "sectionAriaLabel": "Offering overview",
+      "introLines": [
+        "Which MinCFO setup",
+        "fits you?"
+      ],
+      "previewLabel": "Read a short overview of our offerings and click through to the one that fits you best.",
+      "tabListAriaLabel": "Preview solution",
+      "pagerAriaLabel": "Showcase navigation",
+      "currentPageLabel": "Current page",
+      "currentPageCtaLabel": "Learn more about this setup",
+      "platform": {
+        "eyebrow": "Platform",
+        "title": "MinCFO platform",
+        "body": "For companies with their day-to-day in order that want to get more out of their data. With MinCFO you turn numbers into strategic insights in real time.",
+        "ctaLabel": "Go to the platform page",
+        "ctaHref": "/plattform",
+        "signal": "AI Copilot active",
+        "chartLabel": "Usage over the last 30 days",
+        "stats": [
+          {
+            "label": "Reports",
+            "value": "Live"
+          },
+          {
+            "label": "Forecast",
+            "value": "12 months"
+          },
+          {
+            "label": "Fortnox",
+            "value": "Live"
+          }
+        ]
+      },
+      "full-service": {
+        "eyebrow": "Full-service solution",
+        "title": "Your finance function as-a-service",
+        "body": "MinCFO takes full ownership of reporting, follow-up and financial structure. Level up to a finance function that stays several steps ahead!",
+        "ctaLabel": "Go to the full-service solution",
+        "ctaHref": "/",
+        "serviceVisual": {
+          "chipOwnership": "Invoices and bookkeeping",
+          "chipDelivery": "Ongoing follow-up",
+          "chipLeadership": "Report ready",
+          "eyebrow": "Full-service solution",
+          "title": "We are your entire finance function",
+          "badge": "Finance-as-a-service",
+          "steps": [
+            "Accounting",
+            "Reporting",
+            "Follow-up",
+            "Advisory"
+          ],
+          "summaryReportLabel": "Reporting",
+          "summaryReportValue": "Reliable numbers in real time",
+          "summaryAlertsLabel": "Forecasting",
+          "summaryAlertsValue": "Precision in every decision"
+        }
+      },
+      "partner": {
+        "eyebrow": "For accounting firms and finance consultants",
+        "title": "More proactivity and scalability",
+        "body": "Streamline advisory and client communication across your entire client portfolio. With one unified model you onboard new companies faster and ensure high-quality delivery in every engagement.",
+        "ctaLabel": "Go to the firm page",
+        "ctaHref": "/partner",
+        "signal": "Client portfolio synced",
+        "stats": [
+          {
+            "label": "Reports",
+            "value": "Live"
+          },
+          {
+            "label": "Forecast",
+            "value": "12 months"
+          },
+          {
+            "label": "Fortnox",
+            "value": "Synced"
+          }
+        ]
+      }
+    },
+    "options": [
+      {
+        "id": "full-service",
+        "label": "Full-service",
+        "title": "MinCFO as your outsourced finance function",
+        "body": "For companies that want MinCFO to handle finance, reporting and follow-up for them, while the team tracks the situation in real time in the platform.",
+        "bullets": [
+          "We run the finance flow end-to-end",
+          "You get clear follow-up on KPIs, cash flow and deviations",
+          "Ideal for teams that want to focus on the business"
+        ],
+        "cta": "Show full-service"
+      },
+      {
+        "id": "platform",
+        "label": "Platform",
+        "title": "MinCFO platform",
+        "body": "For companies that already handle finance in-house or via a partner and want AI, dashboards and forecasting in one modern system.",
+        "bullets": [
+          "AI copilot and real-time dashboards",
+          "Forecasting, scenarios and decision support",
+          "Ideal for teams with working finance operations ready to level up"
+        ],
+        "cta": "Show platform"
+      },
+      {
+        "id": "partner",
+        "label": "For firms",
+        "title": "MinCFO for multi-client delivery",
+        "body": "For firms and Fractional CFOs that want to standardize follow-up, deliver better advisory and work more scalably across multiple clients.",
+        "bullets": [
+          "Onboard new clients in a ready-made model — skip time-consuming custom setups.",
+          "Visualize the client's future with AI-driven dashboards and forecasts.",
+          "The obvious platform for firms, advisors and Fractional CFOs."
+        ],
+        "cta": "Show firm setup"
+      }
+    ]
+  },
+  "howItWorks": {
+    "sectionTitle": "How it works",
+    "sectionIntro": "How you work with MinCFO in practice.",
+    "sectionIntroByOffer": {
+      "platform": "How you work with MinCFO in practice.",
+      "faas": "How you work with MinCFO as a full-service solution.",
+      "partner": "How firms work with MinCFO in practice."
+    },
+    "offers": {
+      "platform": {
+        "tabLabel": "MinCFO Platform",
+        "steps": [
+          {
+            "title": "Create account",
+            "body": "Get started right away in the platform.",
+            "highlights": [
+              "Create an account and integrate your accounting system in minutes",
+              "Secure onboarding with verification",
+              "Instant access to the platform"
+            ]
+          },
+          {
+            "title": "Connect your accounting system",
+            "body": "Connect to your existing accounting system in a few clicks. MinCFO automatically sets up dashboards and report structure.",
+            "highlights": [
+              "Connect your accounting system in a few clicks",
+              "Customizable dashboards and report structure are set up",
+              "Data syncs continuously to MinCFO once the connection is active"
+            ]
+          },
+          {
+            "title": "Real-time insights with MinCFO AI",
+            "body": "AI that answers questions about your company's numbers, real-time reporting in a custom structure and an automatically updated cash flow forecast.",
+            "highlights": [
+              "Real-time reporting of key metrics",
+              "Cash flow optimization in real time",
+              "Identify opportunities for optimized financial control"
+            ]
+          }
+        ]
+      },
+      "faas": {
+        "tabLabel": "Finance as a Service",
+        "steps": [
+          {
+            "title": "Onboarding & scope",
+            "body": "We set goals, structure and scope: accounting, payroll, VAT, year-end, CFO support and more.",
+            "highlights": [
+              "Shared goals and priorities",
+              "Clear scope for responsibility and delivery",
+              "A plan for accounting, payroll, VAT and year-end"
+            ]
+          },
+          {
+            "title": "Connect systems & permissions",
+            "body": "You give us access to your bank, the Swedish Tax Agency and Fortnox/other systems. MinCFO is connected as your shared dashboard.",
+            "highlights": [
+              "Secure access to bank and the Tax Agency",
+              "Fortnox and other systems are connected",
+              "Permissions and roles are set up correctly"
+            ]
+          },
+          {
+            "title": "We run finance — you follow in real time",
+            "body": "We manage the entire finance flow end-to-end. You see reports, cash flow, key metrics and deviations in MinCFO.",
+            "highlights": [
+              "Reports and KPIs update continuously in the same dashboard",
+              "Cash flow, liquidity and outcome tracked in real time",
+              "Deviations are flagged immediately with clear next steps"
+            ]
+          },
+          {
+            "title": "AI + proactive advisory",
+            "body": "The AI answers questions about your data, flags risks and suggests actions. You also have a personal controller/CFO on demand."
+          }
+        ]
+      },
+      "partner": {
+        "tabLabel": "For firms",
+        "steps": [
+          {
+            "title": "Optimize your client management",
+            "body": "Stop building every client journey from scratch. By setting a shared standard for dashboards and KPIs, every new client is onboarded in a proven way instead of as a time-consuming special case.",
+            "highlights": [
+              "Free up time for proactive advisory by automating the setup of every new client journey.",
+              "Increase profitability per engagement with standardized delivery and less need for custom work.",
+              "Ensure a consistent client experience regardless of which consultant owns the delivery."
+            ]
+          },
+          {
+            "title": "Track the client portfolio",
+            "body": "Get a consolidated view of all clients and immediately spot which companies are off budget, have strained liquidity or are ready for the next advisory meeting.",
+            "highlights": [
+              "Easier follow-up across multiple clients at once",
+              "Automatic warning signals for cash flow risks and deviations",
+              "Compare key metrics between clients and industry segments"
+            ]
+          },
+          {
+            "title": "Scale your advisory with precision",
+            "body": "Use MinCFO as your digital analyst. With AI support and automated report packages you shorten the path from bookkeeping to business value, so you can act as a proactive partner rather than a reactive supplier.",
+            "highlights": [
+              "Ready-made analyses and suggested actions directly in the platform",
+              "Present polished dashboards directly in the client's workspace",
+              "Increase the number of clients while maintaining precision"
+            ]
+          }
+        ]
+      }
+    },
+    "ui": {
+      "tabListAria": "Choose offering",
+      "account": {
+        "secureLabel": "Secure account",
+        "tabCreate": "Create account",
+        "tabLogin": "Log in",
+        "emailLabel": "Work email",
+        "passwordLabel": "Password",
+        "termsLabel": "I accept the terms",
+        "buttonLabel": "Create account",
+        "existingAccountLabel": "Already have an account?",
+        "loginLinkLabel": "Log in",
+        "welcomeTitle": "Welcome back",
+        "welcomeSubtitle": "Log in to continue",
+        "continueWithGoogle": "Log in with Google",
+        "continueWithMicrosoft": "Log in with Microsoft",
+        "dividerLabel": "Or",
+        "emailInputAriaLabel": "Enter email address",
+        "emailInputPlaceholder": "Enter email address",
+        "continueLabel": "Continue"
+      },
+      "connect": {
+        "fortnoxWord": "Fortnox",
+        "accountConnected": "Account connected",
+        "mincfoWord": "MinCFO",
+        "receivingData": "Receiving data",
+        "integrationActive": "Integration active",
+        "lastSyncLabel": "Last sync: just now"
+      },
+      "insights": {
+        "title": "AI Copilot",
+        "question": "How is runway affected if we increase hiring in Q3?",
+        "thinkingLabel": "AI is analyzing data...",
+        "generatedForecastLabel": "Generated forecast",
+        "runwayMonthsLabel": "Runway (months)",
+        "barCurrent": "Now",
+        "barPlan": "Plan",
+        "barScenario": "Scenario",
+        "summary": "AI answer: runway becomes about 12.8 months.",
+        "inputHint": "Ask AI about forecasts or deviations",
+        "inputTyped": "How is runway affected if we increase hiring in Q3?",
+        "sendAriaLabel": "Send question"
+      },
+      "faasRealtime": {
+        "statusUpdated": "Updated now",
+        "cashflowLabel": "Cash flow",
+        "runwayLabel": "Runway",
+        "monthSuffix": "mo",
+        "deviationLabel": "Deviation",
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "personnelAlertTemplate": "Personnel cost is {value}% over budget",
+        "latePaymentsAlert": "Customer payments are 4 days behind plan",
+        "cashflowUnit": "k SEK",
+        "chartTitle": "Net cash flow",
+        "chartDescription": "Jan-Aug actual • Sep-Dec forecast",
+        "alertPool": [
+          "Personnel cost is 1.7% over budget",
+          "Customer payments are 4 days behind plan",
+          "Gross margin is 0.9 percentage points below the monthly plan",
+          "The liquidity forecast has been updated after the latest supplier payment"
+        ]
+      },
+      "faasOnboarding": {
+        "badgeLabel": "Onboarding"
+      },
+      "faasSystems": {
+        "hubLabel": "MinCFO",
+        "bankLabel": "Bank",
+        "skatteverketLabel": "Tax Agency",
+        "fortnoxLabel": "Fortnox",
+        "payrollLabel": "Payroll system",
+        "paymentsLabel": "Payments",
+        "customerTeamLabel": "Customer team",
+        "skatteverketAlt": "Tax Agency",
+        "fortnoxAlt": "Fortnox",
+        "partnerLabels": {
+          "topLeft": "ERP",
+          "topCenter": "Tax Agency",
+          "topRight": "Fortnox",
+          "midLeft": "Report package",
+          "midRight": "CRM",
+          "bottomCenter": "Firm team"
+        }
+      },
+      "partnerWorkspace": {
+        "navAriaLabel": "Workspace navigation",
+        "nav": {
+          "home": "Home",
+          "users": "Users",
+          "settings": "Settings"
+        },
+        "home": {
+          "title": "Firm control panel",
+          "subtitle": "Manage your workspace, client standards and shared workflows.",
+          "columns": [
+            "Company",
+            "Data source",
+            "Reconciled"
+          ],
+          "actionLabel": "Open",
+          "rows": [
+            {
+              "detail": "556812-1042",
+              "label": "Nordvale Growth AB",
+              "status": "Mar 26",
+              "tag": "Fortnox"
+            },
+            {
+              "detail": "559104-2281",
+              "label": "Studio Ledger AB",
+              "status": "Apr 02",
+              "tag": "Fortnox"
+            },
+            {
+              "detail": "559221-7814",
+              "label": "Retail Peak Sverige AB",
+              "status": "Apr 05",
+              "tag": "Fortnox"
+            },
+            {
+              "detail": "559881-2041",
+              "label": "Ardent Ops AB",
+              "status": "Apr 11",
+              "tag": "Fortnox"
+            }
+          ]
+        },
+        "users": {
+          "title": "Users",
+          "subtitle": "Manage users and access.",
+          "columns": [
+            "User",
+            "Role",
+            "Status"
+          ],
+          "actionLabel": "Manage",
+          "rows": [
+            {
+              "detail": "anna@byran.se",
+              "label": "Anna Berg",
+              "status": "Active",
+              "tag": "Admin"
+            },
+            {
+              "detail": "johan@byran.se",
+              "label": "Johan Lind",
+              "status": "Active",
+              "tag": "Advisor"
+            },
+            {
+              "detail": "sara@byran.se",
+              "label": "Sara Ek",
+              "status": "Invited",
+              "tag": "Viewer"
+            },
+            {
+              "detail": "mikael@byran.se",
+              "label": "Mikael Roos",
+              "status": "Invited",
+              "tag": "Viewer"
+            }
+          ],
+          "searchPlaceholder": "Search users...",
+          "inviteLabel": "Invite",
+          "tableLabel": "Users"
+        },
+        "settings": {
+          "title": "Settings",
+          "subtitle": "Manage account and workspace settings.",
+          "columns": [
+            "Setting",
+            "Value",
+            "Status"
+          ],
+          "actionLabel": "Edit",
+          "rows": [
+            {
+              "detail": "Default template for client reporting",
+              "label": "Report structure",
+              "status": "Ready",
+              "tag": "Active"
+            },
+            {
+              "detail": "Runway, margin and cash flow by default",
+              "label": "KPI template",
+              "status": "Ready",
+              "tag": "Active"
+            },
+            {
+              "detail": "Role-based access per client company",
+              "label": "Permissions",
+              "status": "Updated",
+              "tag": "Policy"
+            }
+          ],
+          "tabs": {
+            "profile": "My details",
+            "appearance": "Appearance"
+          },
+          "appearanceTitle": "Display mode",
+          "appearanceBody": "Switch between light or dark mode.",
+          "modes": {
+            "light": "Light",
+            "dark": "Dark"
+          },
+          "languageTitle": "Language",
+          "languageBody": "Choose the default language for the workspace.",
+          "languageValue": "English"
+        },
+        "pagination": {
+          "previous": "Previous",
+          "next": "Next"
+        },
+        "summary": {
+          "label": "For firms",
+          "title": "A workspace where you go from company overview to dashboards, follow-up and analysis per client",
+          "statPrimary": "Multiple companies",
+          "statSecondary": "Per account"
+        }
+      }
+    }
+  },
+  "security": {
+    "pill": "Security & Compliance",
+    "title": "Enterprise-grade security",
+    "intro": "We handle sensitive financial data with the highest standards of security, privacy and compliance.",
+    "cards": [
+      {
+        "body": "MinCFO handles all customer data confidentially and in accordance with applicable data protection law. Access is strictly limited and continuously logged.",
+        "title": "Data protection & privacy"
+      },
+      {
+        "body": "The systems are built with modern security principles and protected through encryption, monitoring and regular security reviews.",
+        "title": "Secure infrastructure"
+      },
+      {
+        "body": "All processing of personal and company data is carried out in accordance with GDPR. Data is handled within the EU and under clear data processing agreements.",
+        "title": "EU & GDPR compliance"
+      }
+    ]
+  },
+  "footer": {
+    "brandAria": "MinCFO",
+    "brandWord": "MinCFO",
+    "intro": "Maximize your company's insights with AI-driven analysis, modular real-time dashboards and smart cash flow forecasts.",
+    "careersCta": "See our open positions",
+    "solutionsTitle": "Solutions",
+    "solutions": [
+      "CEO & Founders",
+      "CFO & Finance",
+      "SaaS / Tech",
+      "How it works"
+    ],
+    "companyTitle": "Company",
+    "company": [
+      "Product",
+      "Customers",
+      "Careers",
+      "For firms"
+    ],
+    "officesTitle": "Offices",
+    "office1": "Västra Hamngatan 11 / 411 17 Gothenburg Sweden",
+    "office2": "Stora Nygatan 33 / 111 27 Stockholm Sweden",
+    "copyright": "Copyright 2026. All rights reserved by MinCFO Sverige AB.",
+    "linkedin": "LinkedIn",
+    "linkedinAria": "MinCFO on LinkedIn",
+    "motionAria": "Motion mode",
+    "motionLabel": "Motion",
+    "motionNowPrefix": "Now:",
+    "motionFull": "Full",
+    "motionReduced": "Reduced"
+  },
+  "blog": {
+    "title": "Insights from MinCFO",
+    "subtitle": "Product news, thoughts on company building and everything we learn along the way.",
+    "sidebarHeading": "Latest posts",
+    "gridHeading": "More from us",
+    "emptyTitle": "No posts yet",
+    "emptyBody": "We're loading articles — stay tuned.",
+    "backToListLabel": "Back to all posts"
+  },
+  "ui": {
+    "back": "Back",
+    "blogEyebrow": "Blog",
+    "blogLatestAria": "Latest posts",
+    "blogMoreAria": "More posts",
+    "blogContentSoon": "Content coming soon.",
+    "readingTimeShort": "min",
+    "readingTimeFull": "min read",
+    "jobStartPrefix": "Start:",
+    "jobKeyInfoAria": "Key information",
+    "jobFallbackMetaTitle": "Jobs | MinCFO",
+    "paginationAria": "Pagination",
+    "paginationPrev": "Previous page",
+    "paginationNext": "Next page",
+    "paginationPage": "Page",
+    "contact": {
+      "metaTitle": "Book a demo | MinCFO",
+      "metaDescription": "Book a demo with MinCFO and find a time that suits you directly in the calendar.",
+      "eyebrow": "Book a demo",
+      "title": "Find a time that works",
+      "subtitle": "Pick an available time directly in the calendar to book a walkthrough of MinCFO.",
+      "calendarAria": "Booking calendar",
+      "calendarTitle": "MinCFO booking calendar"
+    },
+    "careers": {
+      "metaTitle": "Careers | MinCFO",
+      "metaDescription": "Become part of MinCFO. See our open positions and internships and submit your application directly on the site.",
+      "eyebrow": "Careers",
+      "openTitle": "Help build the finance function of the future",
+      "openSubtitle": "We're looking for driven people who want to grow together with us and our customers. Here are the roles we're recruiting for right now.",
+      "closedTitle": "We have no open positions right now",
+      "closedSubtitle": "We're not actively recruiting at the moment, but we're always interested in connecting with sharp people who believe in what we're building at MinCFO.",
+      "listAria": "Open positions",
+      "readMore": "Read more",
+      "spontaneousTitle": "Want to reach out anyway?",
+      "spontaneousBodyPre": "If you think you could be a fit with us, feel free to send a short introduction to ",
+      "spontaneousBodyPost": ". Tell us who you are, what you're good at and why MinCFO feels relevant to you.",
+      "spontaneousCta": "Send a spontaneous application"
+    },
+    "applicationForm": {
+      "cvRequired": "Choose a CV file (PDF).",
+      "cvTooLarge": "The CV may be max 15 MB.",
+      "genericError": "Something went wrong. Please try again.",
+      "networkError": "Could not reach the server. Check your connection and try again.",
+      "successTitle": "Thank you for your application!",
+      "successText": "We've received your application and will get back to you as soon as we've reviewed it.",
+      "eyebrow": "Application",
+      "title": "Submit your application",
+      "subtitle": "Attach your CV and tell us in max 500 characters why you in particular should have the role. Your application is sent directly to Victor at MinCFO.",
+      "nameLabel": "Name",
+      "namePlaceholder": "First and last name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "your@email.com",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "+46 70 123 45 67",
+      "motivationLabel": "Why should you in particular have the role?",
+      "charsRemaining": "characters left",
+      "motivationPlaceholder": "Briefly tell us what you bring and why you're a fit.",
+      "cvLabel": "CV (PDF, max 15 MB)",
+      "cvChoose": "Choose file...",
+      "submit": "Send application",
+      "fineprint": "By submitting you consent to MinCFO processing your application for recruitment purposes."
+    }
+  }
+}

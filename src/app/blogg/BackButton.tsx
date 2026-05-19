@@ -6,9 +6,10 @@ import styles from "./page.module.scss";
 
 interface BackButtonProps {
   href?: string;
+  label?: string;
 }
 
-export default function BackButton({ href = "/" }: BackButtonProps) {
+export default function BackButton({ href = "/", label = "Tillbaka" }: BackButtonProps) {
   const router = useRouter();
 
   const handleBack = () => {
@@ -22,7 +23,7 @@ export default function BackButton({ href = "/" }: BackButtonProps) {
   return (
     <button type="button" className={styles.backButton} onClick={handleBack}>
       <ArrowLeft size={16} aria-hidden="true" />
-      Tillbaka
+      {label}
     </button>
   );
 }

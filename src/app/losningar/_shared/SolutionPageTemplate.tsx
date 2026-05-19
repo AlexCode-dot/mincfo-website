@@ -3,8 +3,17 @@ import Logo from "@/components/layout/Logo/Logo";
 import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
 import { HomeOfferingProvider } from "@/components/home/HomeOfferingProvider";
 import ContactLink from "@/components/system/ContactLink";
-import { HOME_PAGE_TEXT } from "@/content/homePageText";
-import { SOLUTION_SHARED_CONTENT } from "@/content/solutionSharedContent";
+import {
+  HOME_OFFERING_MODES,
+  HOME_PAGE_TEXT,
+  getHomePageText,
+  getSharedText,
+  type HomeOfferingMode,
+  type HomePageText,
+  type PreFetchedHomeContent,
+} from "@/content/homePageText";
+import { getSolutionSharedContent } from "@/content/solutionSharedContent";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/locale";
 import {
   CircleDollarSign,
   Clock3,
@@ -36,11 +45,28 @@ const HERO_TICKER_LOGOS = HOME_PAGE_TEXT.customers.trustedLogos.map((logo) => ({
 const CARD_TRACER_PATH =
   "M 0.8 7.2 A 6.4 6.4 0 0 1 7.2 0.8 H 92.8 A 6.4 6.4 0 0 1 99.2 7.2 V 92.8 A 6.4 6.4 0 0 1 92.8 99.2 H 7.2 A 6.4 6.4 0 0 1 0.8 92.8 Z";
 
-export default function SolutionPageTemplate({ content }: { content: SolutionPageContent }) {
+export default function SolutionPageTemplate({
+  content,
+  locale = DEFAULT_LOCALE,
+}: {
+  content: SolutionPageContent;
+  locale?: Locale;
+}) {
   const impactVisuals = content.impactVisuals ?? ["realtime", "flow", "accuracy", "analysis"];
+  const shared = getSolutionSharedContent(locale);
+  const prefetchedContent: PreFetchedHomeContent = {
+    shared: getSharedText(locale),
+    byMode: Object.fromEntries(
+      HOME_OFFERING_MODES.map((mode) => [mode, getHomePageText(mode, locale)]),
+    ) as Record<HomeOfferingMode, HomePageText>,
+  };
 
   return (
-    <HomeOfferingProvider allowedOfferings={["platform"]} syncWithUrl={false}>
+    <HomeOfferingProvider
+      allowedOfferings={["platform"]}
+      syncWithUrl={false}
+      prefetchedContent={prefetchedContent}
+    >
       <Logo />
       <FloatingNav />
 
@@ -59,17 +85,17 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
 
             <div className={styles.heroActions}>
               <ContactLink href="/contact" className={styles.primaryCta} returnPath="/losningar">
-                {SOLUTION_SHARED_CONTENT.heroPrimaryCta}{" "}
+                {shared.heroPrimaryCta}{" "}
                 <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
               </ContactLink>
               <a href="#utmaning" className={styles.secondaryCta}>
-                {SOLUTION_SHARED_CONTENT.heroSecondaryCta}
+                {shared.heroSecondaryCta}
               </a>
             </div>
 
             <div className={styles.heroTrust}>
               <p className={styles.heroTrustLabel}>{content.logoStripMicrocopy}</p>
-              <div className={styles.heroTickerViewport} aria-label={SOLUTION_SHARED_CONTENT.logoTickerAriaLabel}>
+              <div className={styles.heroTickerViewport} aria-label={shared.logoTickerAriaLabel}>
                 <div className={styles.heroTickerTrack}>
                   {HERO_TICKER_LOGOS.map((logo, index) => (
                     <span key={`a-${logo.src}-${index}`} className={styles.heroTickerItem}>
@@ -99,12 +125,12 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           </div>
           <div className={styles.heroScrollCueWrap}>
             <span className={styles.heroScrollCueLabel}>
-              <span className={styles.keepCase}>{SOLUTION_SHARED_CONTENT.scrollLabel}</span>
+              <span className={styles.keepCase}>{shared.scrollLabel}</span>
             </span>
             <a
               href="#utmaning"
               className={styles.heroScrollCue}
-              aria-label={SOLUTION_SHARED_CONTENT.scrollCueAriaLabel}
+              aria-label={shared.scrollCueAriaLabel}
             >
               <span className={styles.heroScrollCueInner}>
                 <ChevronDown size={18} />
@@ -169,7 +195,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
             <header className={styles.sectionHead}>
               <p className={styles.overline}>
                 <Sparkles size={14} />
-                <span className={styles.keepCase}>{SOLUTION_SHARED_CONTENT.helpsOverline}</span>
+                <span className={styles.keepCase}>{shared.helpsOverline}</span>
               </p>
               <h2>{content.helpsTitle}</h2>
               <p>{content.helpsSubtitle}</p>
@@ -225,7 +251,7 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           <div className={styles.impactIntro}>
             <div>
               <p className={styles.impactTag}>
-                <span className={styles.keepCase}>{SOLUTION_SHARED_CONTENT.impactTag}</span>
+                <span className={styles.keepCase}>{shared.impactTag}</span>
               </p>
               <h2 className={styles.impactHeadline}>{content.impactTitle}</h2>
             </div>
@@ -396,14 +422,14 @@ export default function SolutionPageTemplate({ content }: { content: SolutionPag
           <div className={styles.closingCard}>
             <p className={styles.overline}>
               <Sparkles size={14} />
-              <span className={styles.keepCase}>{SOLUTION_SHARED_CONTENT.closingOverline}</span>
+              <span className={styles.keepCase}>{shared.closingOverline}</span>
             </p>
             <h2>
               <span className={styles.closingTitleMain}>{content.trustHeadline}</span>
             </h2>
             <p>{content.trustSub}</p>
             <ContactLink href="/contact" className={styles.primaryCta} returnPath="/losningar">
-              {SOLUTION_SHARED_CONTENT.closingCta}{" "}
+              {shared.closingCta}{" "}
               <ChevronRight aria-hidden="true" className={styles.ctaIcon} />
             </ContactLink>
           </div>

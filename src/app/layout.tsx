@@ -3,7 +3,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import ContactReturnRestore from "@/components/system/ContactReturnRestore";
 import { MotionProvider } from "@/components/system/MotionProvider";
-import { HOME_PAGE_SHARED_TEXT } from "@/content/homePageText";
+import { getSharedText } from "@/content/homePageText";
+import { HTML_LANG, OG_LOCALE } from "@/i18n/locale";
+import { LocaleProvider } from "@/i18n/LocaleProvider";
+import LanguageSwitch from "@/i18n/LanguageSwitch";
+import { getLocale } from "@/i18n/server";
 import { SanityLive } from "@/sanity/lib/live";
 import "@/styles/globals.scss";
 
@@ -17,10 +21,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const shared = getSharedText(locale);
+  return {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://mincfo.com"),
-  title: HOME_PAGE_SHARED_TEXT.siteMeta.title,
-  description: HOME_PAGE_SHARED_TEXT.siteMeta.description,
+  title: shared.siteMeta.title,
+  description: shared.siteMeta.description,
   icons: {
     icon: [
       { url: "/icon.svg", type: "image/svg+xml" },
@@ -29,12 +36,12 @@ export const metadata: Metadata = {
     apple: "/apple-icon",
   },
   openGraph: {
-    title: HOME_PAGE_SHARED_TEXT.siteMeta.title,
-    description: HOME_PAGE_SHARED_TEXT.siteMeta.description,
+    title: shared.siteMeta.title,
+    description: shared.siteMeta.description,
     type: "website",
     url: "/",
     siteName: "MinCFO",
-    locale: "sv_SE",
+    locale: OG_LOCALE[locale],
     images: [
       {
         url: "/opengraph-image",
@@ -46,26 +53,31 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: HOME_PAGE_SHARED_TEXT.siteMeta.title,
-    description: HOME_PAGE_SHARED_TEXT.siteMeta.description,
+    title: shared.siteMeta.title,
+    description: shared.siteMeta.description,
     images: ["/opengraph-image"],
   },
-};
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
   return (
-    <html lang="sv">
+    <html lang={HTML_LANG[locale]}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <MotionProvider>
-          <ContactReturnRestore />
-          {children}
-          <SanityLive />
-          <Analytics />
-        </MotionProvider>
+        <LocaleProvider initialLocale={locale}>
+          <MotionProvider>
+            <ContactReturnRestore />
+            <LanguageSwitch />
+            {children}
+            <SanityLive />
+            <Analytics />
+          </MotionProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

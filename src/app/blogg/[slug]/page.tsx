@@ -8,6 +8,8 @@ import {
   fetchBlogPostSlugs,
 } from "@/sanity/lib/fetchBlogPosts";
 import { fetchSharedContent } from "@/sanity/lib/fetchHomeContent";
+import { getLocale } from "@/i18n/server";
+import type { Locale } from "@/i18n/locale";
 import { urlForImage } from "@/sanity/lib/imageUrl";
 import BackButton from "../BackButton";
 import PostBody from "./PostBody";
@@ -19,17 +21,17 @@ type PageProps = { params: Promise<PageParams> };
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://mincfo.com";
 
-const SV_DATE = new Intl.DateTimeFormat("sv-SE", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
+const DATE_LOCALE: Record<Locale, string> = { sv: "sv-SE", en: "en-US" };
 
-function formatDate(value: string | undefined): string {
+function formatDate(value: string | undefined, locale: Locale): string {
   if (!value) return "";
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return "";
-  return SV_DATE.format(d);
+  return new Intl.DateTimeFormat(DATE_LOCALE[locale], {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(d);
 }
 
 export async function generateStaticParams(): Promise<PageParams[]> {
@@ -39,7 +41,7 @@ export async function generateStaticParams(): Promise<PageParams[]> {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await fetchBlogPostBySlug(slug);
+  const post = await fetchBlogPostBySlug(slug, await getLocale());
   if (!post) {
     return { title: "Blogg | MinCFO" };
   }
@@ -75,17 +77,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
+  const locale = await getLocale();
   const [post, shared] = await Promise.all([
-    fetchBlogPostBySlug(slug),
-    fetchSharedContent(),
+    fetchBlogPostBySlug(slug, locale),
+    fetchSharedContent(locale),
   ]);
 
   if (!post || !post.published) {
     notFound();
   }
 
-  const date = formatDate(post.publishedAt);
-  const subline = [post.authorRole, date, post.readingTime ? `${post.readingTime} min läsning` : null]
+  const ui = shared.ui;
+  const date = formatDate(post.publishedAt, locale);
+  const subline = [post.authorRole, date, post.readingTime ? `${post.readingTime} ${ui.readingTimeFull}` : null]
     .filter(Boolean)
     .join(" · ");
 
@@ -138,7 +142,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       />
       <div className={styles.topRail}>
         <div className={styles.backWrap}>
-          <BackButton href="/blogg" />
+          <BackButton href="/blogg" label={ui.back} />
         </div>
 
         <Link href="/" className={styles.logo} aria-label="MinCFO">
@@ -201,7 +205,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             {post.body && post.body.length > 0 ? (
               <PostBody value={post.body} />
             ) : (
-              <p className={styles.bodyP}>Innehåll kommer snart.</p>
+              <p className={styles.bodyP}>{ui.blogContentSoon}</p>
             )}
           </section>
 

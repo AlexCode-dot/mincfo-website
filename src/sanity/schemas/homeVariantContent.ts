@@ -46,6 +46,15 @@ export default defineType({
       readOnly: true,
     }),
 
+    defineField({
+      name: "locale",
+      title: "Språk / Language",
+      type: "string",
+      options: { list: ["sv", "en"] },
+      initialValue: "sv",
+      readOnly: true,
+    }),
+
     // ════════════════════════════════════════════════
     // GROUP: content
     // ════════════════════════════════════════════════

@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import solutionPagesText from "@/content/solutionPagesText.json";
+import solutionPagesTextEn from "@/content/solutionPagesText.en.json";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/locale";
 import type { TestimonialItem } from "../ceo-founders/TestimonialSpotlight";
 
 export type SolutionTextCard = {
@@ -140,7 +142,11 @@ type RawSolutionPagesText = {
   pages: RawPage[];
 };
 
-const rawSolutions = solutionPagesText as RawSolutionPagesText;
+const RAW_BY_LOCALE: Record<Locale, RawSolutionPagesText> = {
+  sv: solutionPagesText as RawSolutionPagesText,
+  en: solutionPagesTextEn as RawSolutionPagesText,
+};
+const rawSolutions = RAW_BY_LOCALE[DEFAULT_LOCALE];
 
 const IMPACT_VISUALS_BY_KEY: Record<
   string,
@@ -261,10 +267,17 @@ function mapPage(page: RawPage): SolutionPageContent {
   };
 }
 
-const pageByKey = new Map(rawSolutions.pages.map((page) => [page.key, mapPage(page)]));
+const PAGE_BY_KEY_BY_LOCALE: Record<Locale, Map<string, SolutionPageContent>> = {
+  sv: new Map(RAW_BY_LOCALE.sv.pages.map((page) => [page.key, mapPage(page)])),
+  en: new Map(RAW_BY_LOCALE.en.pages.map((page) => [page.key, mapPage(page)])),
+};
 
-function getPageContent(key: string): SolutionPageContent {
-  const page = pageByKey.get(key);
+function getPageContent(
+  key: string,
+  locale: Locale = DEFAULT_LOCALE,
+): SolutionPageContent {
+  const byKey = PAGE_BY_KEY_BY_LOCALE[locale] ?? PAGE_BY_KEY_BY_LOCALE[DEFAULT_LOCALE];
+  const page = byKey.get(key) ?? PAGE_BY_KEY_BY_LOCALE[DEFAULT_LOCALE].get(key);
   if (!page) {
     throw new Error(`Missing solution page content for key: ${key}`);
   }
@@ -278,15 +291,18 @@ export const KONSULT_TJANSTER_CONTENT = getPageContent("Konsult & Tjänster");
 export const EHANDEL_CONTENT = getPageContent("E-handel");
 
 // Async version that fetches from Sanity with JSON fallback
-export async function fetchSolutionContent(key: string): Promise<SolutionPageContent> {
+export async function fetchSolutionContent(
+  key: string,
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<SolutionPageContent> {
   try {
     const { fetchSolutionPagesText } = await import("@/sanity/lib/fetchSolutionContent");
-    const data = await fetchSolutionPagesText();
+    const data = await fetchSolutionPagesText(locale);
     const raw = data as RawSolutionPagesText;
     const page = raw.pages.find((p) => p.key === key);
-    if (!page) return getPageContent(key);
+    if (!page) return getPageContent(key, locale);
     return mapPage(page);
   } catch {
-    return getPageContent(key);
+    return getPageContent(key, locale);
   }
 }

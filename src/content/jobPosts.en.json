@@ -1,0 +1,258 @@
+{
+  "posts": [
+    {
+      "slug": "fullstack-developer-intern",
+      "title": "Fullstack Developer Intern – 6 months",
+      "eyebrow": "Development",
+      "tagline": "Want to spend your next six months building digital solutions that actually make a difference?",
+      "shortDescription": "Build the next generation platform for financial control together with our product team. 6-month internship.",
+      "location": "Gothenburg / Hybrid / Remote",
+      "employmentType": "Internship – full-time or part-time",
+      "start": "By agreement",
+      "compensation": "Unpaid merit internship",
+      "openForApplications": true,
+      "order": 10,
+      "intro": "MinCFO is now looking for a passionate Fullstack developer where you get to help build the next generation platform for financial control. As a Fullstack Intern at MinCFO you become part of our product team. We believe in learn by doing. You will work with both frontend and backend to create seamless, user-friendly features that simplify everyday life for entrepreneurs.\n\nThe role is a 6-month internship (full-time or part-time by agreement) and an unpaid merit internship – tailored for you who want to build a strong CV and gain hands-on experience alongside or after your studies.",
+      "sections": [
+        {
+          "heading": "What you'll work with",
+          "body": "",
+          "bullets": [
+            "Develop and maintain web applications across the full stack.",
+            "Implement new features in close collaboration with our accountants, customers and the rest of the developer team.",
+            "Write clean, testable and scalable code – a lot of it together with AI agents.",
+            "Help influence technical decisions and architecture choices.",
+            "Integrate external APIs and optimize database flows."
+          ]
+        },
+        {
+          "heading": "Who we're looking for",
+          "body": "We're looking for you who study or have studied information systems, computer engineering or equivalent at a vocational college/university and who are passionate about building products from the ground up. We believe that you:",
+          "bullets": [
+            "Have good knowledge of modern frameworks (e.g. React, Vue or Angular) and backend languages (e.g. Node.js, Python or C#).",
+            "Have a good understanding of databases (SQL or NoSQL).",
+            "Love solving complex problems and aren't afraid to try new technologies.",
+            "Are a team player who thrives in an agile environment with fast iterations.",
+            "Have an eye for UI/UX – you care about how the user experiences what you build.",
+            "Have an interest in understanding how fintech products work and take product ownership of your work."
+          ]
+        },
+        {
+          "heading": "Why MinCFO?",
+          "body": "",
+          "bullets": [
+            "Real responsibility: You get to work on real projects that go live, not just practice tasks.",
+            "Mentorship: Work together with experienced developers and entrepreneurs who support your growth.",
+            "Flexibility: Possibility to work remotely or from our office in Gothenburg.",
+            "Startup culture: An environment with short decision paths, an open atmosphere and a great community."
+          ]
+        }
+      ],
+      "closingHeading": "Application",
+      "closingBody": "Ready to grow together with us? Send your CV and ideally a link to GitHub or a project portfolio. We review applications on a rolling basis!"
+    },
+    {
+      "slug": "junior-redovisnings-intern",
+      "title": "Junior Accounting Intern",
+      "eyebrow": "Finance",
+      "tagline": "Are you a student or recent graduate who wants to learn accounting for real in a modern, digital environment?",
+      "shortDescription": "Learn accounting from the ground up together with experienced consultants in a modern, digital finance firm.",
+      "location": "Gothenburg / Hybrid / Remote",
+      "employmentType": "Internship – part-time or full-time",
+      "start": "By agreement",
+      "compensation": "Unpaid merit internship",
+      "openForApplications": true,
+      "order": 20,
+      "intro": "MinCFO is now looking for a junior Intern who wants to grow with us and our customers. MinCFO is not a traditional accounting firm. We are an entrepreneur-driven partner for growth companies. We build the finance function of the future through digitalization, smart processes and advisory that makes a real difference. With us you get to be where it happens, in an environment characterized by energy and innovation. We have an in-house tool that uses AI to analyze our customers' data.",
+      "sections": [
+        {
+          "heading": "The role in brief",
+          "body": "As an Accounting Intern you get the chance to learn the craft from the ground up in a digital environment. You support our experienced consultants in the daily work and gradually take on more responsibility as you find your feet.",
+          "bullets": []
+        },
+        {
+          "heading": "What you'll do with us",
+          "body": "You get a broad introduction to life at a modern finance firm:",
+          "bullets": [
+            "Assist with ongoing bookkeeping and monthly reconciliations.",
+            "Help with customers' payroll processes and reporting.",
+            "Manage digital flows and streamline processes in systems such as Fortnox.",
+            "Prepare source data for year-end and financial analysis.",
+            "Support the team with administrative tasks related to customers' growth journey."
+          ]
+        },
+        {
+          "heading": "Who are you?",
+          "body": "We're looking for you who study at the School of Business at the University of Gothenburg and have a genuine interest in accounting and entrepreneurship. We believe that you:",
+          "bullets": [
+            "Have a solid theoretical (and ideally practical) foundation in accounting.",
+            "Are a fast learner when it comes to digital tools and systems.",
+            "Are thorough, structured and take responsibility for your tasks.",
+            "Thrive in an entrepreneurial environment with an open atmosphere where you quickly get a lot of responsibility."
+          ]
+        },
+        {
+          "heading": "Why MinCFO?",
+          "body": "",
+          "bullets": [
+            "Steep learning curve: You get to learn the latest systems and the smartest processes in the industry.",
+            "Flexibility: We have great understanding for exam periods and lectures.",
+            "Career opportunities: We're growing fast – for the right person there are good chances of employment after completed studies or internship.",
+            "Community: You become part of a tight team in central Gothenburg. We play ping pong, have monthly activities, after works and always have fruit and free soft drinks chilling."
+          ]
+        }
+      ],
+      "closingHeading": "Application",
+      "closingBody": "Want to build your foundation as a future accounting consultant with us? Send in your CV. We interview on a rolling basis!"
+    },
+    {
+      "slug": "lia-seo-content",
+      "title": "Internship SEO & Content – Marketing Assistant",
+      "eyebrow": "Marketing",
+      "tagline": "Shape MinCFO's digital presence! Internship in SEO & Content.",
+      "shortDescription": "SEO, content and social media – build MinCFO's digital footprint and learn how brands are built.",
+      "location": "Gothenburg / Hybrid / Remote",
+      "employmentType": "Work placement / Internship – part-time or full-time",
+      "start": "Immediately / By agreement",
+      "compensation": "Unpaid merit internship",
+      "openForApplications": true,
+      "order": 30,
+      "intro": "Are you a sharp writer who wants to learn how to build a brand digitally? MinCFO is now looking for an intern focused on SEO optimization, content and social media.\n\nIn the role as Marketing Assistant you get significant creative responsibility. You help us reach out with our expertise by creating content that search engines, AI and humans love. You work on optimizing our website and make sure MinCFO is visible where our future customers are.",
+      "sections": [
+        {
+          "heading": "Your main tasks",
+          "body": "",
+          "bullets": [
+            "SEO optimization: Analyze keywords and optimize content on our website.",
+            "Content: Write engaging blog posts and articles plus suitable images / visual content (with the help of AI).",
+            "Social media: Own our posts on LinkedIn to strengthen our brand.",
+            "Web: Manage and update content on our website."
+          ]
+        },
+        {
+          "heading": "About you",
+          "body": "We believe you study digital marketing, communication or journalism. You're looking for a place for your work placement, a summer job or a merit-building side job alongside or after your studies.",
+          "bullets": [
+            "You write fluently in Swedish and English.",
+            "You're curious about SEO and how digital marketing drives business.",
+            "You're self-driven and enjoy taking your own initiatives.",
+            "You're thorough with text."
+          ]
+        },
+        {
+          "heading": "Why MinCFO?",
+          "body": "MinCFO is a modern, fast-growing company in central Gothenburg. We are a committed team in bright premises together with other startups – where ping pong breaks, after works and positive energy are a given. Decision paths are short here and you get to influence the business from day one.",
+          "bullets": []
+        }
+      ],
+      "closingHeading": "Application",
+      "closingBody": "Send in your CV and a short text about why you in particular should have the role. We review applications on a rolling basis!"
+    },
+    {
+      "slug": "lia-saljare",
+      "title": "Internship Sales – B2B sales",
+      "eyebrow": "Sales",
+      "tagline": "Want to learn B2B sales for real? Internship/side job at MinCFO.",
+      "shortDescription": "Kickstart your sales career close to the founders and learn how B2B relationships are built from first contact.",
+      "location": "Gothenburg / Remote",
+      "employmentType": "Work placement / Internship – part-time or full-time",
+      "start": "Immediately / By agreement",
+      "compensation": "Unpaid merit internship",
+      "openForApplications": true,
+      "order": 40,
+      "intro": "Want to work at an entrepreneur-driven company that's changing financial services? MinCFO is now looking for driven people who want to kickstart their career in sales and business development.\n\nAs a salesperson at MinCFO you are our voice outward. You work closely with the founders to identify and contact potential customers (leads) to book meetings. You will work with both phone and email as tools and learn how to build trust in complex B2B relationships from first contact.",
+      "sections": [
+        {
+          "heading": "Your main tasks",
+          "body": "",
+          "bullets": [
+            "Identify and prospect exciting growth companies.",
+            "Work leads via cold calls and personal emails.",
+            "Book meetings for our advisors / CEO who take meeting #2.",
+            "Help develop our sales processes and pitches."
+          ]
+        },
+        {
+          "heading": "About you",
+          "body": "We're looking for you who study sales, finance or marketing and want practical experience alongside your studies, or during your work placement period.",
+          "bullets": [
+            "You're fearless, communicative and love building relationships.",
+            "You thrive in a dynamic environment where ideas quickly become reality.",
+            "You're fluent in Swedish and English in both speech and writing.",
+            "You take initiative and bring ideas on how we can reach more people, better and more efficiently.",
+            "It's a plus if you have prior experience in service or sales. Extra plus for phone sales."
+          ]
+        },
+        {
+          "heading": "Why MinCFO?",
+          "body": "MinCFO is a modern, fast-growing company in central Gothenburg. We are a committed team in bright premises together with other startups – where ping pong breaks, after works and positive energy are a given. Decision paths are short here and you get to influence the business from day one.",
+          "bullets": []
+        }
+      ],
+      "closingHeading": "Application",
+      "closingBody": "Send your application directly via the form below. Selection is ongoing."
+    },
+    {
+      "slug": "senior-ekonomikonsult",
+      "title": "Senior Finance Consultant – From Payroll to Closing",
+      "eyebrow": "Finance",
+      "tagline": "We're looking for you who want to take a central role in a growth company building the finance function of the future.",
+      "shortDescription": "Key role in a growing company – combine operational work with analysis and advisory.",
+      "location": "Gothenburg",
+      "employmentType": "Full-time",
+      "start": "By agreement",
+      "compensation": "By agreement",
+      "openForApplications": true,
+      "order": 50,
+      "intro": "MinCFO is an entrepreneur-driven finance firm in rapid growth. We help entrepreneurs and growth companies with accounting, payroll, financial control and business advisory – always with a focus on digitalization, smart processes and real value for the customer. With us you get to help shape the finance function of the future and build a stable foundation for our customers' growth.\n\nWe are in an expansive phase where we grow both organically and through acquisitions, and are now looking for you who want to take a central role in our team.",
+      "sections": [
+        {
+          "heading": "The role in brief",
+          "body": "With us you become a key person and a reliable partner for our customers. You get broad responsibility where you combine operational work with analysis and advisory. You will both drive deliveries independently and be a sounding board for colleagues in the team.",
+          "bullets": []
+        },
+        {
+          "heading": "What you'll do with us",
+          "body": "",
+          "bullets": [
+            "Handle ongoing bookkeeping as well as monthly and annual closing.",
+            "Develop and quality-assure reporting.",
+            "Drive improvements and develop the company's processes.",
+            "Support customers in their financial follow-up and reporting.",
+            "Analyze customers' profitability and contribute with advisory.",
+            "Be an internal knowledge holder and sounding board in the team."
+          ]
+        },
+        {
+          "heading": "Who we think you are",
+          "body": "You're confident in your competence, like responsibility and thrive in an entrepreneurial environment where a lot happens. You have experience of both accounting and payroll, and you thrive in a varied everyday life with different types of customers.",
+          "bullets": []
+        },
+        {
+          "heading": "Success factors",
+          "body": "",
+          "bullets": [
+            "At least 2 years of experience in accounting, ideally from a firm.",
+            "Used to independently driving accounting and year-end closing.",
+            "Deep understanding of the accounting flow and ideally experience of financial control.",
+            "Good system skills (including in Fortnox).",
+            "Ability to build trust in customer relationships and coach colleagues.",
+            "Extra plus if you have run your own firm or been responsible for an accounting department."
+          ]
+        },
+        {
+          "heading": "Why MinCFO?",
+          "body": "",
+          "bullets": [
+            "Opportunity to get a key role in a growth company where you have significant influence on both customers and the company's development.",
+            "An entrepreneurial environment where your experience and drive are highly valued.",
+            "A great office environment together with other startup companies in central Gothenburg – ping pong, free soft drinks, after works and a social atmosphere out of the ordinary.",
+            "A tight team that combines high performance with energy, drive and a lot of laughter."
+          ]
+        }
+      ],
+      "closingHeading": "Application",
+      "closingBody": "Does this sound like your next challenge? Send in your application and help build the finance function of the future together with us!"
+    }
+  ]
+}

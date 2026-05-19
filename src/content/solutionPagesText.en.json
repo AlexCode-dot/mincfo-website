@@ -1,0 +1,831 @@
+{
+  "shared": {
+    "heroPrimaryCta": "Book a demo",
+    "heroSecondaryCta": "See how MinCFO solves it",
+    "scrollLabel": "Read more",
+    "scrollCueAriaLabel": "Scroll to the next section",
+    "logoTickerAriaLabel": "Trusted customer logos",
+    "helpsOverline": "The MinCFO solution",
+    "impactTag": "Business value",
+    "closingOverline": "Trust & CTA",
+    "closingAccent": "Build with MinCFO.",
+    "closingCta": "Book a demo",
+    "scenarioPromptPrefix": "Ask",
+    "scenarioUi": {
+      "typingStatus": "User is typing a question...",
+      "analyzingStatus": "AI is analyzing data...",
+      "readyStatus": "Scenario ready. Ask AI about budget, headcount or the next action",
+      "copilotLabel": "AI Copilot",
+      "copilotResponseLabel": "MinCFO Copilot",
+      "metaLoadingLabel": "Analyzing...",
+      "metaReadyLabel": "Generated in 1.2 s",
+      "boardAriaLabel": "Scenario visualization",
+      "boardTitle": "Scenario outcome",
+      "boardBadge": "Active scenario",
+      "chartComparisonLabel": "Base vs scenario",
+      "legendBase": "Base",
+      "legendScenario": "Scenario",
+      "startLabel": "Start",
+      "waitingLabel": "Waiting for scenario...",
+      "rerunAriaLabel": "Run the scenario again",
+      "disclaimer": "MinCFO can make mistakes. Verify important financial data."
+    },
+    "indexPage": {
+      "backLabel": "Back to the home page",
+      "title": "Solutions",
+      "description": "Choose the focus that best matches your team or your industry."
+    }
+  },
+  "pages": [
+    {
+      "key": "CEO & Founders",
+      "eyebrow": "Solution for CEOs and founders",
+      "heroHeadline": {
+        "first": "Financial clarity for",
+        "second": "CEOs and founders"
+      },
+      "heroIntro": "MinCFO brings AI Copilot, real-time dashboards, forecasting and strategic advisory together in one decision surface. The result is faster prioritization, clearer choices and higher precision in every growth decision.",
+      "logoStripText": "Trusted by growth teams that demand financial precision at high pace",
+      "dilemmaTitle": "The CEO & Founder Dilemma",
+      "dilemmaIntro": "High growth demands speed in decisions. But fragmented data, manual reporting and uncertain forecasts mean important choices are made too late.",
+      "dilemmaCards": [
+        {
+          "title": "No consolidated view of the situation",
+          "body": "ARR, burn, cash flow and cost drivers are updated in different tools. Leadership lacks a shared version of the truth."
+        },
+        {
+          "title": "Decisions are made too late",
+          "body": "Reports arrive long after the deviation occurred. Execution happens on outdated data."
+        },
+        {
+          "title": "Runway risk is spotted late",
+          "body": "Small changes in churn, hiring or GTM cost have a big effect over time but are often seen too late."
+        },
+        {
+          "title": "Growth requires more admin",
+          "body": "As the company grows, the number of manual processes increases. Finance becomes a bottleneck and a brake instead of an enabler."
+        }
+      ],
+      "helpsTitle": "How MinCFO helps CEOs and founders",
+      "helpsIntro": "MinCFO connects data, analysis and execution in one and the same flow, so you can act faster with higher precision.",
+      "helpsCards": [
+        {
+          "title": "Live dashboard for better, faster decisions",
+          "body": "Runway, burn, ARR, margin and deviations in one shared view that updates continuously."
+        },
+        {
+          "title": "AI Copilot for CEOs and founders",
+          "body": "Ask questions in natural language and get answers with specific numbers, explanation and data traceability in seconds."
+        },
+        {
+          "title": "Scenario planning in the same flow",
+          "body": "Test the effect of hiring, GTM and cost level directly on results, cash flow and runway."
+        },
+        {
+          "title": "Automated reporting",
+          "body": "Board and investor packages are built from the same data model, with CFO advisory for clear priorities."
+        }
+      ],
+      "scenario": {
+        "heading": "Scenario visualization",
+        "description": "Test growth decisions and see the direct effect on runway and EBITDA, clearly visualized",
+        "question": "If we increase the sales budget by 18% from August and hire two salespeople in September, how are runway and EBITDA affected by year-end?",
+        "answer1": "With current assumptions, runway drops from 13.8 to 12.4 months. EBITDA is about 0.8 percentage points weaker in Q4.",
+        "answer2": "If the hiring is moved six weeks forward, runway stays at 13 months and the year-end growth target can be kept.",
+        "metricLabels": [
+          "Runway today",
+          "Runway in scenario",
+          "Runway forecast"
+        ],
+        "metricValues": [
+          "13.8 mo",
+          "12.4 mo"
+        ],
+        "metricHints": [
+          "Current plan",
+          "-1.4 months"
+        ],
+        "activeMonth": "Aug",
+        "visualPreset": "compare",
+        "variants": [
+          {
+            "question": "If we increase the sales budget by 18% from August and hire two salespeople in September, how are runway and EBITDA affected by year-end?",
+            "answer1": "With current assumptions, runway drops from 13.8 to 12.4 months. EBITDA is about 0.8 percentage points weaker in Q4.",
+            "answer2": "If the hiring is moved six weeks forward, runway stays at 13 months and the year-end growth target can be kept.",
+            "metricValues": [
+              "13.8 mo",
+              "12.4 mo"
+            ],
+            "metricHints": [
+              "Current plan",
+              "-1.4 months"
+            ],
+            "activeMonth": "Aug",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "What happens to runway and EBITDA if we postpone two planned sales hires to October but keep the GTM budget as planned?",
+            "answer1": "When the sales hires are postponed, short-term cash effect improves and runway strengthens to about 13.1 months without EBITDA being pressured as hard in Q4.",
+            "answer2": "The downside is that the revenue ramp shifts into the next quarter, so the year-end growth target becomes somewhat harder to reach.",
+            "metricValues": [
+              "13.8 mo",
+              "13.1 mo"
+            ],
+            "metricHints": [
+              "Current plan",
+              "-0.7 months"
+            ],
+            "activeMonth": "Sep",
+            "visualPreset": "gauge"
+          },
+          {
+            "question": "If we reduce burn by 8% from September while increasing the marketing budget ahead of Q4, how are runway and the growth target affected?",
+            "answer1": "Lower burn neutralizes most of the increased marketing spend, so runway lands around 13.0 months despite higher activity in Q4.",
+            "answer2": "The scenario gives a better balance between offense and control, but requires campaign efficiency to stay on plan for the growth target to be reached.",
+            "metricValues": [
+              "13.8 mo",
+              "13.0 mo"
+            ],
+            "metricHints": [
+              "Current plan",
+              "-0.8 months"
+            ],
+            "activeMonth": "Sep",
+            "visualPreset": "compare"
+          }
+        ]
+      },
+      "impactHeadline": {
+        "first": "Measurable results.",
+        "second": "Direct effect."
+      },
+      "impactIntro": "Clear impact in both leadership work and financial execution. Less administration and more time for value-creating analysis",
+      "impactCards": [
+        {
+          "title": "Faster decisions",
+          "value": "30-50%",
+          "description": "Shorter time from question to decision in leadership meetings through automated data."
+        },
+        {
+          "title": "Less manual work",
+          "value": "60-80%",
+          "description": "Reduced time in monthly reporting and administration via smart workflows."
+        },
+        {
+          "title": "Proactivity",
+          "value": "1-2 qtr",
+          "description": "Earlier detection of runway risk and financial obstacles for the company."
+        },
+        {
+          "title": "Board material",
+          "value": "Stronger",
+          "description": "Clearer KPI narrative for the board and investors."
+        }
+      ],
+      "closingHeadline": "Ready for the next step?",
+      "closingText": "We help CEOs and founders move from reactive reporting to proactive control with real-time data through AI Copilot, scenario planning and advisory in one and the same interface, so every priority becomes clearer and can be executed on faster."
+    },
+    {
+      "key": "CFO & Finance Team",
+      "eyebrow": "Solution for CFOs and the finance function",
+      "heroHeadline": {
+        "first": "Run the finance function",
+        "second": "proactively with MinCFO"
+      },
+      "heroIntro": "MinCFO connects data sources, automates finance flows and gives the team a platform for analysis, planning and strategic follow-up with AI, real-time data and more reliable forecasting.",
+      "logoStripText": "Trusted by teams that want to combine financial control with operational speed",
+      "dilemmaTitle": "The Finance Dilemma",
+      "dilemmaIntro": "CFO teams need fast precision in control. But manual flows mean important decisions are made too late or not at all.",
+      "dilemmaCards": [
+        {
+          "title": "Manual loops slow finance down",
+          "body": "Month-end close takes too long when data must be collected, validated and compiled manually."
+        },
+        {
+          "title": "Forecast loses momentum",
+          "body": "Assumptions are not updated continuously, which makes forecasts quickly outdated for leadership."
+        },
+        {
+          "title": "Too little analysis, too much control",
+          "body": "The team spends disproportionately much time on control tasks instead of business-relevant analysis."
+        },
+        {
+          "title": "Insights arrive too late",
+          "body": "The business gets signals too late to act operationally in time and reduce deviations."
+        }
+      ],
+      "helpsTitle": "How MinCFO helps CFOs & finance functions",
+      "helpsIntro": "MinCFO brings together data, automation and analysis so the team can deliver faster reporting and better decision support.",
+      "helpsCards": [
+        {
+          "title": "AI Copilot with traceable data",
+          "body": "Copilot explains deviations and answers questions in natural language with clear data traceability."
+        },
+        {
+          "title": "Real-time dashboards for P&L and cash",
+          "body": "Up-to-date financial status in real time without export loops or manual compilation."
+        },
+        {
+          "title": "Continuous forecasting",
+          "body": "The forecast updates continuously as new outcomes and drivers come in, so the team always steers on fresh data."
+        },
+        {
+          "title": "Automated finance workflows",
+          "body": "Report packages, reconciliations and follow-up are standardized and run with higher quality and speed."
+        }
+      ],
+      "scenario": {
+        "heading": "Scenario visualization",
+        "description": "Ask Copilot about the latest quarter's deviations and get an immediate explanation with drivers, drilldown and an updated full-year forecast.",
+        "question": "Which cost drivers explain the EBITDA deviation versus budget in the latest quarter?",
+        "answer1": "68% of the deviation comes from personnel cost and lower gross margin in two business areas.",
+        "answer2": "If the trend persists, the full-year effect is about -3.2 MSEK. Prioritize actions in the two most deviating areas first.",
+        "metricLabels": [
+          "Biggest driver",
+          "Full-year effect",
+          "Full-year forecast"
+        ],
+        "metricValues": [
+          "Personnel cost",
+          "-3.2 MSEK"
+        ],
+        "metricHints": [
+          "68% of the deviation",
+          "If the trend persists"
+        ],
+        "activeMonth": "Oct",
+        "visualPreset": "compare",
+        "variants": [
+          {
+            "question": "Which cost drivers explain the EBITDA deviation versus budget in the latest quarter?",
+            "answer1": "68% of the deviation comes from personnel cost and lower gross margin in two business areas.",
+            "answer2": "If the trend persists, the full-year effect is about -3.2 MSEK. Prioritize actions in the two most deviating areas first.",
+            "metricValues": [
+              "Personnel cost",
+              "-3.2 MSEK"
+            ],
+            "metricHints": [
+              "68% of the deviation",
+              "If the trend persists"
+            ],
+            "activeMonth": "Oct",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "Which two business areas drive the largest negative forecast delta right now, and what full-year effect does that give if the trend continues?",
+            "answer1": "Two business areas together account for most of the forecast gap, mainly driven by lower gross margin and higher delivery cost than plan.",
+            "answer2": "If the development continues unchanged, the negative full-year effect increases to about -4.1 MSEK, which justifies targeted action already in the next period.",
+            "metricValues": [
+              "Two business areas",
+              "-4.1 MSEK"
+            ],
+            "metricHints": [
+              "Driving the biggest gap",
+              "At unchanged trend"
+            ],
+            "activeMonth": "Oct",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "How is the full-year forecast affected if we restore gross margin in the weakest segments and keep personnel cost flat in Q4?",
+            "answer1": "If gross margin recovers in the weakest segments while personnel cost is kept flat, the full-year forecast improves clearly already in Q4.",
+            "answer2": "The forecast gap then shrinks to about -1.1 MSEK, which gives better control without requiring broad cost freezes across the rest of the business.",
+            "metricValues": [
+              "Gross margin",
+              "-1.1 MSEK"
+            ],
+            "metricHints": [
+              "Biggest improvement driver",
+              "After action in Q4"
+            ],
+            "activeMonth": "Oct",
+            "visualPreset": "forecast"
+          }
+        ]
+      },
+      "impactHeadline": {
+        "first": "Measurable results.",
+        "second": "Direct effect."
+      },
+      "impactIntro": "Stronger financial execution with less manual administration and more strategic focus in the team.",
+      "impactCards": [
+        {
+          "title": "Faster close to report",
+          "value": "25-40%",
+          "description": "Shorter cycle from period close to leadership report and decision."
+        },
+        {
+          "title": "Less manual report time",
+          "value": "40-60%",
+          "description": "Reduced time in recurring report production through more automation."
+        },
+        {
+          "title": "Forecast accuracy",
+          "value": "Higher",
+          "description": "More frequently updated assumptions give more robust forecasts."
+        },
+        {
+          "title": "Business-relevant analysis capacity",
+          "value": "More",
+          "description": "Finance gets more time for decision support and strategic follow-up."
+        }
+      ],
+      "testimonials": [
+        {
+          "image": "/customers/testimonials/logo-rikard.avif",
+          "name": "Head of Finance",
+          "role": "B2B SaaS",
+          "quote": "Month-end close took too long and reporting became reactive. With MinCFO we standardized the flows and can act faster in every period."
+        },
+        {
+          "image": "/customers/testimonials/logo-oskar.avif",
+          "name": "CFO",
+          "role": "Growth company",
+          "quote": "Forecasting became significantly more accurate when assumptions are updated continuously. The team now spends more time on analysis and less on manual administration."
+        },
+        {
+          "image": "/customers/testimonials/logo-aviv.avif",
+          "name": "Finance Director",
+          "role": "Scale-up",
+          "quote": "AI Copilot and real-time data gave us faster answers on deviations. We got better control without losing operational speed."
+        }
+      ],
+      "closingHeadline": "Strengthen the CFO function from day one.",
+      "closingText": "MinCFO is built for teams that want to combine financial control with operational speed, with no compromise on data quality."
+    },
+    {
+      "key": "SaaS / Tech",
+      "eyebrow": "Solution for SaaS / Tech",
+      "heroHeadline": {
+        "first": "Connect product growth to finance in real time",
+        "second": ""
+      },
+      "heroIntro": "MinCFO unifies SaaS metrics, financial data and AI-driven analysis in one platform so you can steer growth with control over margin, churn and burn.",
+      "logoStripText": "Trusted by SaaS and tech teams that want to scale with better financial precision",
+      "dilemmaTitle": "The SaaS Dilemma",
+      "dilemmaIntro": "When SaaS metrics and finance don't meet in the same decision surface.",
+      "dilemmaCards": [
+        {
+          "title": "KPIs",
+          "body": "and finance live in different systems: ARR/MRR is tracked separately from results and cash, creating conflicting signals and slowing decisions."
+        },
+        {
+          "title": "Growth is steered without a full cost picture",
+          "body": "Product and GTM initiatives are prioritized without a clear link to margin, CAC payback and burn."
+        },
+        {
+          "title": "Churn effects show up too late",
+          "body": "Changes in churn and expansion are often detected only when the financial effect has already hit."
+        },
+        {
+          "title": "Scenario work becomes ad hoc",
+          "body": "Pricing, headcount and GTM plans are compared manually, which makes follow-up slow and hard to anchor."
+        }
+      ],
+      "helpsTitle": "How MinCFO helps SaaS / Tech",
+      "helpsIntro": "MinCFO brings KPIs, forecasting, automation and CFO advisory together in one shared flow for faster and better-anchored growth decisions.",
+      "helpsCards": [
+        {
+          "title": "AI Copilot explains relationships",
+          "body": "Copilot connects growth, churn, margin and liquidity so the team understands what drives the outcome faster."
+        },
+        {
+          "title": "Shared real-time decision view",
+          "body": "SaaS KPIs and financial metrics are gathered in the same dashboard for clear, continuous steering."
+        },
+        {
+          "title": "Forecasting over 12-18 months",
+          "body": "Churn, new sales and expansion are modeled continuously so plan and reality stay in sync."
+        },
+        {
+          "title": "Automated workflows",
+          "body": "Recurring follow-up, reporting and control tasks run with less manual work and higher quality."
+        }
+      ],
+      "scenario": {
+        "heading": "Scenario visualization",
+        "description": "Ask: What happens to ARR, CAC payback and runway if churn decreases and sales capacity increases?",
+        "question": "What happens to ARR, CAC payback and runway if churn decreases by 1.5 percentage points and sales capacity increases?",
+        "answer1": "ARR increases faster from Q3 as retention improves and new sales scale with higher efficiency.",
+        "answer2": "CAC payback improves by about two months and runway strengthens by around 1.3 months compared to the current plan.",
+        "metricLabels": [
+          "CAC payback",
+          "Runway effect",
+          "Growth forecast"
+        ],
+        "metricValues": [
+          "9.4 mo",
+          "+1.3 mo"
+        ],
+        "metricHints": [
+          "Scenario",
+          "Vs current plan"
+        ],
+        "activeMonth": "Jul",
+        "visualPreset": "forecast",
+        "variants": [
+          {
+            "question": "What happens to ARR, CAC payback and runway if churn decreases by 1.5 percentage points and sales capacity increases?",
+            "answer1": "ARR increases faster from Q3 as retention improves and new sales scale with higher efficiency.",
+            "answer2": "CAC payback improves by about two months and runway strengthens by around 1.3 months compared to the current plan.",
+            "metricValues": [
+              "9.4 mo",
+              "+1.3 mo"
+            ],
+            "metricHints": [
+              "Scenario",
+              "Vs current plan"
+            ],
+            "activeMonth": "Jul",
+            "visualPreset": "forecast"
+          },
+          {
+            "question": "How are ARR and runway affected if we raise the price 4% on new contracts but keep the current win rate and sales cost?",
+            "answer1": "A selective price increase on new contracts lifts ARR quality without burdening sales efficiency, provided the win rate stays stable.",
+            "answer2": "Runway then improves by about 0.9 months thanks to higher gross value per new deal, although the effect comes gradually over two quarters.",
+            "metricValues": [
+              "10.1 mo",
+              "+0.9 mo"
+            ],
+            "metricHints": [
+              "Payback after price increase",
+              "Vs current plan"
+            ],
+            "activeMonth": "Aug",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "If expansion revenue increases while CAC rises 10%, how do payback and growth profile change over the next two quarters?",
+            "answer1": "Higher expansion revenue offsets part of the CAC increase, so the net effect on the growth profile is still positive over the next two quarters.",
+            "answer2": "Payback weakens slightly to about 10.3 months but runway still strengthens by around 0.6 months as expansion starts to show in ARR.",
+            "metricValues": [
+              "10.3 mo",
+              "+0.6 mo"
+            ],
+            "metricHints": [
+              "Payback with higher CAC",
+              "Vs current plan"
+            ],
+            "activeMonth": "Oct",
+            "visualPreset": "compare"
+          }
+        ]
+      },
+      "impactHeadline": {
+        "first": "Measurable results.",
+        "second": "Direct effect."
+      },
+      "impactIntro": "Stronger steering between product, GTM and finance with fewer manual loops and better precision in growth decisions.",
+      "impactCards": [
+        {
+          "title": "Decisions between product, GTM and finance",
+          "value": "Faster",
+          "description": "Clearer link between operational initiatives and financial effect in real time."
+        },
+        {
+          "title": "Prioritization of initiatives",
+          "value": "Better",
+          "description": "Focus on actions that improve unit economics, payback and long-term growth quality."
+        },
+        {
+          "title": "Surprises in cash development",
+          "value": "Fewer",
+          "description": "Continuous scenario follow-up makes risks visible earlier and reduces late corrections."
+        },
+        {
+          "title": "Decision material for board and investors",
+          "value": "Stronger",
+          "description": "Consistent KPIs and clear scenarios strengthen the dialogue about pace, risk and capital needs."
+        }
+      ],
+      "testimonials": [
+        {
+          "image": "/customers/testimonials/logo-rikard.avif",
+          "name": "VP Finance",
+          "role": "B2B SaaS",
+          "quote": "We finally got ARR, churn and cash in the same control picture. It gave us faster prioritization between product, sales and cost level."
+        },
+        {
+          "image": "/customers/testimonials/logo-oskar.avif",
+          "name": "COO",
+          "role": "Tech scale-up",
+          "quote": "When we could simulate headcount and GTM in the same scenario flow, decisions became both faster and better anchored in the leadership team."
+        },
+        {
+          "image": "/customers/testimonials/logo-aviv.avif",
+          "name": "CEO",
+          "role": "SaaS company",
+          "quote": "MinCFO gave us better control over payback and runway without losing growth momentum. We act on signals earlier than before."
+        }
+      ],
+      "closingHeadline": "Scale faster with financial precision.",
+      "closingText": "MinCFO fits SaaS and tech companies that want to combine high growth with enterprise-grade financial discipline."
+    },
+    {
+      "key": "Konsult & Tjänster",
+      "eyebrow": "SOLUTION FOR CONSULTING & SERVICES",
+      "heroHeadline": {
+        "first": "Steer utilization, margin and cash – in real time",
+        "second": ""
+      },
+      "heroIntro": "MinCFO connects project data, costs and cash flow in one decision surface. AI Copilot gives fast answers on profitability per client, team and project — without manual reporting.",
+      "logoStripText": "Trusted by teams that demand financial precision at high pace",
+      "dilemmaTitle": "The Services Dilemma",
+      "dilemmaIntro": "When project profitability is only visible after the month is over.",
+      "dilemmaCards": [
+        {
+          "title": "Many projects, low transparency",
+          "body": "Hard to see margin per client and project in time."
+        },
+        {
+          "title": "Utilization and finance drift apart",
+          "body": "Operational planning lacks a clear link to the financial outcome."
+        },
+        {
+          "title": "Invoicing and cash become reactive",
+          "body": "Late invoices and late signals affect liquidity."
+        },
+        {
+          "title": "Manual compilations",
+          "body": "Reports are built by hand and quickly become outdated."
+        }
+      ],
+      "helpsTitle": "How MinCFO helps Consulting & Services",
+      "helpsIntro": "Real-time insight into project outcomes — with AI that explains deviations and the next action.",
+      "helpsCards": [
+        {
+          "title": "Profitability per client/project",
+          "body": "Track revenue, cost and margin with dimensions in real time."
+        },
+        {
+          "title": "Cash flow overview & forecast",
+          "body": "See upcoming payments in/out and early liquidity risks."
+        },
+        {
+          "title": "AI Copilot for deviations",
+          "body": "Ask why margin is falling and get concrete drivers and recommendations."
+        },
+        {
+          "title": "Planning & scenarios",
+          "body": "Test the effect of pricing, utilization and hiring on results and cash."
+        }
+      ],
+      "scenario": {
+        "heading": "Scenario visualization",
+        "question": "Which three clients drag down margin the most – and what happens if we adjust prices 5% on them?",
+        "answer1": "Three clients account for 62% of the margin drop, mainly due to scope creep and low billable rate.",
+        "answer2": "A 5% price adjustment improves total gross margin by about 1.1 pp and strengthens cash by about 290 k SEK over 90 days.",
+        "metricLabels": [
+          "Margin effect",
+          "Liquidity effect",
+          "Margin forecast"
+        ],
+        "metricValues": [
+          "+1.1 pp",
+          "+290 k SEK"
+        ],
+        "metricHints": [
+          "5% price adjustment",
+          "Over 90 days"
+        ],
+        "activeMonth": "Jul",
+        "visualPreset": "compare",
+        "variants": [
+          {
+            "question": "Which three clients drag down margin the most, and what happens if we adjust prices 5% on them?",
+            "answer1": "Three clients account for 62% of the margin drop, mainly due to scope creep and low billable rate.",
+            "answer2": "A 5% price adjustment improves total gross margin by about 1.1 percentage points and strengthens cash by about 290 k SEK over 90 days.",
+            "metricValues": [
+              "+1.1 pp",
+              "+290 k SEK"
+            ],
+            "metricHints": [
+              "5% price adjustment",
+              "Over 90 days"
+            ],
+            "activeMonth": "Jul",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "How is project margin affected if we raise the billable rate by 4 percentage points in two teams with low utilization?",
+            "answer1": "If two teams with low utilization raise the billable rate by four percentage points, project margin improves quickly in engagements with weak profitability.",
+            "answer2": "The effect corresponds to about a 0.8 percentage point margin lift and around 210 k SEK stronger cash over a quarter, without changing the price level toward the client.",
+            "metricValues": [
+              "+0.8 pp",
+              "+210 k SEK"
+            ],
+            "metricHints": [
+              "Billable rate +4 pp",
+              "Over 90 days"
+            ],
+            "activeMonth": "Aug",
+            "visualPreset": "compare"
+          },
+          {
+            "question": "What effect does it have on EBIT if we shorten the lead time to invoicing by seven days and reduce scope creep in our weakest engagements?",
+            "answer1": "Shorter lead time to invoicing mainly improves cash conversion, while reduced scope creep gives a clearer effect on EBIT in the weakest projects.",
+            "answer2": "Altogether the margin picture improves by about 0.6 percentage points and cash strengthens by roughly 180 k SEK during the following quarter.",
+            "metricValues": [
+              "+0.6 pp",
+              "+180 k SEK"
+            ],
+            "metricHints": [
+              "Scope + invoicing",
+              "Over the next quarter"
+            ],
+            "activeMonth": "Oct",
+            "visualPreset": "forecast"
+          }
+        ]
+      },
+      "impactHeadline": {
+        "first": "Measurable results.",
+        "second": "Direct effect."
+      },
+      "impactIntro": "Less admin. More control. Clearer project steering.",
+      "impactCards": [
+        {
+          "title": "Project margin",
+          "value": "Better",
+          "description": "Earlier signals let you adjust scope and price at the right time."
+        },
+        {
+          "title": "Late surprises",
+          "value": "Fewer",
+          "description": "Deviations in delivery and finance are visible before the month is closed."
+        },
+        {
+          "title": "Liquidity",
+          "value": "Stronger",
+          "description": "Improved foresight in invoicing and incoming payments."
+        },
+        {
+          "title": "Admin in follow-up",
+          "value": "Less",
+          "description": "Automated source data frees up time for analysis and client dialogue."
+        }
+      ],
+      "testimonial": {
+        "image": "/customers/testimonials/logo-oskar.avif",
+        "name": "Consulting company",
+        "role": "CEO",
+        "quote": "We saw margin per client in time and could act before the month was over."
+      },
+      "closingHeadline": "Make project steering financially sharp.",
+      "closingText": "Build with MinCFO and steer utilization, margin and cash with AI Copilot and real-time data."
+    },
+    {
+      "key": "E-handel",
+      "eyebrow": "SOLUTION FOR E-COMMERCE",
+      "heroHeadline": {
+        "first": "Full control over margin and cash – in real time",
+        "second": ""
+      },
+      "heroIntro": "MinCFO connects results, cash flow and key metrics so you can steer growth with control over purchasing, campaigns and profitability. AI Copilot explains deviations instantly.",
+      "logoStripText": "Trusted by teams that demand financial precision at high pace",
+      "dilemmaTitle": "The E-commerce Dilemma",
+      "dilemmaIntro": "When purchasing and campaigns affect cash faster than the reports.",
+      "dilemmaCards": [
+        {
+          "title": "Margin varies quickly",
+          "body": "Campaigns, shipping and returns affect the outcome day by day."
+        },
+        {
+          "title": "Inventory ties up capital",
+          "body": "Purchasing and inventory turnover hit cash before the effect shows in the reports."
+        },
+        {
+          "title": "Hard to measure profitable growth",
+          "body": "Growth can look good but drive burn via CAC, returns and COGS."
+        },
+        {
+          "title": "Reporting becomes lagging",
+          "body": "Decisions are made on history instead of a real-time picture."
+        }
+      ],
+      "helpsTitle": "How MinCFO helps E-commerce",
+      "helpsIntro": "Steer profitability and liquidity with AI, forecasting and real-time data.",
+      "helpsCards": [
+        {
+          "title": "Real-time picture of margin & cash",
+          "body": "See how campaigns, COGS and shipping affect results and liquidity."
+        },
+        {
+          "title": "Forecasting for purchasing and season",
+          "body": "Plan cash needs over 12–18 months with scenarios for season and inventory."
+        },
+        {
+          "title": "AI Copilot for deviations",
+          "body": "Get explanations for margin drops, return drivers and cost increases."
+        },
+        {
+          "title": "Dimensions per channel/product",
+          "body": "Track profitability per channel, product category and market."
+        }
+      ],
+      "scenario": {
+        "heading": "Scenario visualization",
+        "question": "How is cash affected if we increase inventory levels ahead of Q4 and run 2 campaigns at -15%?",
+        "answer1": "Increased inventory ties up about 1.9 MSEK in cash over 60 days. The campaigns lower gross margin by about 1.4 pp but can be offset with a mix toward category A.",
+        "answer2": "Recommendation: phase purchasing in two steps and set a margin floor per campaign.",
+        "metricLabels": [
+          "Liquidity effect",
+          "Margin effect",
+          "Liquidity forecast"
+        ],
+        "metricValues": [
+          "-1.9 MSEK",
+          "-1.4 pp"
+        ],
+        "metricHints": [
+          "60 days",
+          "Campaign period"
+        ],
+        "activeMonth": "Oct",
+        "visualPreset": "forecast",
+        "variants": [
+          {
+            "question": "How is cash affected if we increase inventory levels ahead of Q4 and run 2 campaigns at -15%?",
+            "answer1": "Increased inventory ties up about 1.9 MSEK in cash over 60 days. The campaigns lower gross margin by about 1.4 percentage points but can be offset with a mix toward category A.",
+            "answer2": "Recommendation: phase purchasing in two steps and set a margin floor per campaign.",
+            "metricValues": [
+              "-1.9 MSEK",
+              "-1.4 pp"
+            ],
+            "metricHints": [
+              "60 days",
+              "Campaign period"
+            ],
+            "activeMonth": "Oct",
+            "visualPreset": "forecast"
+          },
+          {
+            "question": "What happens to gross margin and inventory tie-up if we move purchasing earlier ahead of Black Week but keep the marketing budget unchanged?",
+            "answer1": "Earlier purchasing increases inventory tie-up earlier in the quarter, but the margin effect is more controlled when campaign pressure does not increase at the same time.",
+            "answer2": "Cash is affected negatively in the near term, but gross margin holds a better level than in a scenario with both heavy discounts and higher marketing spend.",
+            "metricValues": [
+              "-1.5 MSEK",
+              "-0.8 pp"
+            ],
+            "metricHints": [
+              "Earlier purchasing",
+              "Ahead of Black Week"
+            ],
+            "activeMonth": "Nov",
+            "visualPreset": "forecast"
+          },
+          {
+            "question": "If we lower the campaign discount but increase spend in paid social, how are cash conversion and margin affected through Q4?",
+            "answer1": "A lower discount level protects margin better, but higher paid social spend pressures cash conversion earlier in the campaign period.",
+            "answer2": "The net effect is usually less negative for margin than a deep discount campaign, but requires clear ROAS control to be justifiable.",
+            "metricValues": [
+              "-1.1 MSEK",
+              "-0.6 pp"
+            ],
+            "metricHints": [
+              "Increased spend in paid social",
+              "Through Q4"
+            ],
+            "activeMonth": "Nov",
+            "visualPreset": "compare"
+          }
+        ]
+      },
+      "impactHeadline": {
+        "first": "Measurable results.",
+        "second": "Direct effect."
+      },
+      "impactIntro": "Fewer cash surprises and better campaign and purchasing decisions.",
+      "impactCards": [
+        {
+          "title": "Cash surprises",
+          "value": "Fewer",
+          "description": "Liquidity risks are visible earlier with an updated forecast and scenario work."
+        },
+        {
+          "title": "Campaign decisions",
+          "value": "Better",
+          "description": "Every campaign can be tracked against margin targets and cash effect in real time."
+        },
+        {
+          "title": "Inventory management",
+          "value": "Smarter",
+          "description": "Purchasing is phased based on demand, season and tied-up capital."
+        },
+        {
+          "title": "Profitable growth",
+          "value": "Higher",
+          "description": "Growth is prioritized with better control over CAC, COGS and returns."
+        }
+      ],
+      "testimonial": {
+        "image": "/customers/testimonials/logo-aviv.avif",
+        "name": "E-commerce company",
+        "role": "CEO",
+        "quote": "We could predict the cash effect of purchasing and campaigns and avoided unpleasant surprises."
+      },
+      "closingHeadline": "Scale e-commerce with financial control.",
+      "closingText": "Build with MinCFO and steer margin, cash and inventory with AI Copilot and real-time data."
+    }
+  ]
+}

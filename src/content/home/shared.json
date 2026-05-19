@@ -377,7 +377,16 @@
           "Jun"
         ],
         "personnelAlertTemplate": "Personalkostnad ligger {value}% över budget",
-        "latePaymentsAlert": "Kundinbetalningar ligger 4 dagar efter plan"
+        "latePaymentsAlert": "Kundinbetalningar ligger 4 dagar efter plan",
+        "cashflowUnit": "tkr",
+        "chartTitle": "Netto kassaflöde",
+        "chartDescription": "Jan-Aug utfall • Sep-Dec prognos",
+        "alertPool": [
+          "Personalkostnad ligger 1.7% över budget",
+          "Kundinbetalningar ligger 4 dagar efter plan",
+          "Bruttomarginalen är 0.9 procentenheter under månadsplan",
+          "Likviditetsprognosen är uppdaterad efter senaste leverantörsutbetalning"
+        ]
       },
       "faasOnboarding": {
         "badgeLabel": "Onboarding"
@@ -597,5 +606,69 @@
     "emptyTitle": "Inga inlägg ännu",
     "emptyBody": "Vi laddar artiklar – håll utkik framöver.",
     "backToListLabel": "Tillbaka till alla inlägg"
+  },
+  "ui": {
+    "back": "Tillbaka",
+    "blogEyebrow": "Blogg",
+    "blogLatestAria": "Senaste inlägg",
+    "blogMoreAria": "Fler inlägg",
+    "blogContentSoon": "Innehåll kommer snart.",
+    "readingTimeShort": "min",
+    "readingTimeFull": "min läsning",
+    "jobStartPrefix": "Start:",
+    "jobKeyInfoAria": "Nyckelinformation",
+    "jobFallbackMetaTitle": "Jobb | MinCFO",
+    "paginationAria": "Paginering",
+    "paginationPrev": "Föregående sida",
+    "paginationNext": "Nästa sida",
+    "paginationPage": "Sida",
+    "contact": {
+      "metaTitle": "Boka demo | MinCFO",
+      "metaDescription": "Boka en demo med MinCFO och hitta en tid som passar direkt i kalendern.",
+      "eyebrow": "Boka demo",
+      "title": "Hitta en tid som passar",
+      "subtitle": "Välj en ledig tid direkt i kalendern för att boka en genomgång av MinCFO.",
+      "calendarAria": "Bokningskalender",
+      "calendarTitle": "MinCFO bokningskalender"
+    },
+    "careers": {
+      "metaTitle": "Karriär | MinCFO",
+      "metaDescription": "Bli en del av MinCFO. Se våra lediga tjänster och praktikplatser och skicka in din ansökan direkt på sajten.",
+      "eyebrow": "Karriär",
+      "openTitle": "Var med och bygg framtidens ekonomifunktion",
+      "openSubtitle": "Vi söker drivna människor som vill växa tillsammans med oss och våra kunder. Här är rollerna vi rekryterar till just nu.",
+      "closedTitle": "Vi har inga lediga tjänster ute just nu",
+      "closedSubtitle": "Just nu rekryterar vi inte aktivt, men vi är alltid intresserade av att komma i kontakt med skarpa personer som tror på det vi bygger på MinCFO.",
+      "listAria": "Lediga tjänster",
+      "readMore": "Läs mer",
+      "spontaneousTitle": "Vill du ändå höra av dig?",
+      "spontaneousBodyPre": "Om du tror att du skulle kunna passa hos oss får du gärna skicka en kort presentation till ",
+      "spontaneousBodyPost": ". Berätta gärna vem du är, vad du är bra på och varför MinCFO känns relevant för dig.",
+      "spontaneousCta": "Skicka spontanansökan"
+    },
+    "applicationForm": {
+      "cvRequired": "Välj en CV-fil (PDF).",
+      "cvTooLarge": "CV:t får vara max 15 MB.",
+      "genericError": "Något gick fel. Försök igen.",
+      "networkError": "Kunde inte nå servern. Kontrollera din anslutning och försök igen.",
+      "successTitle": "Tack för din ansökan!",
+      "successText": "Vi har tagit emot din ansökan och hör av oss så snart vi har gått igenom den.",
+      "eyebrow": "Ansökan",
+      "title": "Skicka in din ansökan",
+      "subtitle": "Bifoga ditt CV och berätta i max 500 tecken varför just du ska ha rollen. Din ansökan skickas direkt till Victor på MinCFO.",
+      "nameLabel": "Namn",
+      "namePlaceholder": "För- och efternamn",
+      "emailLabel": "E-post",
+      "emailPlaceholder": "din@email.se",
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "+46 70 123 45 67",
+      "motivationLabel": "Varför ska just du ha rollen?",
+      "charsRemaining": "tecken kvar",
+      "motivationPlaceholder": "Berätta kort vad du tar med dig och varför du passar.",
+      "cvLabel": "CV (PDF, max 15 MB)",
+      "cvChoose": "Välj fil...",
+      "submit": "Skicka ansökan",
+      "fineprint": "Genom att skicka in samtycker du till att MinCFO hanterar din ansökan för rekryteringsändamål."
+    }
   }
 }

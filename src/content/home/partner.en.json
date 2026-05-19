@@ -1,0 +1,341 @@
+{
+  "hero": {
+    "tagline": "Finance-as-a-Service",
+    "titleLine1": "Scale your firm with the MinCFO Firm Portal",
+    "titleLine2": "",
+    "body": "Automatically generated proactive advice based on specific trigger points and AI that acts as 1st line support. By bringing all client communication and delivery together in MinCFO you create a unified and professional flow for the entire portfolio",
+    "primaryCta": "Book a demo",
+    "secondaryCta": "See how it works",
+    "address": "app.mincfo.com/dashboard",
+    "playAriaLabel": "Play demo video",
+    "enterFullscreenAriaLabel": "Enter fullscreen demo",
+    "exitFullscreenAriaLabel": "Exit fullscreen demo",
+    "videoAriaLabel": "Demo video of MinCFO dashboard",
+    "videoFallback": "Your browser cannot play the video."
+  },
+  "aicopilot": {
+    "leftPill": "What you get as a partner",
+    "leftTitle": "A systematic way of working across multiple clients",
+    "leftIntro": "MinCFO helps you go from raw data to advisory-ready material faster. Instead of building every delivery from zero, you get a shared way of working for dashboards, forecasts and analysis across multiple clients.",
+    "leftBullets": [
+      "Faster analysis and follow-up across multiple clients",
+      "More consistent delivery in dashboards and report material",
+      "More advisory time and less manual compilation work"
+    ],
+    "panelTitle": "AI Copilot",
+    "loadingAria": "AI is analyzing data",
+    "statusSending": "Sending question...",
+    "statusAnalyzing": "AI is analyzing data...",
+    "inputPlaceholder": "Ask AI about finance, forecasts or the next action",
+    "sendAria": "Send question",
+    "examples": [
+      {
+        "question": "What does our runway look like based on Q3?",
+        "answer": "At the current burn rate you have about 11.4 months of runway. The biggest impact is SaaS costs and recruitment in November.",
+        "chartTitle": "Runway forecast",
+        "chartUnit": "Months",
+        "yTicks": [
+          "12",
+          "10",
+          "8",
+          "6"
+        ],
+        "bars": [
+          {
+            "height": "92%",
+            "label": "Now",
+            "value": "11.4"
+          },
+          {
+            "height": "82%",
+            "label": "Oct",
+            "value": "10.2"
+          },
+          {
+            "height": "71%",
+            "label": "Nov",
+            "value": "8.9"
+          },
+          {
+            "height": "59%",
+            "label": "Dec",
+            "value": "7.4"
+          },
+          {
+            "height": "48%",
+            "label": "Jan",
+            "value": "6.0"
+          }
+        ]
+      },
+      {
+        "question": "How much of our costs are fixed vs variable?",
+        "answer": "The cost base is roughly 62% fixed costs and 38% variable. The variable costs are driven mainly by marketing and transaction fees.",
+        "chartTitle": "Cost breakdown",
+        "chartUnit": "Share %",
+        "yTicks": [
+          "80",
+          "60",
+          "40",
+          "20"
+        ],
+        "bars": [
+          {
+            "height": "78%",
+            "label": "Fixed",
+            "value": "62%"
+          },
+          {
+            "height": "48%",
+            "label": "Variable",
+            "value": "38%"
+          }
+        ]
+      }
+    ],
+    "dashboard": {
+      "previewAria": "Dashboard Preview",
+      "metricMenuAria": "Choose metric",
+      "pill": "Dashboard",
+      "title": "The same quality across more client deliveries",
+      "intro": "Build scalable dashboards and report packages that make your follow-up consistent across the entire portfolio. You explain the situation more clearly, save time on preparation and raise the level in every client conversation.",
+      "kpiBullets": [
+        "Create a unified model for all clients and skip time-consuming custom setups.",
+        "Generate board-ready material in seconds",
+        "Eliminate manual work and person-dependent files"
+      ],
+      "resultTitle": "Financial report · 2025",
+      "currentLabel": "Latest",
+      "previousLabel": "Previous",
+      "currencyLabel": "SEK",
+      "metricOptions": [
+        "Net revenue",
+        "EBIT",
+        "EBITDA",
+        "Gross profit"
+      ],
+      "compareLabel": "Compared to prev. period",
+      "trendAxisTicks": [
+        "500K",
+        "375K",
+        "250K",
+        "125K",
+        "0"
+      ],
+      "monthLabelsSv": [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ]
+    },
+    "planning": {
+      "panelAria": "Planning and benchmarking",
+      "pill": "Planning & Comparison",
+      "title": "Scalable forecasting and reusable scenarios",
+      "intro": "Standardize forecast and scenario work with a consistent delivery model. Reuse proven structures for benchmarking and deviation analysis and get deeper insights faster across the entire client portfolio.",
+      "bullets": [
+        "Scenario work that can be reused between clients",
+        "Generate board-ready material instantly with automated tools for benchmarking and cash flow analysis.",
+        "Identify risks and liquidity needs earlier with scalable flows that ensure quality as the firm grows."
+      ],
+      "forecastTitle": "Forecast",
+      "liveLabel": "Live forecast",
+      "reconciliationTitle": "",
+      "reconciliationSubtext": "",
+      "actualPrefix": "Current month",
+      "forecastPrefix": "Forecast month",
+      "vsPrevious": "Compared to the previous month",
+      "annualVariance": "Annual variance vs baseline",
+      "legend": "",
+      "monthLabelsEn": [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
+      "monthAriaPrefix": "Show budget for"
+    }
+  },
+  "solutions": {
+    "pill": "Solutions",
+    "title": "How firms and advisors use MinCFO in client work",
+    "intro": "MinCFO suits partner teams that want to standardize follow-up, deliver better decision support and scale advisory without every client setup becoming its own special project.",
+    "cardCta": "See solution",
+    "cards": [
+      {
+        "href": "/losningar/ceo-founders",
+        "title": "CEO & Founders",
+        "text": "For advisors who work closely with founders and leadership and want to deliver faster, clearer and more recurring financial material.",
+        "icon": "rocket"
+      },
+      {
+        "href": "/losningar/cfo-finance",
+        "title": "CFO & Finance Team",
+        "text": "For finance consultants who want to combine operational follow-up with standardized dashboards, better analysis and clearer scenario work.",
+        "icon": "briefcase"
+      },
+      {
+        "href": "/losningar/saas-tech",
+        "title": "SaaS / Tech",
+        "text": "For partner teams working with SaaS clients who want to package KPIs, runway and forecasts in a more professional decision surface.",
+        "icon": "cpu"
+      },
+      {
+        "href": "/losningar/konsult-tjanster",
+        "title": "Consulting & Services",
+        "text": "For advisors with service companies as clients where utilization, margin and cash flow need clear and recurring follow-up.",
+        "icon": "building"
+      },
+      {
+        "href": "/losningar/ehandel",
+        "title": "E-commerce",
+        "text": "For partner teams that want to give e-commerce clients better control over margin, inventory and liquidity without building every analysis manually.",
+        "icon": "cart"
+      }
+    ]
+  },
+  "customers": {
+    "pill": "CUSTOMERS",
+    "title": "Companies using MinCFO as their finance function",
+    "intro": "Here are examples of teams that use MinCFO as a full-service solution to avoid running finance internally, while still having full visibility into results, cash flow and deviations.",
+    "tickerLabel": "Trusted by companies that want to place finance and follow-up with an external partner",
+    "controlsAria": "Browse customer reviews",
+    "prevAria": "Previous review",
+    "nextAria": "Next review",
+    "trustedAria": "Customers who trust us",
+    "cardAriaLabelTemplate": "Show review from {person} at {company}",
+    "testimonials": [
+      {
+        "company": "Growbit",
+        "person": "Max Norén & Conrad Brown-Bolin",
+        "role": "Co-founders, Growbit",
+        "quote": "With MinCFO we get a clear picture of revenue per customer and service, can deep-dive into monthly costs per supplier and forecast with AI that continuously updates the numbers based on actual outcomes.",
+        "avatarFiles": [
+          "Screenshot 2026-03-18 at 15.21.41.png",
+          "Screenshot 2026-03-18 at 15.21.51.png"
+        ],
+        "accent": true
+      },
+      {
+        "company": "Hey Sid",
+        "person": "Rikard Jonsson",
+        "role": "CEO, Hey Sid",
+        "quote": "We outsourced the entire finance function to MinCFO and got more time for our core business. Even though we no longer do the work ourselves, our understanding of finance is better than ever",
+        "avatarFile": "logo-rikard.avif",
+        "accent": false
+      },
+      {
+        "company": "Showcase",
+        "person": "Aviv Fahri",
+        "role": "CEO, Showcase",
+        "quote": "MinCFO takes responsibility for follow-up and delivery, not just visualization. They are proactive, find improvement actions and give concrete advice before we've even had time to ask. We got full control without spending the time internally.",
+        "avatarFile": "logo-aviv.avif",
+        "accent": true
+      },
+      {
+        "company": "Sweden ballistics",
+        "person": "Joakim Sjöholm",
+        "role": "CEO, Swebal AB",
+        "quote": "With MinCFO we don't have to spend valuable time on reporting, financial analysis and administration. Instead we can focus fully on our core business and the planning of a new factory.",
+        "avatarFile": "logo-joakim.avif",
+        "accent": false
+      },
+      {
+        "company": "Lawster",
+        "person": "Joel Wikman",
+        "role": "CEO, Lawster",
+        "quote": "I always know where we stand financially. No surprises, no question marks. That makes it much easier to make decisions.",
+        "avatarFile": "lawster-vd.png",
+        "accent": true
+      },
+      {
+        "company": "Hälsa Hemma",
+        "person": "Oskar Nordmark",
+        "role": "Financial Controller, Hälsa Hemma",
+        "quote": "MinCFO is an important support in our growth. With over 100 payrolls in a fast-moving business we need structure and reliability — which we get every month. They take the administrative load off and deliver fast, accurate answers, so we can focus on the business..",
+        "avatarFile": "logo-oskar.avif",
+        "accent": true
+      }
+    ],
+    "trustedLogos": [
+      {
+        "name": "Growbit",
+        "file": "logo-growbit.svg"
+      },
+      {
+        "name": "BAM",
+        "file": "logo-bam.avif"
+      },
+      {
+        "name": "Eloize",
+        "file": "logo-eloize.avif"
+      },
+      {
+        "name": "Fler",
+        "file": "logo-fler.avif"
+      },
+      {
+        "name": "Hälsa Hemma",
+        "file": "logo-hälsa.avif"
+      },
+      {
+        "name": "Lawster",
+        "file": "logo-lawster.avif"
+      },
+      {
+        "name": "Qsid",
+        "file": "logo-qsid.avif"
+      },
+      {
+        "name": "Realforce",
+        "file": "logo-realforce.avif"
+      },
+      {
+        "name": "Rossoneri",
+        "file": "logo-rossoneri.avif"
+      },
+      {
+        "name": "Runway",
+        "file": "logo-runway.webp"
+      },
+      {
+        "name": "Showcase",
+        "file": "logo-showcase.avif"
+      },
+      {
+        "name": "SweBal",
+        "file": "logo-swebal.avif"
+      },
+      {
+        "name": "Safetly",
+        "file": "logo-safetly.svg"
+      },
+      {
+        "name": "Azeea",
+        "file": "logo-azeea.svg"
+      }
+    ]
+  },
+  "ending": {
+    "title": "Discover the power of MinCFO - See how MinCFO works in a scalable client delivery",
+    "body": "Book a demo and see how you can standardize follow-up, deliver better analysis and create value for every client without building every delivery from scratch.",
+    "primaryCta": "Book a demo for firms"
+  }
+}

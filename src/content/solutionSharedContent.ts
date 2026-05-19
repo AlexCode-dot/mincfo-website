@@ -1,4 +1,6 @@
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/locale";
 import solutionPagesText from "./solutionPagesText.json";
+import solutionPagesTextEn from "./solutionPagesText.en.json";
 
 export type SolutionSharedContent = {
   heroPrimaryCta: string;
@@ -62,9 +64,7 @@ type RawSolutionPagesText = {
   shared: RawShared;
 };
 
-const raw = solutionPagesText as RawSolutionPagesText;
-
-export const SOLUTION_SHARED_CONTENT: SolutionSharedContent = {
+const buildShared = (raw: RawSolutionPagesText): SolutionSharedContent => ({
   heroPrimaryCta: raw.shared.heroPrimaryCta,
   heroSecondaryCta: raw.shared.heroSecondaryCta,
   scrollLabel: raw.shared.scrollLabel,
@@ -78,4 +78,15 @@ export const SOLUTION_SHARED_CONTENT: SolutionSharedContent = {
   scenarioPromptPrefix: raw.shared.scenarioPromptPrefix,
   scenarioUi: raw.shared.scenarioUi,
   indexPage: raw.shared.indexPage,
+});
+
+const SHARED_BY_LOCALE: Record<Locale, SolutionSharedContent> = {
+  sv: buildShared(solutionPagesText as RawSolutionPagesText),
+  en: buildShared(solutionPagesTextEn as RawSolutionPagesText),
 };
+
+export const getSolutionSharedContent = (
+  locale: Locale = DEFAULT_LOCALE,
+): SolutionSharedContent => SHARED_BY_LOCALE[locale] ?? SHARED_BY_LOCALE[DEFAULT_LOCALE];
+
+export const SOLUTION_SHARED_CONTENT: SolutionSharedContent = SHARED_BY_LOCALE[DEFAULT_LOCALE];

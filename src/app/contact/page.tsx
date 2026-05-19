@@ -1,22 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
+import { getSharedText } from "@/content/homePageText";
+import { getLocale } from "@/i18n/server";
 import BackButton from "./BackButton";
 import styles from "./page.module.scss";
 
 const HUBSPOT_MEETINGS_URL = "https://meetings-eu1.hubspot.com/vpernvik/webpagelink";
 
-export const metadata: Metadata = {
-  title: "Boka demo | MinCFO",
-  description: "Boka en demo med MinCFO och hitta en tid som passar direkt i kalendern.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const c = getSharedText(await getLocale()).ui.contact;
+  return {
+    title: c.metaTitle,
+    description: c.metaDescription,
+  };
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const ui = getSharedText(await getLocale()).ui;
+  const c = ui.contact;
   return (
     <div className={styles.page}>
       <div className={styles.topRail}>
         <div className={styles.backWrap}>
-          <BackButton />
+          <BackButton label={ui.back} />
         </div>
 
         <Link href="/" className={styles.logo} aria-label="MinCFO">
@@ -35,19 +42,19 @@ export default function ContactPage() {
       <main className={styles.main}>
         <div className={styles.shell}>
           <header className={styles.hero}>
-            <p className={styles.eyebrow}>Boka demo</p>
-            <h1 className={styles.title}>Hitta en tid som passar</h1>
+            <p className={styles.eyebrow}>{c.eyebrow}</p>
+            <h1 className={styles.title}>{c.title}</h1>
             <p className={styles.subtitle}>
-              Välj en ledig tid direkt i kalendern för att boka en genomgång av MinCFO.
+              {c.subtitle}
             </p>
           </header>
 
-          <section className={styles.card} aria-label="Bokningskalender">
+          <section className={styles.card} aria-label={c.calendarAria}>
             <div className={styles.frame}>
               <iframe
                 className={styles.embed}
                 src={HUBSPOT_MEETINGS_URL}
-                title="MinCFO bokningskalender"
+                title={c.calendarTitle}
                 loading="lazy"
                 referrerPolicy="strict-origin-when-cross-origin"
               />

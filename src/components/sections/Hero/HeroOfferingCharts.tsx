@@ -1,10 +1,60 @@
 "use client";
 import { ChevronDown } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Area, AreaChart, CartesianGrid, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import { useOptionalLocale } from "@/i18n/LocaleProvider";
+import type { Locale } from "@/i18n/locale";
 import styles from "./HeroOfferingShowcase.module.scss";
 
-const liquidityMonths = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"] as const;
+const MONTHS_BY_LOCALE: Record<Locale, readonly string[]> = {
+  sv: ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"],
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+};
+
+const CHART_STRINGS: Record<
+  Locale,
+  {
+    cashflowForecast: string;
+    runway: string;
+    unit: string;
+    actual: string;
+    forecast: string;
+    perMonth: string;
+    averageCashflow: string;
+    months: string;
+    chartSelectAria: string;
+    chartMenuAria: string;
+    runwayPeriodAria: string;
+  }
+> = {
+  sv: {
+    cashflowForecast: "Kassaflödesprognos",
+    runway: "Runway",
+    unit: "tkr",
+    actual: "Utfall",
+    forecast: "Prognos",
+    perMonth: "/mån",
+    averageCashflow: "Genomsnittligt kassaflöde",
+    months: "månader",
+    chartSelectAria: "Välj diagram",
+    chartMenuAria: "Diagramval",
+    runwayPeriodAria: "Välj period för runway",
+  },
+  en: {
+    cashflowForecast: "Cash flow forecast",
+    runway: "Runway",
+    unit: "k SEK",
+    actual: "Actual",
+    forecast: "Forecast",
+    perMonth: "/mo",
+    averageCashflow: "Average cash flow",
+    months: "months",
+    chartSelectAria: "Choose chart",
+    chartMenuAria: "Chart selection",
+    runwayPeriodAria: "Select runway period",
+  },
+};
+
 // Trailing twelve-month net cashflow profile for a company moving
 // from sustained burn into a healthier cash generation trend.
 const trailingTwelveMonthCashflowKsek = [-80, -72, -68, -60, -48, -12, 8, -6, 24, 52, 68, 14] as const;
@@ -14,46 +64,36 @@ const openingCashBalanceKsek = 300;
 
 const latestActualCashBalanceKsek = openingCashBalanceKsek + actualMonthlyCashflowKsek.reduce((sum, value) => sum + value, 0);
 
-const liquidityChartData = liquidityMonths.map((month, index) => {
-  const actualCutoff = actualMonthlyCashflowKsek.length;
+const buildLiquidityChartData = (months: readonly string[]) =>
+  months.map((month, index) => {
+    const actualCutoff = actualMonthlyCashflowKsek.length;
 
-  if (index < actualCutoff) {
-    const actual = openingCashBalanceKsek + actualMonthlyCashflowKsek
-      .slice(0, index + 1)
+    if (index < actualCutoff) {
+      const actual = openingCashBalanceKsek + actualMonthlyCashflowKsek
+        .slice(0, index + 1)
+        .reduce((sum, value) => sum + value, 0);
+
+      return {
+        month,
+        actual,
+        forecast: index === actualCutoff - 1 ? actual : null,
+      };
+    }
+
+    const forecastOffset = index - actualCutoff + 1;
+    const forecast = latestActualCashBalanceKsek + forecastMonthlyCashflowKsek
+      .slice(0, forecastOffset)
       .reduce((sum, value) => sum + value, 0);
 
     return {
       month,
-      actual,
-      forecast: index === actualCutoff - 1 ? actual : null,
+      actual: null,
+      forecast,
     };
-  }
+  });
 
-  const forecastOffset = index - actualCutoff + 1;
-  const forecast = latestActualCashBalanceKsek + forecastMonthlyCashflowKsek
-    .slice(0, forecastOffset)
-    .reduce((sum, value) => sum + value, 0);
-
-  return {
-    month,
-    actual: null,
-    forecast,
-  };
-});
-
-const chartOptions = {
-  liquidity: {
-    label: "Kassaflödesprognos",
-    unit: "tkr",
-    data: liquidityChartData,
-  },
-  runway: {
-    label: "Runway",
-    subtitle: "Månader kvar",
-  },
-} as const;
-
-type ChartOptionKey = keyof typeof chartOptions;
+const CHART_KEYS = ["liquidity", "runway"] as const;
+type ChartOptionKey = (typeof CHART_KEYS)[number];
 type RunwayWindow = 1 | 3 | 6 | 12;
 const CHART_AUTOPLAY_SEQUENCE: ChartOptionKey[] = ["liquidity", "runway"];
 const CHART_AUTOPLAY_DELAY_MS = 3600;
@@ -77,11 +117,15 @@ function LiquidityTooltip({
   payload,
   label,
   unit,
+  actualLabel,
+  forecastLabel,
 }: {
   active?: boolean;
   payload?: Array<{ dataKey?: string; value?: number | null }>;
   label?: string;
   unit: string;
+  actualLabel: string;
+  forecastLabel: string;
 }) {
   if (!active || !payload?.length) return null;
 
@@ -92,10 +136,10 @@ function LiquidityTooltip({
     <div className={styles.evilTooltip}>
       <span>{label}</span>
       {typeof actual === "number" && (
-        <strong>Utfall: {actual} {unit}</strong>
+        <strong>{actualLabel}: {actual} {unit}</strong>
       )}
       {typeof forecast === "number" && (
-        <strong>Prognos: {forecast} {unit}</strong>
+        <strong>{forecastLabel}: {forecast} {unit}</strong>
       )}
     </div>
   );
@@ -115,6 +159,17 @@ export function ShowcaseGradientBarChart() {
   const autoplayResumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const chartMenuOpenRef = useRef(false);
   const autoplayMenuAnimatingRef = useRef(false);
+  const locale = useOptionalLocale()?.locale ?? "sv";
+  const t = CHART_STRINGS[locale];
+  const months = MONTHS_BY_LOCALE[locale];
+  const liquidityChartData = useMemo(() => buildLiquidityChartData(months), [months]);
+  const chartOptions = useMemo(
+    () => ({
+      liquidity: { label: t.cashflowForecast, unit: t.unit, data: liquidityChartData },
+      runway: { label: t.runway },
+    }),
+    [t, liquidityChartData],
+  );
   const activeChart = chartOptions[selectedChart];
   const activeLiquidityChart = selectedChart === "liquidity" ? chartOptions.liquidity : null;
   const forecastStart =
@@ -273,7 +328,7 @@ export function ShowcaseGradientBarChart() {
               className={styles.evilSelect}
               aria-haspopup="menu"
               aria-expanded={chartMenuOpen}
-              aria-label="Välj diagram"
+              aria-label={t.chartSelectAria}
               onClick={handleToggleMenu}
             >
               <span>{activeChart.label}</span>
@@ -284,7 +339,7 @@ export function ShowcaseGradientBarChart() {
               />
             </button>
             {chartMenuOpen && (
-              <div className={styles.evilSelectMenu} role="menu" aria-label="Diagramval">
+              <div className={styles.evilSelectMenu} role="menu" aria-label={t.chartMenuAria}>
                 {(Object.entries(chartOptions) as Array<[ChartOptionKey, (typeof chartOptions)[ChartOptionKey]]>).map(([key, option]) => (
                   <button
                     key={key}
@@ -307,15 +362,15 @@ export function ShowcaseGradientBarChart() {
             <>
               <span className={styles.evilLegendItem}>
                 <span className={`${styles.evilLegendLine} ${styles.evilLegendLineActual}`} />
-                <span>Utfall</span>
+                <span>{t.actual}</span>
               </span>
               <span className={styles.evilLegendItem}>
                 <span className={`${styles.evilLegendLine} ${styles.evilLegendLineForecast}`} />
-                <span>Prognos</span>
+                <span>{t.forecast}</span>
               </span>
             </>
           ) : (
-            <div className={styles.runwayTabs} aria-label="Välj period för runway">
+            <div className={styles.runwayTabs} aria-label={t.runwayPeriodAria}>
               {runwayWindows.map((window) => {
                 const active = activeRunwayWindow === window;
 
@@ -358,7 +413,7 @@ export function ShowcaseGradientBarChart() {
                 padding={{ left: 6, right: 6 }}
                 tick={{ fill: "var(--text-secondary)", fontSize: 12 }}
               />
-              <Tooltip cursor={false} content={<LiquidityTooltip unit={activeLiquidityChart.unit} />} />
+              <Tooltip cursor={false} content={<LiquidityTooltip unit={activeLiquidityChart.unit} actualLabel={t.actual} forecastLabel={t.forecast} />} />
               <defs>
                 <linearGradient id="liquidity-actual-fill" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#0E5BFF" stopOpacity={0.22} />
@@ -417,12 +472,12 @@ export function ShowcaseGradientBarChart() {
               <strong className={runwayAverageCashflow >= 0 ? styles.runwayCashflowPositive : styles.runwayCashflowNegative}>
                 {runwayValueLabel}
               </strong>
-              <span>/mån</span>
+              <span>{t.perMonth}</span>
             </p>
           </div>
 
           <div className={styles.runwayDivider}>
-            <span>Genomsnittligt kassaflöde</span>
+            <span>{t.averageCashflow}</span>
           </div>
 
           <div className={styles.runwayGauge}>
@@ -466,7 +521,7 @@ export function ShowcaseGradientBarChart() {
               </g>
             </svg>
             <div className={styles.runwayGaugeCenter}>
-              <span>månader</span>
+              <span>{t.months}</span>
               <strong>{getRunwayLabel(runwayMonths)}</strong>
             </div>
           </div>

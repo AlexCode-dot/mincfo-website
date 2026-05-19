@@ -1,23 +1,25 @@
 import Link from "next/link";
-import { HOME_PAGE_SHARED_TEXT } from "@/content/homePageText";
-import { SOLUTION_SHARED_CONTENT } from "@/content/solutionSharedContent";
+import { getSharedText } from "@/content/homePageText";
+import { getSolutionSharedContent } from "@/content/solutionSharedContent";
+import { getLocale } from "@/i18n/server";
 import styles from "./solutions.module.scss";
 
-const LINKS = HOME_PAGE_SHARED_TEXT.navigation.groups.flatMap((group) => group.items);
-
-export default function LosningarIndexPage() {
+export default async function LosningarIndexPage() {
+  const locale = await getLocale();
+  const shared = getSolutionSharedContent(locale);
+  const links = getSharedText(locale).navigation.groups.flatMap((group) => group.items);
   return (
     <main className={styles.page}>
       <section className={styles.shell}>
         <Link className={styles.back} href="/">
-          {SOLUTION_SHARED_CONTENT.indexPage.backLabel}
+          {shared.indexPage.backLabel}
         </Link>
-        <h1 className={styles.title}>{SOLUTION_SHARED_CONTENT.indexPage.title}</h1>
+        <h1 className={styles.title}>{shared.indexPage.title}</h1>
         <p className={styles.description}>
-          {SOLUTION_SHARED_CONTENT.indexPage.description}
+          {shared.indexPage.description}
         </p>
         <div className={styles.list}>
-          {LINKS.map((item) => (
+          {links.map((item) => (
             <Link key={item.href} href={item.href}>
               {item.label}
             </Link>

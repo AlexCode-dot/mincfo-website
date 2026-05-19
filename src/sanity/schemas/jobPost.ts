@@ -41,6 +41,14 @@ export default defineType({
   fields: [
     // ── Meta ──
     defineField({
+      name: "locale",
+      title: "Språk / Language",
+      type: "string",
+      options: { list: ["sv", "en"] },
+      initialValue: "sv",
+      fieldset: "meta",
+    }),
+    defineField({
       name: "title",
       title: "Titel",
       type: "string",
