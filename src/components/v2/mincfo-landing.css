@@ -141,6 +141,8 @@
   .brand-mark {
     width: 18px;
     height: 18px;
+    max-width: none;
+    flex-shrink: 0;
     color: var(--ink);
   }
   .brand-word {
@@ -635,6 +637,12 @@
     font-weight: 500;
     letter-spacing: 0;
     color: #181513;
+    line-height: 1;
+  }
+  .mv2-root.type-sumary .brand { gap: 8px; }
+  .mv2-root.type-sumary .brand-mark {
+    width: 13px;
+    height: 13px;
   }
   .mv2-root.type-sumary .btn {
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
