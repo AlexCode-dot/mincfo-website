@@ -2282,7 +2282,7 @@
   }
   .footer-grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: clamp(32px, 4vw, 64px);
     margin-bottom: 56px;
   }
@@ -2302,7 +2302,6 @@
     font-size: 12px;
     line-height: 1.7;
     color: rgba(255,255,255,0.5);
-    max-width: 32ch;
   }
   .footer-col h4 {
     font-family: var(--mono);
