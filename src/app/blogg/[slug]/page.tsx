@@ -3,10 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
-import {
-  fetchBlogPostBySlug,
-  fetchBlogPostSlugs,
-} from "@/sanity/lib/fetchBlogPosts";
+import { fetchBlogPostBySlug } from "@/sanity/lib/fetchBlogPosts";
 import { fetchSharedContent } from "@/sanity/lib/fetchHomeContent";
 import { getLocale } from "@/i18n/server";
 import type { Locale } from "@/i18n/locale";
@@ -17,6 +14,12 @@ import styles from "./page.module.scss";
 
 type PageParams = { slug: string };
 type PageProps = { params: Promise<PageParams> };
+
+// Locale lives in a per-request cookie (NEXT_LOCALE), so the post page must
+// render dynamically. Forcing dynamic also keeps next-sanity's draftMode()
+// usage out of the static-rendering path, which throws DYNAMIC_SERVER_USAGE
+// in Next 16 when combined with generateStaticParams.
+export const dynamic = "force-dynamic";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://mincfo.com";
@@ -32,11 +35,6 @@ function formatDate(value: string | undefined, locale: Locale): string {
     month: "long",
     day: "numeric",
   }).format(d);
-}
-
-export async function generateStaticParams(): Promise<PageParams[]> {
-  const slugs = await fetchBlogPostSlugs();
-  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

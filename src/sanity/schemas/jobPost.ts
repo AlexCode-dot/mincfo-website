@@ -59,7 +59,26 @@ export default defineType({
       name: "slug",
       title: "Slug (URL)",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      options: {
+        source: "title",
+        maxLength: 96,
+        isUnique: async (slug, context) => {
+          const { document, getClient } = context;
+          if (!document) return true;
+          const client = getClient({ apiVersion: "2024-01-01" });
+          const id = document._id.replace(/^drafts\./, "");
+          const locale = (document.locale as string | undefined) ?? "sv";
+          return client.fetch(
+            `!defined(*[
+              _type == "jobPost" &&
+              !(_id in [$draft, $published]) &&
+              slug.current == $slug &&
+              coalesce(locale, "sv") == $locale
+            ][0]._id)`,
+            { draft: `drafts.${id}`, published: id, slug, locale },
+          );
+        },
+      },
       validation: (r) => r.required(),
       fieldset: "meta",
     }),
