@@ -59,8 +59,7 @@ export default defineType({
       name: "slug",
       title: "URL",
       type: "slug",
-      description:
-        "Genereras automatiskt från titeln när inlägget skapas. Ändra inte slug på ett publicerat inlägg utan att lägga in en redirect — befintliga länkar och Google-rankings bryts annars.",
+      description: "Genereras automatiskt från titeln.",
       options: {
         source: "title",
         maxLength: 96,
