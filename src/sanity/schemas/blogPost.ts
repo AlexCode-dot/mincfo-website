@@ -1,5 +1,30 @@
-import { defineType, defineField } from "sanity";
-import { AutoSlugInput, HiddenSlugField } from "../components/AutoSlugInput";
+import { defineType, defineField, type SlugIsUniqueValidator } from "sanity";
+import { AutoSlugInput } from "../components/AutoSlugInput";
+
+// Allow the same slug across different locales. Sanity's default uniqueness
+// check rejects any reuse of `slug.current` within the same _type, which
+// blocks publishing the EN variant of a post that shares its URL with the SV
+// original. Two docs may share a slug only when their `locale` differs.
+const isUniqueAcrossLocales: SlugIsUniqueValidator = async (slug, context) => {
+  const { document, getClient } = context;
+  if (!document) return true;
+  const client = getClient({ apiVersion: "2024-01-01" });
+  const id = document._id.replace(/^drafts\./, "");
+  const locale = (document.locale as string | undefined) ?? "sv";
+  const params = {
+    draft: `drafts.${id}`,
+    published: id,
+    slug,
+    locale,
+  };
+  const query = `!defined(*[
+    _type == "blogPost" &&
+    !(_id in [$draft, $published]) &&
+    slug.current == $slug &&
+    coalesce(locale, "sv") == $locale
+  ][0]._id)`;
+  return client.fetch(query, params);
+};
 
 export default defineType({
   name: "blogPost",
@@ -34,10 +59,16 @@ export default defineType({
       name: "slug",
       title: "URL",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      description:
+        "Genereras automatiskt från titeln när inlägget skapas. Ändra inte slug på ett publicerat inlägg utan att lägga in en redirect — befintliga länkar och Google-rankings bryts annars.",
+      options: {
+        source: "title",
+        maxLength: 96,
+        isUnique: isUniqueAcrossLocales,
+      },
       validation: (r) => r.required(),
       fieldset: "meta",
-      components: { input: AutoSlugInput, field: HiddenSlugField },
+      components: { input: AutoSlugInput },
     }),
     defineField({
       name: "publishedAt",
