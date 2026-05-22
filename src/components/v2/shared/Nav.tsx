@@ -104,231 +104,99 @@ export default function Nav() {
               role="menu"
               aria-hidden="true"
             >
-              <div className="mega-grid mega-grid--cats-only">
-                <div className="mega-cats">
+              <div className="mega-grid mega-grid--produkter">
+                <div className="mega-intro">
+                  <div className="mega-prompt">
+                    Hur vill ni jobba med ekonomin?
+                  </div>
+                  <p className="mega-intro-sub">
+                    Två sätt att lägga över ekonomin på MinCFO — välj det
+                    som passar er.
+                  </p>
+                  <div className="mega-intro-foot">
+                    <span className="mega-intro-q">
+                      Osäker på vad som passar er? Vi går igenom upplägget på
+                      30 min.
+                    </span>
+                    <a className="btn" href="/#demo">
+                      Boka samtal
+                    </a>
+                  </div>
+                </div>
+                <div className="mega-feature-cards">
                   <a
-                    className="mega-cat mega-cat--pitch"
+                    className="mega-feature"
                     href="/produkter/helhetslosningen"
                   >
-                    <div className="mega-pitch-img">
+                    <div className="mega-feature-img">
                       <img
                         src="/v2/assets/workspace-photo.png"
                         alt="Ekonomiteam som driver bolagets siffror"
                       />
                     </div>
-                    <div className="mega-cat-l">Helhetslösning</div>
-                    <div className="mega-cat-d">
-                      Vi blir er ekonomifunktion. Ett team, ett paket — fast
-                      pris.
+                    <div className="mega-feature-body">
+                      <div className="mega-feature-t">Helhetslösning</div>
+                      <div className="mega-feature-tag">
+                        Vi blir er ekonomifunktion. Ett team, ett paket — fast
+                        pris.
+                      </div>
+                      <div className="mega-feature-b">
+                        Personlig controller + CFO on demand, redovisning och
+                        realtidsinsyn — allt ingår.
+                      </div>
+                      <span className="mega-feature-cta">
+                        Läs mer om helhetslösningen
+                        <svg
+                          width="10"
+                          height="10"
+                          viewBox="0 0 10 10"
+                          aria-hidden="true"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            fill="none"
+                            d="M2 5h6m-2.5-2.5L8 5l-2.5 2.5"
+                          />
+                        </svg>
+                      </span>
                     </div>
-                    <ul className="mega-pitch-bullets">
-                      <li>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                            d="M2.5 7.5l3 3 6-6.5"
-                          />
-                        </svg>
-                        <span>Personlig controller + CFO on demand</span>
-                      </li>
-                      <li>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                            d="M2.5 7.5l3 3 6-6.5"
-                          />
-                        </svg>
-                        <span>Redovisning, lön och bokslut ingår</span>
-                      </li>
-                      <li>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                            d="M2.5 7.5l3 3 6-6.5"
-                          />
-                        </svg>
-                        <span>Realtidsinsyn i KPI:er och cashflow</span>
-                      </li>
-                      <li>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                            d="M2.5 7.5l3 3 6-6.5"
-                          />
-                        </svg>
-                        <span>Avvikelser flaggas med tydliga nästa steg</span>
-                      </li>
-                    </ul>
-                    <span className="mega-pitch-cta">
-                      Läs mer om helhetslösningen
-                      <svg
-                        width="10"
-                        height="10"
-                        viewBox="0 0 10 10"
-                        aria-hidden="true"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                          fill="none"
-                          d="M2 5h6m-2.5-2.5L8 5l-2.5 2.5"
-                        />
-                      </svg>
-                    </span>
                   </a>
-                  <a
-                    className="mega-cat mega-cat--pitch"
-                    href="/produkter/plattform"
-                  >
-                    <div className="mega-pitch-img">
+                  <a className="mega-feature" href="/produkter/plattform">
+                    <div className="mega-feature-img">
                       <img
                         src="/v2/assets/feat-rapportering.png"
                         alt="Realtidsdashboards i MinCFO-plattformen"
                       />
                     </div>
-                    <div className="mega-cat-l">Plattform</div>
-                    <div className="mega-cat-d">
-                      För team som driver ekonomin själva — men vill ha
-                      modernt beslutsstöd.
+                    <div className="mega-feature-body">
+                      <div className="mega-feature-t">Plattform</div>
+                      <div className="mega-feature-tag">
+                        För team som driver ekonomin själva — men vill ha
+                        modernt beslutsstöd.
+                      </div>
+                      <div className="mega-feature-b">
+                        Realtidsdashboards, forecast och AI Copilot — kopplat
+                        till er faktiska data.
+                      </div>
+                      <span className="mega-feature-cta">
+                        Utforska plattformen
+                        <svg
+                          width="10"
+                          height="10"
+                          viewBox="0 0 10 10"
+                          aria-hidden="true"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            fill="none"
+                            d="M2 5h6m-2.5-2.5L8 5l-2.5 2.5"
+                          />
+                        </svg>
+                      </span>
                     </div>
-                    <ul className="mega-pitch-bullets">
-                      <li>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                            d="M2.5 7.5l3 3 6-6.5"
-                          />
-                        </svg>
-                        <span>Dashboards i realtid för KPI och likviditet</span>
-                      </li>
-                      <li>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                            d="M2.5 7.5l3 3 6-6.5"
-                          />
-                        </svg>
-                        <span>Budget, forecast och scenarier ni styr</span>
-                      </li>
-                      <li>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                            d="M2.5 7.5l3 3 6-6.5"
-                          />
-                        </svg>
-                        <span>AI Copilot grundad i er faktiska data</span>
-                      </li>
-                      <li>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            fill="none"
-                            d="M2.5 7.5l3 3 6-6.5"
-                          />
-                        </svg>
-                        <span>Fortnox idag — fler integrationer på väg</span>
-                      </li>
-                    </ul>
-                    <span className="mega-pitch-cta">
-                      Utforska plattformen
-                      <svg
-                        width="10"
-                        height="10"
-                        viewBox="0 0 10 10"
-                        aria-hidden="true"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                          fill="none"
-                          d="M2 5h6m-2.5-2.5L8 5l-2.5 2.5"
-                        />
-                      </svg>
-                    </span>
                   </a>
-                </div>
-                <div className="mega-footer">
-                  <div className="mega-footer-q">
-                    Osäker på vad som passar er?{" "}
-                    <em>Vi går igenom upplägget på 30 min.</em>
-                  </div>
-                  <div className="mega-footer-links">
-                    <a className="btn" href="/#demo">
-                      Boka samtal
-                    </a>
-                  </div>
                 </div>
               </div>
             </div>
