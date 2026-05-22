@@ -2651,14 +2651,16 @@
   /* mock UI overlays */
   .mock {
     position: absolute;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.92);
     border-radius: 12px;
-    box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.38), 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.32), 0 2px 6px rgba(0, 0, 0, 0.06);
     font-family: var(--mono);
     color: var(--ink);
     overflow: hidden;
   }
   .mock--toast {
+    /* solid so stacked toasts don't bleed each other's text through */
+    background: #ffffff;
     padding: 12px 14px;
     display: flex;
     align-items: flex-start;
@@ -2770,10 +2772,32 @@
   }
 
   /* card 3 — runway forecast chart */
+  .mock-chart-legend {
+    display: flex;
+    gap: 14px;
+    margin-top: 10px;
+  }
+  .mock-leg {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--ink-3);
+  }
+  .mock-leg-line {
+    width: 14px;
+    height: 0;
+    border-top: 2px solid var(--ink);
+    border-radius: 2px;
+  }
+  .mock-leg-line--dash {
+    border-top: 2px dashed #B7651A;
+  }
   .mock-chart {
     width: 100%;
-    height: 64px;
-    margin-top: 12px;
+    height: auto;
+    margin-top: 8px;
     overflow: visible;
   }
   .mock-chart-grid {
@@ -2782,8 +2806,6 @@
     opacity: 0.07;
     vector-effect: non-scaling-stroke;
   }
-  .mock-chart-area { fill: var(--ink); opacity: 0.06; }
-  .mock-chart-area--alert { fill: #B7651A; opacity: 0.10; }
   .mock-chart-line {
     fill: none;
     stroke: var(--ink);
@@ -2812,12 +2834,8 @@
     flex-direction: column;
     gap: 12px;
   }
-  .mock-doc-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-  }
+  .mock--doc .mock-time-head { margin-bottom: 0; }
+  .mock-doc-title { display: flex; flex-direction: column; gap: 3px; }
   .mock-badge {
     font-size: 9.5px;
     font-weight: 600;
@@ -2833,8 +2851,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
-    border-top: 1px solid #EEE;
-    padding-top: 12px;
   }
   .mock-kpi { display: flex; flex-direction: column; gap: 2px; }
   .mock-kpi-label {

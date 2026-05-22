@@ -11,7 +11,7 @@ type ImpactStat = { from: number; to: number; suffix: string; label: string };
 const IMPACTS: ImpactStat[] = [
   { from: 30, to: 50, suffix: "%", label: "Snabbare beslut" },
   { from: 60, to: 80, suffix: "%", label: "Mindre manuellt jobb" },
-  { from: 1, to: 2, suffix: " kv", label: "Proaktivitet" },
+  { from: 3, to: 6, suffix: " mån", label: "Proaktivitet" },
 ];
 
 
@@ -351,7 +351,7 @@ export default function CeoFoundersPage() {
                   </span>
                   <div>
                     <div className="mock-title">Lönekörning klar</div>
-                    <div className="mock-meta">42 anställda · 12:00</div>
+                    <div className="mock-meta">18 anställda · 12:00</div>
                   </div>
                 </div>
                 <div className="mock mock--toast mock--corner-tr mock--stack-3-front">
@@ -382,7 +382,7 @@ export default function CeoFoundersPage() {
                 style={{ backgroundImage: "url(/v2/assets/impact-3.png)" }}
               >
                 <span className="impact-overlay-value serif-h">
-                  1-2 kv
+                  3-6 mån
                 </span>
                 <div className="mock mock--time mock--corner-tr">
                   <div className="mock-time-head">
@@ -393,44 +393,41 @@ export default function CeoFoundersPage() {
                     <span className="mock-time-period">Prognos</span>
                   </div>
                   <div className="mock-tile-label">Runway-prognos</div>
-                  <div className="mock-tile-value">
-                    8.2<span className="mock-tile-unit">mån i Q4</span>
-                  </div>
                   <svg
                     className="mock-chart"
-                    viewBox="0 0 200 72"
-                    preserveAspectRatio="none"
+                    viewBox="0 0 200 64"
                     aria-hidden="true"
                   >
-                    {/* gridlines */}
-                    <line x1="0" y1="24" x2="200" y2="24" className="mock-chart-grid" />
-                    <line x1="0" y1="48" x2="200" y2="48" className="mock-chart-grid" />
-                    {/* actual area + line */}
+                    <defs>
+                      <linearGradient id="mockAreaActual" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#0A0A0A" stopOpacity="0.12" />
+                        <stop offset="100%" stopColor="#0A0A0A" stopOpacity="0" />
+                      </linearGradient>
+                      <linearGradient id="mockAreaForecast" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#B7651A" stopOpacity="0.16" />
+                        <stop offset="100%" stopColor="#B7651A" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    {/* actual: gentle wobble — up, down, up */}
                     <path
-                      className="mock-chart-area"
-                      d="M6,15 L53,23 L100,34 L100,72 L6,72 Z"
+                      fill="url(#mockAreaActual)"
+                      d="M4,20 C12,17 19,16 26,16 C36,16 42,21 50,21 C60,21 66,15 74,15 C84,15 92,18 98,19 L98,64 L4,64 Z"
+                    />
+                    {/* forecast: accelerating plunge toward risk */}
+                    <path
+                      fill="url(#mockAreaForecast)"
+                      d="M98,19 C134,24 168,42 196,60 L196,64 L98,64 Z"
                     />
                     <path
                       className="mock-chart-line"
-                      d="M6,15 L53,23 L100,34"
-                    />
-                    {/* forecast area + dashed line (trending into risk) */}
-                    <path
-                      className="mock-chart-area mock-chart-area--alert"
-                      d="M100,34 L147,47 L194,59 L194,72 L100,72 Z"
+                      d="M4,20 C12,17 19,16 26,16 C36,16 42,21 50,21 C60,21 66,15 74,15 C84,15 92,18 98,19"
                     />
                     <path
                       className="mock-chart-line mock-chart-line--forecast"
-                      d="M100,34 L147,47 L194,59"
+                      d="M98,19 C134,24 168,42 196,60"
                     />
-                    <circle className="mock-chart-dot" cx="194" cy="59" r="3.5" />
+                    <circle className="mock-chart-dot" cx="196" cy="60" r="3.2" />
                   </svg>
-                  <div className="mock-chart-axis">
-                    <span>Q1</span>
-                    <span>Q2</span>
-                    <span>Q3</span>
-                    <span>Q4</span>
-                  </div>
                 </div>
               </div>
               <div className="impact-detail-text">
@@ -452,12 +449,16 @@ export default function CeoFoundersPage() {
                   Starkare
                 </span>
                 <div className="mock mock--doc mock--corner-tr">
-                  <div className="mock-doc-head">
-                    <div>
-                      <div className="mock-title">Q3 Styrelsepaket</div>
-                      <div className="mock-meta">14 sidor · 14:32</div>
-                    </div>
+                  <div className="mock-time-head">
+                    <span className="mock-time-brand">
+                      <BrandMark />
+                      <span>MinCFO</span>
+                    </span>
                     <span className="mock-badge">Klar</span>
+                  </div>
+                  <div className="mock-doc-title">
+                    <div className="mock-title">Q3 Styrelsepaket</div>
+                    <div className="mock-meta">14 sidor · 14:32</div>
                   </div>
                   <div className="mock-kpi-grid">
                     <div className="mock-kpi">
@@ -487,38 +488,6 @@ export default function CeoFoundersPage() {
               </div>
             </article>
           </div>
-        </div>
-      </section>
-
-      {/* ============ TESTIMONIAL ============ */}
-      <section className="section prod-quote-section">
-        <div className="container">
-          <figure className="prod-quote">
-            <blockquote className="prod-quote-text serif-h">
-              “Med MinCFO får vi en tydlig bild av intäkter per kund och tjänst,
-              kan djupdyka i månatliga kostnader per leverantör och
-              prognostisera med hjälp av AI som löpande uppdaterar siffrorna
-              baserat på faktiska utfall.”
-            </blockquote>
-            <figcaption className="prod-quote-by">
-              <span className="prod-quote-avatar prod-quote-avatar--group">
-                <img
-                  src="/customers/testimonials/Screenshot%202026-03-18%20at%2015.21.41.png"
-                  alt="Max Norén"
-                />
-                <img
-                  src="/customers/testimonials/Screenshot%202026-03-18%20at%2015.21.51.png"
-                  alt="Conrad Brown-Bolin"
-                />
-              </span>
-              <span>
-                <div className="prod-quote-name">
-                  Max Norén &amp; Conrad Brown-Bolin
-                </div>
-                <div className="prod-quote-role">Co-founders, Growbit</div>
-              </span>
-            </figcaption>
-          </figure>
         </div>
       </section>
 
