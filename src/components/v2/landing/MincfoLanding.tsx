@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import "./mincfo-landing.css";
-import BrandMark from "./shared/BrandMark";
-import Nav from "./shared/Nav";
-import Footer from "./shared/Footer";
+import "../mincfo-landing.css";
+import BrandMark from "../shared/BrandMark";
+import Nav from "../shared/Nav";
+import Footer from "../shared/Footer";
 
 type Preset = "default" | "midday" | "sumary";
 

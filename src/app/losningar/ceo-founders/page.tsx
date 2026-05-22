@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import SolutionPage from "@/components/v2/SolutionPage";
-import CeoFoundersImpact from "@/components/v2/CeoFoundersImpact";
+import SolutionPage from "@/components/v2/solutions/SolutionPage";
+import CeoFoundersImpact from "@/components/v2/solutions/CeoFoundersImpact";
 
 export const metadata: Metadata = {
   title: "CEO & Founders — MinCFO",

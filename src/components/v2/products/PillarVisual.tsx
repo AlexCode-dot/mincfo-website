@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import BrandMark from "./shared/BrandMark";
+import BrandMark from "../shared/BrandMark";
 
 type Variant = "ledger" | "dashboard" | "copilot" | "chat" | "payroll";
 

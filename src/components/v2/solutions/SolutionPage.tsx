@@ -1,6 +1,6 @@
-import "./mincfo-landing.css";
-import Nav from "./shared/Nav";
-import Footer from "./shared/Footer";
+import "../mincfo-landing.css";
+import Nav from "../shared/Nav";
+import Footer from "../shared/Footer";
 import solutionData from "@/content/solutionPagesText.json";
 
 const TICKER_LOGOS: { name: string; file: string; soft?: boolean }[] = [

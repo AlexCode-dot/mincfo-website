@@ -1,9 +1,9 @@
 "use client";
 
-import "./mincfo-landing.css";
-import Nav from "./shared/Nav";
-import Footer from "./shared/Footer";
-import BrandMark from "./shared/BrandMark";
+import "../mincfo-landing.css";
+import Nav from "../shared/Nav";
+import Footer from "../shared/Footer";
+import BrandMark from "../shared/BrandMark";
 import PillarVisual from "./PillarVisual";
 
 type PillarVisualVariant =

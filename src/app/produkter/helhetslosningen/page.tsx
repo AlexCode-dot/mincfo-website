@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import HelhetslosningenPage from "@/components/v2/HelhetslosningenPage";
+import HelhetslosningenPage from "@/components/v2/products/HelhetslosningenPage";
 
 export const metadata: Metadata = {
   title: "Helhetslösningen — MinCFO",

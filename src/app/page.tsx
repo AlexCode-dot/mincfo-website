@@ -1,4 +1,4 @@
-import MincfoLanding from "@/components/v2/MincfoLanding";
+import MincfoLanding from "@/components/v2/landing/MincfoLanding";
 
 export default function Home() {
   return <MincfoLanding />;
