@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import SolutionPageTemplate from "../_shared/SolutionPageTemplate";
-import { fetchSolutionContent } from "../_shared/solutionPageContent";
-import { CEO_FOUNDERS_META, getSolutionMetadata } from "../_shared/solutionMetadata";
-import { getLocale } from "@/i18n/server";
+import CeoFoundersPage from "@/components/v2/CeoFoundersPage";
 
-export const metadata: Metadata = getSolutionMetadata(CEO_FOUNDERS_META);
+export const metadata: Metadata = {
+  title: "CEO & Founders — MinCFO",
+  description:
+    "MinCFO sköter ekonomin i bakgrunden och ger ledningsteamet en plattform där runway, burn, ARR och avvikelser ligger i realtid.",
+};
 
-export default async function CeoFoundersPage() {
-  const locale = await getLocale();
-  const content = await fetchSolutionContent("CEO & Founders", locale);
-  return <SolutionPageTemplate content={content} locale={locale} />;
+export default function Page() {
+  return <CeoFoundersPage />;
 }
