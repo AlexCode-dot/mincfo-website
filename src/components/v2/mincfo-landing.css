@@ -212,6 +212,113 @@
   .mega-grid--cats-only .mega-cats {
     width: 100%;
   }
+  .mega-grid--produkter {
+    grid-template-columns: 0.8fr 1.55fr;
+    align-items: center;
+  }
+  .mega-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-right: clamp(8px, 2vw, 28px);
+  }
+  .mega-prompt {
+    font-family: var(--serif);
+    font-size: clamp(22px, 2.4vw, 30px);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .mega-intro-sub {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 34ch;
+  }
+  .mega-intro-foot {
+    margin-top: 6px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .mega-intro-q {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--ink-3);
+    line-height: 1.5;
+    max-width: 32ch;
+  }
+  .mega-feature-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(16px, 2vw, 24px);
+  }
+  .mega-feature-cards .mega-feature {
+    display: flex;
+    flex-direction: column;
+    transition: border-color .2s ease, transform .25s ease, box-shadow .25s ease;
+  }
+  .mega-feature-cards .mega-feature:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 34px -22px rgba(0,0,0,0.22);
+  }
+  .mega-feature-cards .mega-feature-img img {
+    transition: transform .5s cubic-bezier(.2,.6,.2,1);
+  }
+  .mega-feature-cards .mega-feature:hover .mega-feature-img img {
+    transform: scale(1.035);
+  }
+  .mega-feature-cards .mega-feature-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: clamp(18px, 1.6vw, 24px);
+  }
+  .mega-feature-cards .mega-feature-t {
+    font-size: clamp(20px, 1.8vw, 24px);
+    letter-spacing: -0.012em;
+    margin-bottom: 6px;
+  }
+  .mega-feature-tag {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--ink-2);
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    margin-bottom: 10px;
+  }
+  .mega-feature-cards .mega-feature-b {
+    margin-bottom: 24px;
+  }
+  .mega-feature-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: auto;
+    padding-top: 22px;
+    border-top: 1px solid var(--line-soft);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition: color .2s ease;
+  }
+  .mega-feature-cta svg {
+    transition: transform .25s ease;
+  }
+  .mega-feature-cards .mega-feature:hover .mega-feature-cta {
+    color: var(--accent-ink);
+  }
+  .mega-feature-cards .mega-feature:hover .mega-feature-cta svg {
+    transform: translateX(3px);
+  }
   .mega-footer {
     margin-top: clamp(20px, 3vw, 32px);
     padding-top: 18px;
@@ -429,6 +536,8 @@
   @media (max-width: 820px) {
     .mega-grid { grid-template-columns: 1fr; }
     .mega-cats { grid-template-columns: 1fr; }
+    .mega-grid--produkter { align-items: stretch; }
+    .mega-feature-cards { grid-template-columns: 1fr; }
   }
   .nav-link:hover { color: var(--ink); }
   .nav-link svg { opacity: .55; }
@@ -3528,3 +3637,54 @@
     width: 40px; height: 40px; border-radius: 999px; object-fit: cover; box-shadow: 0 0 0 2px var(--bg);
   }
   .prod-quote-avatar--group img + img { margin-left: -10px; }
+
+  /* =====================================================
+     IMPACT (clean cards) — used by the generic SolutionPage
+     ===================================================== */
+  .impact-clean { padding: clamp(80px, 10vw, 140px) 0; }
+  .impact-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(16px, 1.8vw, 28px);
+    max-width: 1240px;
+    margin: clamp(48px, 6vw, 80px) auto 0;
+  }
+  @media (max-width: 900px) {
+    .impact-cards-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 520px) {
+    .impact-cards-grid { grid-template-columns: 1fr; }
+  }
+  .impact-card {
+    background: var(--bg);
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    padding: clamp(24px, 2.4vw, 32px);
+    display: flex;
+    flex-direction: column;
+  }
+  .impact-card-value {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(40px, 4.4vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 14px;
+  }
+  .impact-card-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(17px, 1.6vw, 20px);
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 8px;
+    text-wrap: balance;
+  }
+  .impact-card-body {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    line-height: 1.7;
+  }

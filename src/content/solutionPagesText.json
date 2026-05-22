@@ -1,7 +1,7 @@
 {
   "shared": {
-    "heroPrimaryCta": "Boka en demo",
-    "heroSecondaryCta": "Se hur MinCFO löser det",
+    "heroPrimaryCta": "Boka samtal",
+    "heroSecondaryCta": "Se helhetslösningen",
     "scrollLabel": "Läs mer",
     "scrollCueAriaLabel": "Scrolla till nästa sektion",
     "logoTickerAriaLabel": "Betrodda kundlogotyper",
@@ -9,7 +9,7 @@
     "impactTag": "Affärsvärde",
     "closingOverline": "Trust & CTA",
     "closingAccent": "Bygg med MinCFO.",
-    "closingCta": "Boka demo",
+    "closingCta": "Boka samtal",
     "scenarioPromptPrefix": "Fråga",
     "scenarioUi": {
       "typingStatus": "Användare skriver fråga...",
@@ -47,6 +47,7 @@
       "heroIntro": "MinCFO samlar AI Copilot, dashboards i realtid, forecasting och strategisk rådgivning i en beslutsyta. Resultatet är snabbare prioriteringar, tydligare vägval och högre precision i varje tillväxtbeslut.",
       "logoStripText": "Betrodd av tillväxtteam som kräver finansiell precision i hög takt",
       "dilemmaTitle": "The CEO & Founder Dilemma",
+      "dilemmaHeadline": "Tillväxt kräver fart. Splittrad data bromsar.",
       "dilemmaIntro": "Hög tillväxt kräver fart i beslut. Men splittrad data, manuell rapportering och osäker prognos gör att viktiga vägval tas för sent.",
       "dilemmaCards": [
         {
@@ -55,7 +56,7 @@
         },
         {
           "title": "Beslut tas för sent",
-          "body": "Rapporter kommer långt efter att avvikelsen inträffat. Exekvering sker på föråldrad datat."
+          "body": "Rapporter kommer långt efter att avvikelsen inträffat. Exekvering sker på föråldrad data."
         },
         {
           "title": "Runway-risk upptäcks sent",
@@ -67,6 +68,7 @@
         }
       ],
       "helpsTitle": "Så hjälper MinCFO VD:ar och grundare",
+      "helpsHeadline": "Data, analys och exekvering i samma flöde.",
       "helpsIntro": "MinCFO kopplar samman data, analys och exekvering i ett och samma flöde, så att du kan agera snabbare med högre precision.",
       "helpsCards": [
         {
@@ -173,7 +175,7 @@
         },
         {
           "title": "Proaktivitet",
-          "value": "1-2 kv",
+          "value": "3-6 mån",
           "description": "Tidigare upptäckt av runway-risk och finansiella hinder för bolaget."
         },
         {
@@ -195,7 +197,7 @@
       "heroIntro": "MinCFO kopplar ihop datakällor, automatiserar finansflöden och ger teamet en plattform för analys, planering och strategisk uppföljning med AI, realtidsdata och säkrare forecasting.",
       "logoStripText": "Betrodd av team som vill kombinera finansiell kontroll med operativ hastighet",
       "dilemmaTitle": "The Finance Dilemma",
-      "dilemmaIntro": "CFO-team behöver snabb precision i styrningen. Men manuella flöden gör att viktiga beslut  tas för sent eller inte alls.",
+      "dilemmaIntro": "CFO-team behöver snabb precision i styrningen. Men manuella flöden gör att viktiga beslut tas för sent eller inte alls.",
       "dilemmaCards": [
         {
           "title": "Manuella loopar bromsar finance",
@@ -366,8 +368,8 @@
       "dilemmaIntro": "När SaaS-metrics och ekonomi inte möts i samma beslutsyta.",
       "dilemmaCards": [
         {
-          "title": "KPI",
-          "body": "er och ekonomi lever i olika system: ARR/MRR följs separat från resultat och cash, vilket skapar motstridiga signaler och sänker beslutshastigheten."
+          "title": "KPI:er och ekonomi i olika system",
+          "body": "ARR/MRR följs separat från resultat och cash, vilket skapar motstridiga signaler och sänker beslutshastigheten."
         },
         {
           "title": "Tillväxt styrs utan full kostnadsbild",
@@ -523,13 +525,13 @@
     },
     {
       "key": "Konsult & Tjänster",
-      "eyebrow": "LÖSNING FÖR KONSULT & TJÄNSTER",
+      "eyebrow": "Lösning för konsult & tjänster",
       "heroHeadline": {
         "first": "Styr beläggning, marginal och cash – i realtid",
         "second": ""
       },
       "heroIntro": "MinCFO kopplar projektdata, kostnader och kassaflöde i en beslutsyta. AI Copilot ger snabba svar på lönsamhet per kund, team och projekt — utan manuell rapportering.",
-      "logoStripText": "Betrodd av team som kräver finansiell precision i hög takt",
+      "logoStripText": "Betrodd av konsult- och tjänsteteam som styr på beläggning och marginal",
       "dilemmaTitle": "The Services Dilemma",
       "dilemmaIntro": "När projektlönsamhet syns efter att månaden är slut.",
       "dilemmaCards": [
@@ -676,13 +678,13 @@
     },
     {
       "key": "E-handel",
-      "eyebrow": "LÖSNING FÖR E-HANDEL",
+      "eyebrow": "Lösning för e-handel",
       "heroHeadline": {
         "first": "Full kontroll på marginal och cash – i realtid",
         "second": ""
       },
       "heroIntro": "MinCFO kopplar resultat, kassaflöde och nyckeltal så du kan styra tillväxt med kontroll på inköp, kampanjer och lönsamhet. AI Copilot förklarar avvikelser direkt.",
-      "logoStripText": "Betrodd av team som kräver finansiell precision i hög takt",
+      "logoStripText": "Betrodd av e-handelsteam som styr på marginal och kassaflöde i realtid",
       "dilemmaTitle": "The E-commerce Dilemma",
       "dilemmaIntro": "När inköp och kampanjer påverkar cash snabbare än rapporterna.",
       "dilemmaCards": [

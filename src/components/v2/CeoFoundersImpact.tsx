@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import "./mincfo-landing.css";
 import BrandMark from "./shared/BrandMark";
-import Nav from "./shared/Nav";
-import Footer from "./shared/Footer";
 
 type ImpactStat = { from: number; to: number; suffix: string; label: string };
 
@@ -13,7 +10,6 @@ const IMPACTS: ImpactStat[] = [
   { from: 60, to: 80, suffix: "%", label: "Mindre manuellt jobb" },
   { from: 3, to: 6, suffix: " mån", label: "Proaktivitet" },
 ];
-
 
 function CountUpRange({
   from,
@@ -68,190 +64,9 @@ function CountUpRange({
   );
 }
 
-const TICKER_LOGOS: { name: string; file: string; soft?: boolean }[] = [
-  { name: "Growbit", file: "logo-growbit.svg" },
-  { name: "Showcase", file: "logo-showcase.avif", soft: true },
-  { name: "Lawster", file: "logo-lawster.avif" },
-  { name: "Hälsa Hemma", file: "logo-h%C3%A4lsa.avif" },
-  { name: "SweBal", file: "logo-swebal.avif" },
-  { name: "BAM", file: "logo-bam.avif" },
-  { name: "Eloize", file: "logo-eloize.avif" },
-  { name: "Runway", file: "logo-runway.webp" },
-  { name: "Realforce", file: "logo-realforce.avif" },
-  { name: "Rossoneri", file: "logo-rossoneri.avif" },
-  { name: "Qsid", file: "logo-qsid.avif" },
-];
-
-const PAINS: { title: string; body: string }[] = [
-  {
-    title: "Ingen samlad nulägesbild",
-    body: "ARR, burn, kassaflöde och kostnadsdrivare uppdateras i olika verktyg. Ledningen saknar en gemensam version av läget.",
-  },
-  {
-    title: "Beslut tas för sent",
-    body: "Rapporter kommer långt efter att avvikelsen inträffat. Exekvering sker på föråldrad data.",
-  },
-  {
-    title: "Runway-risk upptäcks sent",
-    body: "Små förändringar i churn, rekrytering eller GTM-kostnad ger stor effekt över tid men syns ofta för sent.",
-  },
-];
-
-const HELPS: { title: string; body: string }[] = [
-  {
-    title: "Live dashboard för bättre och snabbare beslut",
-    body: "Runway, burn, ARR, marginal och avvikelser i en gemensam vy som uppdateras löpande.",
-  },
-  {
-    title: "AI Copilot för VD:ar och grundare",
-    body: "Ställ frågor i naturligt språk och få svar med specifika siffror, förklaring och dataspårbarhet på sekunder.",
-  },
-  {
-    title: "Scenario-planering i samma flöde",
-    body: "Testa effekten av rekrytering, GTM och kostnadsnivå direkt på resultat, kassaflöde och runway.",
-  },
-];
-
-export default function CeoFoundersPage() {
+export default function CeoFoundersImpact() {
   return (
-    <div className="mv2-root hl-1 vs-1 type-sumary">
-      <Nav />
-
-      {/* ============ HERO ============ */}
-      <section className="prod-hero" id="top">
-        <div className="container">
-          <div className="prod-hero-inner">
-            <span className="eyebrow">Lösning för VD:ar och grundare</span>
-            <h1 className="prod-hero-title serif-h">
-              Finansiell klarhet för
-              <br />
-              <em>VD:ar och grundare.</em>
-            </h1>
-            <p className="prod-hero-sub">
-              MinCFO samlar AI Copilot, dashboards i realtid, forecasting och
-              strategisk rådgivning i en beslutsyta. Resultatet är snabbare
-              prioriteringar, tydligare vägval och högre precision i varje
-              tillväxtbeslut.
-            </p>
-            <div className="prod-hero-cta">
-              <a className="btn" href="/#demo">
-                Boka samtal
-                <svg width="12" height="12" viewBox="0 0 12 12">
-                  <path
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    fill="none"
-                    d="M3 6h6m0 0L6.5 3.5M9 6L6.5 8.5"
-                  />
-                </svg>
-              </a>
-              <a className="btn btn-outline" href="/produkter/helhetslosningen">
-                Se helhetslösningen
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ TRUST TICKER ============ */}
-      <section className="prod-trust">
-        <div className="container">
-          <p className="prod-trust-l">
-            Betrodd av tillväxtteam som kräver finansiell precision i hög takt
-          </p>
-          <div className="kc-ticker">
-            <div className="kc-track">
-              {[...TICKER_LOGOS, ...TICKER_LOGOS].map((logo, i) => (
-                <span
-                  className={`kc-logo${logo.soft ? " soft" : ""}`}
-                  key={`${logo.file}-${i}`}
-                >
-                  <img
-                    src={`/customers/logos/${logo.file}`}
-                    alt={`${logo.name} logotyp`}
-                  />
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ PAIN POINTS ============ */}
-      <section className="section sol-pain">
-        <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">The CEO &amp; Founder Dilemma</span>
-            <h2 className="serif-h">
-              Tillväxt kräver fart.{" "}
-              <em>Splittrad data bromsar.</em>
-            </h2>
-            <p>
-              Hög tillväxt kräver fart i beslut. Men splittrad data, manuell
-              rapportering och osäker prognos gör att viktiga vägval tas för
-              sent.
-            </p>
-          </div>
-          <div className="sol-cards-3">
-            {PAINS.map((p) => (
-              <article className="sol-card sol-card--filled" key={p.title}>
-                <span className="sol-icon sol-icon--negative" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                </span>
-                <h3 className="sol-card-title serif-h">{p.title}</h3>
-                <p className="sol-card-body">{p.body}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============ HOW WE HELP ============ */}
-      <section className="section sol-helps">
-        <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">Så hjälper MinCFO VD:ar och grundare</span>
-            <h2 className="serif-h">
-              Data, analys och exekvering{" "}
-              <em>i samma flöde.</em>
-            </h2>
-            <p>
-              MinCFO kopplar samman data, analys och exekvering i ett och samma
-              flöde, så att du kan agera snabbare med högre precision.
-            </p>
-          </div>
-          <div className="sol-cards-3">
-            {HELPS.map((h) => (
-              <article className="sol-card sol-card--filled" key={h.title}>
-                <span className="sol-icon sol-icon--positive" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                </span>
-                <h3 className="sol-card-title serif-h">{h.title}</h3>
-                <p className="sol-card-body">{h.body}</p>
-              </article>
-            ))}
-          </div>
-          <div className="sol-helps-cta">
-            <a className="text-link" href="/produkter/helhetslosningen">
-              Se helhetslösningen
-              <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
-                <path
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  fill="none"
-                  d="M2 5h6m-2.5-2.5L8 5l-2.5 2.5"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
-
+    <>
       {/* ============ IMPACT BAND ============ */}
       <section className="impact">
         <div className="container">
@@ -292,9 +107,7 @@ export default function CeoFoundersPage() {
                 className="impact-detail-visual impact-detail-visual--photo"
                 style={{ backgroundImage: "url(/v2/assets/impact-1.png)" }}
               >
-                <span className="impact-overlay-value serif-h">
-                  30-50%
-                </span>
+                <span className="impact-overlay-value serif-h">30-50%</span>
                 <div className="mock mock--time mock--corner-tr">
                   <div className="mock-time-head">
                     <span className="mock-time-brand">
@@ -329,9 +142,7 @@ export default function CeoFoundersPage() {
                 className="impact-detail-visual impact-detail-visual--photo"
                 style={{ backgroundImage: "url(/v2/assets/impact-2.png)" }}
               >
-                <span className="impact-overlay-value serif-h">
-                  60-80%
-                </span>
+                <span className="impact-overlay-value serif-h">60-80%</span>
                 <div className="mock mock--toast mock--corner-tr mock--stack-3-back">
                   <span className="mock-icon mock-icon--success">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -381,9 +192,7 @@ export default function CeoFoundersPage() {
                 className="impact-detail-visual impact-detail-visual--photo"
                 style={{ backgroundImage: "url(/v2/assets/impact-3.png)" }}
               >
-                <span className="impact-overlay-value serif-h">
-                  3-6 mån
-                </span>
+                <span className="impact-overlay-value serif-h">3-6 mån</span>
                 <div className="mock mock--time mock--corner-tr">
                   <div className="mock-time-head">
                     <span className="mock-time-brand">
@@ -408,12 +217,10 @@ export default function CeoFoundersPage() {
                         <stop offset="100%" stopColor="#B7651A" stopOpacity="0" />
                       </linearGradient>
                     </defs>
-                    {/* actual: gentle wobble — up, down, up */}
                     <path
                       fill="url(#mockAreaActual)"
                       d="M4,20 C12,17 19,16 26,16 C36,16 42,21 50,21 C60,21 66,15 74,15 C84,15 92,18 98,19 L98,64 L4,64 Z"
                     />
-                    {/* forecast: accelerating plunge toward risk */}
                     <path
                       fill="url(#mockAreaForecast)"
                       d="M98,19 C134,24 168,42 196,60 L196,64 L98,64 Z"
@@ -445,9 +252,7 @@ export default function CeoFoundersPage() {
                 className="impact-detail-visual impact-detail-visual--photo"
                 style={{ backgroundImage: "url(/v2/assets/impact-4.png)" }}
               >
-                <span className="impact-overlay-value serif-h">
-                  Starkare
-                </span>
+                <span className="impact-overlay-value serif-h">Starkare</span>
                 <div className="mock mock--doc mock--corner-tr">
                   <div className="mock-time-head">
                     <span className="mock-time-brand">
@@ -490,37 +295,6 @@ export default function CeoFoundersPage() {
           </div>
         </div>
       </section>
-
-      {/* ============ FINAL CTA ============ */}
-      <section className="closing prod-closing">
-        <div className="container">
-          <h2>Redo för nästa steg?</h2>
-          <p className="sub">
-            Vi hjälper VD:ar och grundare att gå från reaktiv rapportering till
-            proaktiv styrning med realtidsdata, AI Copilot, scenario-planering
-            och rådgivning i ett och samma interface — så att varje
-            prioritering blir tydligare och kan exekveras på snabbare.
-          </p>
-          <div className="closing-row">
-            <a className="btn" href="/#demo">
-              Boka samtal
-              <svg width="12" height="12" viewBox="0 0 12 12">
-                <path
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  fill="none"
-                  d="M3 6h6m0 0L6.5 3.5M9 6L6.5 8.5"
-                />
-              </svg>
-            </a>
-            <a className="btn btn-outline" href="/produkter/helhetslosningen">
-              Se helhetslösningen
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
+    </>
   );
 }
