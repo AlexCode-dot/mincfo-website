@@ -1,0 +1,444 @@
+/* integration orbit */
+  .orbit {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .orbit-track {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.96);
+    border-radius: 14px;
+    box-shadow: 0 20px 40px -16px rgba(0,0,0,0.5);
+  }
+  .orbit-pill {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px -6px rgba(0,0,0,0.2);
+  }
+  .orbit-pill img { width: 32px; height: 32px; object-fit: contain; }
+  .orbit-pill svg { width: 26px; height: 26px; }
+  .orbit-bg {
+    background: linear-gradient(135deg, #4C3DFF, #6E60FF);
+    color: white;
+  }
+
+  /* feature card mockups */
+  .mock-chart-card .chart-svg { width: 100%; height: 110px; }
+  .mock-row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--line-soft); font-family: var(--mono); font-size: 11px; }
+  .mock-row:last-child { border-bottom: 0; }
+  .mock-row .v { font-family: var(--serif); font-size: 14px; }
+  .mock-row .v.up { color: var(--good); }
+  .mock-row .v.down { color: var(--warn); }
+  .pillar-stack {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(96px, 12vw, 176px);
+  }
+  .pillar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: center;
+    scroll-margin-top: 96px;
+  }
+  .pillar--right { direction: rtl; }
+  .pillar--right > * { direction: ltr; }
+  @media (max-width: 920px) {
+    .pillar { grid-template-columns: 1fr; }
+    .pillar--right { direction: ltr; }
+  }
+  .pillar-art {
+    aspect-ratio: 5 / 4;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--bg-deep);
+  }
+  .pillar-body {
+    max-width: 480px;
+    justify-self: center;
+  }
+  @media (max-width: 920px) {
+    .pillar-body { max-width: none; justify-self: stretch; }
+  }
+  .pillar-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .pillar-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .pillar-title {
+    font-size: clamp(28px, 3.4vw, 44px);
+    margin-bottom: 14px;
+    text-wrap: balance;
+  }
+  .pillar-lead {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-3);
+    line-height: 1.75;
+    max-width: 46ch;
+    margin-bottom: 22px;
+  }
+  .pillar-bullets {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .pillar-bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .pillar-bullets svg { color: var(--good); margin-top: 3px; flex: none; }
+
+  /* =====================================================
+     PILLAR VISUALS — in-component mockups (recreated)
+     ===================================================== */
+
+  /* container override when pillar uses custom visual instead of img */
+  .pillar-art--visual {
+    background: var(--bg-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+  }
+  .pillar-art--visual > .pv {
+    width: 100%;
+    max-width: 420px;
+    margin: clamp(20px, 2.4vw, 40px);
+  }
+
+  /* photo-backed pillar visual */
+  .pv-photo {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+  }
+  .pv-photo-tint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.04) 55%, rgba(0,0,0,0.22) 100%);
+    pointer-events: none;
+  }
+  .pv-photo-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: clamp(18px, 2vw, 32px);
+  }
+  .pv-photo-inner .pv {
+    width: min(82%, 360px);
+    backdrop-filter: blur(8px);
+    background: rgba(255,255,255,0.96);
+    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.5) inset;
+  }
+  /* Ledger: place stack center-right, lifted up */
+  .pv-photo--ledger .pv-photo-inner { align-items: center; justify-content: flex-end; }
+  .pv-photo--ledger .pv-ledger-stack { transform: translateY(-14%); }
+  /* Payroll: card in lower-right region */
+  .pv-photo--payroll .pv-photo-inner { align-items: center; justify-content: flex-end; }
+  /* Copilot: centered card */
+  .pv-photo--copilot .pv-photo-inner { align-items: center; justify-content: center; }
+  .pv-photo--copilot .pv { width: min(92%, 460px); }
+  .pv-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .pv-head-l { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+  .pv-head-t {
+    font-family: var(--serif);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+  .pv-head-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .pv-head-meta--success { color: #4F8A4A; }
+  .pv-foot { padding-top: 12px; border-top: 1px solid var(--line-soft); }
+  .pv-foot-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+    display: inline-flex;
+    align-items: center;
+  }
+  .pv-pulse {
+    width: 5px; height: 5px; border-radius: 999px; display: inline-block;
+    background: #4F8A4A; margin-right: 6px; box-shadow: 0 0 0 3px rgba(79,138,74,0.12);
+  }
+  /* brand mark used as a card icon */
+  .pv-logo {
+    width: 18px; height: 18px; display: inline-flex; align-items: center;
+    justify-content: center; color: var(--ink); flex: none;
+  }
+  .pv-logo .brand-mark { width: 14px; height: 14px; }
+
+  /* ---- Ledger (Redovisning) ---- */
+  .pv-ledger-rows {
+    list-style: none;
+    padding: 14px 0 4px;
+    margin: 0;
+    border-top: 1px solid var(--line-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .pv-ledger-rows li { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .pv-ledger-label { font-family: var(--serif); font-size: 12.5px; color: var(--ink); }
+  .pv-ledger-value { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
+
+  /* ledger two-card stack with scroll-triggered reveal of the front card */
+  .pv-ledger-stack { position: relative; width: min(86%, 440px); }
+  .pv-ledger-stack .pv { width: 100%; }
+  .pv-ledger-card--back { position: relative; z-index: 1; }
+  .pv-ledger-card--front {
+    position: absolute;
+    left: -28%;
+    bottom: -34%;
+    z-index: 2;
+    opacity: 0;
+    transform: translate(-20px, 28px);
+    transition:
+      opacity 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 1.4s,
+      transform 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 1.4s;
+  }
+  .pv-ledger-stack.is-in-view .pv-ledger-card--front { opacity: 1; transform: translate(0, 0); }
+  @media (max-width: 920px) {
+    .pv-ledger-card--front { left: -14%; bottom: -20%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pv-ledger-card--front { transition: none; opacity: 1; transform: none; }
+  }
+
+  /* ---- Dashboard (Rapportering): desk photo bg + two screenshots ---- */
+  .pillar-art--visual:has(.pv-dashboard-stack) {
+    background-color: #1A1612;
+    background-image:
+      linear-gradient(135deg, rgba(0,0,0,0.16), rgba(0,0,0,0.04) 50%, rgba(0,0,0,0.24)),
+      url("/v2/assets/pillars/dashboard-bg.png");
+    background-size: cover;
+    background-position: center;
+    padding: 0;
+    display: block;
+    position: relative;
+  }
+  .pv-dashboard-stack { position: absolute; inset: 0; }
+  .pv-dashboard-shot {
+    position: absolute;
+    bottom: clamp(20px, 3vw, 40px);
+    left: clamp(16px, 2vw, 32px);
+    width: min(92%, 720px);
+    background: #FFFFFF;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+      0 32px 60px -24px rgba(0, 0, 0, 0.6),
+      0 8px 16px -8px rgba(0, 0, 0, 0.35),
+      0 1px 0 rgba(255, 255, 255, 0.06) inset;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 1;
+  }
+  .pv-dashboard-shot img { width: 100%; height: auto; display: block; }
+  .pv-dashboard-pl {
+    position: absolute;
+    top: clamp(40px, 6vw, 100px);
+    right: clamp(-320px, -20vw, -200px);
+    width: min(112%, 880px);
+    background: #FFFFFF;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+      0 24px 48px -22px rgba(0, 0, 0, 0.55),
+      0 6px 12px -6px rgba(0, 0, 0, 0.3),
+      0 1px 0 rgba(255, 255, 255, 0.06) inset;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 2;
+  }
+  .pv-dashboard-pl img { width: 100%; height: auto; display: block; }
+  @media (max-width: 920px) {
+    .pv-dashboard-shot { width: min(94%, 520px); left: 16px; bottom: 16px; }
+    .pv-dashboard-pl { width: min(108%, 580px); right: -160px; top: 40px; }
+  }
+
+  /* ---- AI CFO-assistent (Copilot) ---- */
+  .pv--copilot { gap: 12px; }
+  .pv-cfo-head { display: inline-flex; align-items: center; gap: 8px; }
+  .pv-cfo-title {
+    font-family: var(--serif); font-size: 15px; font-weight: 500;
+    letter-spacing: -0.005em; color: var(--ink);
+  }
+  .pv-cfo-msg { display: flex; align-items: flex-start; gap: 8px; }
+  .pv-cfo-msg--user { justify-content: flex-end; }
+  .pv-cfo-bubble {
+    background: var(--bg-soft);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-family: var(--serif);
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--ink);
+    max-width: 78%;
+  }
+  .pv-cfo-avatar {
+    width: 24px; height: 24px; border-radius: 999px; background: #E27444;
+    color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em; flex: none;
+  }
+  .pv-cfo-thinking {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 10.5px; color: var(--ink-3);
+    letter-spacing: 0.02em; margin-top: 4px;
+  }
+  .pv-cfo-spinner {
+    width: 14px; height: 14px; border-radius: 999px;
+    border: 2px solid var(--accent); border-top-color: transparent;
+    animation: pvCfoSpin 0.9s linear infinite;
+  }
+  .pv--copilot-phase-pre .pv-cfo-spinner,
+  .pv--copilot-phase-asking .pv-cfo-spinner,
+  .pv--copilot-phase-done .pv-cfo-spinner {
+    animation: none; border-top-color: var(--accent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pv-cfo-spinner { animation: none; border-top-color: var(--accent); }
+  }
+  .pv-cfo-answer {
+    font-family: var(--serif); font-size: 12.5px; line-height: 1.5; color: var(--ink); margin: 0;
+  }
+  .pv-cfo-answer strong { font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .pv-cfo-chart {
+    border: 1px solid var(--line-soft); border-radius: 8px; padding: 10px 12px 6px;
+    background: var(--bg); display: flex; flex-direction: column; gap: 4px;
+  }
+  .pv-cfo-chart-l {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.06em;
+    color: var(--ink-3); text-transform: uppercase;
+  }
+  .pv-cfo-chart-svg { width: 100%; height: 56px; display: block; }
+  .pv-cfo-chart-axis {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.04em; color: var(--ink-3);
+  }
+  .pv-cfo-chart-axis span:last-child { color: var(--ink); font-weight: 500; }
+  .pv-cfo-input {
+    margin-top: 6px; padding: 10px 12px 8px; background: var(--bg);
+    border: 1px solid var(--line); border-radius: 10px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .pv-cfo-input-placeholder { font-family: var(--serif); font-size: 12.5px; color: var(--ink-3); }
+  .pv-cfo-input-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .pv-cfo-input-funk {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); letter-spacing: 0.02em;
+  }
+  .pv-cfo-input-right { display: inline-flex; align-items: center; gap: 8px; }
+  .pv-cfo-input-counter { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); letter-spacing: 0.02em; }
+  .pv-cfo-input-send {
+    width: 20px; height: 20px; border-radius: 999px; background: var(--accent);
+    color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center;
+  }
+  /* phase reveal */
+  .pv--copilot .pv-cfo-msg,
+  .pv--copilot .pv-cfo-thinking,
+  .pv--copilot .pv-cfo-answer,
+  .pv--copilot .pv-cfo-chart {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .pv--copilot-phase-asking .pv-cfo-msg,
+  .pv--copilot-phase-thinking .pv-cfo-msg,
+  .pv--copilot-phase-done .pv-cfo-msg { opacity: 1; transform: translateY(0); }
+  .pv--copilot-phase-thinking .pv-cfo-thinking,
+  .pv--copilot-phase-done .pv-cfo-thinking { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
+  .pv--copilot-phase-done .pv-cfo-answer { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
+  .pv--copilot-phase-done .pv-cfo-chart { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
+  @media (prefers-reduced-motion: reduce) {
+    .pv--copilot .pv-cfo-msg,
+    .pv--copilot .pv-cfo-thinking,
+    .pv--copilot .pv-cfo-answer,
+    .pv--copilot .pv-cfo-chart { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* ---- Payroll (Lön) ---- */
+  .pv-payroll-rows {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .pv-payroll-rows li {
+    display: grid;
+    grid-template-columns: 92px 1fr auto;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 11.5px;
+  }
+  .pv-payroll-role {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+  .pv-payroll-name { font-family: var(--serif); font-size: 12px; color: var(--ink); }
+  .pv-payroll-amount { font-family: var(--mono); font-size: 11px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .pv-payroll-total {
+    background: var(--bg-soft);
+    border: 1px solid var(--line-soft);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--serif);
+    font-size: 12.5px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* privacy blur — mock data stays private */
+  .pv-blur { filter: blur(5px); user-select: none; -webkit-user-select: none; }
+  @media (prefers-reduced-motion: reduce) { .pv-blur { filter: blur(3px); } }
