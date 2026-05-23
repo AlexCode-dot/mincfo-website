@@ -296,7 +296,7 @@ export default function Nav() {
           </a>
         </div>
         <div className="nav-end">
-          <a className="signin" href="#login">
+          <a className="signin" href="/login">
             Logga in
           </a>
           <a className="btn" href="/#demo">
