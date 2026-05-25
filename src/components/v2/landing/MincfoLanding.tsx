@@ -639,8 +639,8 @@ export default function MincfoLanding() {
                     Eller — testa plattformen själv
                   </span>
                   <span className="cta-trial-hint-b">
-                    Skapa konto och prova gratis i 14 dagar — samma vy som
-                    helhetslösningskunder använder för att följa läget.
+                    Skapa konto och prova gratis i 14 dagar — följ resultat,
+                    likviditet och KPI:er i realtid.
                   </span>
                 </span>
                 <svg
