@@ -631,16 +631,8 @@ export default function MincfoLanding() {
                     />
                   </svg>
                 </a>
-                <span className="cta-lead-meta">
-                  Svar inom 1 arbetsdag · Utan åtagande
-                </span>
+                <span className="cta-lead-meta">Utan åtagande</span>
               </div>
-
-              <ul className="cta-incl">
-                <li>Personlig controller + CFO on demand</li>
-                <li>Redovisning, lön, moms och bokslut</li>
-                <li>Realtidsinsyn i plattformen — KPI:er, cashflow, avvikelser</li>
-              </ul>
             </div>
 
             <div className="cta-form-col">
