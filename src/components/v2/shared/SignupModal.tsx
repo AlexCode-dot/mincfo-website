@@ -13,7 +13,7 @@ interface SignupModalProps {
 const T = {
   title: "Skapa konto",
   subtitle:
-    "Fyll i dina uppgifter så skapar vi ett konto åt dig. Vi skickar en inbjudan till din e-post så snart vi kan.",
+    "Skapa ett konto och testa MinCFO-plattformen kostnadsfritt i 14 dagar. Vi skickar en inbjudan till din e-post så snart vi kan.",
   companyLabel: "Företagsnamn",
   companyPlaceholder: "Företagsnamn",
   orgNrLabel: "Organisationsnummer",
