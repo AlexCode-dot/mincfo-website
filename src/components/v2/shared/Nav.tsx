@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import BrandMark from "./BrandMark";
 import LoginChooserModal from "./LoginChooserModal";
+import SignupModal from "./SignupModal";
 
 const APP_LOGIN_URL =
   process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
 
 export default function Nav() {
   const [loginOpen, setLoginOpen] = useState(false);
+  const [signupOpen, setSignupOpen] = useState(false);
 
   const handleLogin = () => {
     setLoginOpen(false);
@@ -19,9 +21,7 @@ export default function Nav() {
 
   const handleSignup = () => {
     setLoginOpen(false);
-    if (typeof window !== "undefined") {
-      window.location.href = "/#demo";
-    }
+    setSignupOpen(true);
   };
 
   useEffect(() => {
@@ -336,6 +336,7 @@ export default function Nav() {
       onLogin={handleLogin}
       onSignup={handleSignup}
     />
+    <SignupModal open={signupOpen} onClose={() => setSignupOpen(false)} />
     </>
   );
 }
