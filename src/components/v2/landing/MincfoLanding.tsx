@@ -639,8 +639,9 @@ export default function MincfoLanding() {
                     Eller — testa plattformen själv
                   </span>
                   <span className="cta-trial-hint-b">
-                    Skapa konto och prova gratis i 14 dagar — följ resultat,
-                    likviditet och KPI:er i realtid.
+                    Följ hela ekonomin i realtid — dashboards,
+                    kassaflödesprognos och en AI som svarar på era siffror.
+                    Prova gratis i 14 dagar.
                   </span>
                 </span>
                 <svg
