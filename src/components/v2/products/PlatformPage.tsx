@@ -313,6 +313,11 @@ export default function PlatformPage() {
                 Boka samtal
               </a>
             </div>
+            <p className="plat-hero-trust">
+              <span>14 dagar gratis</span>
+              <span>Avsluta när som helst</span>
+              <span>Data inom EU</span>
+            </p>
           </div>
         </div>
       </section>
