@@ -154,6 +154,12 @@ const STEPS: { n: string; title: string; body: string }[] = [
     body:
       "AI som besvarar frågor om bolagets siffror, realtidsrapportering enligt anpassad struktur och automatiskt uppdaterad kassaflödesprognos.",
   },
+  {
+    n: "04",
+    title: "Planera och simulera framåt",
+    body:
+      "Testa scenarier, förstå risker tidigare och prioritera utifrån faktisk ekonomisk påverkan — i samma flöde som uppföljningen.",
+  },
 ];
 
 /* FAQ — grounded in the platform.json messaging. */
