@@ -139,7 +139,7 @@
 
 /* chart */
 .plat-fc-chartwrap { position: relative; }
-.plat-fc-chart { width: 100%; height: 152px; display: block; }
+.plat-fc-chart { width: 100%; height: 188px; display: block; }
 .plat-fc-tip {
   position: absolute;
   left: 54%;

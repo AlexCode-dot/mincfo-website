@@ -60,14 +60,14 @@ const FC_MONTHS = [
   "Jan", "Feb", "Mar", "Apr", "Maj", "Jun",
   "Jul", "Aug", "Sep", "Okt", "Nov", "Dec",
 ];
-// 12 points (viewBox 0 0 340 150): actuals wobble realistically through
-// Jul, then the forecast climbs. Lower y = higher value.
+// 12 points (viewBox 0 0 340 180): actuals wobble realistically through
+// Jul, then the forecast climbs to near the top. Lower y = higher value.
 const FC_PTS: [number, number][] = [
-  [14, 116], [42.4, 110], [70.7, 118], [99.1, 106], [127.5, 112], [155.8, 102],
-  [184.2, 100], [212.5, 88], [240.9, 74], [269.3, 64], [297.6, 50], [326, 36],
+  [14, 118], [42.4, 112], [70.7, 120], [99.1, 108], [127.5, 113], [155.8, 100],
+  [184.2, 96], [212.5, 80], [240.9, 64], [269.3, 50], [297.6, 34], [326, 24],
 ];
 const FC_BOUNDARY = 6; // Jul is the last actual month
-const BASELINE = 134;
+const BASELINE = 160;
 
 // Catmull-Rom → cubic bezier segments for a smooth, natural curve.
 // segs[i] draws the curve from point i to point i+1, using neighbours
@@ -146,21 +146,21 @@ function ForecastVisual() {
           <div className="plat-fc-chartwrap">
             <svg
               className="plat-fc-chart"
-              viewBox="0 0 340 150"
+              viewBox="0 0 340 180"
               preserveAspectRatio="none"
               aria-hidden="true"
             >
               <defs>
                 <linearGradient id="platFcArea" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#4C3DFF" stopOpacity="0.22" />
+                  <stop offset="0%" stopColor="#4C3DFF" stopOpacity="0.24" />
                   <stop offset="100%" stopColor="#4C3DFF" stopOpacity="0" />
                 </linearGradient>
               </defs>
-              {[44, 80, 116].map((y) => (
+              {[48, 92, 136].map((y) => (
                 <line key={y} x1="14" y1={y} x2="326" y2={y}
                   stroke="rgba(0,0,0,0.06)" strokeWidth="1" strokeDasharray="2 4" />
               ))}
-              <line x1={bx} y1="14" x2={bx} y2={BASELINE}
+              <line x1={bx} y1="16" x2={bx} y2={BASELINE}
                 stroke="rgba(0,0,0,0.10)" strokeWidth="1" strokeDasharray="3 3" />
               <path d={areaPath} fill="url(#platFcArea)" />
               <path d={actualLine} fill="none" stroke="#4C3DFF"
