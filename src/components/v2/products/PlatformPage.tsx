@@ -101,7 +101,11 @@ const areaPath =
   ` L${FC_PTS[FC_PTS.length - 1][0]},${BASELINE} Z`;
 
 function ForecastVisual() {
-  const [bx, by] = FC_PTS[FC_BOUNDARY];
+  const bx = FC_PTS[FC_BOUNDARY][0];
+  // marker rendered as HTML (not SVG) so it stays a true circle despite
+  // the chart's non-uniform preserveAspectRatio scaling.
+  const dotLeft = (FC_PTS[FC_BOUNDARY][0] / 340) * 100;
+  const dotTop = (FC_PTS[FC_BOUNDARY][1] / 180) * 100;
   return (
     <div
       className="plat-fc-photo"
@@ -168,9 +172,12 @@ function ForecastVisual() {
               <path d={forecastLine} fill="none" stroke="#4C3DFF"
                 strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
                 strokeDasharray="5 5" opacity="0.85" />
-              <circle cx={bx} cy={by} r="4.5" fill="#FFFFFF"
-                stroke="#4C3DFF" strokeWidth="2.5" />
             </svg>
+            <span
+              className="plat-fc-dot"
+              style={{ left: `${dotLeft}%`, top: `${dotTop}%` }}
+              aria-hidden="true"
+            />
             <div className="plat-fc-tip">
               <span>{FC_MONTHS[FC_BOUNDARY]}</span>
               <strong>Utfall: 372 tkr</strong>
