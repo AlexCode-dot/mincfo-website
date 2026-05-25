@@ -75,34 +75,31 @@
 .plat-fc-chip {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 8px 10px;
+  gap: 5px;
+  padding: 9px 11px;
   border: 1px solid var(--line-soft);
   border-radius: 9px;
   background: var(--bg);
 }
 .plat-fc-chip-l {
   font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 9.5px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
   color: var(--ink-3);
+  min-height: 2.7em; /* reserve two lines so the KPI values align */
 }
 .plat-fc-chip-v {
+  margin-top: auto;
   font-family: var(--serif);
-  font-size: 12.5px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--ink);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
-.plat-fc-live-dot {
-  width: 7px; height: 7px; border-radius: 999px;
-  background: var(--good);
-  box-shadow: 0 0 0 3px rgba(79, 138, 74, 0.16);
-  flex: none;
-}
+.plat-fc-chip-v--up { color: var(--good); }
+.plat-fc-chip-v--down { color: #C9504A; }
 
 /* header: select + legend */
 .plat-fc-head {

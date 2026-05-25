@@ -88,20 +88,16 @@ function ForecastVisual() {
         <div className="pv plat-fc">
           <div className="plat-fc-status">
             <span className="plat-fc-chip">
-              <span className="plat-fc-chip-l">Rapporter</span>
-              <span className="plat-fc-chip-v">
-                <span className="plat-fc-live-dot" />Live
-              </span>
+              <span className="plat-fc-chip-l">{planning.forecastPrefix} (Dec)</span>
+              <span className="plat-fc-chip-v">453 069 kr</span>
             </span>
             <span className="plat-fc-chip">
-              <span className="plat-fc-chip-l">Prognos</span>
-              <span className="plat-fc-chip-v">12 månader</span>
+              <span className="plat-fc-chip-l">{planning.vsPrevious}</span>
+              <span className="plat-fc-chip-v plat-fc-chip-v--up">+20,2%</span>
             </span>
             <span className="plat-fc-chip">
-              <span className="plat-fc-chip-l">Fortnox</span>
-              <span className="plat-fc-chip-v">
-                <span className="plat-fc-live-dot" />Live
-              </span>
+              <span className="plat-fc-chip-l">{planning.annualVariance}</span>
+              <span className="plat-fc-chip-v plat-fc-chip-v--down">-7,0%</span>
             </span>
           </div>
 
