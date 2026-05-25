@@ -171,6 +171,15 @@ export default function SignupModal({ open, onClose }: SignupModalProps) {
             </header>
 
             <form className="auth-form" onSubmit={handleSubmit}>
+              {/* anti-spam honeypot — mirrors main; bots fill it, humans never see it */}
+              <input
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                className="auth-honeypot"
+                aria-hidden="true"
+              />
               <div className="auth-field">
                 <label htmlFor="signup-company">{T.companyLabel}</label>
                 <input
@@ -179,6 +188,7 @@ export default function SignupModal({ open, onClose }: SignupModalProps) {
                   type="text"
                   placeholder={T.companyPlaceholder}
                   autoComplete="organization"
+                  maxLength={200}
                   required
                 />
               </div>
@@ -204,6 +214,7 @@ export default function SignupModal({ open, onClose }: SignupModalProps) {
                     type="text"
                     placeholder={T.namePlaceholder}
                     autoComplete="name"
+                    maxLength={200}
                     required
                   />
                 </div>
@@ -215,6 +226,7 @@ export default function SignupModal({ open, onClose }: SignupModalProps) {
                     type="email"
                     placeholder={T.emailPlaceholder}
                     autoComplete="email"
+                    maxLength={200}
                     required
                   />
                 </div>
@@ -228,12 +240,13 @@ export default function SignupModal({ open, onClose }: SignupModalProps) {
                   type="tel"
                   placeholder={T.phonePlaceholder}
                   autoComplete="tel"
+                  maxLength={30}
                   required
                 />
               </div>
 
               <label className="auth-terms" htmlFor="signup-terms">
-                <input id="signup-terms" type="checkbox" required />
+                <input id="signup-terms" name="consent" type="checkbox" required />
                 <span>
                   {T.consentBefore}
                   <a href={T.consentLinkHref}>{T.consentLinkText}</a>
