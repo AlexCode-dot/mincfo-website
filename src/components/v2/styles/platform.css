@@ -143,7 +143,7 @@
 .plat-fc-tip {
   position: absolute;
   left: 54%;
-  bottom: 56%;
+  bottom: 68%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;

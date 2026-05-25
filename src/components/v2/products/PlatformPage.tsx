@@ -63,8 +63,8 @@ const FC_MONTHS = [
 // 12 points (viewBox 0 0 340 180): actuals wobble realistically through
 // Jul, then the forecast climbs to near the top. Lower y = higher value.
 const FC_PTS: [number, number][] = [
-  [14, 118], [42.4, 112], [70.7, 120], [99.1, 108], [127.5, 113], [155.8, 100],
-  [184.2, 96], [212.5, 80], [240.9, 64], [269.3, 50], [297.6, 34], [326, 24],
+  [14, 106], [42.4, 109], [70.7, 110], [99.1, 102], [127.5, 86], [155.8, 73],
+  [184.2, 70], [212.5, 60], [240.9, 51], [269.3, 43], [297.6, 34], [326, 26],
 ];
 const FC_BOUNDARY = 6; // Jul is the last actual month
 const BASELINE = 160;
