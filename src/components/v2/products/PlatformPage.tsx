@@ -301,12 +301,12 @@ export default function PlatformPage() {
             </h1>
             <p className="prod-hero-sub">{hero.body}</p>
             <div className="prod-hero-cta">
-              <a className="btn" href="/#demo">
-                {hero.primaryCta}
+              <a className="btn" href="https://app.mincfo.com">
+                Testa gratis
                 <ArrowRight />
               </a>
-              <a className="btn btn-outline" href="#how">
-                {hero.secondaryCta}
+              <a className="btn btn-outline" href="/boka-samtal">
+                Boka samtal
               </a>
             </div>
           </div>
@@ -428,12 +428,12 @@ export default function PlatformPage() {
           <h2>{ending.title}</h2>
           <p className="sub">{ending.body}</p>
           <div className="closing-row">
-            <a className="btn" href="/#demo">
-              {ending.primaryCta}
+            <a className="btn" href="https://app.mincfo.com">
+              Testa gratis
               <ArrowRight />
             </a>
-            <a className="btn btn-outline" href="#how">
-              {hero.secondaryCta}
+            <a className="btn btn-outline" href="/boka-samtal">
+              Boka samtal
             </a>
           </div>
         </div>
