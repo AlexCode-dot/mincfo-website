@@ -632,6 +632,32 @@ export default function MincfoLanding() {
                   </svg>
                 </a>
               </div>
+
+              <a className="cta-trial-hint" href="#ctaForm">
+                <span className="cta-trial-hint-copy">
+                  <span className="cta-trial-hint-t">
+                    Eller — testa plattformen själv
+                  </span>
+                  <span className="cta-trial-hint-b">
+                    Skapa konto och prova gratis i 14 dagar — samma vy som
+                    helhetslösningskunder använder för att följa läget.
+                  </span>
+                </span>
+                <svg
+                  className="cta-trial-hint-arrow"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 12 12"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    fill="none"
+                    d="M3 6h6m0 0L6.5 3.5M9 6L6.5 8.5"
+                  />
+                </svg>
+              </a>
             </div>
 
             <form
@@ -642,15 +668,10 @@ export default function MincfoLanding() {
               <div className="cta-form-head">
                 <span className="cta-form-l cta-form-l-pulse">
                   <BrandMark />
-                  Testa plattformen själv
+                  Skapa konto
                 </span>
-                <span className="cta-form-meta">14 dagar gratis</span>
+                <span className="cta-form-meta">Svar inom 1 arbetsdag</span>
               </div>
-              <p className="cta-form-sub">
-                Skapa konto och prova MinCFO-plattformen gratis i 14 dagar —
-                samma vy som våra helhetslösningskunder använder för att följa
-                läget.
-              </p>
 
               <div className="cta-field">
                 <label htmlFor="cta-company">Företagsnamn</label>
