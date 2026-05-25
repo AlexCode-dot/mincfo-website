@@ -1,5 +1,5 @@
-import PlatformPage from "@/components/v2/products/PlatformPage";
+import HomePage from "@/app/_components/HomePage";
 
 export default function PlattformPage() {
-  return <PlatformPage />;
+  return <HomePage initialOffering="platform" />;
 }
