@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import "../mincfo-landing.css";
 import "../styles/platform.css";
 import Nav from "../shared/Nav";
 import Footer from "../shared/Footer";
 import BrandMark from "../shared/BrandMark";
+import SignupModal from "../shared/SignupModal";
 import PillarVisual from "./PillarVisual";
 import platform from "@/content/home/platform.json";
 
@@ -285,6 +287,8 @@ const FAQS: { q: string; a: string }[] = [
 ];
 
 export default function PlatformPage() {
+  const [signupOpen, setSignupOpen] = useState(false);
+  const openSignup = () => setSignupOpen(true);
   return (
     <div className="mv2-root hl-1 vs-1 type-sumary">
       <Nav />
@@ -301,10 +305,10 @@ export default function PlatformPage() {
             </h1>
             <p className="prod-hero-sub">{hero.body}</p>
             <div className="prod-hero-cta">
-              <a className="btn" href="https://app.mincfo.com">
+              <button type="button" className="btn" onClick={openSignup}>
                 Testa gratis
                 <ArrowRight />
-              </a>
+              </button>
               <a className="btn btn-outline" href="/boka-samtal">
                 Boka samtal
               </a>
@@ -428,10 +432,10 @@ export default function PlatformPage() {
           <h2>{ending.title}</h2>
           <p className="sub">{ending.body}</p>
           <div className="closing-row">
-            <a className="btn" href="https://app.mincfo.com">
+            <button type="button" className="btn" onClick={openSignup}>
               Testa gratis
               <ArrowRight />
-            </a>
+            </button>
             <a className="btn btn-outline" href="/boka-samtal">
               Boka samtal
             </a>
@@ -440,6 +444,8 @@ export default function PlatformPage() {
       </section>
 
       <Footer />
+
+      <SignupModal open={signupOpen} onClose={() => setSignupOpen(false)} />
     </div>
   );
 }
