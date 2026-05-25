@@ -7,16 +7,18 @@
 /* ---------- list: job grid ---------- */
 .car-list { padding: clamp(56px, 7vw, 104px) 0 clamp(72px, 9vw, 120px); }
 
+/* Flex (not grid) so an incomplete last row centers:
+   5 cards -> 3 on top, 2 centered below. */
 .car-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(20px, 2.4vw, 32px);
-}
-@media (max-width: 760px) {
-  .car-grid { grid-template-columns: 1fr; }
+  --car-gap: clamp(20px, 2.4vw, 32px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--car-gap);
 }
 
 .car-card {
+  flex: 0 1 calc((100% - 2 * var(--car-gap)) / 3);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -34,6 +36,12 @@
   border-color: rgba(0, 0, 0, 0.2);
   box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.35);
   transform: translateY(-2px);
+}
+@media (max-width: 1024px) {
+  .car-card { flex-basis: calc((100% - var(--car-gap)) / 2); }
+}
+@media (max-width: 640px) {
+  .car-card { flex-basis: 100%; }
 }
 
 .car-card-eyebrow {

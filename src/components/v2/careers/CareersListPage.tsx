@@ -15,20 +15,6 @@ type JobPost = {
   order?: number;
 };
 
-const TICKER_LOGOS: { name: string; file: string; soft?: boolean }[] = [
-  { name: "Growbit", file: "logo-growbit.svg" },
-  { name: "Showcase", file: "logo-showcase.avif", soft: true },
-  { name: "Lawster", file: "logo-lawster.avif" },
-  { name: "Hälsa Hemma", file: "logo-h%C3%A4lsa.avif" },
-  { name: "SweBal", file: "logo-swebal.avif" },
-  { name: "BAM", file: "logo-bam.avif" },
-  { name: "Eloize", file: "logo-eloize.avif" },
-  { name: "Runway", file: "logo-runway.webp" },
-  { name: "Realforce", file: "logo-realforce.avif" },
-  { name: "Rossoneri", file: "logo-rossoneri.avif" },
-  { name: "Qsid", file: "logo-qsid.avif" },
-];
-
 const Arrow = () => (
   <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
     <path
@@ -66,30 +52,6 @@ export default function CareersListPage() {
                 ? "Vi söker drivna människor som vill växa tillsammans med oss och våra kunder. Här är rollerna vi rekryterar till just nu."
                 : "Just nu rekryterar vi inte aktivt, men vi är alltid intresserade av att komma i kontakt med skarpa personer som tror på det vi bygger på MinCFO."}
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ TRUST TICKER ============ */}
-      <section className="prod-trust">
-        <div className="container">
-          <p className="prod-trust-l">
-            Vi bygger ekonomifunktionen för 50+ snabbväxande bolag
-          </p>
-          <div className="kc-ticker">
-            <div className="kc-track">
-              {[...TICKER_LOGOS, ...TICKER_LOGOS].map((logo, i) => (
-                <span
-                  className={`kc-logo${logo.soft ? " soft" : ""}`}
-                  key={`${logo.file}-${i}`}
-                >
-                  <img
-                    src={`/customers/logos/${logo.file}`}
-                    alt={`${logo.name} logotyp`}
-                  />
-                </span>
-              ))}
-            </div>
           </div>
         </div>
       </section>
