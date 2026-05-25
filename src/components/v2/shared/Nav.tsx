@@ -1,9 +1,29 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import BrandMark from "./BrandMark";
+import LoginChooserModal from "./LoginChooserModal";
+
+const APP_LOGIN_URL =
+  process.env.NEXT_PUBLIC_APP_LOGIN_URL ?? "https://app.mincfo.com/login";
 
 export default function Nav() {
+  const [loginOpen, setLoginOpen] = useState(false);
+
+  const handleLogin = () => {
+    setLoginOpen(false);
+    if (typeof window !== "undefined") {
+      window.location.href = APP_LOGIN_URL;
+    }
+  };
+
+  const handleSignup = () => {
+    setLoginOpen(false);
+    if (typeof window !== "undefined") {
+      window.location.href = "/#demo";
+    }
+  };
+
   useEffect(() => {
     const megas = Array.from(
       document.querySelectorAll<HTMLElement>("[data-mega]")
@@ -79,6 +99,7 @@ export default function Nav() {
   }, []);
 
   return (
+    <>
     <nav className="nav">
       <div className="container nav-inner">
         <a className="brand" href="/">
@@ -291,19 +312,30 @@ export default function Nav() {
           <a className="nav-link" href="/#kundcase">
             Kundcase
           </a>
-          <a className="nav-link" href="/#blogg">
+          <a className="nav-link" href="/blogg">
             Blogg
           </a>
         </div>
         <div className="nav-end">
-          <a className="signin" href="/login">
+          <button
+            className="signin"
+            type="button"
+            onClick={() => setLoginOpen(true)}
+          >
             Logga in
-          </a>
+          </button>
           <a className="btn" href="/#demo">
             Boka samtal
           </a>
         </div>
       </div>
     </nav>
+    <LoginChooserModal
+      open={loginOpen}
+      onClose={() => setLoginOpen(false)}
+      onLogin={handleLogin}
+      onSignup={handleSignup}
+    />
+    </>
   );
 }
