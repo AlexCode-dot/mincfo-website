@@ -60,21 +60,44 @@ const FC_MONTHS = [
   "Jan", "Feb", "Mar", "Apr", "Maj", "Jun",
   "Jul", "Aug", "Sep", "Okt", "Nov", "Dec",
 ];
-// 12 points: steady actuals through Jul, then a climbing forecast.
-// Lower y = higher value.
+// 12 points (viewBox 0 0 340 150): actuals wobble realistically through
+// Jul, then the forecast climbs. Lower y = higher value.
 const FC_PTS: [number, number][] = [
-  [12, 92], [38.9, 91], [65.8, 90], [92.7, 89], [119.6, 88], [146.5, 86],
-  [173.5, 84], [200.4, 73], [227.3, 61], [254.2, 49], [281.1, 37], [308, 25],
+  [14, 116], [42.4, 110], [70.7, 118], [99.1, 106], [127.5, 112], [155.8, 102],
+  [184.2, 100], [212.5, 88], [240.9, 74], [269.3, 64], [297.6, 50], [326, 36],
 ];
 const FC_BOUNDARY = 6; // Jul is the last actual month
-const BASELINE = 110;
-const toLine = (pts: [number, number][]) =>
-  pts.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x},${y}`).join(" ");
-const actualPts = FC_PTS.slice(0, FC_BOUNDARY + 1);
-const forecastPts = FC_PTS.slice(FC_BOUNDARY);
+const BASELINE = 134;
+
+// Catmull-Rom → cubic bezier segments for a smooth, natural curve.
+// segs[i] draws the curve from point i to point i+1, using neighbours
+// on both sides so the solid/dashed split stays tangent-continuous.
+const r1 = (n: number) => Math.round(n * 10) / 10;
+function smoothSegments(pts: [number, number][]): string[] {
+  const segs: string[] = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] ?? pts[i];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[i + 2] ?? p2;
+    const c1x = r1(p1[0] + (p2[0] - p0[0]) / 6);
+    const c1y = r1(p1[1] + (p2[1] - p0[1]) / 6);
+    const c2x = r1(p2[0] - (p3[0] - p1[0]) / 6);
+    const c2y = r1(p2[1] - (p3[1] - p1[1]) / 6);
+    segs.push(`C${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`);
+  }
+  return segs;
+}
+const FC_SEGS = smoothSegments(FC_PTS);
+const actualLine =
+  `M${FC_PTS[0][0]},${FC_PTS[0][1]} ` +
+  FC_SEGS.slice(0, FC_BOUNDARY).join(" ");
+const forecastLine =
+  `M${FC_PTS[FC_BOUNDARY][0]},${FC_PTS[FC_BOUNDARY][1]} ` +
+  FC_SEGS.slice(FC_BOUNDARY).join(" ");
 const areaPath =
-  `M${FC_PTS[0][0]},${BASELINE} ` +
-  FC_PTS.map(([x, y]) => `L${x},${y}`).join(" ") +
+  `M${FC_PTS[0][0]},${BASELINE} L${FC_PTS[0][0]},${FC_PTS[0][1]} ` +
+  FC_SEGS.join(" ") +
   ` L${FC_PTS[FC_PTS.length - 1][0]},${BASELINE} Z`;
 
 function ForecastVisual() {
@@ -123,7 +146,7 @@ function ForecastVisual() {
           <div className="plat-fc-chartwrap">
             <svg
               className="plat-fc-chart"
-              viewBox="0 0 320 124"
+              viewBox="0 0 340 150"
               preserveAspectRatio="none"
               aria-hidden="true"
             >
@@ -133,18 +156,18 @@ function ForecastVisual() {
                   <stop offset="100%" stopColor="#4C3DFF" stopOpacity="0" />
                 </linearGradient>
               </defs>
-              {[40, 68, 96].map((y) => (
-                <line key={y} x1="12" y1={y} x2="308" y2={y}
+              {[44, 80, 116].map((y) => (
+                <line key={y} x1="14" y1={y} x2="326" y2={y}
                   stroke="rgba(0,0,0,0.06)" strokeWidth="1" strokeDasharray="2 4" />
               ))}
-              <line x1={bx} y1="12" x2={bx} y2={BASELINE}
+              <line x1={bx} y1="14" x2={bx} y2={BASELINE}
                 stroke="rgba(0,0,0,0.10)" strokeWidth="1" strokeDasharray="3 3" />
               <path d={areaPath} fill="url(#platFcArea)" />
-              <path d={toLine(actualPts)} fill="none" stroke="#4C3DFF"
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              <path d={toLine(forecastPts)} fill="none" stroke="#4C3DFF"
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                strokeDasharray="4 4" opacity="0.85" />
+              <path d={actualLine} fill="none" stroke="#4C3DFF"
+                strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d={forecastLine} fill="none" stroke="#4C3DFF"
+                strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+                strokeDasharray="5 5" opacity="0.85" />
               <circle cx={bx} cy={by} r="4.5" fill="#FFFFFF"
                 stroke="#4C3DFF" strokeWidth="2.5" />
             </svg>
