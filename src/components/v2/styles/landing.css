@@ -848,11 +848,19 @@
   .cta-lead-btn svg { transition: transform 0.2s ease; }
   .cta-lead-btn:hover svg { transform: translateX(2px); }
   /* secondary trial form column */
-  .cta-form-col { display: flex; flex-direction: column; gap: 12px; }
+  .cta-form-col { display: flex; flex-direction: column; gap: 16px; }
+  .cta-form-intro { display: flex; flex-direction: column; gap: 8px; }
   .cta-form-or {
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .cta-form-or-sub {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.5);
+    max-width: 54ch;
   }

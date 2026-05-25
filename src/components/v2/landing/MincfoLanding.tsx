@@ -635,9 +635,14 @@ export default function MincfoLanding() {
             </div>
 
             <div className="cta-form-col">
-              <span className="cta-form-or">
-                Eller — testa plattformen själv i 14 dagar
-              </span>
+              <div className="cta-form-intro">
+                <span className="cta-form-or">Eller — testa plattformen själv</span>
+                <p className="cta-form-or-sub">
+                  Prova MinCFO-plattformen gratis i 14 dagar — samma vy där
+                  även våra helhetslösningskunder följer resultat, likviditet
+                  och KPI:er i realtid.
+                </p>
+              </div>
               <form
                 className="cta-form"
                 id="ctaForm"
