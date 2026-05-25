@@ -15,6 +15,19 @@ export default function Footer() {
               controlling och CFO-stöd. Ert team driver bolaget, vi driver
               ekonomin.
             </p>
+            <a className="footer-careers-cta" href="/karriar">
+              Se våra lediga tjänster
+              <svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true">
+                <path
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4.5 2.5L8 6l-3.5 3.5"
+                />
+              </svg>
+            </a>
           </div>
           <div className="footer-col">
             <h4>Produkt</h4>
@@ -57,7 +70,7 @@ export default function Footer() {
                 <a href="/#kundcase">Kundcase</a>
               </li>
               <li>
-                <a href="/#blogg">Blogg</a>
+                <a href="/blogg">Blogg</a>
               </li>
               <li>
                 <a href="/#karriar">Karriär</a>

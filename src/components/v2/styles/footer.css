@@ -42,6 +42,32 @@
     color: rgba(255,255,255,0.5);
     max-width: 32ch;
   }
+  .footer-careers-cta {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+    padding: 12px 22px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    color: #FFFFFF;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
+    transition: background .18s ease, border-color .18s ease;
+  }
+  .footer-careers-cta:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.28);
+  }
+  .footer-careers-cta svg {
+    color: rgba(255,255,255,0.8);
+    flex: none;
+    transition: transform .18s ease;
+  }
+  .footer-careers-cta:hover svg { transform: translateX(3px); }
   .footer-col h4 {
     font-family: var(--mono);
     font-size: 11px;
