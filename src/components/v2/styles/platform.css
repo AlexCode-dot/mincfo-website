@@ -69,59 +69,6 @@
 .plat-sol-cta svg { transition: transform .2s ease; }
 .plat-sol-card:hover .plat-sol-cta svg { transform: translateX(3px); }
 
-/* ---------- Customers grid ---------- */
-.plat-cust-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(16px, 1.8vw, 24px);
-  max-width: 1320px;
-  margin: 0 auto;
-}
-@media (max-width: 1024px) { .plat-cust-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 620px) { .plat-cust-grid { grid-template-columns: 1fr; } }
-
-.plat-cust-card {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: clamp(24px, 2.4vw, 34px);
-  background: var(--bg);
-  border: 1px solid var(--line-soft);
-  border-radius: 12px;
-}
-.plat-cust-card--accent {
-  background: var(--bg-soft);
-  border-color: var(--line);
-}
-.plat-cust-quote {
-  font-family: var(--serif);
-  font-size: 16px;
-  line-height: 1.5;
-  letter-spacing: -0.005em;
-  color: var(--ink);
-}
-.plat-cust-by {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line-soft);
-}
-.plat-cust-name {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--ink);
-  letter-spacing: 0.01em;
-}
-.plat-cust-role {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-3);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
 /* ---------- Planning / forecast mock (pillar visual) ---------- */
 .plat-fc { gap: 12px; }
 .plat-fc-head {

@@ -8,8 +8,9 @@ import BrandMark from "../shared/BrandMark";
 import PillarVisual from "./PillarVisual";
 import platform from "@/content/home/platform.json";
 
-const { hero, aicopilot, solutions, customers, ending } = platform;
+const { hero, aicopilot, solutions, ending } = platform;
 const { dashboard, planning } = aicopilot;
+const customers = platform.customers;
 
 const ArrowRight = ({ size = 12 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 12 12" aria-hidden="true">
@@ -31,6 +32,24 @@ const Check = () => (
       strokeLinejoin="round"
       fill="none"
       d="M2.5 7.5l3 3 6-6.5"
+    />
+  </svg>
+);
+
+const Chevron = () => (
+  <svg
+    className="faq-chev"
+    width="14"
+    height="14"
+    viewBox="0 0 14 14"
+    aria-hidden="true"
+  >
+    <path
+      stroke="currentColor"
+      strokeWidth="1.4"
+      fill="none"
+      strokeLinecap="round"
+      d="M3 5.5l4 4 4-4"
     />
   </svg>
 );
@@ -156,6 +175,58 @@ const PILLARS: Pillar[] = [
   },
 ];
 
+/* "Så funkar det" — steps grounded in the platform.json copy. */
+const STEPS: { n: string; title: string; body: string }[] = [
+  {
+    n: "01",
+    title: "Koppla på era system",
+    body:
+      "Koppla på MinCFO på era befintliga finansiella flöden och system. Ni byter inte verktyg — er data flödar in automatiskt.",
+  },
+  {
+    n: "02",
+    title: "Se allt i realtidsdashboards",
+    body:
+      "KPI:er, resultat och likviditet samlas i samma beslutsyta. Alla som behöver förstå läget får samma uppdaterade bild.",
+  },
+  {
+    n: "03",
+    title: "Fråga AI Copilot",
+    body:
+      "Sluta leta i rapporter och chatta med er data. Ställ frågor om resultat, runway och avvikelser och få svar direkt.",
+  },
+  {
+    n: "04",
+    title: "Planera och simulera",
+    body:
+      "Testa scenarier, förstå risker tidigare och prioritera utifrån faktisk ekonomisk påverkan — i samma flöde som uppföljningen.",
+  },
+];
+
+/* FAQ — grounded in the platform.json messaging. */
+const FAQS: { q: string; a: string }[] = [
+  {
+    q: "Behöver vi byta system?",
+    a: "Nej. MinCFO kopplas på era befintliga finansiella flöden och system — ni fortsätter jobba i de verktyg ni redan har.",
+  },
+  {
+    q: "Vad kan AI Copiloten svara på?",
+    a: "Ställ frågor om resultat, runway och avvikelser och få omedelbara svar, visualiseringar och strategiska råd — helt utan manuellt arbete.",
+  },
+  {
+    q: "Hur uppdaterad är datan?",
+    a: "Era viktigaste KPI:er är alltid synkade och klara. Ni ser läget i realtid utan att vänta på nästa manuella rapport.",
+  },
+  {
+    q: "Kan vi dela vyer med team och styrelse?",
+    a: "Ja. Dela uppdaterade vyer med team och styrelse med ett klick — alla får samma bild av läget.",
+  },
+  {
+    q: "Vem passar plattformen för?",
+    a: "Olika team använder MinCFO på olika sätt — founders, finance-team, SaaS- och tech-bolag, konsulter och e-handlare. Välj den lösning som speglar hur ni vill jobba.",
+  },
+];
+
 export default function PlatformPage() {
   return (
     <div className="mv2-root hl-1 vs-1 type-sumary">
@@ -177,7 +248,7 @@ export default function PlatformPage() {
                 {hero.primaryCta}
                 <ArrowRight />
               </a>
-              <a className="btn btn-outline" href="#plattform">
+              <a className="btn btn-outline" href="#how">
                 {hero.secondaryCta}
               </a>
             </div>
@@ -244,8 +315,36 @@ export default function PlatformPage() {
         </div>
       </section>
 
+      {/* ============ HOW IT WORKS ============ */}
+      <section className="workspace" id="how">
+        <div className="container">
+          <div className="prod-how-head">
+            <span className="eyebrow">Så funkar det</span>
+            <h2 className="workspace-title">
+              Från koppling till <em>realtidsläge.</em>
+            </h2>
+            <p className="workspace-body">
+              Koppla på MinCFO på era befintliga flöden och system — sen ser
+              ni läget, frågar er data och planerar framåt i samma yta.
+            </p>
+          </div>
+
+          <ol className="prod-steps">
+            {STEPS.map((s) => (
+              <li key={s.n} className="prod-step">
+                <span className="prod-step-n">{s.n}</span>
+                <div>
+                  <div className="prod-step-t">{s.title}</div>
+                  <div className="prod-step-b">{s.body}</div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
       {/* ============ SOLUTIONS ============ */}
-      <section className="section" id="losningar">
+      <section className="section prod-deliverables" id="losningar">
         <div className="container">
           <div className="section-head">
             <span className="eyebrow">{solutions.pill}</span>
@@ -270,28 +369,24 @@ export default function PlatformPage() {
         </div>
       </section>
 
-      {/* ============ CUSTOMERS ============ */}
-      <section className="section" id="kundcase">
+      {/* ============ FAQ ============ */}
+      <section className="section prod-faq">
         <div className="container">
           <div className="section-head">
-            <span className="eyebrow">{customers.pill}</span>
-            <h2 className="serif-h">{customers.title}</h2>
-            <p>{customers.intro}</p>
+            <span className="eyebrow">Frågor vi får ofta</span>
+            <h2 className="serif-h">
+              Vanliga frågor om <em>plattformen.</em>
+            </h2>
           </div>
-          <div className="plat-cust-grid">
-            {customers.testimonials.map((t) => (
-              <article
-                className={`plat-cust-card${
-                  t.accent ? " plat-cust-card--accent" : ""
-                }`}
-                key={`${t.company}-${t.person}`}
-              >
-                <p className="plat-cust-quote">&ldquo;{t.quote}&rdquo;</p>
-                <div className="plat-cust-by">
-                  <span className="plat-cust-name">{t.person}</span>
-                  <span className="plat-cust-role">{t.role}</span>
-                </div>
-              </article>
+          <div className="faq-list">
+            {FAQS.map((f) => (
+              <details className="faq-item" key={f.q}>
+                <summary>
+                  <span>{f.q}</span>
+                  <Chevron />
+                </summary>
+                <p>{f.a}</p>
+              </details>
             ))}
           </div>
         </div>
@@ -310,7 +405,7 @@ export default function PlatformPage() {
               {ending.primaryCta}
               <ArrowRight />
             </a>
-            <a className="btn btn-outline" href="#plattform">
+            <a className="btn btn-outline" href="#how">
               {hero.secondaryCta}
             </a>
           </div>
