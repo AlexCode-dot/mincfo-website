@@ -847,12 +847,6 @@
   .cta-lead-btn:hover { background: #ECECEC; transform: translateY(-1px); }
   .cta-lead-btn svg { transition: transform 0.2s ease; }
   .cta-lead-btn:hover svg { transform: translateX(2px); }
-  .cta-lead-meta {
-    font-family: var(--mono);
-    font-size: 11.5px;
-    letter-spacing: 0.02em;
-    color: rgba(255, 255, 255, 0.55);
-  }
   /* secondary trial form column */
   .cta-form-col { display: flex; flex-direction: column; gap: 12px; }
   .cta-form-or {

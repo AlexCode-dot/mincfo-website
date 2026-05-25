@@ -631,7 +631,6 @@ export default function MincfoLanding() {
                     />
                   </svg>
                 </a>
-                <span className="cta-lead-meta">Utan åtagande</span>
               </div>
             </div>
 
