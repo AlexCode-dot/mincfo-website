@@ -634,27 +634,23 @@ export default function MincfoLanding() {
               </div>
             </div>
 
-            <div className="cta-form-col">
-              <div className="cta-form-intro">
-                <span className="cta-form-or">Eller — testa plattformen själv</span>
-                <p className="cta-form-or-sub">
-                  Prova MinCFO-plattformen gratis i 14 dagar — samma vy där
-                  även våra helhetslösningskunder följer resultat, likviditet
-                  och KPI:er i realtid.
-                </p>
-              </div>
-              <form
-                className="cta-form"
-                id="ctaForm"
-                onSubmit={(e) => e.preventDefault()}
-              >
+            <form
+              className="cta-form"
+              id="ctaForm"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <div className="cta-form-head">
                 <span className="cta-form-l cta-form-l-pulse">
                   <BrandMark />
-                  Skapa konto
+                  Testa plattformen själv
                 </span>
-                <span className="cta-form-meta">Svar inom 1 arbetsdag</span>
+                <span className="cta-form-meta">14 dagar gratis</span>
               </div>
+              <p className="cta-form-sub">
+                Skapa konto och prova MinCFO-plattformen gratis i 14 dagar —
+                samma vy som våra helhetslösningskunder använder för att följa
+                läget.
+              </p>
 
               <div className="cta-field">
                 <label htmlFor="cta-company">Företagsnamn</label>
@@ -737,8 +733,7 @@ export default function MincfoLanding() {
                 <span>Avsluta när som helst</span>
                 <span>Data inom EU</span>
               </div>
-              </form>
-            </div>
+            </form>
           </div>
         </div>
       </section>

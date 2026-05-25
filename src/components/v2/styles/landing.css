@@ -747,7 +747,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.9fr);
     gap: clamp(40px, 5vw, 80px);
-    align-items: start;
+    align-items: center;
     max-width: 1320px;
     margin: 0 auto;
   }
@@ -847,20 +847,12 @@
   .cta-lead-btn:hover { background: #ECECEC; transform: translateY(-1px); }
   .cta-lead-btn svg { transition: transform 0.2s ease; }
   .cta-lead-btn:hover svg { transform: translateX(2px); }
-  /* secondary trial form column */
-  .cta-form-col { display: flex; flex-direction: column; gap: 16px; }
-  .cta-form-intro { display: flex; flex-direction: column; gap: 8px; }
-  .cta-form-or {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.5);
-  }
-  .cta-form-or-sub {
+  /* secondary trial form: subtitle inside the card */
+  .cta-form-sub {
     font-family: var(--mono);
     font-size: 12px;
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.5);
-    max-width: 54ch;
+    max-width: 52ch;
+    margin-top: -4px;
   }
