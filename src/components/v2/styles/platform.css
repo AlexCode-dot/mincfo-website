@@ -6,28 +6,23 @@
    solutions grid, the customers grid and the planning mock.
    ============================================================ */
 
-/* ---------- "Så funkar det" step highlights (dark band) ---------- */
-.plat-step-hl {
-  list-style: none;
-  padding: 0;
-  margin: 14px 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
+/* ---------- "Så funkar det" header + steps ---------- */
+.plat-how .prod-how-head {
+  max-width: 760px;
+  align-items: center;
 }
-.plat-step-hl li {
+.plat-how .prod-how-head .workspace-title {
+  text-align: center;
+  text-wrap: balance;
+  font-size: clamp(28px, 3.1vw, 42px);
+  max-width: 16ch;
+  margin: 0 auto;
+}
+/* reserve two title lines so every step's body starts on the same line */
+.plat-how .prod-step-t {
+  min-height: 2.5em;
   display: flex;
   align-items: flex-start;
-  gap: 9px;
-  font-family: var(--mono);
-  font-size: 11.5px;
-  line-height: 1.5;
-  color: rgba(245, 245, 245, 0.78);
-}
-.plat-step-hl svg {
-  color: rgba(255, 255, 255, 0.55);
-  margin-top: 2px;
-  flex: none;
 }
 
 /* ---------- Planning / forecast mock (pillar visual) ---------- */

@@ -135,51 +135,32 @@ const PILLARS: Pillar[] = [
   },
 ];
 
-/* "Så funkar det" — verbatim platform steps + highlights from shared.json
-   (live copy). Step 04 is grounded in the platform.json planning section. */
-const STEPS: { n: string; title: string; body: string; highlights: string[] }[] = [
+/* "Så funkar det" — verbatim platform steps from shared.json (live copy).
+   Step 04 is grounded in the platform.json planning section. */
+const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "01",
     title: "Skapa konto",
-    body: "Kom igång direkt i plattformen.",
-    highlights: [
-      "Skapa konto och integrera till redovisningssystem på några minuter",
-      "Säker onboarding med verifiering",
-      "Direkt tillgång till plattformen",
-    ],
+    body:
+      "Kom igång direkt i plattformen med säker onboarding och verifiering — på några minuter.",
   },
   {
     n: "02",
     title: "Koppla Redovisningssystem",
     body:
       "Koppla till befintligt redovisningssystem på några klick. MinCFO sätter automatiskt upp dashboards och rapportstruktur.",
-    highlights: [
-      "Koppla upp ert redovisningssystem på några klick",
-      "Anpassningsbar dashboards och rapportstruktur sätts upp",
-      "Data synkas löpande till MinCFO efter aktiverad koppling",
-    ],
   },
   {
     n: "03",
     title: "Realtidsinsikter med MinCFO AI",
     body:
       "AI som besvarar frågor om bolagets siffror, realtidsrapportering enligt anpassad struktur och automatiskt uppdaterad kassaflödesprognos.",
-    highlights: [
-      "Realtidsrapportering av nyckeltal",
-      "Kassaflödesoptimering i realtid",
-      "Identifiera möjligheter för optimerad ekonomistyrning",
-    ],
   },
   {
     n: "04",
     title: "Planera och simulera framåt",
     body:
       "Testa scenarier, förstå risker tidigare och prioritera utifrån faktisk ekonomisk påverkan — i samma flöde som uppföljningen.",
-    highlights: [
-      "Scenarioarbete för tillväxt, kostnader och hiring",
-      "Tidigare signaler på risk och avvikelse",
-      "Jämför segment, kunder och perioder",
-    ],
   },
 ];
 
@@ -296,7 +277,7 @@ export default function PlatformPage() {
       </section>
 
       {/* ============ HOW IT WORKS ============ */}
-      <section className="workspace" id="how">
+      <section className="workspace plat-how" id="how">
         <div className="container">
           <div className="prod-how-head">
             <span className="eyebrow">Så funkar det</span>
@@ -312,14 +293,6 @@ export default function PlatformPage() {
                 <div>
                   <div className="prod-step-t">{s.title}</div>
                   <div className="prod-step-b">{s.body}</div>
-                  <ul className="plat-step-hl">
-                    {s.highlights.map((h) => (
-                      <li key={h}>
-                        <Check />
-                        <span>{h}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </li>
             ))}
