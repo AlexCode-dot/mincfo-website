@@ -819,52 +819,78 @@
   }
   .closing .btn-outline:hover { background: rgba(255,255,255,0.08); }
 
-  /* ===== Helhetslösning block in the "Kom igång" section =====
-     Elevates the (priority) helhetslösning path from a footnote to a
-     clear bordered block on the dark final-cta, beside the platform
-     trial form. */
-  .cta-helhet {
-    margin-top: 28px;
-    padding: 20px 22px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.04);
+  /* ===== "Kom igång": helhetslösning primary + secondary trial =====
+     Landing is helhetslösning-led, so this section leads with a prominent
+     Boka samtal CTA; the platform trial form is kept but framed as the
+     secondary "eller testa plattformen själv". */
+  .cta-lead {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 22px;
+    gap: 18px;
     flex-wrap: wrap;
+    margin-top: 30px;
   }
-  .cta-helhet-copy { max-width: 52ch; }
-  .cta-helhet-t {
-    font-family: var(--serif);
-    font-size: 18px;
-    color: #FFFFFF;
-    letter-spacing: -0.005em;
-    line-height: 1.25;
-  }
-  .cta-helhet-b {
-    font-family: var(--mono);
-    font-size: 12px;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.6);
-    margin-top: 8px;
-  }
-  .cta-helhet-btn {
-    flex: none;
+  .cta-lead-btn {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 9px;
     background: #FFFFFF;
     color: #14110D;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.02em;
-    padding: 11px 20px;
-    border-radius: 6px;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    padding: 14px 26px;
+    border-radius: 7px;
     white-space: nowrap;
     transition: background 0.2s ease, transform 0.15s ease;
   }
-  .cta-helhet-btn:hover { background: #ECECEC; }
-  .cta-helhet-btn svg { transition: transform 0.2s ease; }
-  .cta-helhet-btn:hover svg { transform: translateX(2px); }
+  .cta-lead-btn:hover { background: #ECECEC; transform: translateY(-1px); }
+  .cta-lead-btn svg { transition: transform 0.2s ease; }
+  .cta-lead-btn:hover svg { transform: translateX(2px); }
+  .cta-lead-meta {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .cta-incl {
+    list-style: none;
+    padding: 0;
+    margin: 30px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 46ch;
+  }
+  .cta-incl li {
+    position: relative;
+    padding-left: 24px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.72);
+  }
+  .cta-incl li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none'><path d='M2 5.2L4.2 7.2 8 3.4' stroke='white' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round' opacity='0.8'/></svg>");
+    background-size: 10px 10px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  /* secondary trial form column */
+  .cta-form-col { display: flex; flex-direction: column; gap: 12px; }
+  .cta-form-or {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+  }

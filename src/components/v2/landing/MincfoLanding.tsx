@@ -612,63 +612,17 @@ export default function MincfoLanding() {
           <div className="final-cta-grid">
             <div>
               <span className="eyebrow">Kom igång</span>
-              <h2>Prova fritt i 14 dagar.</h2>
+              <h2>Redo att lämna över ekonomin?</h2>
               <p className="sub">
-                Fyll i uppgifterna så bjuder vi in er till plattformen —
-                oftast inom en arbetsdag. Koppla er Fortnox-data på några
-                klick och testa MinCFO fritt i 14 dagar, den gemensamma vyn
-                där ni följer läget för er ekonomi i realtid.
+                Boka ett samtal så går vi igenom ert nuläge och tar fram ett
+                upplägg som passar er — hur helhetslösningen fungerar och hur
+                ni följer läget i plattformen i vardagen.
               </p>
 
-              <ol className="cta-steps">
-                <li className="cta-step">
-                  <span className="cta-step-n">01</span>
-                  <div>
-                    <div className="cta-step-t">Ni fyller i uppgifterna</div>
-                    <div className="cta-step-b">
-                      Företag, kontaktperson och hur ni vill bli nådda. Tar två
-                      minuter.
-                    </div>
-                  </div>
-                </li>
-                <li className="cta-step">
-                  <span className="cta-step-n">02</span>
-                  <div>
-                    <div className="cta-step-t">
-                      Vi bjuder in er till plattformen
-                    </div>
-                    <div className="cta-step-b">
-                      Vi kollar igenom och skickar en inbjudan via mejl. Sen
-                      kopplar ni er Fortnox-data på några klick.
-                    </div>
-                  </div>
-                </li>
-                <li className="cta-step">
-                  <span className="cta-step-n">03</span>
-                  <div>
-                    <div className="cta-step-t">Testa plattformen fritt</div>
-                    <div className="cta-step-b">
-                      Följ resultat, likviditet och KPI:er i realtid i samma
-                      vy — i 14 dagar, utan åtagande.
-                    </div>
-                  </div>
-                </li>
-              </ol>
-
-              <div className="cta-helhet">
-                <div className="cta-helhet-copy">
-                  <div className="cta-helhet-t">
-                    Vill ni att vi sköter ekonomin åt er?
-                  </div>
-                  <div className="cta-helhet-b">
-                    Det är vår helhetslösning. Boka ett samtal så tar vi fram
-                    ett upplägg som passar er — och visar hur ni använder
-                    plattformen.
-                  </div>
-                </div>
-                <a className="cta-helhet-btn" href="/boka-samtal">
+              <div className="cta-lead">
+                <a className="cta-lead-btn" href="/boka-samtal">
                   Boka samtal
-                  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                  <svg width="13" height="13" viewBox="0 0 12 12" aria-hidden="true">
                     <path
                       stroke="currentColor"
                       strokeWidth="1.4"
@@ -677,14 +631,27 @@ export default function MincfoLanding() {
                     />
                   </svg>
                 </a>
+                <span className="cta-lead-meta">
+                  Svar inom 1 arbetsdag · Utan åtagande
+                </span>
               </div>
+
+              <ul className="cta-incl">
+                <li>Personlig controller + CFO on demand</li>
+                <li>Redovisning, lön, moms och bokslut</li>
+                <li>Realtidsinsyn i plattformen — KPI:er, cashflow, avvikelser</li>
+              </ul>
             </div>
 
-            <form
-              className="cta-form"
-              id="ctaForm"
-              onSubmit={(e) => e.preventDefault()}
-            >
+            <div className="cta-form-col">
+              <span className="cta-form-or">
+                Eller — testa plattformen själv i 14 dagar
+              </span>
+              <form
+                className="cta-form"
+                id="ctaForm"
+                onSubmit={(e) => e.preventDefault()}
+              >
               <div className="cta-form-head">
                 <span className="cta-form-l cta-form-l-pulse">
                   <BrandMark />
@@ -774,7 +741,8 @@ export default function MincfoLanding() {
                 <span>Avsluta när som helst</span>
                 <span>Data inom EU</span>
               </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       </section>
