@@ -614,9 +614,10 @@ export default function MincfoLanding() {
               <span className="eyebrow">Kom igång</span>
               <h2>Prova fritt i 14 dagar.</h2>
               <p className="sub">
-                Fyll i uppgifterna så landar förfrågan hos oss direkt. Vi
-                kollar igenom, kopplar er Fortnox-data och hör av oss med
-                upplägg — oftast inom en arbetsdag.
+                Fyll i uppgifterna så bjuder vi in er till plattformen —
+                oftast inom en arbetsdag. Koppla er Fortnox-data på några
+                klick och testa MinCFO fritt i 14 dagar, den gemensamma vyn
+                där ni följer läget för er ekonomi i realtid.
               </p>
 
               <ol className="cta-steps">
@@ -637,25 +638,26 @@ export default function MincfoLanding() {
                       Vi bjuder in er till plattformen
                     </div>
                     <div className="cta-step-b">
-                      Vi kollar igenom, skickar inbjudan via mejl och bokar 30
-                      min för upplägg.
+                      Vi kollar igenom och skickar en inbjudan via mejl. Sen
+                      kopplar ni er Fortnox-data på några klick.
                     </div>
                   </div>
                 </li>
                 <li className="cta-step">
                   <span className="cta-step-n">03</span>
                   <div>
-                    <div className="cta-step-t">14 dagars kostnadsfri pilot</div>
+                    <div className="cta-step-t">Testa plattformen fritt</div>
                     <div className="cta-step-b">
-                      Vi kopplar er Fortnox-data och ni ser exakt hur er
-                      ekonomifunktion skulle se ut hos oss — utan åtagande.
+                      Följ resultat, likviditet och KPI:er i realtid i samma
+                      vy — i 14 dagar, utan åtagande.
                     </div>
                   </div>
                 </li>
               </ol>
 
               <div className="cta-alt">
-                Hellre prata först?
+                Vill ni att vi sköter ekonomin åt er? Boka ett samtal — vi går
+                igenom ett upplägg som passar er och hur ni använder plattformen.
                 <a href="/boka-samtal">Boka samtal →</a>
               </div>
             </div>
@@ -755,34 +757,6 @@ export default function MincfoLanding() {
                 <span>Data inom EU</span>
               </div>
             </form>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== PLATFORM SIGNPOST (secondary; self-contained — lift out
-              when the platform becomes its own brand) ===== */}
-      <section className="plat-signpost">
-        <div className="container">
-          <div className="plat-signpost-inner">
-            <div className="plat-signpost-copy">
-              <span className="eyebrow">Driver ni ekonomin själva?</span>
-              <p className="plat-signpost-t">
-                MinCFO-plattformen finns också som fristående produkt —
-                realtidsdashboards, forecast och AI Copilot kopplat till er
-                egen data.
-              </p>
-            </div>
-            <a className="text-link" href="/produkter/plattform">
-              Utforska plattformen
-              <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
-                <path
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  fill="none"
-                  d="M2 5h6m-2.5-2.5L8 5l-2.5 2.5"
-                />
-              </svg>
-            </a>
           </div>
         </div>
       </section>

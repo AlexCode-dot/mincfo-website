@@ -818,30 +818,3 @@
     border: 1px solid rgba(255,255,255,0.25);
   }
   .closing .btn-outline:hover { background: rgba(255,255,255,0.08); }
-
-  /* ===== Platform signpost (secondary, self-contained) =====
-     Light band on the helhetslösning landing pointing to the
-     self-serve platform. Scoped to .plat-signpost so it's easy to
-     lift out when the platform becomes its own brand/site. */
-  .plat-signpost {
-    padding: clamp(40px, 5vw, 72px) 0;
-    border-top: 1px solid var(--line-soft);
-  }
-  .plat-signpost-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 28px;
-    flex-wrap: wrap;
-  }
-  .plat-signpost-copy { max-width: 64ch; }
-  .plat-signpost-t {
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--ink-3);
-    margin-top: 10px;
-  }
-  .plat-signpost .text-link svg { margin-left: 2px; }
