@@ -135,31 +135,24 @@ const PILLARS: Pillar[] = [
   },
 ];
 
-/* "Så funkar det" — steps grounded in the platform.json copy. */
+/* "Så funkar det" — verbatim platform steps from shared.json (live copy). */
 const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "01",
-    title: "Koppla på era system",
-    body:
-      "Koppla på MinCFO på era befintliga finansiella flöden och system. Ni byter inte verktyg — er data flödar in automatiskt.",
+    title: "Skapa konto",
+    body: "Kom igång direkt i plattformen.",
   },
   {
     n: "02",
-    title: "Se allt i realtidsdashboards",
+    title: "Koppla Redovisningssystem",
     body:
-      "KPI:er, resultat och likviditet samlas i samma beslutsyta. Alla som behöver förstå läget får samma uppdaterade bild.",
+      "Koppla till befintligt redovisningssystem på några klick. MinCFO sätter automatiskt upp dashboards och rapportstruktur.",
   },
   {
     n: "03",
-    title: "Fråga AI Copilot",
+    title: "Realtidsinsikter med MinCFO AI",
     body:
-      "Sluta leta i rapporter och chatta med er data. Ställ frågor om resultat, runway och avvikelser och få svar direkt.",
-  },
-  {
-    n: "04",
-    title: "Planera och simulera",
-    body:
-      "Testa scenarier, förstå risker tidigare och prioritera utifrån faktisk ekonomisk påverkan — i samma flöde som uppföljningen.",
+      "AI som besvarar frågor om bolagets siffror, realtidsrapportering enligt anpassad struktur och automatiskt uppdaterad kassaflödesprognos.",
   },
 ];
 
@@ -281,12 +274,8 @@ export default function PlatformPage() {
           <div className="prod-how-head">
             <span className="eyebrow">Så funkar det</span>
             <h2 className="workspace-title">
-              Från koppling till <em>realtidsläge.</em>
+              Så arbetar ni med MinCFO <em>i praktiken.</em>
             </h2>
-            <p className="workspace-body">
-              Koppla på MinCFO på era befintliga flöden och system — sen ser
-              ni läget, frågar er data och planerar framåt i samma yta.
-            </p>
           </div>
 
           <ol className="prod-steps">
