@@ -213,7 +213,7 @@ export default function HelhetslosningenPage() {
               realtid. Ert team slutar göra det operativa.
             </p>
             <div className="prod-hero-cta">
-              <a className="btn" href="/#demo">
+              <a className="btn" href="/boka-samtal">
                 Boka samtal
                 <svg width="12" height="12" viewBox="0 0 12 12">
                   <path
@@ -306,7 +306,7 @@ export default function HelhetslosningenPage() {
       </section>
 
       {/* ============ HOW IT WORKS ============ */}
-      <section className="workspace" id="how">
+      <section className="workspace hl-how" id="how">
         <div className="container">
           <div className="prod-how-head">
             <span className="eyebrow">Så funkar det</span>
@@ -430,7 +430,7 @@ export default function HelhetslosningenPage() {
             ekonomifunktion hos oss skulle se ut för er.
           </p>
           <div className="closing-row">
-            <a className="btn" href="/#demo">
+            <a className="btn" href="/boka-samtal">
               Boka samtal
               <svg width="12" height="12" viewBox="0 0 12 12">
                 <path

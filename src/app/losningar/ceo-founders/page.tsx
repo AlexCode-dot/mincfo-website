@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import SolutionPage from "@/components/v2/solutions/SolutionPage";
-import CeoFoundersImpact from "@/components/v2/solutions/CeoFoundersImpact";
 
 export const metadata: Metadata = {
   title: "CEO & Founders — MinCFO",
@@ -9,7 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return (
-    <SolutionPage solutionKey="CEO & Founders" impact={<CeoFoundersImpact />} />
-  );
+  return <SolutionPage solutionKey="CEO & Founders" />;
 }

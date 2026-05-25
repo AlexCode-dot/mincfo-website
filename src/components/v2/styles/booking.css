@@ -1,0 +1,107 @@
+/* ============================================================
+   Booking page — /boka-samtal
+   Reuses the .pillar layout (copy left, visual right). Only the
+   calendar "visual" card is page-specific.
+   ============================================================ */
+.boka-section {
+  scroll-margin-top: 96px;
+}
+
+.boka-pillar {
+  align-items: center;
+  /* pillar--right is direction:rtl, so the FIRST track maps to the
+     right column (the calendar). Larger first track = larger calendar. */
+  grid-template-columns: 1.15fr 0.85fr;
+}
+
+@media (max-width: 920px) {
+  .boka-pillar {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* calendar takes the place of a pillar visual — override the
+   aspect-ratio art frame so the embed defines its own height */
+.boka-cal-art {
+  aspect-ratio: auto;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--bg-card);
+  box-shadow:
+    0 1px 2px rgba(10, 10, 10, 0.04),
+    0 14px 36px rgba(10, 10, 10, 0.06);
+}
+
+.boka-cal-embed {
+  display: block;
+  width: 100%;
+  min-height: 720px;
+  border: 0;
+}
+
+@media (max-width: 920px) {
+  .boka-cal-embed {
+    min-height: 1040px;
+  }
+}
+
+/* reassurance bullets */
+.boka-bullets {
+  margin-top: 26px;
+}
+
+/* presenter card */
+.boka-presenter {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.boka-presenter-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--bg-deep);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font-family: var(--serif, var(--mono));
+  font-weight: 600;
+  font-size: 18px;
+  flex: none;
+}
+
+.boka-presenter-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+}
+
+.boka-presenter-lead {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.boka-presenter-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.boka-presenter-role {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+@media (max-width: 920px) {
+  .boka-presenter {
+    justify-content: center;
+  }
+}

@@ -436,3 +436,72 @@
   .mv2-root.type-sumary .nav-link:hover,
   .mv2-root.type-sumary .signin:hover { opacity: 1; }
   .mv2-root.type-sumary .nav-link svg { opacity: .5; }
+
+  /* Plattform card — desk photo + two product screenshots (mirrors the
+     dashboard pillar visual, scaled for the 16:9 mega-feature slot). */
+  .mega-feature-dash {
+    position: relative;
+    background-color: #1A1612;
+    background-image:
+      linear-gradient(135deg, rgba(0,0,0,0.18), rgba(0,0,0,0.04) 50%, rgba(0,0,0,0.30)),
+      url("/v2/assets/pillars/dashboard-bg.png");
+    background-size: cover;
+    background-position: center;
+  }
+  .mega-feature-dash .mega-dash-shot,
+  .mega-feature-dash .mega-dash-pl {
+    position: absolute;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow:
+      0 24px 44px -20px rgba(0, 0, 0, 0.6),
+      0 6px 12px -6px rgba(0, 0, 0, 0.35);
+  }
+  .mega-feature-dash .mega-dash-shot {
+    left: 4%;
+    bottom: 6%;
+    width: 78%;
+    z-index: 1;
+  }
+  .mega-feature-dash .mega-dash-pl {
+    right: 4%;
+    top: 7%;
+    width: 58%;
+    z-index: 2;
+  }
+  /* override the default cover-fill img rule for the layered screenshots */
+  .mega-feature-cards .mega-feature-dash .mega-dash-shot img,
+  .mega-feature-cards .mega-feature-dash .mega-dash-pl img,
+  .mega-feature-dash .mega-dash-shot img,
+  .mega-feature-dash .mega-dash-pl img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+  /* keep the subtle hover lift on the whole composite, not per-image */
+  .mega-feature-cards .mega-feature:hover .mega-feature-dash .mega-dash-shot img,
+  .mega-feature-cards .mega-feature:hover .mega-feature-dash .mega-dash-pl img {
+    transform: none;
+  }
+  /* AI CFO-assistent card — third floating layer (full copilot card,
+     reusing .pv / .pv--copilot styling, shrunk for the small slot). */
+  .mega-feature-dash .mega-dash-copilot {
+    position: absolute;
+    right: 4%;
+    bottom: 2%;
+    width: 47%;
+    z-index: 3;
+    padding: 11px 12px 22px;
+    gap: 7px;
+    border-radius: 10px;
+    box-shadow:
+      0 28px 50px -20px rgba(0, 0, 0, 0.65),
+      0 8px 16px -8px rgba(0, 0, 0, 0.4);
+  }
+  /* tighten the pillar-sized internals to read well at card scale */
+  .mega-dash-copilot .pv-cfo-title { font-size: 11.5px; }
+  .mega-dash-copilot .pv-cfo-bubble { font-size: 10.5px; padding: 5px 8px; }
+  .mega-dash-copilot .pv-cfo-avatar { width: 17px; height: 17px; font-size: 8.5px; }
+  .mega-dash-copilot .pv-cfo-thinking { font-size: 9px; }
+  .mega-dash-copilot .pv-cfo-answer { font-size: 10.5px; line-height: 1.4; }

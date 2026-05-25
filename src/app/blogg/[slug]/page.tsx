@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import SiteFooter from "@/components/layout/SiteFooter/SiteFooter";
 import { fetchBlogPostBySlug } from "@/sanity/lib/fetchBlogPosts";
 import { fetchSharedContent } from "@/sanity/lib/fetchHomeContent";
 import { getLocale } from "@/i18n/server";
 import type { Locale } from "@/i18n/locale";
 import { urlForImage } from "@/sanity/lib/imageUrl";
-import BackButton from "../BackButton";
-import PostBody from "./PostBody";
-import styles from "./page.module.scss";
+import BlogArticle from "@/components/v2/blog/BlogArticle";
 
 type PageParams = { slug: string };
 type PageProps = { params: Promise<PageParams> };
@@ -87,16 +82,14 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   const ui = shared.ui;
   const date = formatDate(post.publishedAt, locale);
-  const subline = [post.authorRole, date, post.readingTime ? `${post.readingTime} ${ui.readingTimeFull}` : null]
-    .filter(Boolean)
-    .join(" · ");
 
   const coverSrc = post.coverImage
-    ? urlForImage(post.coverImage)?.width(1800).height(1010).fit("crop").auto("format").url()
-    : null;
-
-  const avatarSrc = post.authorImage
-    ? urlForImage(post.authorImage)?.width(96).height(96).fit("crop").auto("format").url()
+    ? urlForImage(post.coverImage)
+        ?.width(1800)
+        .height(1010)
+        .fit("crop")
+        .auto("format")
+        .url()
     : null;
 
   const articleUrl = `${SITE_URL}/blogg/${post.slug}`;
@@ -133,89 +126,21 @@ export default async function BlogPostPage({ params }: PageProps) {
   };
 
   return (
-    <div className={styles.page}>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className={styles.topRail}>
-        <div className={styles.backWrap}>
-          <BackButton href="/blogg" label={ui.back} />
-        </div>
-
-        <Link href="/" className={styles.logo} aria-label="MinCFO">
-          <svg className={styles.mark} viewBox="0 0 50 50" role="img" aria-hidden="true">
-            <g fill="currentColor">
-              <path d="M0 0H24V24A24 24 0 0 1 0 0Z" />
-              <path d="M25 0H50A12.5 12.5 0 0 1 25 0Z" />
-              <path d="M0 26H24V50A24 24 0 0 1 0 26Z" />
-              <path d="M25 26H50A12.5 12.5 0 0 1 25 26Z" />
-            </g>
-          </svg>
-          <span className={styles.wordmark}>MinCFO</span>
-        </Link>
-      </div>
-
-      <main className={styles.main}>
-        <article className={styles.shell}>
-          <header className={styles.hero}>
-            {post.eyebrow && <p className={styles.eyebrow}>{post.eyebrow}</p>}
-            <h1 className={styles.title}>{post.title}</h1>
-            {post.excerpt && <p className={styles.excerpt}>{post.excerpt}</p>}
-
-            {(post.author || date) && (
-              <div className={styles.author}>
-                {avatarSrc ? (
-                  <Image
-                    src={avatarSrc}
-                    alt={post.author ?? ""}
-                    width={48}
-                    height={48}
-                    className={styles.authorAvatar}
-                  />
-                ) : post.author ? (
-                  <span className={styles.authorAvatar} aria-hidden="true" data-fallback>
-                    {post.author.slice(0, 1)}
-                  </span>
-                ) : null}
-                <div className={styles.authorMeta}>
-                  {post.author && <span className={styles.authorName}>{post.author}</span>}
-                  {subline && <span className={styles.authorSub}>{subline}</span>}
-                </div>
-              </div>
-            )}
-          </header>
-
-          {coverSrc && (
-            <div className={styles.cover}>
-              <Image
-                src={coverSrc}
-                alt={post.coverImage?.alt ?? post.title}
-                fill
-                sizes="(min-width: 980px) 920px, 100vw"
-                priority
-                className={styles.coverImage}
-              />
-            </div>
-          )}
-
-          <section className={styles.body}>
-            {post.body && post.body.length > 0 ? (
-              <PostBody value={post.body} />
-            ) : (
-              <p className={styles.bodyP}>{ui.blogContentSoon}</p>
-            )}
-          </section>
-
-          <footer className={styles.postFooter}>
-            <Link href="/blogg" className={styles.footerBack}>
-              ← {shared.blog.backToListLabel}
-            </Link>
-          </footer>
-        </article>
-      </main>
-
-      <SiteFooter />
-    </div>
+      <BlogArticle
+        post={post}
+        locale={locale}
+        labels={{
+          back: ui.back,
+          readingTimeFull: ui.readingTimeFull,
+          contentSoon: ui.blogContentSoon,
+          backToList: shared.blog.backToListLabel,
+        }}
+      />
+    </>
   );
 }

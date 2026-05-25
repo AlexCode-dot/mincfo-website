@@ -139,7 +139,7 @@ export default function Nav() {
                       Osäker på vad som passar er? Vi går igenom upplägget på
                       30 min.
                     </span>
-                    <a className="btn" href="/#demo">
+                    <a className="btn" href="/boka-samtal">
                       Boka samtal
                     </a>
                   </div>
@@ -184,11 +184,47 @@ export default function Nav() {
                     </div>
                   </a>
                   <a className="mega-feature" href="/produkter/plattform">
-                    <div className="mega-feature-img">
-                      <img
-                        src="/v2/assets/feat-rapportering.png"
-                        alt="Realtidsdashboards i MinCFO-plattformen"
-                      />
+                    <div className="mega-feature-img mega-feature-dash">
+                      <span className="mega-dash-shot">
+                        <img
+                          src="/v2/assets/pillars/dashboard.webp"
+                          alt="MinCFO-plattformens Investor Board med Revenue Quarterly vs LY och KPI:er"
+                        />
+                      </span>
+                      <span className="mega-dash-pl">
+                        <img
+                          src="/v2/assets/pillars/pl-table.webp"
+                          alt="P&L-rapport i MinCFO med avvikelse-kolumner"
+                        />
+                      </span>
+                      <div
+                        className="mega-dash-copilot pv pv--copilot pv--copilot-phase-done"
+                        aria-hidden="true"
+                      >
+                        <div className="pv-cfo-head">
+                          <span className="pv-logo" aria-hidden="true">
+                            <BrandMark />
+                          </span>
+                          <span className="pv-cfo-title">AI CFO-assistent</span>
+                        </div>
+                        <div className="pv-cfo-msg pv-cfo-msg--user">
+                          <span className="pv-cfo-bubble">
+                            Hur ser vår runway ut?
+                          </span>
+                          <span className="pv-cfo-avatar" aria-hidden="true">
+                            A
+                          </span>
+                        </div>
+                        <div className="pv-cfo-thinking">
+                          <span className="pv-cfo-spinner" aria-hidden="true" />
+                          Tänkte i 9 sekunder
+                        </div>
+                        <p className="pv-cfo-answer">
+                          Baserat på Q1 2026 har ni cirka{" "}
+                          <strong>11,4 månader runway</strong> (kassa 1 696 581
+                          kr, snittburn −148 700 kr/mån).
+                        </p>
+                      </div>
                     </div>
                     <div className="mega-feature-body">
                       <div className="mega-feature-t">Plattform</div>
@@ -324,7 +360,7 @@ export default function Nav() {
           >
             Logga in
           </button>
-          <a className="btn" href="/#demo">
+          <a className="btn" href="/boka-samtal">
             Boka samtal
           </a>
         </div>

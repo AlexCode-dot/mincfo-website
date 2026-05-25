@@ -146,7 +146,7 @@ export default function MincfoLanding() {
                   vi kombinerar operativ leverans med proaktiv rådgivning i en
                   och samma plattform.
                 </p>
-                <a className="btn" href="#demo">
+                <a className="btn" href="/boka-samtal">
                   Boka samtal
                 </a>
               </div>
@@ -614,9 +614,10 @@ export default function MincfoLanding() {
               <span className="eyebrow">Kom igång</span>
               <h2>Prova fritt i 14 dagar.</h2>
               <p className="sub">
-                Fyll i uppgifterna så landar förfrågan hos oss direkt. Vi
-                kollar igenom, kopplar er Fortnox-data och hör av oss med
-                upplägg — oftast inom en arbetsdag.
+                Fyll i uppgifterna så bjuder vi in er till plattformen —
+                oftast inom en arbetsdag. Koppla er Fortnox-data på några
+                klick och testa MinCFO fritt i 14 dagar, den gemensamma vyn
+                där ni följer läget för er ekonomi i realtid.
               </p>
 
               <ol className="cta-steps">
@@ -637,26 +638,26 @@ export default function MincfoLanding() {
                       Vi bjuder in er till plattformen
                     </div>
                     <div className="cta-step-b">
-                      Vi kollar igenom, skickar inbjudan via mejl och bokar 30
-                      min för upplägg.
+                      Vi kollar igenom och skickar en inbjudan via mejl. Sen
+                      kopplar ni er Fortnox-data på några klick.
                     </div>
                   </div>
                 </li>
                 <li className="cta-step">
                   <span className="cta-step-n">03</span>
                   <div>
-                    <div className="cta-step-t">14 dagars kostnadsfri pilot</div>
+                    <div className="cta-step-t">Testa plattformen fritt</div>
                     <div className="cta-step-b">
-                      Vi kopplar er Fortnox-data och ni ser exakt hur er
-                      ekonomifunktion skulle se ut hos oss — utan åtagande.
+                      Följ resultat, likviditet och KPI:er i realtid i samma
+                      vy — i 14 dagar, utan åtagande.
                     </div>
                   </div>
                 </li>
               </ol>
 
               <div className="cta-alt">
-                Hellre prata först?
-                <a href="#book">Boka 30 min →</a>
+                Vill ni ha helhetslösningen? Vi sätter ett upplägg som passar er.
+                <a href="/boka-samtal">Boka samtal →</a>
               </div>
             </div>
 
@@ -860,7 +861,7 @@ export default function MincfoLanding() {
             realtid direkt i plattformen.
           </p>
           <div className="closing-row">
-            <a className="btn" href="#book">
+            <a className="btn" href="/boka-samtal">
               Boka samtal
               <svg width="12" height="12" viewBox="0 0 12 12">
                 <path

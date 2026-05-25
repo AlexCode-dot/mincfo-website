@@ -1,6 +1,7 @@
 import "../mincfo-landing.css";
 import Nav from "../shared/Nav";
 import Footer from "../shared/Footer";
+import SolutionImpact from "./SolutionImpact";
 import solutionData from "@/content/solutionPagesText.json";
 
 const TICKER_LOGOS: { name: string; file: string; soft?: boolean }[] = [
@@ -53,10 +54,8 @@ const Arrow = () => (
 
 export default function SolutionPage({
   solutionKey,
-  impact,
 }: {
   solutionKey: string;
-  impact?: React.ReactNode;
 }) {
   const shared = solutionData.shared;
   const content = (solutionData.pages as SolutionContent[]).find(
@@ -103,7 +102,7 @@ export default function SolutionPage({
             </h1>
             <p className="prod-hero-sub">{content.heroIntro}</p>
             <div className="prod-hero-cta">
-              <a className="btn" href="/#demo">
+              <a className="btn" href="/boka-samtal">
                 {shared.heroPrimaryCta}
                 <Arrow />
               </a>
@@ -240,31 +239,14 @@ export default function SolutionPage({
         </div>
       </section>
 
-      {/* ============ IMPACT ============ */}
-      {/* Rich per-page impact (photos + mocks) if provided; else clean cards from data */}
-      {impact ?? (
-        <section className="section impact-clean">
-          <div className="container">
-            <div className="section-head">
-              <span className="eyebrow">{shared.impactTag}</span>
-              <h2 className="serif-h">
-                {content.impactHeadline.first}{" "}
-                <em>{content.impactHeadline.second}</em>
-              </h2>
-              <p>{content.impactIntro}</p>
-            </div>
-            <div className="impact-cards-grid">
-              {content.impactCards.map((c) => (
-                <article className="impact-card" key={c.title}>
-                  <div className="impact-card-value serif-h">{c.value}</div>
-                  <h3 className="impact-card-title serif-h">{c.title}</h3>
-                  <p className="impact-card-body">{c.description}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* ============ IMPACT (rich, data-driven; reuses shared imagery + mocks) ============ */}
+      <SolutionImpact
+        tag={shared.impactTag}
+        headline={content.impactHeadline}
+        intro={content.impactIntro}
+        cards={content.impactCards}
+        solutionKey={content.key}
+      />
 
       {/* ============ FINAL CTA ============ */}
       <section className="closing prod-closing">
@@ -272,7 +254,7 @@ export default function SolutionPage({
           <h2>{content.closingHeadline}</h2>
           <p className="sub">{content.closingText}</p>
           <div className="closing-row">
-            <a className="btn" href="/#demo">
+            <a className="btn" href="/boka-samtal">
               {shared.closingCta}
               <Arrow />
             </a>
