@@ -77,7 +77,7 @@ export default function JobDetailPage({ slug }: { slug: string }) {
   if (post.compensation) meta.push({ icon: <IconWallet />, label: post.compensation });
 
   return (
-    <div className="mv2-root hl-1 vs-1 type-sumary">
+    <div className="mv2-root hl-1 vs-1 type-sumary car-page">
       <Nav />
 
       <section className="section car-detail" id="top">

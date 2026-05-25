@@ -34,7 +34,7 @@ export default function CareersListPage() {
   const hasPosts = posts.length > 0;
 
   return (
-    <div className="mv2-root hl-1 vs-1 type-sumary">
+    <div className="mv2-root hl-1 vs-1 type-sumary car-page">
       <Nav />
 
       {/* ============ HERO ============ */}

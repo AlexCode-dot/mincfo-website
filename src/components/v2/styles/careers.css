@@ -4,8 +4,19 @@
    .closing, .section, .btn). Only careers-specific styles below.
    ============================================================ */
 
+/* ---------- hero: outlined eyebrow chip (echoes live) ---------- */
+.car-page .prod-hero .eyebrow {
+  display: inline-block;
+  padding: 7px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-card);
+  color: var(--ink-3);
+  margin-bottom: 22px;
+}
+
 /* ---------- list: job grid ---------- */
-.car-list { padding: clamp(56px, 7vw, 104px) 0 clamp(72px, 9vw, 120px); }
+.car-list { padding: clamp(48px, 6vw, 88px) 0 clamp(72px, 9vw, 120px); }
 
 /* Flex (not grid) so an incomplete last row centers:
    5 cards -> 3 on top, 2 centered below. */
@@ -33,9 +44,9 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 .car-card:hover {
-  border-color: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.35);
-  transform: translateY(-2px);
+  border-color: rgba(76, 61, 255, 0.45);
+  box-shadow: 0 28px 56px -30px rgba(40, 35, 120, 0.4);
+  transform: translateY(-3px);
 }
 @media (max-width: 1024px) {
   .car-card { flex-basis: calc((100% - var(--car-gap)) / 2); }
@@ -47,21 +58,19 @@
 .car-card-eyebrow {
   display: inline-block;
   font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent-ink);
-  background: var(--accent-soft);
-  padding: 5px 10px;
-  border-radius: 999px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .car-card-title {
-  font-size: clamp(22px, 2.4vw, 30px);
-  line-height: 1.18;
-  letter-spacing: -0.01em;
-  margin-bottom: 12px;
+  font-size: clamp(22px, 2.4vw, 29px);
+  line-height: 1.16;
+  letter-spacing: -0.015em;
+  margin-bottom: 14px;
   text-wrap: balance;
 }
 
@@ -73,12 +82,14 @@
   max-width: 46ch;
 }
 
+/* divider + stacked meta + CTA, echoing the live layout */
 .car-card-foot {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 16px;
-  flex-wrap: wrap;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
 }
 
 .car-card-meta {
@@ -86,42 +97,30 @@
   padding: 0;
   margin: 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
+  flex-direction: column;
+  gap: 7px;
 }
 .car-card-meta li {
-  position: relative;
   font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
   color: var(--ink-3);
-}
-.car-card-meta li + li::before {
-  content: "";
-  position: absolute;
-  left: -8px;
-  top: 50%;
-  width: 3px;
-  height: 3px;
-  border-radius: 999px;
-  background: var(--line);
-  transform: translateY(-50%);
 }
 
 .car-card-cta {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 12.5px;
   letter-spacing: 0.02em;
-  color: var(--ink);
+  color: var(--accent-ink);
   white-space: nowrap;
 }
 .car-card-cta svg {
   transition: transform 0.2s ease;
 }
-.car-card:hover .car-card-cta svg { transform: translateX(3px); }
+.car-card:hover .car-card-cta svg { transform: translateX(4px); }
 
 /* ---------- list: spontaneous application fallback ---------- */
 .car-spontaneous {
