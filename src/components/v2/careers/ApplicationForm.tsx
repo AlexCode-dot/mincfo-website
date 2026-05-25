@@ -29,7 +29,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
 
     const cv = fd.get("cv");
     if (!(cv instanceof File) || cv.size === 0) {
-      setError("Bifoga ditt CV som PDF.");
+      setError("Välj en CV-fil (PDF).");
       setLoading(false);
       return;
     }
@@ -54,7 +54,9 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
         setMotivation("");
       }
     } catch {
-      setError("Kunde inte skicka ansökan. Kontrollera din anslutning.");
+      setError(
+        "Kunde inte nå servern. Kontrollera din anslutning och försök igen."
+      );
     } finally {
       setLoading(false);
     }
@@ -75,8 +77,8 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
         </svg>
         <h3 className="car-success-title serif-h">Tack för din ansökan!</h3>
         <p className="car-success-text">
-          Vi har tagit emot din ansökan och hör av oss om det är en match. Vi går
-          igenom ansökningar löpande.
+          Vi har tagit emot din ansökan och hör av oss så snart vi har gått
+          igenom den.
         </p>
       </div>
     );
@@ -85,11 +87,11 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
   return (
     <>
       <header className="car-form-head">
-        <p className="eyebrow">Ansök</p>
-        <h2 className="car-form-title serif-h">Skicka din ansökan</h2>
+        <p className="eyebrow">Ansökan</p>
+        <h2 className="car-form-title serif-h">Skicka in din ansökan</h2>
         <p className="car-form-sub">
-          Fyll i formuläret och bifoga ditt CV som PDF. Vi går igenom ansökningar
-          löpande.
+          Bifoga ditt CV och berätta i max 500 tecken varför just du ska ha
+          rollen. Din ansökan skickas direkt till Victor på MinCFO.
         </p>
       </header>
 
@@ -129,7 +131,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
               name="email"
               type="email"
               required
-              placeholder="din@epost.se"
+              placeholder="din@email.se"
               maxLength={200}
               autoComplete="email"
             />
@@ -145,7 +147,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
             id="apply-phone"
             name="phone"
             type="tel"
-            placeholder="07X XXX XX XX"
+            placeholder="+46 70 123 45 67"
             maxLength={30}
             autoComplete="tel"
           />
@@ -153,7 +155,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
 
         <div className="car-field">
           <label className="car-label" htmlFor="apply-motivation">
-            Varför ska vi välja dig?{" "}
+            Varför ska just du ha rollen?{" "}
             <span className="car-char">{motivationRemaining} tecken kvar</span>
           </label>
           <textarea
@@ -163,7 +165,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
             required
             rows={5}
             maxLength={MAX_MOTIVATION}
-            placeholder="Berätta kort om dig och varför just den här rollen passar dig."
+            placeholder="Berätta kort vad du tar med dig och varför du passar."
             value={motivation}
             onChange={(e) => setMotivation(e.target.value)}
           />
@@ -171,7 +173,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
 
         <div className="car-field">
           <label className="car-label" htmlFor="apply-cv">
-            CV (PDF)
+            CV (PDF, max 15 MB)
           </label>
           <label htmlFor="apply-cv" className="car-file">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -183,7 +185,7 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
                 strokeLinejoin="round"
               />
             </svg>
-            <span>{cvName ?? "Välj fil"}</span>
+            <span>{cvName ?? "Välj fil..."}</span>
           </label>
           <input
             id="apply-cv"
@@ -206,8 +208,8 @@ export default function ApplicationForm({ jobSlug, jobTitle }: ApplicationFormPr
         </button>
 
         <p className="car-fineprint">
-          Genom att skicka in godkänner du att vi behandlar dina uppgifter för
-          rekrytering. Vi delar dem aldrig med tredje part.
+          Genom att skicka in samtycker du till att MinCFO hanterar din ansökan
+          för rekryteringsändamål.
         </p>
       </form>
     </>

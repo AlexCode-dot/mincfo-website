@@ -57,24 +57,14 @@ export default function CareersListPage() {
           <div className="prod-hero-inner">
             <span className="eyebrow">Karriär</span>
             <h1 className="prod-hero-title serif-h">
-              {hasPosts ? (
-                <>
-                  Bygg framtidens
-                  <br />
-                  <em>ekonomifunktion.</em>
-                </>
-              ) : (
-                <>
-                  Inga öppna roller
-                  <br />
-                  <em>just nu.</em>
-                </>
-              )}
+              {hasPosts
+                ? "Var med och bygg framtidens ekonomifunktion"
+                : "Vi har inga lediga tjänster ute just nu"}
             </h1>
             <p className="prod-hero-sub">
               {hasPosts
-                ? "Vi är ett entreprenörsdrivet team i centrala Göteborg som bygger en modern ekonomifunktion för tillväxtbolag. Hitta din roll nedan."
-                : "Vi har inga utlysta tjänster för tillfället — men vi träffar alltid gärna vassa personer. Skicka en spontanansökan så hör vi av oss."}
+                ? "Vi söker drivna människor som vill växa tillsammans med oss och våra kunder. Här är rollerna vi rekryterar till just nu."
+                : "Just nu rekryterar vi inte aktivt, men vi är alltid intresserade av att komma i kontakt med skarpa personer som tror på det vi bygger på MinCFO."}
             </p>
           </div>
         </div>
@@ -141,13 +131,15 @@ export default function CareersListPage() {
             </div>
           ) : (
             <div className="car-spontaneous">
-              <h2 className="serif-h">Spontanansökan</h2>
+              <h2 className="serif-h">Vill du ändå höra av dig?</h2>
               <p>
-                Tror du att du skulle passa hos oss? Skicka ett mail till{" "}
+                Om du tror att du skulle kunna passa hos oss får du gärna skicka
+                en kort presentation till{" "}
                 <a className="inline-link" href="mailto:victor@mincfo.com">
                   victor@mincfo.com
-                </a>{" "}
-                med ditt CV och några rader om vad du brinner för.
+                </a>
+                . Berätta gärna vem du är, vad du är bra på och varför MinCFO
+                känns relevant för dig.
               </p>
               <a className="btn" href="mailto:victor@mincfo.com">
                 Skicka spontanansökan
@@ -158,25 +150,25 @@ export default function CareersListPage() {
         </div>
       </section>
 
-      {/* ============ FINAL CTA ============ */}
-      <section className="closing prod-closing">
-        <div className="container">
-          <h2>Osäker på vilken roll som passar?</h2>
-          <p className="sub">
-            Hör av dig så berättar vi mer om hur det är att jobba på MinCFO och
-            vilka vägar in som finns.
-          </p>
-          <div className="closing-row">
-            <a className="btn" href="mailto:victor@mincfo.com">
-              Hör av dig
-              <Arrow />
-            </a>
-            <a className="btn btn-outline" href="/">
-              Till startsidan
-            </a>
+      {/* ============ FINAL CTA (spontaneous) ============ */}
+      {hasPosts && (
+        <section className="closing prod-closing">
+          <div className="container">
+            <h2>Vill du ändå höra av dig?</h2>
+            <p className="sub">
+              Om du tror att du skulle kunna passa hos oss får du gärna skicka en
+              kort presentation. Berätta vem du är, vad du är bra på och varför
+              MinCFO känns relevant för dig.
+            </p>
+            <div className="closing-row">
+              <a className="btn" href="mailto:victor@mincfo.com">
+                Skicka spontanansökan
+                <Arrow />
+              </a>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer />
     </div>

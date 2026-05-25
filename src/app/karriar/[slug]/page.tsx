@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const post = (jobPostsJson.posts ?? []).find((p) => p.slug === slug);
   if (!post) {
-    return { title: "Tjänst hittades inte — MinCFO" };
+    return { title: "Jobb | MinCFO" };
   }
   return {
     title: `${post.title} | MinCFO`,

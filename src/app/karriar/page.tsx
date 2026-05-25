@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import CareersListPage from "@/components/v2/careers/CareersListPage";
 
 export const metadata: Metadata = {
-  title: "Karriär — MinCFO",
+  title: "Karriär | MinCFO",
   description:
-    "Lediga roller på MinCFO. Vi bygger framtidens ekonomifunktion för tillväxtbolag — bli en del av ett entreprenörsdrivet team i centrala Göteborg.",
+    "Bli en del av MinCFO. Se våra lediga tjänster och praktikplatser och skicka in din ansökan direkt på sajten.",
 };
 
 export default function Page() {

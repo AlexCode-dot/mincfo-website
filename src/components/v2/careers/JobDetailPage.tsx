@@ -61,12 +61,6 @@ const Check = () => (
   </svg>
 );
 
-const Arrow = () => (
-  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-    <path stroke="currentColor" strokeWidth="1.4" fill="none" d="M3 6h6m0 0L6.5 3.5M9 6L6.5 8.5" />
-  </svg>
-);
-
 export default function JobDetailPage({ slug }: { slug: string }) {
   const post = ((jobPostsJson.posts ?? []) as JobPost[]).find(
     (p) => p.slug === slug
@@ -96,7 +90,7 @@ export default function JobDetailPage({ slug }: { slug: string }) {
               {post.tagline && <p className="car-detail-tagline">{post.tagline}</p>}
 
               {meta.length > 0 && (
-                <ul className="car-meta" aria-label="Nyckelinfo">
+                <ul className="car-meta" aria-label="Nyckelinformation">
                   {meta.map((m, i) => (
                     <li key={i}>
                       {m.icon}
@@ -168,30 +162,10 @@ export default function JobDetailPage({ slug }: { slug: string }) {
                 <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
                   <path stroke="currentColor" strokeWidth="1.4" fill="none" d="M8 5H2m2.5-2.5L2 5l2.5 2.5" />
                 </svg>
-                Alla lediga roller
+                Tillbaka till lediga tjänster
               </a>
             </div>
           </article>
-        </div>
-      </section>
-
-      {/* ============ FINAL CTA ============ */}
-      <section className="closing prod-closing">
-        <div className="container">
-          <h2>Redo att söka?</h2>
-          <p className="sub">
-            Skicka in din ansökan ovan — vi går igenom ansökningar löpande och hör
-            av oss så snart vi kan.
-          </p>
-          <div className="closing-row">
-            <a className="btn" href="#ansok">
-              Till ansökan
-              <Arrow />
-            </a>
-            <a className="btn btn-outline" href="/karriar">
-              Se alla roller
-            </a>
-          </div>
         </div>
       </section>
 
