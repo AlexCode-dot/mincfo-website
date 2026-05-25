@@ -25,104 +25,166 @@
   align-items: flex-start;
 }
 
-/* ---------- Planning / forecast mock (pillar visual) ---------- */
+/* ---------- Planning / forecast mock (pillar visual) ----------
+   Photo backdrop + a floating cash-flow card, mirroring the other
+   pillars (copilot/dashboard). Scoped to the planning pillar. */
+#planering .pillar-art--visual { background: #14110D; padding: 0; }
 
-/* Branded backdrop so the forecast card fills the frame instead of
-   floating in flat grey — matches the purple forecast bars. Scoped to
-   the planning pillar (#planering) only. */
-#planering .pillar-art--visual {
-  background:
-    radial-gradient(110% 80% at 22% 12%, rgba(76, 61, 255, 0.12) 0%, rgba(76, 61, 255, 0) 55%),
-    radial-gradient(90% 80% at 90% 100%, rgba(76, 61, 255, 0.07) 0%, rgba(76, 61, 255, 0) 60%),
-    linear-gradient(135deg, #F1EFFF 0%, #FBFAFF 55%, #FFFFFF 100%);
-}
-#planering .pillar-art--visual > .pv {
-  max-width: 460px;
-  border-color: rgba(76, 61, 255, 0.12);
-  box-shadow:
-    0 30px 60px -26px rgba(33, 24, 99, 0.32),
-    0 2px 0 rgba(255, 255, 255, 0.6) inset;
-}
-
-.plat-fc { gap: 12px; }
-.plat-fc-head {
+.plat-fc-photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: center;
+  padding: clamp(18px, 2vw, 32px);
 }
-.plat-fc-title {
-  font-family: var(--serif);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-  color: var(--ink);
+.plat-fc-tint {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(10,8,20,0.52) 0%, rgba(10,8,20,0.22) 50%, rgba(34,26,78,0.46) 100%);
+  pointer-events: none;
 }
-.plat-fc-live {
+.plat-fc-inner {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* the card */
+.pv.plat-fc {
+  width: min(96%, 470px);
+  gap: 13px;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 30px 64px -24px rgba(8, 6, 24, 0.62),
+    0 1px 0 rgba(255, 255, 255, 0.6) inset;
+}
+
+/* status chips row */
+.plat-fc-status {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.plat-fc-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: 9px;
+  background: var(--bg);
+}
+.plat-fc-chip-l {
   font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
+  font-size: 9px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--good);
+  color: var(--ink-3);
+}
+.plat-fc-chip-v {
+  font-family: var(--serif);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink);
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
-.plat-fc-live::before {
-  content: "";
-  width: 6px; height: 6px; border-radius: 999px;
+.plat-fc-live-dot {
+  width: 7px; height: 7px; border-radius: 999px;
   background: var(--good);
-  box-shadow: 0 0 0 3px rgba(79,138,74,0.14);
+  box-shadow: 0 0 0 3px rgba(79, 138, 74, 0.16);
+  flex: none;
 }
-.plat-fc-bars {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 6px;
-  align-items: end;
-  height: 96px;
-  padding-top: 4px;
-}
-.plat-fc-col { display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
-.plat-fc-bar {
-  width: 100%;
-  border-radius: 3px 3px 0 0;
-  background: var(--accent-soft);
-}
-.plat-fc-bar--fore {
-  background: repeating-linear-gradient(
-    -45deg,
-    rgba(76,61,255,0.22) 0 5px,
-    rgba(76,61,255,0.08) 5px 10px
-  );
-  border: 1px dashed rgba(76,61,255,0.35);
-}
-.plat-fc-bar--now { background: var(--accent); }
-.plat-fc-l {
-  font-family: var(--mono);
-  font-size: 9px;
-  color: var(--ink-3);
-  letter-spacing: 0.02em;
-}
-.plat-fc-foot {
+
+/* header: select + legend */
+.plat-fc-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line-soft);
+  gap: 10px;
 }
-.plat-fc-foot-k {
+.plat-fc-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: var(--serif);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.plat-fc-select svg { color: var(--ink-3); flex: none; }
+.plat-fc-legend { display: inline-flex; gap: 14px; }
+.plat-fc-lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--mono);
   font-size: 10px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--ink-3);
 }
-.plat-fc-foot-v {
+.plat-fc-lg-solid,
+.plat-fc-lg-dash {
+  width: 16px; height: 0; flex: none;
+}
+.plat-fc-lg-solid { border-top: 2px solid var(--accent); }
+.plat-fc-lg-dash { border-top: 2px dashed var(--accent); }
+
+/* chart */
+.plat-fc-chartwrap { position: relative; }
+.plat-fc-chart { width: 100%; height: 116px; display: block; }
+.plat-fc-tip {
+  position: absolute;
+  left: 29%;
+  top: 14%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 10px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 22px -12px rgba(0, 0, 0, 0.34);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.plat-fc-tip span {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+.plat-fc-tip strong {
   font-family: var(--serif);
-  font-size: 14px;
-  color: var(--good);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
+}
+
+/* month axis */
+.plat-fc-months {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  padding: 0 10px;
+}
+.plat-fc-months span {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  text-align: center;
 }
 
 /* Pillar eyebrow runs lowercase copy from JSON — keep it readable */

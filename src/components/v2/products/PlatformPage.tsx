@@ -54,46 +54,115 @@ const Chevron = () => (
   </svg>
 );
 
-/* Planning / forecast mock used as the planning pillar visual. */
-const FORECAST_BARS: { h: number; label: string; kind?: "now" | "fore" }[] = [
-  { h: 44, label: "Maj" },
-  { h: 52, label: "Jun" },
-  { h: 60, label: "Jul" },
-  { h: 68, label: "Aug", kind: "now" },
-  { h: 74, label: "Sep", kind: "fore" },
-  { h: 82, label: "Okt", kind: "fore" },
-  { h: 88, label: "Nov", kind: "fore" },
-  { h: 96, label: "Dec", kind: "fore" },
+/* Planning / forecast mock — a cash-flow chart shown on a photo backdrop,
+   mirroring the other pillars. Built in the v2 light card style. */
+const FC_MONTHS = [
+  "Jan", "Feb", "Mar", "Apr", "Maj", "Jun",
+  "Jul", "Aug", "Sep", "Okt", "Nov", "Dec",
 ];
+// 12 points, slight dip then a steady climb. Lower y = higher value.
+const FC_PTS: [number, number][] = [
+  [12, 88], [38.9, 86], [65.8, 84], [92.7, 74], [119.6, 68], [146.5, 60],
+  [173.5, 54], [200.4, 47], [227.3, 40], [254.2, 33], [281.1, 27], [308, 20],
+];
+const FC_BOUNDARY = 3; // Apr is the last actual month
+const BASELINE = 110;
+const toLine = (pts: [number, number][]) =>
+  pts.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x},${y}`).join(" ");
+const actualPts = FC_PTS.slice(0, FC_BOUNDARY + 1);
+const forecastPts = FC_PTS.slice(FC_BOUNDARY);
+const areaPath =
+  `M${FC_PTS[0][0]},${BASELINE} ` +
+  FC_PTS.map(([x, y]) => `L${x},${y}`).join(" ") +
+  ` L${FC_PTS[FC_PTS.length - 1][0]},${BASELINE} Z`;
 
 function ForecastVisual() {
+  const [bx, by] = FC_PTS[FC_BOUNDARY];
   return (
-    <div className="pv plat-fc">
-      <div className="plat-fc-head">
-        <span className="plat-fc-title">{planning.forecastTitle}</span>
-        <span className="plat-fc-live">{planning.liveLabel}</span>
-      </div>
-      <div className="plat-fc-bars" aria-hidden="true">
-        {FORECAST_BARS.map((b) => (
-          <div className="plat-fc-col" key={b.label}>
-            <span
-              className={
-                "plat-fc-bar" +
-                (b.kind === "now"
-                  ? " plat-fc-bar--now"
-                  : b.kind === "fore"
-                  ? " plat-fc-bar--fore"
-                  : "")
-              }
-              style={{ height: `${b.h}%` }}
-            />
-            <span className="plat-fc-l">{b.label}</span>
+    <div
+      className="plat-fc-photo"
+      style={{ backgroundImage: "url(/v2/assets/pillars/ledger.png)" }}
+    >
+      <span className="plat-fc-tint" aria-hidden="true" />
+      <div className="plat-fc-inner">
+        <div className="pv plat-fc">
+          <div className="plat-fc-status">
+            <span className="plat-fc-chip">
+              <span className="plat-fc-chip-l">Rapporter</span>
+              <span className="plat-fc-chip-v">
+                <span className="plat-fc-live-dot" />Live
+              </span>
+            </span>
+            <span className="plat-fc-chip">
+              <span className="plat-fc-chip-l">Prognos</span>
+              <span className="plat-fc-chip-v">12 månader</span>
+            </span>
+            <span className="plat-fc-chip">
+              <span className="plat-fc-chip-l">Fortnox</span>
+              <span className="plat-fc-chip-v">
+                <span className="plat-fc-live-dot" />Live
+              </span>
+            </span>
           </div>
-        ))}
-      </div>
-      <div className="plat-fc-foot">
-        <span className="plat-fc-foot-k">{planning.annualVariance}</span>
-        <span className="plat-fc-foot-v">+12,4%</span>
+
+          <div className="plat-fc-head">
+            <span className="plat-fc-select">
+              Kassaflödesprognos
+              <svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true">
+                <path stroke="currentColor" strokeWidth="1.4" fill="none"
+                  strokeLinecap="round" d="M3 4.5l3 3 3-3" />
+              </svg>
+            </span>
+            <span className="plat-fc-legend">
+              <span className="plat-fc-lg">
+                <i className="plat-fc-lg-solid" />Utfall
+              </span>
+              <span className="plat-fc-lg">
+                <i className="plat-fc-lg-dash" />Prognos
+              </span>
+            </span>
+          </div>
+
+          <div className="plat-fc-chartwrap">
+            <svg
+              className="plat-fc-chart"
+              viewBox="0 0 320 124"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient id="platFcArea" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#4C3DFF" stopOpacity="0.22" />
+                  <stop offset="100%" stopColor="#4C3DFF" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              {[40, 68, 96].map((y) => (
+                <line key={y} x1="12" y1={y} x2="308" y2={y}
+                  stroke="rgba(0,0,0,0.06)" strokeWidth="1" strokeDasharray="2 4" />
+              ))}
+              <line x1={bx} y1="12" x2={bx} y2={BASELINE}
+                stroke="rgba(0,0,0,0.10)" strokeWidth="1" strokeDasharray="3 3" />
+              <path d={areaPath} fill="url(#platFcArea)" />
+              <path d={toLine(actualPts)} fill="none" stroke="#4C3DFF"
+                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d={toLine(forecastPts)} fill="none" stroke="#4C3DFF"
+                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                strokeDasharray="4 4" opacity="0.85" />
+              <circle cx={bx} cy={by} r="4.5" fill="#FFFFFF"
+                stroke="#4C3DFF" strokeWidth="2.5" />
+            </svg>
+            <div className="plat-fc-tip">
+              <span>{FC_MONTHS[FC_BOUNDARY]}</span>
+              <strong>Utfall: 314 tkr</strong>
+            </div>
+          </div>
+
+          <div className="plat-fc-months" aria-hidden="true">
+            {FC_MONTHS.map((m) => (
+              <span key={m}>{m}</span>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
