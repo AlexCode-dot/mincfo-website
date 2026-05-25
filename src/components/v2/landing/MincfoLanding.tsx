@@ -655,10 +655,28 @@ export default function MincfoLanding() {
                 </li>
               </ol>
 
-              <div className="cta-alt">
-                Vill ni att vi sköter ekonomin åt er? Boka ett samtal — vi går
-                igenom ett upplägg som passar er och hur ni använder plattformen.
-                <a href="/boka-samtal">Boka samtal →</a>
+              <div className="cta-helhet">
+                <div className="cta-helhet-copy">
+                  <div className="cta-helhet-t">
+                    Vill ni att vi sköter ekonomin åt er?
+                  </div>
+                  <div className="cta-helhet-b">
+                    Det är vår helhetslösning. Boka ett samtal så tar vi fram
+                    ett upplägg som passar er — och visar hur ni använder
+                    plattformen.
+                  </div>
+                </div>
+                <a className="cta-helhet-btn" href="/boka-samtal">
+                  Boka samtal
+                  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                    <path
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      fill="none"
+                      d="M3 6h6m0 0L6.5 3.5M9 6L6.5 8.5"
+                    />
+                  </svg>
+                </a>
               </div>
             </div>
 

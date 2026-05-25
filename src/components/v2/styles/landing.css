@@ -818,3 +818,53 @@
     border: 1px solid rgba(255,255,255,0.25);
   }
   .closing .btn-outline:hover { background: rgba(255,255,255,0.08); }
+
+  /* ===== Helhetslösning block in the "Kom igång" section =====
+     Elevates the (priority) helhetslösning path from a footnote to a
+     clear bordered block on the dark final-cta, beside the platform
+     trial form. */
+  .cta-helhet {
+    margin-top: 28px;
+    padding: 20px 22px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+  .cta-helhet-copy { max-width: 52ch; }
+  .cta-helhet-t {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: #FFFFFF;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+  }
+  .cta-helhet-b {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 8px;
+  }
+  .cta-helhet-btn {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    color: #14110D;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    padding: 11px 20px;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+  .cta-helhet-btn:hover { background: #ECECEC; }
+  .cta-helhet-btn svg { transition: transform 0.2s ease; }
+  .cta-helhet-btn:hover svg { transform: translateX(2px); }
