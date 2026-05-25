@@ -142,7 +142,7 @@
 .plat-fc-chart { width: 100%; height: 116px; display: block; }
 .plat-fc-tip {
   position: absolute;
-  left: 28%;
+  left: 54%;
   bottom: 56%;
   transform: translateX(-50%);
   display: flex;

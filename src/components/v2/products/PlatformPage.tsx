@@ -60,12 +60,13 @@ const FC_MONTHS = [
   "Jan", "Feb", "Mar", "Apr", "Maj", "Jun",
   "Jul", "Aug", "Sep", "Okt", "Nov", "Dec",
 ];
-// 12 points, slight dip then a steady climb. Lower y = higher value.
+// 12 points: steady actuals through Jul, then a climbing forecast.
+// Lower y = higher value.
 const FC_PTS: [number, number][] = [
-  [12, 88], [38.9, 86], [65.8, 84], [92.7, 74], [119.6, 68], [146.5, 60],
-  [173.5, 54], [200.4, 47], [227.3, 40], [254.2, 33], [281.1, 27], [308, 20],
+  [12, 92], [38.9, 91], [65.8, 90], [92.7, 89], [119.6, 88], [146.5, 86],
+  [173.5, 84], [200.4, 73], [227.3, 61], [254.2, 49], [281.1, 37], [308, 25],
 ];
-const FC_BOUNDARY = 3; // Apr is the last actual month
+const FC_BOUNDARY = 6; // Jul is the last actual month
 const BASELINE = 110;
 const toLine = (pts: [number, number][]) =>
   pts.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x},${y}`).join(" ");
@@ -149,7 +150,7 @@ function ForecastVisual() {
             </svg>
             <div className="plat-fc-tip">
               <span>{FC_MONTHS[FC_BOUNDARY]}</span>
-              <strong>Utfall: 314 tkr</strong>
+              <strong>Utfall: 372 tkr</strong>
             </div>
           </div>
 
