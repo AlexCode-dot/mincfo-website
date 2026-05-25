@@ -8,7 +8,7 @@ import BrandMark from "../shared/BrandMark";
 import PillarVisual from "./PillarVisual";
 import platform from "@/content/home/platform.json";
 
-const { hero, aicopilot, solutions, ending } = platform;
+const { hero, aicopilot, ending } = platform;
 const { dashboard, planning } = aicopilot;
 const customers = platform.customers;
 
@@ -53,46 +53,6 @@ const Chevron = () => (
     />
   </svg>
 );
-
-/* Solution-card icons keyed to the JSON `icon` field. */
-const SOL_ICONS: Record<string, React.ReactNode> = {
-  rocket: (
-    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M11 3c3.5 1 5.5 4 5 8l-3 3-4-4 2-7z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M9 11l-3 1-2 4 4-2 1-3M13 7.5h.01" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ),
-  briefcase: (
-    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <rect x="3" y="6.5" width="14" height="9.5" rx="1.5" stroke="currentColor" strokeWidth="1.3" />
-      <path d="M7.5 6.5V5a1.5 1.5 0 011.5-1.5h2A1.5 1.5 0 0112.5 5v1.5M3 10.5h14" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-    </svg>
-  ),
-  cpu: (
-    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <rect x="6" y="6" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="1.3" />
-      <path d="M8 3v2m4-2v2M8 15v2m4-2v2M3 8h2m-2 4h2m10-4h2m-2 4h2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-    </svg>
-  ),
-  building: (
-    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <rect x="4" y="3.5" width="12" height="13" rx="1" stroke="currentColor" strokeWidth="1.3" />
-      <path d="M7 7h1.5M7 10h1.5M7 13h1.5M11.5 7H13m-1.5 3H13m-1.5 3H13" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-    </svg>
-  ),
-  cart: (
-    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M3 4h2l1.5 9h8l1.5-6H6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="8" cy="16" r="1.1" stroke="currentColor" strokeWidth="1.2" />
-      <circle cx="14" cy="16" r="1.1" stroke="currentColor" strokeWidth="1.2" />
-    </svg>
-  ),
-  handshake: (
-    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M3 7l3-2 4 2 4-2 3 2v5l-3 2-2-2-2 2-2-2-3 2V7z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
-    </svg>
-  ),
-};
 
 /* Planning / forecast mock used as the planning pillar visual. */
 const FORECAST_BARS: { h: number; label: string; kind?: "now" | "fore" }[] = [
@@ -340,32 +300,6 @@ export default function PlatformPage() {
               </li>
             ))}
           </ol>
-        </div>
-      </section>
-
-      {/* ============ SOLUTIONS ============ */}
-      <section className="section prod-deliverables" id="losningar">
-        <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">{solutions.pill}</span>
-            <h2 className="serif-h">{solutions.title}</h2>
-            <p>{solutions.intro}</p>
-          </div>
-          <div className="plat-sol-grid">
-            {solutions.cards.map((c) => (
-              <a className="plat-sol-card" href={c.href} key={c.href}>
-                <span className="plat-sol-icon">
-                  {SOL_ICONS[c.icon] ?? SOL_ICONS.briefcase}
-                </span>
-                <div className="plat-sol-title">{c.title}</div>
-                <div className="plat-sol-text">{c.text}</div>
-                <span className="plat-sol-cta">
-                  {solutions.cardCta}
-                  <ArrowRight size={11} />
-                </span>
-              </a>
-            ))}
-          </div>
         </div>
       </section>
 
