@@ -6,7 +6,6 @@ import { MotionProvider } from "@/components/system/MotionProvider";
 import { getSharedText } from "@/content/homePageText";
 import { HTML_LANG, OG_LOCALE } from "@/i18n/locale";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
-import LanguageSwitch from "@/i18n/LanguageSwitch";
 import { getLocale } from "@/i18n/server";
 import { SanityLive } from "@/sanity/lib/live";
 import "@/styles/globals.scss";
@@ -72,7 +71,6 @@ export default async function RootLayout({
         <LocaleProvider initialLocale={locale}>
           <MotionProvider>
             <ContactReturnRestore />
-            <LanguageSwitch />
             {children}
             <SanityLive />
             <Analytics />
