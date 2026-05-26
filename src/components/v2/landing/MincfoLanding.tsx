@@ -636,12 +636,11 @@ export default function MincfoLanding() {
               <a className="cta-trial-hint" href="#ctaForm">
                 <span className="cta-trial-hint-copy">
                   <span className="cta-trial-hint-t">
-                    Eller — testa plattformen själv
+                    Testa plattformen gratis i 14 dagar
                   </span>
                   <span className="cta-trial-hint-b">
                     Följ hela ekonomin i realtid — dashboards,
                     kassaflödesprognos och en AI som svarar på era siffror.
-                    Prova gratis i 14 dagar.
                   </span>
                 </span>
                 <svg
