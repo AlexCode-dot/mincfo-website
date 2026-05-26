@@ -87,11 +87,12 @@ const PILLARS: {
     title: "En partner som tänker",
     italic: "steget före.",
     body:
-      "Ni får en personlig controller och en CFO on demand. Vi hör av oss innan ni hör av oss — med insikter, varningar och förslag på nästa drag.",
+      "Ni får en personlig controller och en CFO on demand. Vi hör av oss innan ni hör av oss — med insikter, varningar och förslag på nästa drag. Vi bygger dessutom forecast, budget och scenarier som en del av leveransen.",
     bullets: [
       "Personlig controller som äger leveransen",
       "CFO on demand vid beslut, board och investerare",
-      "Återkommande genomgångar — inte bara siffror",
+      "Forecast, budget och scenarioarbete som del av leveransen",
+      "Scenarioanalys för hiring, kostnader och intäkter",
       "Proaktiv rådgivning innan problemen växer",
     ],
     visual: "chat",
