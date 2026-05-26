@@ -876,8 +876,8 @@
       0 24px 44px -20px rgba(0, 0, 0, 0.6),
       0 6px 12px -6px rgba(0, 0, 0, 0.35);
   }
-  .plat-dash-shot { left: 4%; bottom: 5%; width: 90%; z-index: 1; }
-  .plat-dash-pl { right: 2%; top: 4%; width: 72%; z-index: 2; }
+  .plat-dash-shot { left: 3%; bottom: 10%; width: 97%; z-index: 1; }
+  .plat-dash-pl { right: 2%; top: 3%; width: 84%; z-index: 2; }
   .plat-dash-shot img,
   .plat-dash-pl img { display: block; width: 100%; height: auto; }
   .plat-dash-copilot {
