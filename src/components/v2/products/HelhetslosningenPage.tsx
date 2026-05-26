@@ -179,10 +179,6 @@ const FAQS: { q: string; a: string }[] = [
     a: "Vi tar över hela leveransen — bokföring, lön, bokslut och rådgivning. När och hur ni går över anpassar vi efter er situation.",
   },
   {
-    q: "Vem är vår kontaktperson?",
-    a: "Ni får en personlig controller som äger den löpande leveransen, och en CFO som finns med vid beslut och styrelsearbete.",
-  },
-  {
     q: "Vad ingår i helhetslösningen?",
     a: "Redovisning, lön, moms, bokslut och CFO-stöd — levererat löpande, med realtidsinsyn i KPI:er, cashflow och avvikelser i plattformen.",
   },
