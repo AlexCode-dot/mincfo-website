@@ -824,11 +824,13 @@
   .plat-section .eyebrow { color: rgba(255, 255, 255, 0.5); }
   .plat-section .plat-section-copy h2 { color: #FFFFFF; }
   .plat-section .plat-section-copy p { color: rgba(255, 255, 255, 0.6); }
-  .plat-section .text-link {
+  .mv2-root.type-sumary .plat-section .text-link,
+  .mv2-root .plat-section .text-link {
     color: #FFFFFF;
     border-bottom-color: rgba(255, 255, 255, 0.4);
   }
-  .plat-section .text-link:hover { border-bottom-color: #FFFFFF; }
+  .mv2-root.type-sumary .plat-section .text-link:hover,
+  .mv2-root .plat-section .text-link:hover { border-bottom-color: #FFFFFF; }
   .plat-section-grid {
     display: grid;
     grid-template-columns: 1fr 1.05fr;
@@ -854,7 +856,7 @@
   /* composite product mock: desk photo + dashboard + P&L + copilot card */
   .plat-section-visual {
     position: relative;
-    aspect-ratio: 16 / 11;
+    aspect-ratio: 16 / 12.5;
     border-radius: 12px;
     overflow: hidden;
     background-color: #1A1612;
@@ -874,28 +876,28 @@
       0 24px 44px -20px rgba(0, 0, 0, 0.6),
       0 6px 12px -6px rgba(0, 0, 0, 0.35);
   }
-  .plat-dash-shot { left: 4%; bottom: 6%; width: 82%; z-index: 1; }
-  .plat-dash-pl { right: 2%; top: 5%; width: 66%; z-index: 2; }
+  .plat-dash-shot { left: 4%; bottom: 5%; width: 90%; z-index: 1; }
+  .plat-dash-pl { right: 2%; top: 4%; width: 72%; z-index: 2; }
   .plat-dash-shot img,
   .plat-dash-pl img { display: block; width: 100%; height: auto; }
   .plat-dash-copilot {
     position: absolute;
     right: 3%;
     bottom: 4%;
-    width: 52%;
+    width: 56%;
     z-index: 3;
-    padding: 12px 13px 20px;
-    gap: 8px;
-    border-radius: 10px;
+    padding: 16px 16px 26px;
+    gap: 11px;
+    border-radius: 12px;
     box-shadow:
       0 28px 50px -20px rgba(0, 0, 0, 0.65),
       0 8px 16px -8px rgba(0, 0, 0, 0.4);
   }
-  .plat-dash-copilot .pv-cfo-title { font-size: 12px; }
-  .plat-dash-copilot .pv-cfo-bubble { font-size: 11px; padding: 6px 9px; }
-  .plat-dash-copilot .pv-cfo-avatar { width: 18px; height: 18px; font-size: 9px; }
-  .plat-dash-copilot .pv-cfo-thinking { font-size: 9.5px; }
-  .plat-dash-copilot .pv-cfo-answer { font-size: 11px; line-height: 1.45; }
+  .plat-dash-copilot .pv-cfo-title { font-size: 14px; }
+  .plat-dash-copilot .pv-cfo-bubble { font-size: 12.5px; padding: 8px 11px; }
+  .plat-dash-copilot .pv-cfo-avatar { width: 22px; height: 22px; font-size: 11px; }
+  .plat-dash-copilot .pv-cfo-thinking { font-size: 11px; }
+  .plat-dash-copilot .pv-cfo-answer { font-size: 12.5px; line-height: 1.5; }
 
   /* ===== "Kom igång": helhetslösning primary + secondary trial =====
      Landing is helhetslösning-led, so this section leads with a prominent
