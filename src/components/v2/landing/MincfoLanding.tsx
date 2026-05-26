@@ -842,34 +842,6 @@ export default function MincfoLanding() {
         </div>
       </section>
 
-      {/* ============ CLOSING ============ */}
-      <section className="closing">
-        <div className="container">
-          <h2>Upptäck kraften i MinCFO.</h2>
-          <p className="sub">
-            Boka ett samtal och se hur vi tar fullt ägarskap för er ekonomi och
-            rapportering, medan ni följer varje nyckeltal och prognos i
-            realtid direkt i plattformen.
-          </p>
-          <div className="closing-row">
-            <a className="btn" href="/boka-samtal">
-              Boka samtal
-              <svg width="12" height="12" viewBox="0 0 12 12">
-                <path
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  fill="none"
-                  d="M3 6h6m0 0L6.5 3.5M9 6L6.5 8.5"
-                />
-              </svg>
-            </a>
-            <a className="btn btn-outline" href="#how">
-              Se hur det funkar
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* ============ FOOTER ============ */}
       <Footer />
     </div>
