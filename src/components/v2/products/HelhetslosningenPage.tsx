@@ -113,30 +113,32 @@ const PILLARS: {
   },
 ];
 
+// Mirrors the live/main helhetslösning (faas) how-it-works copy
+// (shared.json → howItWorks.offers.faas).
 const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "01",
-    title: "Vi kopplar Fortnox",
+    title: "Onboarding & scope",
     body:
-      "Ni ger oss åtkomst en gång. Vi går igenom kontoplan, öppna poster och avstämningar — så vi startar från en sann nollställd punkt.",
+      "Vi sätter mål, struktur och omfattning: redovisning, lön, moms, bokslut, CFO-stöd m.m.",
   },
   {
     n: "02",
-    title: "Vi tar över det löpande",
+    title: "Koppla system & behörigheter",
     body:
-      "Bokföring, reskontra, moms och löner flyttar över till oss. Ert team slutar göra det operativa — utan att byta system.",
+      "Ni ger oss åtkomst till bank, Skatteverket och Fortnox/övriga system. MinCFO kopplas in som er gemensamma dashboard.",
   },
   {
     n: "03",
-    title: "Ni får er controller och CFO",
+    title: "Vi sköter ekonomin – ni följer i realtid",
     body:
-      "En personlig controller leder leveransen och en CFO finns med vid beslut, board och investerardialog. Ni har alltid en person att ringa.",
+      "Vi hanterar hela ekonomiflödet end-to-end. Ni ser rapporter, kassaflöde, nyckeltal och avvikelser i MinCFO.",
   },
   {
     n: "04",
-    title: "Plattformen blir er sanning",
+    title: "AI + proaktiv rådgivning",
     body:
-      "Ni öppnar MinCFO och ser resultat, likviditet och KPI:er live. Vi underhåller forecasts, ni testar scenarier.",
+      "AI:n svarar på frågor om er data, flaggar risker och föreslår åtgärder. Ni har dessutom personlig controller/CFO on demand.",
   },
 ];
 
@@ -307,13 +309,9 @@ export default function HelhetslosningenPage() {
           <div className="prod-how-head">
             <span className="eyebrow">Så funkar det</span>
             <h2 className="workspace-title">
-              Från Fortnox-koppling till{" "}
-              <em>realtidsläge.</em>
+              Så arbetar ni med MinCFO{" "}
+              <em>som helhetslösning.</em>
             </h2>
-            <p className="workspace-body">
-              Vi sätter upplägget tillsammans med er. Ni byter inte system —
-              ni slutar bara göra det operativa.
-            </p>
           </div>
 
           <ol className="prod-steps">
