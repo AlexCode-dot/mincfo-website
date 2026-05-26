@@ -14,6 +14,9 @@ const { hero, aicopilot, ending } = platform;
 const { dashboard, planning } = aicopilot;
 const customers = platform.customers;
 
+// Near-white logos need darkening to stay visible on the white ticker.
+const SOFT_LOGOS = new Set(["logo-showcase.avif"]);
+
 const ArrowRight = ({ size = 12 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 12 12" aria-hidden="true">
     <path
@@ -118,7 +121,7 @@ function ForecastVisual() {
         <div className="pv plat-fc">
           <div className="plat-fc-status">
             <span className="plat-fc-chip">
-              <span className="plat-fc-chip-l">{planning.forecastPrefix} (Dec)</span>
+              <span className="plat-fc-chip-l">Prognos helår (Dec)</span>
               <span className="plat-fc-chip-v">453 069 kr</span>
             </span>
             <span className="plat-fc-chip">
@@ -330,7 +333,10 @@ export default function PlatformPage() {
             <div className="kc-track">
               {[...customers.trustedLogos, ...customers.trustedLogos].map(
                 (logo, i) => (
-                  <span className="kc-logo" key={`${logo.file}-${i}`}>
+                  <span
+                    className={`kc-logo${SOFT_LOGOS.has(logo.file) ? " soft" : ""}`}
+                    key={`${logo.file}-${i}`}
+                  >
                     <img
                       src={`/customers/logos/${logo.file}`}
                       alt={`${logo.name} logotyp`}
