@@ -617,8 +617,7 @@ export default function MincfoLanding() {
               <p>
                 MinCFO-plattformen ger er realtidsdashboards,
                 kassaflödesprognos och en AI Copilot — kopplat till er egen
-                data. Den ingår i helhetslösningen, men finns också på egen
-                hand.
+                data.
               </p>
               <a className="text-link" href="/produkter/plattform">
                 Utforska plattformen
