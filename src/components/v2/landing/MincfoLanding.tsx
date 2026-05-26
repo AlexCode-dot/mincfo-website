@@ -606,6 +606,42 @@ export default function MincfoLanding() {
         </div>
       </section>
 
+      {/* ===== PLATFORM (secondary; self-contained — lift out when the
+              platform becomes its own brand) ===== */}
+      <section className="section plat-section">
+        <div className="container">
+          <div className="plat-section-grid">
+            <div className="plat-section-copy">
+              <span className="eyebrow">Plattformen</span>
+              <h2 className="serif-h">Vill ni driva ekonomin själva?</h2>
+              <p>
+                MinCFO-plattformen ger er realtidsdashboards,
+                kassaflödesprognos och en AI Copilot — kopplat till er egen
+                data. Den ingår i helhetslösningen, men finns också på egen
+                hand.
+              </p>
+              <a className="text-link" href="/produkter/plattform">
+                Utforska plattformen
+                <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                  <path
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    fill="none"
+                    d="M2 5h6m-2.5-2.5L8 5l-2.5 2.5"
+                  />
+                </svg>
+              </a>
+            </div>
+            <div className="plat-section-visual">
+              <img
+                src="/v2/assets/pillars/dashboard.webp"
+                alt="MinCFO-plattformens dashboard med KPI:er och rapporter i realtid"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ============ SECURITY ============ */}
       <section className="section security" id="sakerhet">
         <div className="container">
