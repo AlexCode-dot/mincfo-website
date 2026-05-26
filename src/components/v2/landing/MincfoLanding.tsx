@@ -657,7 +657,6 @@ export default function MincfoLanding() {
                     <BrandMark />
                     Skapa konto
                   </span>
-                  <span className="cta-form-meta">Svar inom 1 arbetsdag</span>
                 </div>
                 <p className="cta-form-headsub">
                   Skapa ett konto och testa MinCFO-plattformen kostnadsfritt i
