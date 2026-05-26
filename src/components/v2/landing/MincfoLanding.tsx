@@ -660,7 +660,9 @@ export default function MincfoLanding() {
                   <span className="cta-form-meta">Svar inom 1 arbetsdag</span>
                 </div>
                 <p className="cta-form-headsub">
-                  Vi skickar en inbjudan till din e-post så snart vi kan.
+                  Skapa ett konto och testa MinCFO-plattformen kostnadsfritt i
+                  14 dagar. Vi skickar en inbjudan till din e-post så snart vi
+                  kan.
                 </p>
               </div>
 
