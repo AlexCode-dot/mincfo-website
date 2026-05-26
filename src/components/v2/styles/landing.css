@@ -874,15 +874,15 @@
       0 24px 44px -20px rgba(0, 0, 0, 0.6),
       0 6px 12px -6px rgba(0, 0, 0, 0.35);
   }
-  .plat-dash-shot { left: 5%; bottom: 8%; width: 70%; z-index: 1; }
-  .plat-dash-pl { right: 3%; top: 8%; width: 54%; z-index: 2; }
+  .plat-dash-shot { left: 4%; bottom: 6%; width: 82%; z-index: 1; }
+  .plat-dash-pl { right: 2%; top: 5%; width: 66%; z-index: 2; }
   .plat-dash-shot img,
   .plat-dash-pl img { display: block; width: 100%; height: auto; }
   .plat-dash-copilot {
     position: absolute;
-    right: 4%;
-    bottom: 5%;
-    width: 45%;
+    right: 3%;
+    bottom: 4%;
+    width: 52%;
     z-index: 3;
     padding: 12px 13px 20px;
     gap: 8px;
