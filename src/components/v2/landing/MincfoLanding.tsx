@@ -633,23 +633,9 @@ export default function MincfoLanding() {
                 </a>
               </div>
 
-              <a className="cta-trial-hint" href="#ctaForm">
-                <span className="cta-trial-hint-copy">
-                  <span className="cta-trial-hint-t">
-                    Testa plattformen gratis i 14 dagar
-                  </span>
-                  <span className="cta-trial-hint-b">
-                    Följ hela ekonomin i realtid — dashboards,
-                    kassaflödesprognos och en AI som svarar på era siffror.
-                  </span>
-                </span>
-                <svg
-                  className="cta-trial-hint-arrow"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 12 12"
-                  aria-hidden="true"
-                >
+              <a className="cta-trial-link" href="#ctaForm">
+                Testa plattformen gratis i 14 dagar
+                <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
                   <path
                     stroke="currentColor"
                     strokeWidth="1.4"
