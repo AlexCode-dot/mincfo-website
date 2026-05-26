@@ -606,6 +606,97 @@ export default function MincfoLanding() {
         </div>
       </section>
 
+      {/* ============ SECURITY ============ */}
+      <section className="section security" id="sakerhet">
+        <div className="container">
+          <div className="security-head">
+            <span className="eyebrow">Säkerhet &amp; Compliance</span>
+            <h2 className="serif-h">Enterprise-grade säkerhet.</h2>
+            <p>
+              Vi hanterar känslig finansiell data med högsta krav på säkerhet,
+              integritet och efterlevnad.
+            </p>
+          </div>
+          <div className="security-grid">
+            <article className="trust-card">
+              <div className="trust-badge">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path
+                    d="M9 1L2 4v5c0 4 3 7 7 8 4-1 7-4 7-8V4l-7-3z"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6 9l2.2 2L12 7"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <h3 className="trust-title">Dataskydd &amp; integritet</h3>
+              <p className="trust-body">
+                MinCFO hanterar all kunddata konfidentiellt och i enlighet med
+                gällande dataskyddslagstiftning. Åtkomst är strikt begränsad
+                och loggas kontinuerligt.
+              </p>
+            </article>
+            <article className="trust-card">
+              <div className="trust-badge">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle
+                    cx="9"
+                    cy="9"
+                    r="7.5"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                  />
+                  <path
+                    d="M1.5 9h15M9 1.5c2 2 3 4.5 3 7.5s-1 5.5-3 7.5M9 1.5c-2 2-3 4.5-3 7.5s1 5.5 3 7.5"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                  />
+                </svg>
+              </div>
+              <h3 className="trust-title">Säker infrastruktur</h3>
+              <p className="trust-body">
+                Systemen är byggda med moderna säkerhetsprinciper och skyddas
+                genom kryptering, övervakning och regelbundna
+                säkerhetskontroller.
+              </p>
+            </article>
+            <article className="trust-card">
+              <div className="trust-badge">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <rect
+                    x="3"
+                    y="7.5"
+                    width="12"
+                    height="9"
+                    rx="1"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                  />
+                  <path
+                    d="M5.5 7.5V5a3.5 3.5 0 0 1 7 0v2.5"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                  />
+                </svg>
+              </div>
+              <h3 className="trust-title">EU &amp; GDPR-efterlevnad</h3>
+              <p className="trust-body">
+                All behandling av person- och företagsdata sker i enlighet med
+                GDPR. Data hanteras inom EU och enligt tydliga
+                personuppgiftsbiträdesavtal.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       {/* ============ FINAL CTA ============ */}
       <section className="final-cta" id="demo">
         <div className="container">
@@ -747,97 +838,6 @@ export default function MincfoLanding() {
                 <span>Data inom EU</span>
               </div>
             </form>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ SECURITY ============ */}
-      <section className="section security" id="sakerhet">
-        <div className="container">
-          <div className="security-head">
-            <span className="eyebrow">Säkerhet &amp; Compliance</span>
-            <h2 className="serif-h">Enterprise-grade säkerhet.</h2>
-            <p>
-              Vi hanterar känslig finansiell data med högsta krav på säkerhet,
-              integritet och efterlevnad.
-            </p>
-          </div>
-          <div className="security-grid">
-            <article className="trust-card">
-              <div className="trust-badge">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <path
-                    d="M9 1L2 4v5c0 4 3 7 7 8 4-1 7-4 7-8V4l-7-3z"
-                    stroke="currentColor"
-                    strokeWidth="1.3"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M6 9l2.2 2L12 7"
-                    stroke="currentColor"
-                    strokeWidth="1.3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-              <h3 className="trust-title">Dataskydd &amp; integritet</h3>
-              <p className="trust-body">
-                MinCFO hanterar all kunddata konfidentiellt och i enlighet med
-                gällande dataskyddslagstiftning. Åtkomst är strikt begränsad
-                och loggas kontinuerligt.
-              </p>
-            </article>
-            <article className="trust-card">
-              <div className="trust-badge">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <circle
-                    cx="9"
-                    cy="9"
-                    r="7.5"
-                    stroke="currentColor"
-                    strokeWidth="1.3"
-                  />
-                  <path
-                    d="M1.5 9h15M9 1.5c2 2 3 4.5 3 7.5s-1 5.5-3 7.5M9 1.5c-2 2-3 4.5-3 7.5s1 5.5 3 7.5"
-                    stroke="currentColor"
-                    strokeWidth="1.3"
-                  />
-                </svg>
-              </div>
-              <h3 className="trust-title">Säker infrastruktur</h3>
-              <p className="trust-body">
-                Systemen är byggda med moderna säkerhetsprinciper och skyddas
-                genom kryptering, övervakning och regelbundna
-                säkerhetskontroller.
-              </p>
-            </article>
-            <article className="trust-card">
-              <div className="trust-badge">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <rect
-                    x="3"
-                    y="7.5"
-                    width="12"
-                    height="9"
-                    rx="1"
-                    stroke="currentColor"
-                    strokeWidth="1.3"
-                  />
-                  <path
-                    d="M5.5 7.5V5a3.5 3.5 0 0 1 7 0v2.5"
-                    stroke="currentColor"
-                    strokeWidth="1.3"
-                  />
-                </svg>
-              </div>
-              <h3 className="trust-title">EU &amp; GDPR-efterlevnad</h3>
-              <p className="trust-body">
-                All behandling av person- och företagsdata sker i enlighet med
-                GDPR. Data hanteras inom EU och enligt tydliga
-                personuppgiftsbiträdesavtal.
-              </p>
-            </article>
           </div>
         </div>
       </section>
