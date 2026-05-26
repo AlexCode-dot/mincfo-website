@@ -749,6 +749,10 @@ export default function MincfoLanding() {
                 </svg>
               </button>
 
+              <p className="cta-form-fine">
+                Vi skickar en inbjudan till din e-post så snart vi kan.
+              </p>
+
               <div className="cta-form-trust">
                 <span>14 dagar gratis</span>
                 <span>Avsluta när som helst</span>
