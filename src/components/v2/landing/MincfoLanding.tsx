@@ -672,6 +672,9 @@ export default function MincfoLanding() {
                 </span>
                 <span className="cta-form-meta">Svar inom 1 arbetsdag</span>
               </div>
+              <p className="cta-form-headsub">
+                Vi skickar en inbjudan till din e-post så snart vi kan.
+              </p>
 
               <div className="cta-field">
                 <label htmlFor="cta-company">Företagsnamn</label>
@@ -748,10 +751,6 @@ export default function MincfoLanding() {
                   />
                 </svg>
               </button>
-
-              <p className="cta-form-fine">
-                Vi skickar en inbjudan till din e-post så snart vi kan.
-              </p>
 
               <div className="cta-form-trust">
                 <span>14 dagar gratis</span>
