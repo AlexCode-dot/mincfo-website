@@ -666,15 +666,17 @@ export default function MincfoLanding() {
               onSubmit={(e) => e.preventDefault()}
             >
               <div className="cta-form-head">
-                <span className="cta-form-l cta-form-l-pulse">
-                  <BrandMark />
-                  Skapa konto
-                </span>
-                <span className="cta-form-meta">Svar inom 1 arbetsdag</span>
+                <div className="cta-form-head-row">
+                  <span className="cta-form-l cta-form-l-pulse">
+                    <BrandMark />
+                    Skapa konto
+                  </span>
+                  <span className="cta-form-meta">Svar inom 1 arbetsdag</span>
+                </div>
+                <p className="cta-form-headsub">
+                  Vi skickar en inbjudan till din e-post så snart vi kan.
+                </p>
               </div>
-              <p className="cta-form-headsub">
-                Vi skickar en inbjudan till din e-post så snart vi kan.
-              </p>
 
               <div className="cta-field">
                 <label htmlFor="cta-company">Företagsnamn</label>
