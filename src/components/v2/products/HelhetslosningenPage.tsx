@@ -418,14 +418,15 @@ export default function HelhetslosningenPage() {
           <div className="prod-closing-brand" aria-hidden="true">
             <BrandMark />
           </div>
-          <h2>Redo att lämna över ekonomin?</h2>
+          <h2>Upptäck kraften i MinCFO.</h2>
           <p className="sub">
-            Boka ett samtal så går vi igenom er situation och visar hur en
-            ekonomifunktion hos oss skulle se ut för er.
+            Boka ett samtal och se hur vi tar fullt ägarskap för er ekonomi
+            och rapportering, medan ni följer varje nyckeltal och prognos i
+            realtid direkt i plattformen.
           </p>
           <div className="closing-row">
             <a className="btn" href="/boka-samtal">
-              Boka samtal
+              Boka en tid för samtal
               <svg width="12" height="12" viewBox="0 0 12 12">
                 <path
                   stroke="currentColor"
