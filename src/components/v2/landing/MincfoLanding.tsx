@@ -278,7 +278,7 @@ export default function MincfoLanding() {
                 system. MinCFO kopplas in som er gemensamma dashboard.
               </p>
               <div style={{ height: 24 }}></div>
-              <a className="text-link" href="#integrations">
+              <a className="text-link" href="/produkter/helhetslosningen#how">
                 Se hur det funkar
                 <svg width="10" height="10" viewBox="0 0 10 10">
                   <path
