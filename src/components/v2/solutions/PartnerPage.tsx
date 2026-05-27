@@ -123,7 +123,8 @@ export default function PartnerPage() {
       <section className="prod-trust">
         <div className="container">
           <p className="prod-trust-l">
-            Byråer och rådgivare som skalar sin leverans med MinCFO
+            Betrodd av bolag som vill lägga ekonomi och uppföljning hos en
+            extern partner
           </p>
           <div className="kc-ticker">
             <div className="kc-track">
