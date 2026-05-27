@@ -14,7 +14,10 @@
     "content:fake:blog:with-images": "node scripts/clean-blog.mjs && node scripts/seed-blog-test.mjs",
     "content:fake:blog:no-images": "node scripts/clean-blog.mjs && SEED_BLOG_NO_IMAGES=1 node scripts/seed-blog-test.mjs",
     "content:pull:sanity": "node scripts/pull-sanity.mjs",
-    "content:validate:sanity": "node scripts/validate-sanity.mjs"
+    "content:validate:sanity": "node scripts/validate-sanity.mjs",
+    "content:seed:staging": "NEXT_PUBLIC_SANITY_DATASET=staging node scripts/seed-sanity.mjs",
+    "content:pull:staging": "NEXT_PUBLIC_SANITY_DATASET=staging node scripts/pull-sanity.mjs",
+    "content:validate:staging": "NEXT_PUBLIC_SANITY_DATASET=staging node scripts/validate-sanity.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.0.3",
