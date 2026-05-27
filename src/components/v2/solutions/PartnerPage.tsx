@@ -23,16 +23,16 @@ const TICKER_LOGOS: { name: string; file: string; soft?: boolean }[] = [
 
 const PAINS: { title: string; body: string }[] = [
   {
-    title: "Varje klient blir ett specialprojekt",
-    body: "Dashboards, rapporter och uppföljning byggs från noll för varje ny klient — tid som sällan blir fakturerbar rådgivning.",
+    title: "Varje klientleverans byggs från noll",
+    body: "Utan ett gemensamt arbetssätt blir varje dashboard, rapport och forecast ett tidskrävande specialbygge — tid som sällan blir fakturerbar rådgivning.",
   },
   {
-    title: "Manuellt arbete äter marginalen",
-    body: "Rådata ska bli rådgivningsklart underlag, men för mycket tid går åt till att samla in, städa och formatera siffror.",
+    title: "Manuellt arbete i personberoende filer",
+    body: "Rådata ska bli rådgivningsklart underlag, men tiden går åt till att samla in, städa och formatera siffror i filer som bara en person förstår.",
   },
   {
-    title: "Svårt att vara proaktiv i skala",
-    body: "Ju fler klienter, desto mer reaktiv blir leveransen. Att bevaka varje portfölj manuellt håller inte när ni växer.",
+    title: "Svårt att hålla kvalitet när ni skalar",
+    body: "Ju fler klienter, desto ojämnare blir uppföljningen — och det är svårt att vara proaktiv över hela portföljen när varje analys görs manuellt.",
   },
 ];
 
