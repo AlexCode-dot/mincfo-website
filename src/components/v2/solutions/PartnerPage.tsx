@@ -101,10 +101,10 @@ export default function PartnerPage() {
               <em>med MinCFO Byråportal.</em>
             </h1>
             <p className="prod-hero-sub">
-              Samla klientuppföljning, leverans och kommunikation i en portal.
-              Proaktiva råd genereras automatiskt och AI sköter första linjens
-              support — så ni skalar rådgivningen utan att varje klientupplägg
-              blir ett specialprojekt.
+              Automatiskt genererade proaktiva råd baserade på specifika
+              triggerpoints och AI som agerar 1st line support. Genom att samla
+              all kundkommunikation och leverans i MinCFO skapar ni ett
+              enhetligt och professionellt flöde för hela portföljen.
             </p>
             <div className="prod-hero-cta">
               <a className="btn" href="/boka-samtal">
@@ -112,7 +112,7 @@ export default function PartnerPage() {
                 <Arrow />
               </a>
               <a className="btn btn-outline" href="/produkter/plattform">
-                Se plattformen
+                Se hur det funkar
               </a>
             </div>
           </div>
