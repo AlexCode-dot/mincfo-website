@@ -147,7 +147,7 @@ export default function MincfoLanding() {
                   och samma plattform.
                 </p>
                 <a className="btn" href="/boka-samtal">
-                  Boka samtal
+                  Boka demo
                 </a>
               </div>
             </div>
@@ -271,11 +271,12 @@ export default function MincfoLanding() {
             <div>
               <span className="eyebrow">Koppla system &amp; behörigheter</span>
               <h2 className="workspace-title">
-                Kopplad till <em>Fortnox.</em>
+                Integrerad med systemen <em>ni använder.</em>
               </h2>
               <p className="workspace-body">
-                Ni ger oss åtkomst till bank, Skatteverket och Fortnox/övriga
-                system. MinCFO kopplas in som er gemensamma dashboard.
+                Ni ger oss säker åtkomst till verktygen ni redan använder. MinCFO
+                kopplas in ovanpå och blir er gemensamma dashboard — utan att ni
+                byter något.
               </p>
               <div style={{ height: 24 }}></div>
               <a className="text-link" href="/produkter/helhetslosningen#how">
@@ -294,7 +295,7 @@ export default function MincfoLanding() {
             <div className="workspace-photo">
               <img
                 src="/v2/assets/workspace-photo.png"
-                alt="Person vid laptop med Fortnox till MinCFO"
+                alt="Person vid laptop med MinCFO kopplat till sina system"
               />
             </div>
           </div>
@@ -779,7 +780,7 @@ export default function MincfoLanding() {
 
               <div className="cta-lead">
                 <a className="cta-lead-btn" href="/boka-samtal">
-                  Boka samtal
+                  Boka demo
                   <svg width="13" height="13" viewBox="0 0 12 12" aria-hidden="true">
                     <path
                       stroke="currentColor"
