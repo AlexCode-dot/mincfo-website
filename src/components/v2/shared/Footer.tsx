@@ -39,7 +39,7 @@ export default function Footer() {
                 <a href="/produkter/helhetslosningen">Helhetslösning</a>
               </li>
               <li>
-                <a href="/#partner">För byråer</a>
+                <a href="/partner">För byråer</a>
               </li>
               <li>
                 <a href="/#integrations">Integrationer</a>
@@ -76,7 +76,7 @@ export default function Footer() {
                 <a href="/#karriar">Karriär</a>
               </li>
               <li>
-                <a href="/#contact">Kontakt</a>
+                <a href="/boka-samtal">Kontakt</a>
               </li>
             </ul>
           </div>

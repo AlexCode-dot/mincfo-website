@@ -265,7 +265,7 @@ export default function MincfoLanding() {
       </section>
 
       {/* ============ WORKSPACE ============ */}
-      <section className="workspace">
+      <section className="workspace" id="integrations">
         <div className="container">
           <div className="workspace-grid">
             <div>
