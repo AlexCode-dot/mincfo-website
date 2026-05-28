@@ -292,6 +292,10 @@
     display: block;
     transition: transform .4s ease;
   }
+  /* Copilot asset has more navy padding around the card; zoom in slightly
+     so its white card matches the footprint of the other two cards. The card
+     also sits ~1.8% low in the source PNG, so nudge it up to center it. */
+  .feat-card--copilot .feat-art img { transform: translateY(-1.8%) scale(1.08); }
 
   /* floating UI snippet on top of card bg */
   .feat-snippet {
@@ -311,6 +315,7 @@
   .feat-snippet--copilot { width: min(86%, 340px); padding: 12px 14px; }
   .feat-snippet--forecast { width: min(82%, 300px); }
   .feat-card:hover .feat-art img { transform: scale(1.02); }
+  .feat-card--copilot:hover .feat-art img { transform: translateY(-1.8%) scale(1.10); }
   .feat-body {
     padding: 0 4px;
   }
@@ -410,7 +415,17 @@
   }
   @media (max-width: 1024px) { .uc-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 540px) { .uc-grid { grid-template-columns: 1fr; } }
-  .uc-card { display: flex; flex-direction: column; }
+  .uc-card {
+    display: flex;
+    flex-direction: column;
+    color: inherit;
+    text-decoration: none;
+  }
+  a.uc-card { transition: transform 0.2s ease; }
+  a.uc-card:hover { transform: translateY(-3px); }
+  a.uc-card:hover .uc-photo img { transform: scale(1.03); }
+  a.uc-card:hover .uc-name { text-decoration: underline; text-underline-offset: 3px; }
+  a.uc-card .uc-photo img { transition: transform 0.4s ease; }
   .uc-photo {
     aspect-ratio: 4/5;
     border-radius: 3px;

@@ -140,7 +140,7 @@ export default function Nav() {
                       30 min.
                     </span>
                     <a className="btn" href="/boka-samtal">
-                      Boka samtal
+                      Boka demo
                     </a>
                   </div>
                 </div>
@@ -258,93 +258,6 @@ export default function Nav() {
               </div>
             </div>
           </div>
-          <div className="nav-mega" data-mega>
-            <button
-              className="nav-link nav-trigger"
-              type="button"
-              aria-expanded="false"
-              aria-controls="megaLosningar"
-            >
-              Lösningar
-              <svg width="10" height="10" viewBox="0 0 10 10">
-                <path fill="currentColor" d="M5 7L1 3h8z" />
-              </svg>
-            </button>
-            <div
-              className="mega-panel"
-              id="megaLosningar"
-              role="menu"
-              aria-hidden="true"
-            >
-              <div className="mega-grid">
-                <div className="mega-cats">
-                  <div className="mega-cat">
-                    <div className="mega-cat-l">Efter roll</div>
-                    <div className="mega-cat-d">
-                      För team som vill växa utan att bygga ekonomi internt.
-                    </div>
-                    <div className="mega-cat-items">
-                      <a className="mega-item" href="/losningar/ceo-founders">
-                        <div className="mega-item-t">CEO &amp; Founders</div>
-                        <div className="mega-item-b">
-                          Beslutsunderlag utan en intern finance-funktion.
-                        </div>
-                      </a>
-                      <a className="mega-item" href="/losningar/cfo-finance">
-                        <div className="mega-item-t">CFO &amp; Finance Team</div>
-                        <div className="mega-item-b">
-                          Lämna över det operativa. Behåll strategin.
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                  <div className="mega-cat">
-                    <div className="mega-cat-l">Efter bransch</div>
-                    <div className="mega-cat-d">
-                      Anpassat upplägg för er affärsmodell.
-                    </div>
-                    <div className="mega-cat-items">
-                      <a className="mega-item" href="/losningar/saas-tech">
-                        <div className="mega-item-t">SaaS / Tech</div>
-                        <div className="mega-item-b">
-                          Runway, MRR och scenarier i realtid.
-                        </div>
-                      </a>
-                      <a className="mega-item" href="/losningar/konsult-tjanster">
-                        <div className="mega-item-t">Konsult &amp; Tjänster</div>
-                        <div className="mega-item-b">
-                          Beläggning, marginal och kassaflöde.
-                        </div>
-                      </a>
-                      <a className="mega-item" href="/losningar/ehandel">
-                        <div className="mega-item-t">E-handel</div>
-                        <div className="mega-item-b">
-                          Marginaler, lager och likviditet.
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <a className="mega-feature" href="/#losningar">
-                  <div className="mega-feature-img">
-                    <img
-                      src="/v2/assets/uc-founders.png"
-                      alt="Bolag som lämnat över ekonomin"
-                    />
-                  </div>
-                  <div className="mega-feature-body">
-                    <div className="mega-feature-t">
-                      Bolag som vill växa utan att bygga ekonomi internt
-                    </div>
-                    <div className="mega-feature-b">
-                      Se hur founders, CFOs och e-handlare jobbar med MinCFO
-                      som sin ekonomifunktion.
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
           <a className="nav-link" href="/#kundcase">
             Kundcase
           </a>
@@ -361,7 +274,7 @@ export default function Nav() {
             Logga in
           </button>
           <a className="btn" href="/boka-samtal">
-            Boka samtal
+            Boka demo
           </a>
         </div>
       </div>

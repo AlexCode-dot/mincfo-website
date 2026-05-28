@@ -65,9 +65,24 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
+  const shared = getSharedText(locale);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mincfo.com";
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "MinCFO",
+    url: siteUrl,
+    logo: `${siteUrl}/icon.svg`,
+    description: shared.siteMeta.description,
+    areaServed: { "@type": "Country", name: "Sweden" },
+  };
   return (
     <html lang={HTML_LANG[locale]}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
         <LocaleProvider initialLocale={locale}>
           <MotionProvider>
             <ContactReturnRestore />

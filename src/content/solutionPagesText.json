@@ -1,6 +1,6 @@
 {
   "shared": {
-    "heroPrimaryCta": "Boka samtal",
+    "heroPrimaryCta": "Boka demo",
     "heroSecondaryCta": "Se helhetslösningen",
     "scrollLabel": "Läs mer",
     "scrollCueAriaLabel": "Scrolla till nästa sektion",
@@ -9,7 +9,7 @@
     "impactTag": "Affärsvärde",
     "closingOverline": "Trust & CTA",
     "closingAccent": "Bygg med MinCFO.",
-    "closingCta": "Boka samtal",
+    "closingCta": "Boka demo",
     "scenarioPromptPrefix": "Fråga",
     "scenarioUi": {
       "typingStatus": "Användare skriver fråga...",
