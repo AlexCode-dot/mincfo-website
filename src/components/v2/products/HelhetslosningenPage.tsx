@@ -5,6 +5,8 @@ import Nav from "../shared/Nav";
 import Footer from "../shared/Footer";
 import BrandMark from "../shared/BrandMark";
 import PillarVisual from "./PillarVisual";
+import { faqJsonLd } from "../shared/faqJsonLd";
+import { serviceJsonLd } from "../shared/serviceJsonLd";
 
 type PillarVisualVariant =
   | "ledger"
@@ -204,6 +206,24 @@ const FAQS: { q: string; a: string }[] = [
 export default function HelhetslosningenPage() {
   return (
     <div className="mv2-root hl-1 vs-1 type-sumary">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(FAQS)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            serviceJsonLd({
+              name: "MinCFO Helhetslösning",
+              serviceType: "Outsourcad ekonomifunktion och CFO-as-a-service",
+              description:
+                "Redovisning, rapportering, lön och CFO-stöd — levererat av ett team som äger leveransen och en plattform som visar läget i realtid.",
+              url: "/produkter/helhetslosningen",
+            })
+          ),
+        }}
+      />
       <Nav />
 
       {/* ============ HERO ============ */}

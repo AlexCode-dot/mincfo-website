@@ -7,6 +7,8 @@ import Nav from "../shared/Nav";
 import Footer from "../shared/Footer";
 import BrandMark from "../shared/BrandMark";
 import SignupModal from "../shared/SignupModal";
+import { faqJsonLd } from "../shared/faqJsonLd";
+import { serviceJsonLd } from "../shared/serviceJsonLd";
 import PillarVisual from "./PillarVisual";
 import platform from "@/content/home/platform.json";
 
@@ -298,6 +300,23 @@ export default function PlatformPage() {
   const openSignup = () => setSignupOpen(true);
   return (
     <div className="mv2-root hl-1 vs-1 type-sumary">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(FAQS)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            serviceJsonLd({
+              name: "MinCFO Plattform",
+              serviceType: "Ekonomiplattform med AI-copilot",
+              description: hero.body,
+              url: "/produkter/plattform",
+            })
+          ),
+        }}
+      />
       <Nav />
 
       {/* ============ HERO ============ */}
