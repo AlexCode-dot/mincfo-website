@@ -109,7 +109,7 @@ export default async function BokaSamtalPage() {
       <section className="prod-trust boka-trust">
         <div className="container">
           <p className="prod-trust-l">
-            Betrodd av 50+ bolag som lagt ut hela sin ekonomi till MinCFO
+            Betrodd av 60+ bolag som lagt ut hela sin ekonomi till MinCFO
           </p>
           <div className="kc-ticker">
             <div className="kc-track">

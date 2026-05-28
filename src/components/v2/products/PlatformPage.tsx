@@ -15,7 +15,11 @@ const { dashboard, planning } = aicopilot;
 const customers = platform.customers;
 
 // Near-white logos need darkening to stay visible on the white ticker.
-const SOFT_LOGOS = new Set(["logo-showcase.avif"]);
+const SOFT_LOGOS = new Set([
+  "logo-showcase.avif",
+  "logo-ekoelement.svg",
+  "logo-fastighetskalendern.svg",
+]);
 
 const ArrowRight = ({ size = 12 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 12 12" aria-hidden="true">
@@ -313,7 +317,7 @@ export default function PlatformPage() {
                 <ArrowRight />
               </button>
               <a className="btn btn-outline" href="/boka-samtal">
-                Boka samtal
+                Boka demo
               </a>
             </div>
             <p className="plat-hero-trust">
@@ -391,9 +395,9 @@ export default function PlatformPage() {
       <section className="workspace plat-how" id="how">
         <div className="container">
           <div className="prod-how-head">
-            <span className="eyebrow">Så funkar det</span>
+            <span className="eyebrow">Kom igång</span>
             <h2 className="workspace-title">
-              Så arbetar ni med MinCFO <em>i praktiken.</em>
+              Koppla på. <em>Igång direkt.</em>
             </h2>
           </div>
 
@@ -448,7 +452,7 @@ export default function PlatformPage() {
               <ArrowRight />
             </button>
             <a className="btn btn-outline" href="/boka-samtal">
-              Boka samtal
+              Boka demo
             </a>
           </div>
         </div>

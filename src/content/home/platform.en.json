@@ -223,7 +223,7 @@
     "pill": "CUSTOMERS",
     "title": "Companies using the MinCFO platform today",
     "intro": "Some of the companies that use MinCFO for better overview, faster analysis and stronger decision support without demanding manual processes.",
-    "tickerLabel": "Trusted by 50+ companies that use MinCFO as their financial decision surface",
+    "tickerLabel": "Trusted by 60+ companies that use MinCFO as their financial decision surface",
     "controlsAria": "Browse customer reviews",
     "prevAria": "Previous review",
     "nextAria": "Next review",
@@ -338,6 +338,34 @@
       {
         "name": "Azeea",
         "file": "logo-azeea.svg"
+      },
+      {
+        "name": "Devotion Ventures",
+        "file": "logo-devotion.svg"
+      },
+      {
+        "name": "Rankad",
+        "file": "logo-rankad.png"
+      },
+      {
+        "name": "Indivd",
+        "file": "logo-indivd.svg"
+      },
+      {
+        "name": "Dina Kubik",
+        "file": "logo-dinakubik.png"
+      },
+      {
+        "name": "Ekoelement",
+        "file": "logo-ekoelement.svg"
+      },
+      {
+        "name": "Fastighetskalendern",
+        "file": "logo-fastighetskalendern.svg"
+      },
+      {
+        "name": "Lystra Familjehem",
+        "file": "logo-lystra.svg"
       }
     ]
   },

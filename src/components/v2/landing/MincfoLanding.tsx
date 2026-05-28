@@ -24,6 +24,16 @@ const TICKER_LOGOS: {
   { name: "Realforce", file: "logo-realforce.avif" },
   { name: "Rossoneri", file: "logo-rossoneri.avif" },
   { name: "Qsid", file: "logo-qsid.avif" },
+  { name: "Fler", file: "logo-fler.avif" },
+  { name: "Safetly", file: "logo-safetly.svg" },
+  { name: "Azeea", file: "logo-azeea.svg" },
+  { name: "Devotion Ventures", file: "logo-devotion.svg" },
+  { name: "Rankad", file: "logo-rankad.png" },
+  { name: "Indivd", file: "logo-indivd.svg" },
+  { name: "Dina Kubik", file: "logo-dinakubik.png" },
+  { name: "Ekoelement", file: "logo-ekoelement.svg", soft: true },
+  { name: "Fastighetskalendern", file: "logo-fastighetskalendern.svg", soft: true },
+  { name: "Lystra Familjehem", file: "logo-lystra.svg" },
 ];
 
 export default function MincfoLanding() {
@@ -210,7 +220,7 @@ export default function MincfoLanding() {
           <div className="cards-3">
             <article className="feat-card feat-card--rapport">
               <div className="feat-art">
-                <img src="/v2/assets/feat-rapportering.png" alt="Rapportering" />
+                <img src="/v2/assets/feat-rapportering.webp" alt="Rapportering" />
               </div>
               <div className="feat-body">
                 <div className="feat-eyebrow">DASHBOARD</div>
@@ -229,7 +239,7 @@ export default function MincfoLanding() {
 
             <article className="feat-card feat-card--copilot">
               <div className="feat-art">
-                <img src="/v2/assets/feat-copilot.png" alt="AI Copilot" />
+                <img src="/v2/assets/feat-copilot.webp" alt="AI Copilot" />
               </div>
               <div className="feat-body">
                 <div className="feat-eyebrow">AI COPILOT</div>
@@ -246,7 +256,7 @@ export default function MincfoLanding() {
 
             <article className="feat-card feat-card--forecast">
               <div className="feat-art">
-                <img src="/v2/assets/feat-forecast.png" alt="P&L Budget" />
+                <img src="/v2/assets/feat-forecast.webp" alt="P&L Budget" />
               </div>
               <div className="feat-body">
                 <div className="feat-eyebrow">PLANERING &amp; JÄMFÖRELSE</div>
@@ -320,7 +330,7 @@ export default function MincfoLanding() {
           </div>
 
           <div className="uc-grid">
-            <article className="uc-card">
+            <a className="uc-card" href="/losningar/ceo-founders">
               <div className="uc-photo">
                 <img src="/v2/assets/uc-founders.png" alt="CEO & Founders" />
               </div>
@@ -329,8 +339,8 @@ export default function MincfoLanding() {
                 För ledningsteam som vill ha kontroll och beslutsunderlag utan
                 att bygga upp en egen full finance-funktion internt.
               </p>
-            </article>
-            <article className="uc-card">
+            </a>
+            <a className="uc-card" href="/losningar/cfo-finance">
               <div className="uc-photo">
                 <img src="/v2/assets/uc-cfo.png" alt="CFO & Finance Team" />
               </div>
@@ -340,8 +350,8 @@ export default function MincfoLanding() {
                 hörnet. Med vår helhetslösning får ni full kontroll och ett
                 proaktivt beslutsstöd.
               </p>
-            </article>
-            <article className="uc-card">
+            </a>
+            <a className="uc-card" href="/losningar/saas-tech">
               <div className="uc-photo">
                 <img src="/v2/assets/uc-saas.png" alt="SaaS / Tech" />
               </div>
@@ -351,8 +361,8 @@ export default function MincfoLanding() {
                 ekonomistyrningen framåt. Vi sköter uppföljning och struktur, så
                 att ert team kan lägga all energi på att bygga verksamheten.
               </p>
-            </article>
-            <article className="uc-card">
+            </a>
+            <a className="uc-card" href="/losningar/ehandel">
               <div className="uc-photo">
                 <img src="/v2/assets/uc-ehandel.png" alt="E-handel" />
               </div>
@@ -362,7 +372,7 @@ export default function MincfoLanding() {
                 greppet om marginalerna. Vi driver den löpande hanteringen
                 medan ni följer lager, likviditet och lönsamhet i realtid.
               </p>
-            </article>
+            </a>
           </div>
         </div>
       </section>
@@ -586,7 +596,7 @@ export default function MincfoLanding() {
 
           <div className="kc-trusted">
             <p className="kc-trusted-l">
-              Betrodd av 50+ företag som lagt ut hela sin ekonomi till MinCFO
+              Betrodd av 60+ företag som lagt ut hela sin ekonomi till MinCFO
             </p>
             <div className="kc-ticker">
               <div className="kc-track">

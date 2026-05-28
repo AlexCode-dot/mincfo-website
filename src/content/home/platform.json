@@ -223,7 +223,7 @@
     "pill": "KUNDCASE",
     "title": "Företag som använder MinCFOs plattform idag",
     "intro": "Några av de företag som använder MinCFO för bättre överblick, snabbare analys och starkare beslutsunderlag utan krävande manuella processer.",
-    "tickerLabel": "Betrodd av 50+ företag som använder MinCFO som sin finansiella beslutsyta",
+    "tickerLabel": "Betrodd av 60+ företag som använder MinCFO som sin finansiella beslutsyta",
     "controlsAria": "Bläddra kundomdömen",
     "prevAria": "Föregående omdöme",
     "nextAria": "Nästa omdöme",
@@ -338,6 +338,34 @@
       {
         "name": "Azeea",
         "file": "logo-azeea.svg"
+      },
+      {
+        "name": "Devotion Ventures",
+        "file": "logo-devotion.svg"
+      },
+      {
+        "name": "Rankad",
+        "file": "logo-rankad.png"
+      },
+      {
+        "name": "Indivd",
+        "file": "logo-indivd.svg"
+      },
+      {
+        "name": "Dina Kubik",
+        "file": "logo-dinakubik.png"
+      },
+      {
+        "name": "Ekoelement",
+        "file": "logo-ekoelement.svg"
+      },
+      {
+        "name": "Fastighetskalendern",
+        "file": "logo-fastighetskalendern.svg"
+      },
+      {
+        "name": "Lystra Familjehem",
+        "file": "logo-lystra.svg"
       }
     ]
   },

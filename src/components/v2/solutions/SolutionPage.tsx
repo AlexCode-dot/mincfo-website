@@ -16,6 +16,16 @@ const TICKER_LOGOS: { name: string; file: string; soft?: boolean }[] = [
   { name: "Realforce", file: "logo-realforce.avif" },
   { name: "Rossoneri", file: "logo-rossoneri.avif" },
   { name: "Qsid", file: "logo-qsid.avif" },
+  { name: "Fler", file: "logo-fler.avif" },
+  { name: "Safetly", file: "logo-safetly.svg" },
+  { name: "Azeea", file: "logo-azeea.svg" },
+  { name: "Devotion Ventures", file: "logo-devotion.svg" },
+  { name: "Rankad", file: "logo-rankad.png" },
+  { name: "Indivd", file: "logo-indivd.svg" },
+  { name: "Dina Kubik", file: "logo-dinakubik.png" },
+  { name: "Ekoelement", file: "logo-ekoelement.svg", soft: true },
+  { name: "Fastighetskalendern", file: "logo-fastighetskalendern.svg", soft: true },
+  { name: "Lystra Familjehem", file: "logo-lystra.svg" },
 ];
 
 type Card = { title: string; body: string };
