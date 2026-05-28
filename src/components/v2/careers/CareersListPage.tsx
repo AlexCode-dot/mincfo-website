@@ -37,28 +37,56 @@ export default function CareersListPage() {
     <div className="mv2-root hl-1 vs-1 type-sumary car-page">
       <Nav />
 
-      {/* ============ HERO ============ */}
-      <section className="prod-hero" id="top">
+      {/* ============ HERO (copy left, team photo right) ============ */}
+      <section className="section prod-pillars car-hero" id="top">
         <div className="container">
-          <div className="prod-hero-inner">
-            <span className="eyebrow">Karriär</span>
-            <h1 className="prod-hero-title serif-h">
-              {hasPosts
-                ? "Var med och bygg framtidens ekonomifunktion"
-                : "Vi har inga lediga tjänster ute just nu"}
-            </h1>
-            <p className="prod-hero-sub">
-              {hasPosts
-                ? "Vi söker drivna människor som vill växa tillsammans med oss och våra kunder. Här är rollerna vi rekryterar till just nu."
-                : "Just nu rekryterar vi inte aktivt, men vi är alltid intresserade av att komma i kontakt med skarpa personer som tror på det vi bygger på MinCFO."}
-            </p>
-          </div>
+          <article className="pillar pillar--right car-hero-pillar">
+            <figure className="pillar-art car-team-art">
+              <picture>
+                <source srcSet="/v2/assets/careers-team.webp" type="image/webp" />
+                <img
+                  src="/v2/assets/careers-team.jpg"
+                  alt="MinCFO-teamet på kontoret i Stockholm"
+                  width={1600}
+                  height={1200}
+                />
+              </picture>
+            </figure>
+            <div className="pillar-body">
+              <div className="pillar-eyebrow">Karriär</div>
+              <h1 className="pillar-title serif-h">
+                {hasPosts
+                  ? "Var med och bygg framtidens ekonomifunktion"
+                  : "Vi har inga lediga tjänster ute just nu"}
+              </h1>
+              <p className="pillar-lead">
+                {hasPosts
+                  ? "Vi söker drivna människor som vill växa tillsammans med oss och våra kunder. Här är rollerna vi rekryterar till just nu."
+                  : "Just nu rekryterar vi inte aktivt, men vi är alltid intresserade av att komma i kontakt med skarpa personer som tror på det vi bygger på MinCFO."}
+              </p>
+              <div className="car-hero-cta">
+                <a
+                  className="btn"
+                  href={hasPosts ? "#jobs" : "mailto:victor@mincfo.com"}
+                >
+                  {hasPosts ? "Se våra lediga jobb" : "Skicka spontanansökan"}
+                  <Arrow />
+                </a>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
 
       {/* ============ JOB LIST ============ */}
-      <section className="section car-list">
+      <section className="section car-list" id="jobs">
         <div className="container">
+          {hasPosts && (
+            <div className="car-list-head">
+              <span className="eyebrow">Lediga tjänster</span>
+              <h2 className="car-list-title serif-h">Roller vi rekryterar till nu</h2>
+            </div>
+          )}
           {hasPosts ? (
             <div className="car-grid">
               {posts.map((post) => (
@@ -111,26 +139,6 @@ export default function CareersListPage() {
           )}
         </div>
       </section>
-
-      {/* ============ FINAL CTA (spontaneous) ============ */}
-      {hasPosts && (
-        <section className="closing prod-closing">
-          <div className="container">
-            <h2>Vill du ändå höra av dig?</h2>
-            <p className="sub">
-              Om du tror att du skulle kunna passa hos oss får du gärna skicka en
-              kort presentation. Berätta vem du är, vad du är bra på och varför
-              MinCFO känns relevant för dig.
-            </p>
-            <div className="closing-row">
-              <a className="btn" href="mailto:victor@mincfo.com">
-                Skicka spontanansökan
-                <Arrow />
-              </a>
-            </div>
-          </div>
-        </section>
-      )}
 
       <Footer />
     </div>

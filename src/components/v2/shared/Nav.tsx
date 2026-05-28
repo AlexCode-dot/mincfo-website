@@ -264,6 +264,9 @@ export default function Nav() {
           <a className="nav-link" href="/blogg">
             Blogg
           </a>
+          <a className="nav-link" href="/karriar">
+            Karriär
+          </a>
         </div>
         <div className="nav-end">
           <button

@@ -14,8 +14,73 @@
   line-height: 1.06;
 }
 
+/* ---------- hero: team photo (reuses .pillar) ---------- */
+/* Fill the viewport: vertically centered, larger type + photo. */
+.car-hero {
+  display: flex;
+  align-items: center;
+  min-height: calc(100svh - 72px);
+  padding-top: clamp(24px, 4vw, 56px);
+  padding-bottom: clamp(40px, 6vw, 88px);
+}
+.car-hero > .container { width: 100%; }
+
+/* equal columns: photo and copy share the row evenly */
+.car-hero-pillar {
+  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 5vw, 88px);
+}
+@media (max-width: 920px) {
+  .car-hero { min-height: 0; }
+  .car-hero-pillar { grid-template-columns: 1fr; }
+}
+
+/* scale up the hero copy */
+.car-hero .pillar-title {
+  font-size: clamp(38px, 4.6vw, 66px);
+  line-height: 1.04;
+}
+.car-hero .pillar-lead {
+  font-size: clamp(14px, 1.2vw, 16px);
+  max-width: 42ch;
+}
+
+/* team photo as the pillar visual — keeps the 5/4 framed box (like the
+   product pillars) so the copy column stays vertically centered against it */
+.car-team-art {
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  box-shadow:
+    0 1px 2px rgba(10, 10, 10, 0.04),
+    0 28px 60px -34px rgba(10, 10, 10, 0.4);
+}
+
+/* CTA replaces the presenter card — same divider/spacing */
+.car-hero-cta {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 920px) {
+  .car-hero-cta { display: flex; justify-content: center; }
+}
+
 /* ---------- list: job grid ---------- */
 .car-list { padding: clamp(48px, 6vw, 88px) 0 clamp(72px, 9vw, 120px); }
+.car-list { scroll-margin-top: 96px; }
+
+.car-list-head {
+  text-align: center;
+  margin: 0 auto clamp(28px, 3.5vw, 48px);
+}
+.car-list-head .eyebrow { display: inline-block; margin-bottom: 12px; }
+.car-list-title {
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
 
 /* Flex (not grid) so an incomplete last row centers:
    5 cards -> 3 on top, 2 centered below. */

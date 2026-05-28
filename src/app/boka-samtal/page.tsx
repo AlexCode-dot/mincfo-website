@@ -92,7 +92,12 @@ export default async function BokaSamtalPage() {
 
               <div className="boka-presenter">
                 <span className="boka-presenter-avatar" aria-hidden="true">
-                  V
+                  <img
+                    src="/v2/assets/victor-pernvik.png"
+                    alt=""
+                    width={46}
+                    height={46}
+                  />
                 </span>
                 <span className="boka-presenter-meta">
                   <span className="boka-presenter-lead">Du träffar</span>

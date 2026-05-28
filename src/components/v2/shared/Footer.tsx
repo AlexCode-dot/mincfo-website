@@ -73,7 +73,7 @@ export default function Footer() {
                 <a href="/blogg">Blogg</a>
               </li>
               <li>
-                <a href="/#karriar">Karriär</a>
+                <a href="/karriar">Karriär</a>
               </li>
               <li>
                 <a href="/boka-samtal">Kontakt</a>
